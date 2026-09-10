@@ -1,6 +1,6 @@
 # Add the first versioned authored terrain surface and shared height query
 
-Work package **RV-003** · M2 Terrain · help wanted, area: terrain · terrain/connected explorer and model reuse/six-map view merged through PR #31
+Work package **RV-003** · M2 Terrain · help wanted, area: terrain · terrain/connected explorer and model reuse merged; camera-driven loading in review
 
 ## Problem
 
@@ -36,7 +36,10 @@ with per-map textures, ownership masks, cached buffers and desktop flight.
 That merged baseline loads four maps from Oldale.
 **Merged — [PR #31](https://github.com/ChronoHaxx/rubyvr-studio-archive-20260910/pull/31), [model reuse and six-map exploration](../region-model-reuse.md):**
 the identical four-map allocation falls 76.2%; two authored hops now include
-Littleroot and Petalburg. Loading further maps as the camera travels is next. The reported outer cutoff/void
+Littleroot and Petalburg. **In review — [camera-driven map loading](../camera-map-streaming.md):**
+prepare a moving window in the background, reuse unchanged GPU buffers and
+release distant maps without moving the world or altering the editor.
+The reported outer cutoff/void
 belongs to this package's borders/undersides; horizon blending and fog belong
 to M8. First-person alone is not an edge fix.
 
@@ -69,6 +72,11 @@ to M8. First-person alone is not an edge fix.
   source indices while sharing rigid models, keep ground-following deformation,
   and verify wider flight and unchanged editor state. [Evidence](../region-model-reuse.md).
   Streaming, outer borders and full geography remain open.
+- [ ] **In review — camera-driven loading:** bounded background preparation,
+  fixed origins across unloading/return, unchanged-buffer reuse and cancellation
+  without late publication. Both authored round trips and source-floor travel
+  beyond the initial window are checked. [GIF and measured limits](../camera-map-streaming.md).
+  Whole-world geography, outer borders and headset upload budgets remain open.
 
 ## Where to start
 

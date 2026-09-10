@@ -43,7 +43,7 @@ def main():
         vx,vy=800,int(height*.78)
         events += [dict(frame=80,type='motion',x=vx,y=vy),dict(frame=81,type='down',x=vx,y=vy,button=3),
                    dict(frame=83,type='key-down',scan=26),dict(frame=183,type='key-up',scan=26),
-                   dict(frame=185,type='up',x=vx,y=vy,button=3)]
+                   dict(frame=185,type='up',x=vx,y=vy,button=3),dict(frame=188,type='wait-stream')]
         ui.click(events,225,180,17);ui.click(events,250,1082,17);ui.click(events,275,180,17)
         ui.key(events,297,22,64);events.append(dict(frame=320,type='quit'))
         points=[(18,'before'),(43,'loaded'),(75,'guarded'),(150,'crossed'),(196,'stopped'),(220,'idle'),
@@ -61,9 +61,18 @@ def main():
             assert s['room_hash']==before['room_hash'] and s['undo']==before['undo'] and s['map_id']==before['map_id']
             assert not s['draft_dirty'] and not s['unsaved']
             assert Path(str(OUT/name)+f'.png.{n}.working.json').read_bytes()==baseline
+        assert states['guarded']['region_hash']==loaded['region_hash']
+        assert states['guarded']['mesh_uploads']==loaded['mesh_uploads']
+        origins={m['id']:(m['x'],m['z']) for m in loaded['stream_maps']}
         for n in ('guarded','crossed','stopped','idle'):
-            s=states[n];assert s['region_hash']==loaded['region_hash'] and s['mesh_uploads']==loaded['mesh_uploads']
+            s=states[n]
+            assert not s['stream_errors'] and 0<s['region_maps']<=6
+            assert all(origins[m['id']]==(m['x'],m['z']) for m in s['stream_maps'])
             assert 0<s['region_draw_calls']<=s['region_batches']
+        assert states['stopped']['stream_anchor']=='MAP_ROUTE103' and states['stopped']['region_maps']==4
+        assert not states['stopped']['stream_pending']
+        assert states['stopped']['region_hash']==states['idle']['region_hash']
+        assert states['stopped']['mesh_uploads']==states['idle']['mesh_uploads']
         crossed=states['crossed'];yaw,pitch,dist=crossed['camera']
         eye_z=crossed['camera_target'][2]+math.cos(yaw)*math.cos(pitch)*dist
         assert -13<eye_z<7,eye_z # Camera has crossed Oldale's north boundary into Route 103.
@@ -72,7 +81,7 @@ def main():
             s=states[n];assert not s['exploring'] and s['region_maps']==s['region_bytes']==0
             assert s['camera']==before['camera'] and s['camera_target']==before['camera_target']
         assert states['again']['region_hash']==loaded['region_hash']
-        assert states['again']['mesh_uploads']==loaded['mesh_uploads']+6
+        assert states['again']['mesh_uploads']==states['returned']['mesh_uploads']+6
         assert json.loads(Path(str(OUT/name)+'-saved.json').read_bytes())==json.loads(baseline)
         reports.append(dict(viewport=[width,height],checkpoints=len(states),vertices=loaded['region_vertices'],
             stored_vertices=loaded['region_stored_vertices'],models=loaded['region_models'],
@@ -86,10 +95,12 @@ def main():
     floors=OUT/'source-floors.json';floors.write_text('{"version":6,"patterns":[]}\n')
     camera=dict(yaw=0,pitch=1.5,dist=8,tx=27,ty=1,tz=52)
     normal=run('atlas-own',[dict(frame=25,type='quit')],[(20,'view')],frames=30,map_id='MAP_ROUTE104',source=floors,camera=camera)['view']
-    events=[];ui.click(events,22,1082,17);events.append(dict(frame=55,type='quit'))
+    events=[];ui.click(events,22,1082,17)
+    events.extend([dict(frame=32,type='wait-stream'),dict(frame=55,type='quit')])
     camera.update(tx=-13,tz=2)
     region=run('atlas-connected',events,[(45,'view')],frames=60,map_id='MAP_PETALBURG_CITY',source=floors,camera=camera)['view']
-    assert region['region_maps']==3 and region['region_draw_calls']<region['region_maps']
+    assert region['stream_anchor']=='MAP_ROUTE104' and region['region_maps']==4
+    assert region['region_draw_calls']<region['region_maps'] and not region['stream_pending']
     x,y,w,h=map(int,normal['view']);crop=(x+w//2-100,y+h//2-80,x+w//2+100,y+h//2+80)
     images=[Image.open(OUT/(n+'.png.view.png')).convert('RGB').crop(crop) for n in ('atlas-own','atlas-connected')]
     assert ImageChops.difference(*images).getbbox() is None,'Neighbour atlas differs from its own actual render'
@@ -97,7 +108,7 @@ def main():
     result=dict(status='PASS',scope='Six-map desktop preview; no live traversal/headset claim',
         gui_sha256=hashlib.sha256((ROOT/'build/rubyvr_gui.exe').read_bytes()).hexdigest(),
         input_sha256=hashlib.sha256(original).hexdigest(),layouts=reports,atlas_pixels_identical=32000,
-        source_unchanged=True,document_unchanged=True,zero_camera_mesh_uploads=True,
+        source_unchanged=True,document_unchanged=True,zero_idle_mesh_uploads=True,
         render_measurement='Synchronized single-eye GL draw, including sky; excludes UI, CPU builds and driver overhead; not headset frame time')
     (OUT/'studio-verification.json').write_text(json.dumps(result,indent=2)+'\n')
     print(json.dumps(result,indent=2))

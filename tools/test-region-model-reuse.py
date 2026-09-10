@@ -51,6 +51,10 @@ def main():
             for a,b in zip(before,after):
                 assert a['name']==b['name'] and a['view']==b['view']
                 assert a['camera']==b['camera'] and a['camera_target']==b['camera_target']
+                # The resident window now changes after crossing Route 103.
+                # Historical fixed-window pictures only apply before travel
+                # and after the exact editor/initial region is restored.
+                if a['name'] in ('crossed','stopped','idle'):continue
                 x,y,w,h=map(int,a['view']);box=(x,y,x+w,y+h);suffix='.png.'+a['name']+'.png'
                 images=[Image.open(p/(name+suffix)).convert('RGB').crop(box) for p in (args.baseline,test.OUT)]
                 assert ImageChops.difference(*images).getbbox() is None,(layout,a['name'])
@@ -58,10 +62,11 @@ def main():
     # Real Shift-W flight: Littleroot -> Route 101 -> Oldale -> Route 103.
     test.OUT=OUT
     events=[];test.ui.click(events,22,470,501);test.ui.click(events,29,460,564)
+    events.append(dict(frame=40,type='wait-stream'))
     events += [dict(frame=55,type='motion',x=800,y=800),dict(frame=56,type='down',x=800,y=800,button=3),
         dict(frame=60,type='key-down',scan=225,mod=1),dict(frame=64,type='key-down',scan=26,mod=1),
         dict(frame=134,type='key-up',scan=26,mod=1),dict(frame=136,type='key-up',scan=225),
-        dict(frame=138,type='up',x=800,y=800,button=3)]
+        dict(frame=138,type='up',x=800,y=800,button=3),dict(frame=180,type='wait-stream')]
     test.ui.click(events,205,1470,224)
     for f in (214,219,224):test.ui.click(events,f,997,501)
     events.append(dict(frame=245,type='quit'))
@@ -73,28 +78,37 @@ def main():
     assert any(27<eye(s)[2]<47 for n,s in states.items() if n.startswith('travel-'))
     assert any(7<eye(s)[2]<27 for n,s in states.items() if n.startswith('travel-'))
     assert start['lighting']=='Noon' and end['camera_target']!=states['overview']['camera_target']
+    assert start['stream_anchor']=='MAP_LITTLEROOT_TOWN' and start['region_maps']==3
+    assert end['stream_anchor']=='MAP_ROUTE103' and end['region_maps']==4
     initial=(OUT/'north-flight.png.littleroot.working.json').read_bytes()
+    origins={}
     for n,s in states.items():
-        assert s['exploring'] and s['region_maps']==6 and s['region_hash']==six['geometry_hash']
-        assert s['mesh_uploads']==start['mesh_uploads'] and 0<s['region_draw_calls']<=s['region_batches']
+        assert s['exploring'] and 0<s['region_maps']<=6 and not s['stream_errors']
+        for m in s['stream_maps']:
+            position=(m['x'],m['z'])
+            if m['id'] in origins:assert origins[m['id']]==position
+            origins[m['id']]=position
+        assert 0<s['region_draw_calls']<=s['region_batches']
         assert not s['unsaved'] and not s['draft_dirty']
         assert (OUT/f'north-flight.png.{n}.working.json').read_bytes()==initial
     # Fly west across Route 102's offset connection into Petalburg.
     events=[];test.ui.click(events,22,470,501);test.ui.click(events,29,460,564)
     events += [dict(frame=55,type='motion',x=800,y=800),dict(frame=56,type='down',x=800,y=800,button=3),
         dict(frame=60,type='key-down',scan=26),dict(frame=150,type='key-up',scan=26),
-        dict(frame=152,type='up',x=800,y=800,button=3),dict(frame=175,type='quit')]
+        dict(frame=152,type='up',x=800,y=800,button=3),dict(frame=155,type='wait-stream'),dict(frame=175,type='quit')]
     west=test.run('west-flight',events,[(50,'route102'),(135,'crossed'),(165,'petalburg')],frames=180,connected=True,
         camera=dict(yaw=math.pi/2,pitch=.12,dist=8,tx=-43,ty=9,tz=9))
     assert eye(west['route102'])[0]>-43 and eye(west['petalburg'])[0]<-43
     for s in west.values():
-        assert s['region_hash']==six['geometry_hash'] and s['mesh_uploads']==west['route102']['mesh_uploads']
+        assert s['exploring'] and 0<s['region_maps']<=6 and not s['stream_errors']
+        assert all(origins[m['id']]==(m['x'],m['z']) for m in s['stream_maps'])
+    assert west['petalburg']['stream_anchor']=='MAP_PETALBURG_CITY' and west['petalburg']['region_maps']==3
     report=dict(status='PASS',gui_sha256=common['gui_sha256'],batch_sha256=hashlib.sha256((ROOT/'build/rubyvr_studio.exe').read_bytes()).hexdigest(),
         input_sha256=common['input_sha256'],source=source['scenes'],connected_checks=common,
         baseline_views=comparisons,baseline_pixels=sum(v['pixels'] for v in comparisons),
         north_flight=dict(start=eye(start),end=eye(end),checkpoints=len(states)),
         west_flight=dict(start=eye(west['route102']),end=eye(west['petalburg']),checkpoints=len(west)),
-        scope='Desktop GL and native equivalence; model storage reuse, six preloaded maps; no streaming/headset acceptance')
+        scope='Desktop GL and native equivalence; model reuse with camera-driven residency; no headset acceptance')
     (OUT/'verification.json').write_text(json.dumps(report,indent=2)+'\n')
     print('PASS: model reuse and six-map flight; optional baseline pixels:',report['baseline_pixels'])
 

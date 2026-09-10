@@ -5,6 +5,8 @@
 **[Model reuse and six-map exploration](region-model-reuse.md) merged in PR #31.**
 The current branch preloads Oldale, Routes 101/102/103, Littleroot and Petalburg
 into one 3D view. The ordinary editing view remains available.
+**In review: [camera-driven loading](camera-map-streaming.md)** moves this
+bounded window as you fly, retaining the same world coordinates.
 
 ![Actual Studio six-map flight and overview](media/region-model-reuse.gif)
 
@@ -44,8 +46,9 @@ Each map keeps its own indexed tile and palette textures. Region chunks use
 the existing production mesher and shader, with independent buffers so leaving
 the explorer restores editing immediately. Rigid repeats share one model mesh
 within each map's source atlas; ordered placement offsets preserve draw order.
-Ground-following models retain per-vertex deformation. Turning or flying does
-not rebuild or upload geometry; maps outside the camera's view are skipped.
+Ground-following models retain per-vertex deformation. Turning within the same
+loaded area does not rebuild geometry; entering another map prepares a nearby
+window in the background. Maps outside the camera's view are skipped.
 
 This changes presentation, not the authored height recipe. It preserves the
 66 starter models, six cleanup masks and the existing regional terrain/water.
@@ -57,7 +60,8 @@ PR #29's deliberately raised foundation test hill is not part of this example.
   live characters, animated source state or headset acceptance.
 - The loader takes two connection hops within authored terrain, otherwise one,
   at most nine maps. An unauthored neighbour remains a named frontier. It does
-  not load or unload maps as the camera moves.
+  load or unload maps as the camera moves in the [streaming follow-up](camera-map-streaming.md),
+  currently in review.
 - The six-map fixture has **10,007,814 expanded vertices** with **69.4 MiB of
   stored mesh, placement offsets and indexed textures**. The same four-map
   fixture as PR #30 falls from 198.4 to 47.1 MiB. CPU working data, driver

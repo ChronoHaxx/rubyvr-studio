@@ -84,9 +84,15 @@ the editing buffer. Rigid models share one mesh per pattern per source map,
 with placement offsets and ordered instanced draw ranges; ground-following
 models stay deformed per placement. No cross-atlas geometry cache is assumed.
 Expanded geometry hashes/bounds enumerate the original ordered vertices without
-retaining those copies in the renderer. Loading is explicit and synchronous:
-two hops within authored terrain, one without, at most nine maps. See
-[model reuse, budgets and evidence](region-model-reuse.md).
+retaining those copies in the renderer. Initial entry is synchronous; subsequent
+camera-map changes prepare a bounded window in one worker owning its Decomp,
+snapshots and recipes. `prepare_region` performs CPU work; `publish_region`
+compares geometry/materials and stages GL resources before an atomic replacement.
+Unchanged buffers transfer to the new window and departed buffers are released.
+Cancellation prevents late publication after returning to editing. Origins stay
+fixed, including remembered identities of unloaded maps. The window keeps two
+hops within authored terrain, one without, and at most nine maps. See
+[streaming limits and evidence](camera-map-streaming.md) and [model reuse](region-model-reuse.md).
 V1 snapshots retain unknown
 identity. The live prototype explicitly clears source identity and connections;
 verified runtime identity, feet/camera placement and complete regional terrain

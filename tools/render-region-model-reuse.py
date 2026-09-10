@@ -11,6 +11,8 @@ ROOT=Path(__file__).resolve().parents[1];OUT=ROOT/'build/region-model-reuse'
 def main():
     report=json.loads((OUT/'verification.json').read_bytes())
     assert report['status']=='PASS'
+    assert 'six preloaded maps' in report['scope'],('This historical renderer expects PR #31 captures. '
+        'Use test-camera-map-streaming.py and render-camera-map-streaming.py for current residency.')
     assert hashlib.sha256((ROOT/'build/rubyvr_gui.exe').read_bytes()).hexdigest()==report['gui_sha256']
     spec=importlib.util.spec_from_file_location('reuse',ROOT/'tools/test-region-model-reuse.py')
     test=importlib.util.module_from_spec(spec);spec.loader.exec_module(test)

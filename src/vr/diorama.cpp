@@ -3520,15 +3520,68 @@ void draw_raw(const math::Mat4& view_proj, const math::Mat4& model, int debug, T
     submit(view_proj, model, debug, tint);
 }
 
-bool build_region(const std::vector<RegionMap>& maps,const overrides::OverrideSet& set,std::string* error) {
-    if(!g_ready) {if(error)*error="The renderer is not ready.";return false;}
-    std::vector<RegionCPU> cpu;RegionStats stats;
-    if(!region_cpu(maps,set,&cpu,&stats,error)) return false;
-    std::vector<RegionGPU> candidate(maps.size());
-    for(size_t i=0;i<maps.size();++i) if(!upload_region_chunk(cpu[i],*maps[i].source,&candidate[i])) {
-        release_region(candidate);if(error)*error="GPU allocation failed. The previous view is retained.";return false;
+struct PreparedRegion {
+    std::vector<RegionCPU> cpu;
+    // Only material data is needed by GL; no borrowed snapshot pointers survive.
+    std::vector<world::Snapshot> materials;
+    RegionStats stats;
+};
+std::shared_ptr<PreparedRegion> prepare_region(const std::vector<RegionMap>& maps,
+    const overrides::OverrideSet& set,std::string* error,const std::atomic<bool>* cancel) {
+    try {
+        auto result=std::make_shared<PreparedRegion>();
+        if(!region_cpu(maps,set,&result->cpu,&result->stats,error,cancel))return {};
+        for(const auto& m:maps) {
+            world::Snapshot art;art.map_group=m.source->map_group;art.map_number=m.source->map_number;
+            art.vram_tiles=m.source->vram_tiles;art.bg_palette=m.source->bg_palette;
+            result->materials.push_back(std::move(art));
+        }
+        return result;
+    } catch(const std::bad_alloc&) {
+        if(error)*error="Map preparation ran out of memory. The previous view is retained.";
+        return {};
     }
-    release_region(g_region);g_region=std::move(candidate);g_region_stats=stats;return true;
+}
+bool publish_region(const std::shared_ptr<PreparedRegion>& prepared,std::string* error) {
+    if(!g_ready || !prepared) {if(error)*error="The region is not ready.";return false;}
+    const auto& cpu=prepared->cpu;const auto& materials=prepared->materials;
+    std::vector<RegionGPU> candidate;std::vector<int> reuse;
+    RegionStats stats=prepared->stats;
+    try {
+        candidate.resize(cpu.size());reuse.resize(cpu.size(),-1);
+        for(size_t i=0;i<cpu.size();++i) {
+            const auto& c=cpu[i];const auto& s=materials[i];
+            for(size_t j=0;j<g_region.size();++j) {
+                const auto& old=g_region[j];
+                // Hash includes every ordered world vertex, source address and
+                // shade after neighbour ownership/occlusion. Art is byte-compared.
+                if(old.group==s.map_group && old.number==s.map_number && old.x==c.x && old.z==c.z &&
+                   old.hash==c.hash && old.stored==c.mesh.size() && old.instances==c.placed.offsets.size() &&
+                   old.draws.size()==c.placed.draws.size() && old.source_tiles==s.vram_tiles && old.source_palette==s.bg_palette) {
+                    reuse[i]=int(j);++stats.reused_maps;break;
+                }
+            }
+            if(reuse[i]>=0)continue;
+            if(!upload_region_chunk(c,s,&candidate[i])) {
+                release_region(candidate);if(error)*error="GPU allocation failed. The previous view is retained.";return false;
+            }
+            ++stats.uploaded_maps;
+        }
+    } catch(const std::bad_alloc&) {
+        release_region(candidate);if(error)*error="GPU preparation ran out of memory. The previous view is retained.";return false;
+    }
+    // Transfer reused handles only once every allocation succeeded. Failed
+    // staging must never delete resources belonging to the visible old view.
+    for(size_t i=0;i<reuse.size();++i)if(reuse[i]>=0) {
+        candidate[i]=std::move(g_region[size_t(reuse[i])]);g_region[size_t(reuse[i])]={};
+    }
+    for(const auto& c:g_region)if(c.vao)++stats.released_maps;
+    release_region(g_region);g_region=std::move(candidate);g_region_stats=stats;
+    if(error)error->clear();return true;
+}
+bool build_region(const std::vector<RegionMap>& maps,const overrides::OverrideSet& set,std::string* error) {
+    auto prepared=prepare_region(maps,set,error);
+    return prepared && publish_region(prepared,error);
 }
 void clear_region() {release_region(g_region);g_region_stats={};}
 const RegionStats& region_stats() {return g_region_stats;}

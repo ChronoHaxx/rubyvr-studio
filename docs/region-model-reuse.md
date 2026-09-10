@@ -1,5 +1,8 @@
 # Model reuse and the six-map explorer
 
+This records PR #31's merged baseline. The [camera-driven loading follow-up](camera-map-streaming.md)
+is in review; its moving window supersedes the fixed residency described here.
+
 **M2, merged — [PR #31](https://github.com/ChronoHaxx/rubyvr-studio-archive-20260910/pull/31).** Connected views now store each rigid model once per map's
 source atlas, with small placement offsets for repeated trees and buildings.
 The same authored six-map pack can load Littleroot and Petalburg alongside
@@ -66,15 +69,18 @@ are recorded in the [exact evidence](region-model-reuse-evidence-2026-09-10.json
 
 ```powershell
 python tools/test-region-model-reuse.py
-python tools/render-region-model-reuse.py
+python tools/test-camera-map-streaming.py
+python tools/render-camera-map-streaming.py
 ```
 
 An optional `--baseline <local-directory>` compares retained PR #30 probe
 captures with identical current cameras. Source assets and intermediate
 captures stay local; the evidence records the exact binary/input hashes.
-The old `render-connected-scene.py` entry point forwards to the current film.
+The historical `render-region-model-reuse.py` and `render-connected-scene.py`
+entry points require the fixed-window PR #31 captures; use the commands above
+for the current moving-window film.
 
-**Next M2 work:** load/unload further neighbours as the camera travels, then
+**Current M2 follow-up:** camera-driven loading is in review, then
 deliberate outer borders and undersides. Complete coastal geography, bridges,
 stairs, caves and live terrain placement remain open in the [roadmap](roadmap.md).
 This preview has no gameplay collision or live/headset acceptance.

@@ -45,6 +45,8 @@
 #include <cstdlib>
 #include <cstring>
 #include <filesystem>
+#include <thread>
+#include <chrono>
 #include <string>
 #include <vector>
 
@@ -343,6 +345,13 @@ void outline_rect(ImDrawList* dl, const Mat4& vp, int w, int h,
 
 // ── State ────────────────────────────────────────────────────────────────────
 
+struct ConnectedWork {
+    std::atomic<bool> cancel{false},done{false};std::thread thread;
+    studio::connected::Scene scene;
+    std::shared_ptr<vr::diorama::PreparedRegion> prepared;
+    std::string anchor,error;double milliseconds=0;
+    ~ConnectedWork() {cancel=true;if(thread.joinable())thread.join();}
+};
 struct App {
     // Immutable for the session.
     studio::Decomp decomp;
@@ -455,6 +464,10 @@ struct App {
     bool exploring=false, explore_saved_fly=false, explore_saved_grid=false, explore_saved_terrain=false;
     Camera explore_saved_camera;
     studio::connected::Scene connected;
+    std::shared_ptr<ConnectedWork> connected_work;
+    std::string connected_anchor,connected_failed;
+    size_t stream_updates=0,stream_loaded=0,stream_unloaded=0,stream_reused=0,stream_errors=0,stream_pending_frames=0;
+    double stream_build_ms=0,stream_main_ms=0;
     bool fly_mode=false, fly_looking=false;
     float fly_speed=6.f; // map cells / second, Shift multiplies by four
     bool   debug = false;          // false textured, true classification colours
@@ -4717,6 +4730,7 @@ int main(int argc, char** argv) {
             io.DisplayFramebufferScale = ImVec2(float(render_w) / ww, float(render_h) / wh);
         }
         ImGui::NewFrame();
+        update_connected(app);
         header_panel(app);
         ImGui::BeginDisabled(app.exploring);
         group_panel(app);
@@ -4819,6 +4833,10 @@ int main(int argc, char** argv) {
 
         if (g_probe) {
             if(probe.showcasing) {
+                // A test-only barrier keeps replay time still while the real
+                // worker runs. Input/rendering and result publication still use
+                // the ordinary event loop; barriers require released controls.
+                if(showcase_wait_stream(probe,app)) {SDL_Delay(1);continue;}
                 showcase_frame(probe,app);
                 if(++probe.it>=probe.showcase.find("frames")->as_int()) running=false;
                 continue;

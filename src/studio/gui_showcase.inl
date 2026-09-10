@@ -11,7 +11,7 @@ bool load_showcase(const char* path, Probe& p) {
         const auto* frame=e.find("frame");const auto* type=e.find("type");
         if(!frame || frame->as_int(-1)<0 || frame->as_int()>=frames->as_int() || !type) return false;
         const auto& t=type->string;
-        if(t!="motion" && t!="down" && t!="up" && t!="wheel" && t!="focus-lost" && t!="key-down" && t!="key-up" && t!="text" && t!="quit") return false;
+        if(t!="motion" && t!="down" && t!="up" && t!="wheel" && t!="focus-lost" && t!="key-down" && t!="key-up" && t!="text" && t!="quit" && t!="wait-stream") return false;
         if((t=="down" || t=="up") && e.find("button") && (e.find("button")->as_int()<1 || e.find("button")->as_int()>3)) return false;
         if(t=="text" && (!e.find("text") || e.find("text")->string.size()>=SDL_TEXTINPUTEVENT_TEXT_SIZE)) return false;
     }
@@ -35,6 +35,21 @@ bool showcase_open(Probe& p) {
     if(record && record->as_int()!=0) {
         p.recording=std::fopen((p.png_path+".rgb").c_str(),"wb");
         if(!p.recording) {std::fclose(p.checkpoints);p.checkpoints=nullptr;return false;}
+    }
+    return true;
+}
+bool showcase_wait_stream(Probe& p,const App& a) {
+    static int waiting=-1;static uint32_t started=0;
+    bool barrier=false;
+    for(const auto& e:p.showcase.find("events")->items)
+        barrier|=e.find("frame")->as_int()==p.it && e.find("type")->string=="wait-stream";
+    if(!barrier || !a.connected_work) {waiting=-1;return false;}
+    if(a.fly_looking) {
+        p.showcase_ok=false;std::fprintf(stderr,"[stream-probe] Release flight controls before wait-stream.\n");return false;
+    }
+    if(waiting!=p.it) {waiting=p.it;started=SDL_GetTicks();}
+    if(SDL_GetTicks()-started>30000) {
+        p.showcase_ok=false;std::fprintf(stderr,"[stream-probe] Map preparation timed out.\n");return false;
     }
     return true;
 }
@@ -83,6 +98,14 @@ void showcase_frame(Probe& p, const App& a) {
         json_string(f,stats_value(a.last_stats,"geom"));
         std::fputs(",\"map_id\":",f);json_string(f,a.map_id);
         const auto& region=vr::diorama::region_stats();
+        std::fputs(",\"stream_anchor\":",f);json_string(f,a.connected_anchor);
+        std::fprintf(f,",\"stream_pending\":%s,\"stream_updates\":%zu,\"stream_loaded\":%zu,\"stream_unloaded\":%zu,\"stream_reused\":%zu,\"stream_errors\":%zu,\"stream_pending_frames\":%zu,\"stream_build_ms\":%.6f,\"stream_main_ms\":%.6f,\"stream_maps\":[",
+            a.connected_work && !a.connected_work->cancel.load()?"true":"false",a.stream_updates,a.stream_loaded,a.stream_unloaded,a.stream_reused,a.stream_errors,a.stream_pending_frames,a.stream_build_ms,a.stream_main_ms);
+        for(size_t i=0;i<a.connected.maps.size();++i) {
+            const auto& m=a.connected.maps[i];std::fprintf(f,"%s{\"id\":",i?",":"");json_string(f,m.id);
+            std::fprintf(f,",\"x\":%d,\"z\":%d}",m.x,m.z);
+        }
+        std::fputs("]",f);
         std::fprintf(f,",\"region_stored_vertices\":%zu,\"region_models\":%zu,\"region_model_instances\":%zu,\"region_deformed_instances\":%zu,\"region_batches\":%zu",
             region.stored_vertices,region.models,region.model_instances,region.deformed_instances,region.batches);
         std::fprintf(f,",\"region_draw_calls\":%zu,\"region_drawn_vertices\":%zu",region.draw_calls,region.drawn_vertices);

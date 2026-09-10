@@ -3,22 +3,29 @@
 struct RegionCPU {
     std::vector<Vertex> mesh; PlacedMesh placed; DioramaStats stats;
     int x=0,z=0;float lo[3]{},hi[3]{};
+    uint64_t hash=0;
 };
 struct RegionGPU {
     GLuint vao=0,vbo=0,offsets=0,tiles=0,palette=0; GLsizei count=0;
     std::vector<MeshDraw> draws;int x=0,z=0;
     float lo[3]{},hi[3]{};
+    uint64_t hash=0;size_t stored=0,instances=0;
+    int group=-1,number=-1;
+    std::vector<uint8_t> source_tiles;
+    std::vector<uint16_t> source_palette;
 };
 std::vector<RegionGPU> g_region;
 RegionStats g_region_stats;
 
 bool region_cpu(const std::vector<RegionMap>& maps,const overrides::OverrideSet& set,
-                std::vector<RegionCPU>* out,RegionStats* stats,std::string* error) {
+                std::vector<RegionCPU>* out,RegionStats* stats,std::string* error,
+                const std::atomic<bool>* cancel=nullptr) {
     auto fail=[&](const char* why){if(error)*error=why;return false;};
     if(!out || !stats || maps.empty() || maps.size()>9) return fail("Choose an area of one to nine maps.");
     size_t cells=0;
     std::vector<terrain::Resolved> land;
     for(size_t i=0;i<maps.size();++i) {
+        if(cancel && cancel->load())return fail("Map preparation cancelled.");
         const auto* s=maps[i].source;
         if(!s || !s->valid || !s->has_map_identity() || !s->valid_connections() ||
            s->width<=15 || s->height<=14 || s->width>512 || s->height>512 ||
@@ -48,6 +55,7 @@ bool region_cpu(const std::vector<RegionMap>& maps,const overrides::OverrideSet&
     std::vector<RegionCPU> result;RegionStats total;total.maps=maps.size();
     for(size_t i=0;i<maps.size();++i) {
         const auto& m=maps[i];const auto& s=*m.source;
+        if(cancel && cancel->load())return fail("Map preparation cancelled.");
         auto surfaces=land[i];std::vector<uint8_t> visible(s.grid.size(),0);
         for(int y=0;y<s.height;++y) for(int x=0;x<s.width;++x) {
             const int j=owner(x+m.x,y+m.z);const size_t k=size_t(y)*s.width+x;
@@ -85,6 +93,7 @@ bool region_cpu(const std::vector<RegionMap>& maps,const overrides::OverrideSet&
             for(int k=0;k<3;++k){chunk.lo[k]=std::min(chunk.lo[k],p[k]);chunk.hi[k]=std::max(chunk.hi[k],p[k]);}
         });
         total.geometry_hash=fnv1a_mix(fnv1a_mix(total.geometry_hash,uint32_t(hash)),uint32_t(hash>>32));
+        chunk.hash=hash;
         total.raised_instances+=chunk.stats.raised_instances;
         total.terrain_rejected+=chunk.stats.terrain_rejected;
         total.unresolved_placements+=chunk.stats.unresolved_placements;
@@ -106,6 +115,9 @@ void release_region(std::vector<RegionGPU>& chunks) {
 }
 
 bool upload_region_chunk(const RegionCPU& cpu,const world::Snapshot& s,RegionGPU* c) {
+    c->hash=cpu.hash;c->stored=cpu.mesh.size();c->instances=cpu.placed.offsets.size();
+    c->group=s.map_group;c->number=s.map_number;
+    c->source_tiles=s.vram_tiles;c->source_palette=s.bg_palette;
     std::copy_n(cpu.lo,3,c->lo);std::copy_n(cpu.hi,3,c->hi);
     c->draws=cpu.placed.draws;c->x=cpu.x;c->z=cpu.z;
     gl::glGenVertexArrays(1,&c->vao);gl::glBindVertexArray(c->vao);

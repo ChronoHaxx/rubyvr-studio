@@ -1,0 +1,723 @@
+{
+  "date": "2026-09-10",
+  "status": "PASS",
+  "milestone": "M2",
+  "work_package": "RV-003",
+  "delivery": "In review",
+  "base_commit": "173d9e51adc0918e4b27bbe86fbcceef19c4c379",
+  "branch": "codex/camera-map-streaming",
+  "scope": "Bounded camera-driven desktop map residency; no gameplay/headset acceptance",
+  "travel": {
+    "status": "PASS",
+    "scope": "Camera-driven residency in the six authored maps; desktop source/GL only",
+    "gui_sha256": "8a00accf664a030de285991fb22eb72d9a627e0ada6544b9aaa492315e377251",
+    "input_sha256": "e76ed940e012a6b804e1a5e8e43e8f3a11219a13574e0e32995c5909617ea220",
+    "checkpoints": 16,
+    "fixed_origins": {
+      "MAP_OLDALE_TOWN": [
+        0,
+        0
+      ],
+      "MAP_ROUTE103": [
+        0,
+        -20
+      ],
+      "MAP_ROUTE101": [
+        0,
+        20
+      ],
+      "MAP_ROUTE102": [
+        -50,
+        0
+      ],
+      "MAP_LITTLEROOT_TOWN": [
+        0,
+        40
+      ],
+      "MAP_PETALBURG_CITY": [
+        -80,
+        -10
+      ]
+    },
+    "settled": {
+      "oldale": {
+        "stream_anchor": "MAP_OLDALE_TOWN",
+        "region_maps": 6,
+        "region_bytes": 72760248,
+        "region_hash": "5b43cb3ab31d22fc",
+        "stream_updates": 0,
+        "stream_loaded": 6,
+        "stream_unloaded": 0,
+        "stream_reused": 0,
+        "stream_build_ms": 0.0,
+        "stream_main_ms": 0.0011,
+        "stream_pending_frames": 0
+      },
+      "littleroot": {
+        "stream_anchor": "MAP_LITTLEROOT_TOWN",
+        "region_maps": 3,
+        "region_bytes": 31020960,
+        "region_hash": "83e3a5126df3b725",
+        "stream_updates": 2,
+        "stream_loaded": 6,
+        "stream_unloaded": 3,
+        "stream_reused": 6,
+        "stream_build_ms": 641.6283,
+        "stream_main_ms": 15.2362,
+        "stream_pending_frames": 344
+      },
+      "oldale-return": {
+        "stream_anchor": "MAP_OLDALE_TOWN",
+        "region_maps": 6,
+        "region_bytes": 72760248,
+        "region_hash": "5b43cb3ab31d22fc",
+        "stream_updates": 4,
+        "stream_loaded": 9,
+        "stream_unloaded": 3,
+        "stream_reused": 12,
+        "stream_build_ms": 1242.8351,
+        "stream_main_ms": 50.8359,
+        "stream_pending_frames": 1071
+      },
+      "petalburg": {
+        "stream_anchor": "MAP_PETALBURG_CITY",
+        "region_maps": 3,
+        "region_bytes": 44053200,
+        "region_hash": "0e8889f27fd9ae7f",
+        "stream_updates": 6,
+        "stream_loaded": 9,
+        "stream_unloaded": 6,
+        "stream_reused": 18,
+        "stream_build_ms": 826.4142,
+        "stream_main_ms": 50.8359,
+        "stream_pending_frames": 1507
+      },
+      "oldale-again": {
+        "stream_anchor": "MAP_OLDALE_TOWN",
+        "region_maps": 6,
+        "region_bytes": 72760248,
+        "region_hash": "5b43cb3ab31d22fc",
+        "stream_updates": 8,
+        "stream_loaded": 12,
+        "stream_unloaded": 6,
+        "stream_reused": 24,
+        "stream_build_ms": 1194.5259,
+        "stream_main_ms": 50.8359,
+        "stream_pending_frames": 2200
+      }
+    },
+    "document_unchanged": true,
+    "source_unchanged": true,
+    "cancellation": {
+      "status": "PASS",
+      "checkpoints": 5,
+      "cancelled_while_pending": true,
+      "late_publication": false,
+      "document_unchanged": true,
+      "camera_restored": true
+    },
+    "beyond_initial": {
+      "status": "PASS",
+      "fixture": "Source floors without authored terrain; not new terrain acceptance",
+      "new_maps": [
+        "MAP_ROUTE105",
+        "MAP_RUSTBORO_CITY"
+      ],
+      "checkpoints": 3,
+      "fixed_origins": {
+        "MAP_PETALBURG_CITY": [
+          0,
+          0
+        ],
+        "MAP_ROUTE104": [
+          -40,
+          -50
+        ],
+        "MAP_ROUTE102": [
+          30,
+          10
+        ],
+        "MAP_RUSTBORO_CITY": [
+          -40,
+          -110
+        ],
+        "MAP_ROUTE105": [
+          -40,
+          30
+        ]
+      },
+      "returned_hash": "d61e8a1572e73746"
+    },
+    "measurements": "Resident GPU mesh/material bytes; main-thread streaming-update maximum excludes rendering/UI and is not headset FPS."
+  },
+  "visual": {
+    "status": "PASS",
+    "gui_sha256": "8a00accf664a030de285991fb22eb72d9a627e0ada6544b9aaa492315e377251",
+    "input_sha256": "e76ed940e012a6b804e1a5e8e43e8f3a11219a13574e0e32995c5909617ea220",
+    "gif_sha256": "bf10712e9b9aa02a45fb6d5e4f61f9c3e76ba30cea9672cfdbec49034305a5c2",
+    "frames": 36,
+    "duration_seconds": 11.44,
+    "captures": [
+      {
+        "name": "oldale",
+        "maps": 6,
+        "bytes": 72760248,
+        "anchor": "MAP_OLDALE_TOWN",
+        "pending": false
+      },
+      {
+        "name": "west-40",
+        "maps": 6,
+        "bytes": 72760248,
+        "anchor": "MAP_OLDALE_TOWN",
+        "pending": false
+      },
+      {
+        "name": "west-45",
+        "maps": 6,
+        "bytes": 72760248,
+        "anchor": "MAP_OLDALE_TOWN",
+        "pending": false
+      },
+      {
+        "name": "west-50",
+        "maps": 6,
+        "bytes": 72760248,
+        "anchor": "MAP_OLDALE_TOWN",
+        "pending": true
+      },
+      {
+        "name": "west-55",
+        "maps": 6,
+        "bytes": 72760248,
+        "anchor": "MAP_OLDALE_TOWN",
+        "pending": true
+      },
+      {
+        "name": "west-60",
+        "maps": 6,
+        "bytes": 72760248,
+        "anchor": "MAP_OLDALE_TOWN",
+        "pending": true
+      },
+      {
+        "name": "west-65",
+        "maps": 6,
+        "bytes": 72760248,
+        "anchor": "MAP_OLDALE_TOWN",
+        "pending": true
+      },
+      {
+        "name": "west-70",
+        "maps": 6,
+        "bytes": 72760248,
+        "anchor": "MAP_OLDALE_TOWN",
+        "pending": true
+      },
+      {
+        "name": "west-75",
+        "maps": 6,
+        "bytes": 72760248,
+        "anchor": "MAP_OLDALE_TOWN",
+        "pending": true
+      },
+      {
+        "name": "west-80",
+        "maps": 6,
+        "bytes": 72760248,
+        "anchor": "MAP_OLDALE_TOWN",
+        "pending": true
+      },
+      {
+        "name": "west-85",
+        "maps": 5,
+        "bytes": 64241308,
+        "anchor": "MAP_ROUTE102",
+        "pending": false
+      },
+      {
+        "name": "west-90",
+        "maps": 5,
+        "bytes": 64241308,
+        "anchor": "MAP_ROUTE102",
+        "pending": false
+      },
+      {
+        "name": "west-95",
+        "maps": 5,
+        "bytes": 64241308,
+        "anchor": "MAP_ROUTE102",
+        "pending": false
+      },
+      {
+        "name": "west-100",
+        "maps": 5,
+        "bytes": 64241308,
+        "anchor": "MAP_ROUTE102",
+        "pending": false
+      },
+      {
+        "name": "west-105",
+        "maps": 5,
+        "bytes": 64241308,
+        "anchor": "MAP_ROUTE102",
+        "pending": false
+      },
+      {
+        "name": "west-110",
+        "maps": 5,
+        "bytes": 64241308,
+        "anchor": "MAP_ROUTE102",
+        "pending": false
+      },
+      {
+        "name": "west-115",
+        "maps": 5,
+        "bytes": 64241308,
+        "anchor": "MAP_ROUTE102",
+        "pending": true
+      },
+      {
+        "name": "petalburg",
+        "maps": 3,
+        "bytes": 44053200,
+        "anchor": "MAP_PETALBURG_CITY",
+        "pending": false
+      },
+      {
+        "name": "east-175",
+        "maps": 3,
+        "bytes": 44053200,
+        "anchor": "MAP_PETALBURG_CITY",
+        "pending": false
+      },
+      {
+        "name": "east-180",
+        "maps": 3,
+        "bytes": 44053200,
+        "anchor": "MAP_PETALBURG_CITY",
+        "pending": false
+      },
+      {
+        "name": "east-185",
+        "maps": 3,
+        "bytes": 44053200,
+        "anchor": "MAP_PETALBURG_CITY",
+        "pending": true
+      },
+      {
+        "name": "east-190",
+        "maps": 3,
+        "bytes": 44053200,
+        "anchor": "MAP_PETALBURG_CITY",
+        "pending": true
+      },
+      {
+        "name": "east-195",
+        "maps": 3,
+        "bytes": 44053200,
+        "anchor": "MAP_PETALBURG_CITY",
+        "pending": true
+      },
+      {
+        "name": "east-200",
+        "maps": 3,
+        "bytes": 44053200,
+        "anchor": "MAP_PETALBURG_CITY",
+        "pending": true
+      },
+      {
+        "name": "east-205",
+        "maps": 3,
+        "bytes": 44053200,
+        "anchor": "MAP_PETALBURG_CITY",
+        "pending": true
+      },
+      {
+        "name": "east-210",
+        "maps": 3,
+        "bytes": 44053200,
+        "anchor": "MAP_PETALBURG_CITY",
+        "pending": true
+      },
+      {
+        "name": "east-215",
+        "maps": 3,
+        "bytes": 44053200,
+        "anchor": "MAP_PETALBURG_CITY",
+        "pending": true
+      },
+      {
+        "name": "east-220",
+        "maps": 5,
+        "bytes": 64241308,
+        "anchor": "MAP_ROUTE102",
+        "pending": false
+      },
+      {
+        "name": "east-225",
+        "maps": 5,
+        "bytes": 64241308,
+        "anchor": "MAP_ROUTE102",
+        "pending": false
+      },
+      {
+        "name": "east-230",
+        "maps": 5,
+        "bytes": 64241308,
+        "anchor": "MAP_ROUTE102",
+        "pending": false
+      },
+      {
+        "name": "east-235",
+        "maps": 5,
+        "bytes": 64241308,
+        "anchor": "MAP_ROUTE102",
+        "pending": false
+      },
+      {
+        "name": "east-240",
+        "maps": 5,
+        "bytes": 64241308,
+        "anchor": "MAP_ROUTE102",
+        "pending": false
+      },
+      {
+        "name": "east-245",
+        "maps": 5,
+        "bytes": 64241308,
+        "anchor": "MAP_ROUTE102",
+        "pending": true
+      },
+      {
+        "name": "east-250",
+        "maps": 5,
+        "bytes": 64241308,
+        "anchor": "MAP_ROUTE102",
+        "pending": true
+      },
+      {
+        "name": "oldale-again",
+        "maps": 6,
+        "bytes": 72760248,
+        "anchor": "MAP_OLDALE_TOWN",
+        "pending": false
+      },
+      {
+        "name": "overview",
+        "maps": 6,
+        "bytes": 72760248,
+        "anchor": "MAP_OLDALE_TOWN",
+        "pending": false
+      }
+    ],
+    "scope": "Actual SDL input and production frames sampled with pauses; no interpolated views or real-time FPS claim"
+  },
+  "regression": {
+    "native_connected_checks": 39,
+    "native_terrain_checks": 197,
+    "native_foundation_checks": 23,
+    "connected_studio": {
+      "status": "PASS",
+      "scope": "Six-map desktop preview; no live traversal/headset claim",
+      "gui_sha256": "8a00accf664a030de285991fb22eb72d9a627e0ada6544b9aaa492315e377251",
+      "input_sha256": "e76ed940e012a6b804e1a5e8e43e8f3a11219a13574e0e32995c5909617ea220",
+      "layouts": [
+        {
+          "viewport": [
+            1600,
+            1100
+          ],
+          "checkpoints": 10,
+          "vertices": 10007814,
+          "stored_vertices": 2584128,
+          "models": 68,
+          "model_instances": 442,
+          "deformed_instances": 0,
+          "batches": 217,
+          "gpu_bytes": 72760248,
+          "region_hash": "5b43cb3ab31d22fc",
+          "crossed_eye_z": 2.60001278,
+          "loaded_draw_ms": 0.794375,
+          "crossed_draw_ms": 0.448506,
+          "crossed_draw_calls": 55
+        },
+        {
+          "viewport": [
+            1280,
+            720
+          ],
+          "checkpoints": 10,
+          "vertices": 10007814,
+          "stored_vertices": 2584128,
+          "models": 68,
+          "model_instances": 442,
+          "deformed_instances": 0,
+          "batches": 217,
+          "gpu_bytes": 72760248,
+          "region_hash": "5b43cb3ab31d22fc",
+          "crossed_eye_z": 2.60001278,
+          "loaded_draw_ms": 0.778631,
+          "crossed_draw_ms": 0.368756,
+          "crossed_draw_calls": 55
+        }
+      ],
+      "atlas_pixels_identical": 32000,
+      "source_unchanged": true,
+      "document_unchanged": true,
+      "zero_idle_mesh_uploads": true,
+      "render_measurement": "Synchronized single-eye GL draw, including sky; excludes UI, CPU builds and driver overhead; not headset frame time"
+    },
+    "north_flight": {
+      "start": [
+        17.0,
+        12.957697634483948,
+        59.94246908970402
+      ],
+      "end": [
+        17.0,
+        6.253805884483947,
+        4.345202419704023
+      ],
+      "checkpoints": 25
+    },
+    "west_flight": {
+      "start": [
+        -35.05753091029598,
+        9.957697634483948,
+        8.999999656844802
+      ],
+      "end": [
+        -52.928166910295985,
+        7.802871474483948,
+        8.999999656844802
+      ],
+      "checkpoints": 3
+    },
+    "source_scenes": [
+      {
+        "maps": 4,
+        "atlases": 1,
+        "vertices": 7421814,
+        "gpu_bytes": 49427684,
+        "primary_cells": 3400,
+        "padding_cells": 601,
+        "hidden_cells": 916,
+        "raised": 331,
+        "geometry_hash": "3b0d708d12ea9e5b",
+        "placements": [
+          {
+            "map": "MAP_OLDALE_TOWN",
+            "x": 0,
+            "z": 0
+          },
+          {
+            "map": "MAP_ROUTE103",
+            "x": 0,
+            "z": -20
+          },
+          {
+            "map": "MAP_ROUTE101",
+            "x": 0,
+            "z": 20
+          },
+          {
+            "map": "MAP_ROUTE102",
+            "x": -50,
+            "z": 0
+          }
+        ],
+        "stored_vertices": 1755624,
+        "models": 43,
+        "model_instances": 331,
+        "deformed_instances": 0,
+        "batches": 167
+      },
+      {
+        "maps": 6,
+        "atlases": 1,
+        "vertices": 10007814,
+        "gpu_bytes": 72760248,
+        "primary_cells": 4700,
+        "padding_cells": 531,
+        "hidden_cells": 1545,
+        "raised": 442,
+        "geometry_hash": "5b43cb3ab31d22fc",
+        "placements": [
+          {
+            "map": "MAP_OLDALE_TOWN",
+            "x": 0,
+            "z": 0
+          },
+          {
+            "map": "MAP_ROUTE103",
+            "x": 0,
+            "z": -20
+          },
+          {
+            "map": "MAP_ROUTE101",
+            "x": 0,
+            "z": 20
+          },
+          {
+            "map": "MAP_ROUTE102",
+            "x": -50,
+            "z": 0
+          },
+          {
+            "map": "MAP_LITTLEROOT_TOWN",
+            "x": 0,
+            "z": 40
+          },
+          {
+            "map": "MAP_PETALBURG_CITY",
+            "x": -80,
+            "z": -10
+          }
+        ],
+        "stored_vertices": 2584128,
+        "models": 68,
+        "model_instances": 442,
+        "deformed_instances": 0,
+        "batches": 217
+      },
+      {
+        "maps": 3,
+        "atlases": 2,
+        "vertices": 279360,
+        "gpu_bytes": 8021760,
+        "primary_cells": 5100,
+        "padding_cells": 720,
+        "hidden_cells": 848,
+        "raised": 0,
+        "geometry_hash": "d61e8a1572e73746",
+        "placements": [
+          {
+            "map": "MAP_PETALBURG_CITY",
+            "x": 0,
+            "z": 0
+          },
+          {
+            "map": "MAP_ROUTE104",
+            "x": -40,
+            "z": -50
+          },
+          {
+            "map": "MAP_ROUTE102",
+            "x": 30,
+            "z": 10
+          }
+        ],
+        "stored_vertices": 279360,
+        "models": 0,
+        "model_instances": 0,
+        "deformed_instances": 0,
+        "batches": 3
+      }
+    ],
+    "editor": {
+      "status": "PASS",
+      "started_utc": "2026-09-10T17:27:24.687676+00:00",
+      "scope": "standalone editor; disk source; no live/headset validation",
+      "checks": [
+        {
+          "name": "editor-selftest",
+          "exit_code": 0,
+          "passed": true
+        },
+        {
+          "name": "editor-objects",
+          "exit_code": 0,
+          "passed": true
+        },
+        {
+          "name": "editor-scenes",
+          "exit_code": 0,
+          "passed": true
+        },
+        {
+          "name": "eight-frozen-geometry-hashes",
+          "passed": true,
+          "hashes": {
+            "route101": "f3a1bd5a56a98d41",
+            "house": "92d76bb11e408a83",
+            "pokecenter": "94dc8b44ccd9cb97",
+            "tree": "cac8b0cd5ca32253",
+            "trees-stacked": "683ce96a70b24e56",
+            "forest": "d6b432b23316aaf3",
+            "ledge": "29c7362056392a43",
+            "littleroot-clipped": "9b283dac1177116b"
+          }
+        },
+        {
+          "name": "editor-layout-scene",
+          "exit_code": 0,
+          "passed": true
+        },
+        {
+          "name": "editor-layout-view",
+          "exit_code": 0,
+          "passed": true
+        },
+        {
+          "name": "editor-layout-small",
+          "exit_code": 0,
+          "passed": true
+        },
+        {
+          "name": "editor-layout-scaled",
+          "exit_code": 0,
+          "passed": true
+        },
+        {
+          "name": "editor-camera",
+          "exit_code": 0,
+          "passed": true
+        },
+        {
+          "name": "editor-voxel-ui",
+          "exit_code": 0,
+          "passed": true
+        },
+        {
+          "name": "editor-part-selection",
+          "exit_code": 0,
+          "passed": true
+        }
+      ],
+      "rubyvr_gui.exe_sha256": "8a00accf664a030de285991fb22eb72d9a627e0ada6544b9aaa492315e377251",
+      "rubyvr_studio.exe_sha256": "fd057a55698461b45b6f60f8ae8af5e271c70c73bff033e04b52dd397273ff9b",
+      "finished_utc": "2026-09-10T17:28:08.669744+00:00"
+    },
+    "editor_selftest_checks": 278,
+    "frozen_geometry_hashes_unchanged": 8,
+    "old_fixed_window_pixel_baseline": "Not rerun; changed resident windows intentionally have different outer extents"
+  },
+  "visual_review": {
+    "reviewer": "Codex",
+    "method": "Inspected all 36 production captures in a contact sheet and full-size Petalburg/overview views",
+    "verdict": "Tested joins remain aligned during residency changes; no new terrain/art approval",
+    "remaining": [
+      "Visible outer cutoffs and undersides (M2)",
+      "Repeated foliage appearance and incomplete starter shapes (M4)",
+      "World/horizon treatment (M8)",
+      "Main-thread upload/cleanup spikes and whole-process/headset budgets (M10)"
+    ]
+  },
+  "limits": {
+    "max_maps": 9,
+    "max_source_cells": 65536,
+    "max_stored_vertices": 8000000,
+    "max_expanded_vertices": 16000000,
+    "max_remembered_origins": 1024,
+    "world_origin_limit_cells": 8192,
+    "workers": 1,
+    "peak_ram": "Unmeasured; staging overlaps old/new CPU and GPU data; resident counts are not process limits",
+    "initial_entry": "Synchronous; travel geometry preparation is asynchronous",
+    "cancellation": "Checked between maps; the current map may finish on the worker before cancellation drains",
+    "authored_frontiers": [
+      "MAP_ROUTE104",
+      "MAP_ROUTE110"
+    ]
+  }
+}

@@ -27,6 +27,8 @@
 //   It also keeps the mesh static: geometry only changes when the MAP changes.
 
 #pragma once
+#include <atomic>
+#include <memory>
 
 #include "overrides.h"
 #include "ruby_world.h"
@@ -284,8 +286,15 @@ struct RegionStats {
     size_t stored_vertices=0,models=0,model_instances=0,deformed_instances=0,batches=0;
     uint64_t geometry_hash=0;
     size_t draw_calls=0,drawn_vertices=0;
+    size_t uploaded_maps=0,reused_maps=0,released_maps=0;
 };
 struct RegionMesh { std::vector<AuthoredVertex> vertices; DioramaStats stats; };
+struct PreparedRegion;
+// Preparation owns all CPU/source data and touches no GL/global renderer state.
+// Publish is main-thread-only and retains the old complete region on failure.
+std::shared_ptr<PreparedRegion> prepare_region(const std::vector<RegionMap>&,
+    const overrides::OverrideSet&,std::string* error,const std::atomic<bool>* cancel=nullptr);
+bool publish_region(const std::shared_ptr<PreparedRegion>&,std::string* error);
 bool inspect_region_mesh(const std::vector<RegionMap>&, const overrides::OverrideSet&,
                          std::vector<RegionMesh>*, RegionStats*, std::string* error);
 bool build_region(const std::vector<RegionMap>&, const overrides::OverrideSet&, std::string* error);

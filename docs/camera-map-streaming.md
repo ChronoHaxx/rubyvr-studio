@@ -1,6 +1,6 @@
 # Maps load around the camera
 
-**M2 / RV-003 — [PR #20, in review](https://github.com/ChronoHaxx/rubyvr-studio/pull/20).** Explore area now moves its loaded neighbourhood
+**M2 / RV-003 — [PR #20, merged](https://github.com/ChronoHaxx/rubyvr-studio/pull/20).** Explore area now moves its loaded neighbourhood
 with the camera. Fly from Oldale toward Littleroot or Petalburg: distant maps
 are released, nearby maps are prepared in the background, and returning
 restores the same world positions. The document and editing camera stay intact.

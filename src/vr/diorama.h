@@ -271,8 +271,11 @@ struct AuthoredVertex {
 // with the rendered mesh. The normal rendering/cache path is unchanged.
 bool inspect_authored_mesh(const world::Snapshot&, const overrides::Pattern&, std::vector<AuthoredVertex>*,
                            std::vector<size_t>* triangle_parts = nullptr);
+// `closed_base` adds the connected explorer's -16 source-pixel preview base to
+// the same shared mesher output. The editor path leaves it false; the region
+// path and its equivalence checks opt in.
 bool inspect_diorama_mesh(const world::Snapshot&, const overrides::OverrideSet&,
-                          std::vector<AuthoredVertex>*, DioramaStats*);
+                          std::vector<AuthoredVertex>*, DioramaStats*, bool closed_base = false);
 
 // Bounded desktop region. Each source keeps its own indexed tiles/palette.
 // Offsets translate backup-map coordinates; input snapshots are borrowed only

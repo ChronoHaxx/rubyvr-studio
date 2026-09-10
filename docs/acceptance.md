@@ -1,10 +1,19 @@
 # Watch the acceptance check
 
+**In review, unmerged: [solid ground base](connected-ground-base.md).**
+The 12-second comparison shows the underside and exposed edge closing while
+existing scenery stays in place. Native and desktop regressions pass; this
+does not finish outer geography or headset acceptance.
+
+![Actual Studio ground-base comparison](media/connected-ground-base.gif)
+
+## Merged camera-driven map loading
+
 **11 seconds. Fly to Petalburg and back while the loaded area follows you.**
 
 ![Actual Studio flight with maps loading and unloading](media/camera-map-streaming.gif)
 
-**[PR #20, in review](https://github.com/ChronoHaxx/rubyvr-studio/pull/20) — camera-driven map loading: desktop checks PASS.** Nearby maps
+**[PR #20, merged](https://github.com/ChronoHaxx/rubyvr-studio/pull/20) — camera-driven map loading: desktop checks PASS.** Nearby maps
 prepare in the background, unchanged GPU buffers are reused, and distant maps
 are released. The visible window drops from six maps (**69.4 MiB**) to three
 near Petalburg (**42.0 MiB**), then returns to the same geometry and coordinates.

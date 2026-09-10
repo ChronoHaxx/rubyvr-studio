@@ -2030,11 +2030,16 @@ public:
 #include "terrain_mesh.inl"
 #include "placed_mesh.inl"
 
+// Region neighbours contain the owning map's validated surfaces plus a one-cell
+// halo. `closed_base` opts into the connected explorer's -16px preview base;
+// the single-map editor leaves both defaults and keeps its exact mesh.
 bool build_authored_diorama(const world::Snapshot& s,const overrides::OverrideSet& set,
                             std::vector<Vertex>* out,DioramaStats* stats,
                             const std::vector<uint8_t>* visible=nullptr,
                             const terrain::Resolved* shared_surfaces=nullptr,
-                            PlacedMesh* placed=nullptr) {
+                            PlacedMesh* placed=nullptr,
+                            const std::vector<TerrainNeighbor>* neighbors=nullptr,
+                            bool closed_base=false) {
     if(!s.valid || !out || !stats || !overrides::supported_version(set.version)) return false;
     if(!terrain::valid(set.terrain) || (!set.terrain.empty() && set.version!=overrides::kTerrainVersion)) return false;
     for(const auto& p:set.patterns) if(!cutout::valid(p) || !overrides::valid_parts(p) ||
@@ -2091,7 +2096,7 @@ bool build_authored_diorama(const world::Snapshot& s,const overrides::OverrideSe
         uint16_t id=recovered[size_t(y)*s.width+x]?floor[size_t(y)*s.width+x]:s.metatile_id(x,y);
         if(const auto* cell=surfaces.cell(x,y)) {
             if(cell->underlay>=0) id=uint16_t(cell->underlay);
-            const size_t before=mesh.size();terrain_cell_mesh(s,mesh,surfaces,*cell,x,y,id);
+            const size_t before=mesh.size();terrain_cell_mesh(s,mesh,surfaces,neighbors,*cell,x,y,id,closed_base);
             if(mesh.size()>2000000) return false;
             result.terrain_vertices+=mesh.size()-before;continue;
         }
@@ -2102,6 +2107,7 @@ bool build_authored_diorama(const world::Snapshot& s,const overrides::OverrideSe
             const float px=x+(k&1)*.5f,pz=y+(k>>1)*.5f,py=pair*.002f;
             push_quad(mesh,e,kShadeFlat,0,px,py,pz,px+.5f,py,pz,px+.5f,py,pz+.5f,px,py,pz+.5f,true);
         }
+        if(closed_base) terrain_legacy_base(s,mesh,surfaces,neighbors,x,y,id);
     }
     // V6 preserves explicitly owned background pixels at their original map
     // positions. Object and source cast-shadow pixels reveal recovered ground.
@@ -3632,10 +3638,10 @@ bool inspect_authored_mesh(const world::Snapshot& s, const overrides::Pattern& p
     return true;
 }
 bool inspect_diorama_mesh(const world::Snapshot& s,const overrides::OverrideSet& set,
-                          std::vector<AuthoredVertex>* out,DioramaStats* stats) {
+                          std::vector<AuthoredVertex>* out,DioramaStats* stats,bool closed_base) {
     if(!out || !stats) return false;
     std::vector<Vertex> mesh;DioramaStats result;
-    if(!build_authored_diorama(s,set,&mesh,&result)) return false;
+    if(!build_authored_diorama(s,set,&mesh,&result,nullptr,nullptr,nullptr,nullptr,closed_base)) return false;
     std::vector<AuthoredVertex> vertices;vertices.reserve(mesh.size());
     for(const auto& v:mesh) vertices.push_back({{v.x,v.y,v.z},v.u,v.v,v.tile,v.pal});
     *out=std::move(vertices);*stats=result;return true;

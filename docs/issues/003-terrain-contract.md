@@ -1,6 +1,6 @@
 # Add the first versioned authored terrain surface and shared height query
 
-Work package **RV-003** · M2 Terrain · help wanted, area: terrain · terrain/connected explorer and model reuse merged; camera-driven loading in review
+Work package **RV-003** · M2 Terrain · help wanted, area: terrain · terrain/connected explorer, model reuse and camera-driven loading merged; ground base in review
 
 ## Problem
 
@@ -36,7 +36,7 @@ with per-map textures, ownership masks, cached buffers and desktop flight.
 That merged baseline loads four maps from Oldale.
 **Merged — [PR #31](https://github.com/ChronoHaxx/rubyvr-studio-archive-20260910/pull/31), [model reuse and six-map exploration](../region-model-reuse.md):**
 the identical four-map allocation falls 76.2%; two authored hops now include
-Littleroot and Petalburg. **In review — [PR #20](https://github.com/ChronoHaxx/rubyvr-studio/pull/20), [camera-driven map loading](../camera-map-streaming.md):**
+Littleroot and Petalburg. **Merged — [PR #20](https://github.com/ChronoHaxx/rubyvr-studio/pull/20), [camera-driven map loading](../camera-map-streaming.md):**
 prepare a moving window in the background, reuse unchanged GPU buffers and
 release distant maps without moving the world or altering the editor.
 The reported outer cutoff/void
@@ -72,13 +72,19 @@ to M8. First-person alone is not an edge fix.
   source indices while sharing rigid models, keep ground-following deformation,
   and verify wider flight and unchanged editor state. [Evidence](../region-model-reuse.md).
   Streaming, outer borders and full geography remain open.
-- [ ] **In review — camera-driven loading:** bounded background preparation,
+- [x] **Merged — camera-driven loading:** bounded background preparation,
   fixed origins across unloading/return, unchanged-buffer reuse and cancellation
   without late publication. Both authored round trips and source-floor travel
   beyond the initial window are checked. [GIF and measured limits](../camera-map-streaming.md).
   Whole-world geography, outer borders and headset upload budgets remain open.
 
 ## Where to start
+
+The [connected ground base](../connected-ground-base.md) is in review
+and unmerged: legacy/authored Ground closes at -16 px with world-owner seam
+occlusion. Explicit water/decks, source guards and the single-map editor retain
+their semantics. The 12-second comparison and native/SDL results cover this
+bounded underside change. Complete coastlines, depth and cutaways remain open.
 
 `src/vr/ruby_world.h`, `world_io.*`, `overrides.*`, `diorama.*`, `src/studio/pattern_io.*`, `docs/architecture.md`.
 

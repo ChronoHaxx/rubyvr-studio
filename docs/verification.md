@@ -24,7 +24,8 @@ python tools/test-editor.py
 python tools/test-studio-launcher.py
 python tools/test-connected-studio.py
 python tools/test-region-model-reuse.py
-python tools/render-region-model-reuse.py
+python tools/test-camera-map-streaming.py
+python tools/render-camera-map-streaming.py
 python tools/test-studio-foundation.py
 python tools/render-terrain-foundations.py
 python tools/test-studio-terrain.py
@@ -57,11 +58,13 @@ do not substitute old outputs or change frozen hashes to obtain a pass.
 | Standalone build | GUI/batch compile/link without gbarecomp or the XR loader | Does not build a game or establish other platforms |
 | `--test-terrain` | 197 original synthetic checks of surfaces/layers, guards, native UV bands, corner grades, neighbour projection, shared model height, persistence and memory bounds | No source art or GL; included in CI |
 | `--test-foundation` | 23 original synthetic checks: actual base bounds exclude roof overhang, highest-corner pad, rigid movement/contact, native art, source/outside-terrain preservation, atomic refusal and exact v7 persistence | No source art or GL; included in CI; rectangular ground pads only |
-| `--test-connected` | 28 synthetic checks of ownership, overhangs, seams, source indices, atomic refusal, rigid reuse and ordered equivalence with ground-following deformation | No source art or GL; included in CI |
+| `--test-connected` | 39 synthetic checks of ownership, overhangs, seams, source indices, atomic refusal, rigid reuse, ordered equivalence, camera seam hysteresis, fixed/revisited origins and cancellation | No source art or GL; included in CI |
 | `test-studio-launcher.py` | Six cases in Windows PowerShell 5.1 and PowerShell 7: exact native arguments, paths with spaces, plain/connected launch and nonfatal stale coverage | Runs the real launcher with a source-free native argv recorder; included in CI; rendering is checked separately |
 | `--test-connected-source` | Four- and six-map authored fixtures plus a three-map/two-atlas source-floor fixture: offsets, expanded/stored counts and geometry hashes | Requires pinned local source and generated regional pack; third fixture deliberately has no scenery patterns |
 | `test-connected-studio.py` | 20 SDL checkpoints at two sizes: enter, fly across a boundary, stop, blocked edits, return, repeat, save and unchanged source; 32,000 rendered pixels match a neighbour's own source-floor view | Cached uploads and whole-map culling checked; timings cover synchronized single-eye GL draw only, not whole-app or headset frame time |
-| `test-region-model-reuse.py` | Native reuse/source audit, existing 20 SDL checkpoints plus 28 north/west flight/overview checkpoints; optional PR #30 same-camera pixel comparison | Six maps preloaded; no camera-driven loading; [exact evidence](region-model-reuse-evidence-2026-09-10.json) |
+| `test-region-model-reuse.py` | Native reuse/source audit, existing 20 SDL checkpoints plus 28 north/west flight/overview checkpoints, now preserving positions through moving residency | Optional PR #30 same-camera comparison applies before travel/after restoration; changed outer windows are excluded explicitly; [historical evidence](region-model-reuse-evidence-2026-09-10.json) |
+| `test-camera-map-streaming.py` | 24 SDL checkpoints: two return journeys, unchanged source/document/history, GPU releases/reuse, cancellation during preparation, exact reentry and new maps beyond the initial window | Extra maps use source floors without authored terrain; timings exclude UI/rendering and are not headset FPS |
+| `render-camera-map-streaming.py` | 36 inspected production captures in an 11-second GIF, actual flight and resident memory changes | Frames sampled with pauses; outer borders/foliage unfinished; [current evidence](camera-map-streaming-evidence-2026-09-10.json) |
 | `render-region-model-reuse.py` (also `render-connected-scene.py`) | 27 actual production frames in a 13-second GIF: Littleroot through Oldale, Petalburg's offset join, and the full area | Uses verified captures; [scope and memory limits](region-model-reuse.md); outer frontiers and foliage unfinished |
 | `test-studio-foundation.py` | 14 SDL checkpoints at two sizes: application, undo/redo, repeated no-op, save/reopen, 16 changed terrain cells and unchanged models/source | Controlled test slope, not proposed Oldale geography; [evidence](terrain-foundations-evidence-2026-09-10.json) |
 | `render-terrain-foundations.py` | Six actual SDL captures from the tested executable, three paired views in a 12-second GIF | Inspected desktop evidence; no live/headset or entrance-route acceptance |

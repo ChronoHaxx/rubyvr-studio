@@ -1,5 +1,24 @@
 # Watch the acceptance check
 
+**11 seconds. Fly to Petalburg and back while the loaded area follows you.**
+
+![Actual Studio flight with maps loading and unloading](media/camera-map-streaming.gif)
+
+**[PR #20, in review](https://github.com/ChronoHaxx/rubyvr-studio/pull/20) — camera-driven map loading: desktop checks PASS.** Nearby maps
+prepare in the background, unchanged GPU buffers are reused, and distant maps
+are released. The visible window drops from six maps (**69.4 MiB**) to three
+near Petalburg (**42.0 MiB**), then returns to the same geometry and coordinates.
+The separate Littleroot journey drops to **29.6 MiB**. Editing and source data
+stay unchanged, including cancellation while loading.
+
+The frames are sampled with pauses. Uploads still have a measured **50.8 ms**
+main-thread peak; this is desktop progress, not a headset FPS result. The visible
+outer borders remain the next M2 task, and foliage remains M4.
+[Run it and see the limits](camera-map-streaming.md) ·
+[Exact evidence](camera-map-streaming-evidence-2026-09-10.json) · [Roadmap](roadmap.md).
+
+## Merged model reuse and six-map explorer — PR #31
+
 **13 seconds. Fly from Littleroot through Oldale, then see Petalburg and all six maps.**
 
 ![Actual six-map Studio flight and overview](media/region-model-reuse.gif)

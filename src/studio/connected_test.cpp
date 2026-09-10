@@ -120,7 +120,31 @@ int connected_selftest() {
         }
         if(!check(identical,"compact decoding preserves every ordered world vertex and material after translation"))return 1;
     }
-    std::printf("[connected-test] PASS: %d checks; ownership, reuse, deformation, atlas identity, seams and atomic refusal\n",checks);return 0;
+    studio::connected::Scene scene;
+    studio::connected::Map left;left.id="A";left.source=a;
+    auto right=left;right.id="B";right.x=4;right.source=b;scene.maps={left,right};
+    using studio::connected::camera_map;
+    if(!check(camera_map(scene,"A",12,9)=="B","camera enters the next primary map body") ||
+       !check(camera_map(scene,"A",11.2f,9)=="A" && camera_map(scene,"B",10.8f,9)=="B","inset bounds prevent seam chatter in both directions") ||
+       !check(camera_map(scene,"B",9,9)=="A","return travel changes the anchor back") ||
+       !check(camera_map(scene,"A",9000,9000)=="A" && camera_map(scene,"A",std::nanf(""),9)=="A","overview, outside and nonfinite cameras do not chase void space"))return 1;
+    auto shifted=scene;for(auto& m:shifted.maps)m.x-=4;
+    if(!check(studio::connected::rebase(&shifted,scene,"B",&error) && shifted.maps[0].x==0 && shifted.maps[1].x==4,"window recentering preserves the original world coordinates"))return 1;
+    auto negative=scene;for(auto& m:negative.maps){m.x-=50;m.z+=37;}
+    shifted=scene;for(auto& m:shifted.maps)m.x-=4;
+    if(!check(studio::connected::rebase(&shifted,negative,"B",&error) && shifted.maps[0].x==-50 && shifted.maps[1].x==-46 && shifted.maps[1].z==37,"negative and offset joins preserve their fixed world origin"))return 1;
+    shifted=scene;shifted.maps[0].x=1;
+    if(!check(!studio::connected::rebase(&shifted,scene,"B",&error) && shifted.maps[0].x==1,"conflicting shared placement refuses before changing offsets") ||
+       !check(!studio::connected::rebase(&shifted,scene,"missing",&error),"unloaded travel anchor refuses"))return 1;
+    auto distant=scene;distant.maps.erase(distant.maps.begin());distant.maps[0].x=8192;
+    shifted=scene;shifted.maps[0].id="new";shifted.maps[0].x=8;
+    if(!check(!studio::connected::rebase(&shifted,distant,"B",&error) && shifted.maps[1].x==4,"world bound failure retains the original candidate"))return 1;
+    auto history=scene;history.known={{"A",0,0},{"B",4,0},{"unloaded",12,0}};
+    shifted=scene;auto revisit=left;revisit.id="unloaded";revisit.x=13;shifted.maps.push_back(revisit);
+    if(!check(!studio::connected::rebase(&shifted,history,"A",&error) && shifted.maps.back().x==13,"unloaded map identities still guard world placement on a later loop"))return 1;
+    std::atomic<bool> cancelled{true};
+    if(!check(!diorama::prepare_region(inputs,separate,&error,&cancelled),"cancelled CPU preparation produces no publishable region"))return 1;
+    std::printf("[connected-test] PASS: %d checks; ownership, streaming coordinates, reuse, seams and atomic refusal\n",checks);return 0;
 }
 
 int connected_source_test(const char* root,const char* pack,const char* output) {

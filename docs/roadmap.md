@@ -4,8 +4,9 @@
 game integration.** It replaces the local research workspace's
 `_docs/full-vr-roadmap-v1.md`; its detailed M0–M11 scope is retained here.
 Work-package documents explain individual contributions; they are not another
-roadmap. Last reconciled **2026-09-10**, after PRs #19–#31 merged. PR #31's
-source/build CI passed. Experimental foliage art remains unapproved.
+roadmap. Last reconciled **2026-09-10**: archived PRs #19–#31 and the new
+repository's GPL PR #19 are merged. Camera-driven map loading is in review.
+Experimental foliage art remains unapproved.
 
 **Prefer the short version? [Watch the acceptance GIF and verdict](acceptance.md).**
 The contributor/agent performs routine desktop functional and visual checks;
@@ -70,14 +71,19 @@ deformation and map-local materials. The same four-map scene drops from
 Petalburg. Twenty original camera views remain pixel-identical. The
 [13-second flight](acceptance.md) shows the wider connected view.
 
-**In review — standard GPL licence:** replace the custom no-sales terms with
-[GPLv3-or-later](licensing.md), retaining earlier grants and the runtime
-distribution constraint under [RV-007 / M5](issues/007-native-integration.md).
-This maintenance change adds no terrain, scenery, gameplay or headset completion.
+- [x] **Merged — [PR #19](https://github.com/ChronoHaxx/rubyvr-studio/pull/19), standard GPL licence:**
+  replace the custom no-sales terms with [GPLv3-or-later](licensing.md), retaining
+  earlier grants and the runtime constraint under [RV-007 / M5](issues/007-native-integration.md).
+  This maintenance change adds no terrain, scenery, gameplay or headset completion.
 
-Next M2 slice: load/unload further neighbours as the camera travels, then
-deliberate outer borders/undersides. This contribution preloads a bounded area;
-camera-driven loading is still open.
+**In review — [PR #20](https://github.com/ChronoHaxx/rubyvr-studio/pull/20), [camera-driven map loading](camera-map-streaming.md):** a bounded
+neighbourhood follows desktop flight, prepares geometry in the background,
+reuses unchanged GPU buffers and releases distant maps. Return/cancellation,
+fixed origins and source-floor travel beyond the initial window pass checks.
+[Watch the 11-second flight](acceptance.md). Main-thread publication still has
+a measured 50.8 ms peak; this is not headset performance acceptance.
+
+Next M2 slice after merge: deliberate outer borders/undersides.
 Complete coastal geography,
 waterfalls and underwater depth remain open. Route 104
 and Route 110 remain explicit frontiers of this example. A cliff's corner belongs
@@ -161,7 +167,7 @@ Catalog and placement audits do not certify a complete game or headset experienc
 |---|---|---|
 | [M0 Common scenery fixes](#m0-common-scenery-fixes) | Initial fixes merged; complete recorded visual acceptance pending | Existing editor/pack |
 | [M1 Coverage ledger](#m1-coverage-ledger) | Inventories, browser, native paths and treatment/ownership rules merged; remaining source/runtime audits pending | Source adapter |
-| [M2 Terrain and placement](#m2-terrain-and-placement) | Active: terrain, connected explorer and model reuse/six-map view merged through PR #31; streaming and complete geography pending | M1 inventory + stable map identity |
+| [M2 Terrain and placement](#m2-terrain-and-placement) | Active: terrain, connected explorer and model reuse merged; camera-driven loading in review; outer borders and complete geography pending | M1 inventory + stable map identity |
 | [M3 Manual authoring](#m3-manual-authoring) | Core workflow and part selection merged; convenience tools and timed user trial pending | Current editor + M2 contract for terrain |
 | [M4 All static scenery](#m4-all-static-scenery) | Common starters and bounded tree fixes merged; foliage art deferred here; full coverage/review pending | M1–M3 |
 | [M5 Live scene data](#m5-live-scene-data) | Prototype foundation; complete capture/routing pending | Public integration + M1 |
@@ -289,6 +295,11 @@ automated/visual/live/headset results, evidence and unresolved defects separatel
 - [x] Define and version terrain independently of individual object parts:
   surface height, floor/layer identity, material/underlay, vertical boundaries,
   water surface and overrides. Preserve unknowns and provenance.
+- [ ] **In review — [camera-driven map loading](camera-map-streaming.md):** prepare
+  a moving bounded window off the GL thread, reuse unchanged map buffers,
+  release distant maps and preserve fixed origins on return. Cancelled/failed
+  work retains the editor/last complete area; authored frontiers stay explicit.
+  Desktop checks and visual evidence do not establish global geography or VR budgets.
 - [ ] Implement map/chunk terrain for the 8 oversized export gaps retained by
   M1, preserving their source/fragment provenance instead of forcing a huge
   region into one model's 64-part limit.
@@ -313,7 +324,8 @@ automated/visual/live/headset results, evidence and unresolved defects separatel
   matching-atlas padding. The regional compiler's origin/height constraints are
   merged in PR #27 for the six-map example. Full immediate-neighbour bodies and
   per-map textures merged in PR #30; global world
-  constraints, streaming and live transitions remain pending.
+  constraints and live transitions remain pending. Bounded desktop streaming
+  is in review above.
 - [ ] Define map undersides, outer borders, cutaway walls/ceilings and occlusion
   so orbit/first-person views do not expose unintended voids or hide the player.
   Maintainer feedback (2026-09-10): the visible outer cutoff/void needs a deliberate

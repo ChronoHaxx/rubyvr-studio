@@ -2,7 +2,7 @@
   "status": "PASS",
   "date": "2026-09-10",
   "baseline": "0dc33b2b9c4f4d088cacd1cb78ba34ea07140209",
-  "delivery": "Local isolated branch; not pushed, published or merged",
+  "delivery": "Desktop verification complete; draft review, merge pending",
   "scope": "Connected-ground preview base only; no live-game/headset acceptance",
   "native_checks": {
     "connected": 69,

@@ -1,6 +1,6 @@
 # Solid ground in the connected explorer
 
-**M2 / RV-003 — locally verified, not yet published or merged.** Ground no
+**M2 / RV-003 — desktop checks pass; in review, unmerged.** Ground no
 longer disappears when the camera flies below the loaded area. Legacy floors
 and authored Ground now close at **-16 source pixels**, one map cell below the
 original floor. Existing terrain heights and scenery placement stay unchanged.

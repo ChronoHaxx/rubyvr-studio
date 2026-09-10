@@ -1,6 +1,6 @@
 # Add the first versioned authored terrain surface and shared height query
 
-Work package **RV-003** · M2 Terrain · help wanted, area: terrain · terrain/connected explorer, model reuse and camera-driven loading merged; ground base locally verified/unmerged
+Work package **RV-003** · M2 Terrain · help wanted, area: terrain · terrain/connected explorer, model reuse and camera-driven loading merged; ground base in review
 
 ## Problem
 
@@ -80,7 +80,7 @@ to M8. First-person alone is not an edge fix.
 
 ## Where to start
 
-The [connected ground base](../connected-ground-base.md) is locally verified
+The [connected ground base](../connected-ground-base.md) is in review
 and unmerged: legacy/authored Ground closes at -16 px with world-owner seam
 occlusion. Explicit water/decks, source guards and the single-map editor retain
 their semantics. The 12-second comparison and native/SDL results cover this

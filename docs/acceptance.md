@@ -1,6 +1,6 @@
 # Watch the acceptance check
 
-**Local, unmerged follow-up: [solid ground base](connected-ground-base.md).**
+**In review, unmerged: [solid ground base](connected-ground-base.md).**
 The 12-second comparison shows the underside and exposed edge closing while
 existing scenery stays in place. Native and desktop regressions pass; this
 does not finish outer geography or headset acceptance.

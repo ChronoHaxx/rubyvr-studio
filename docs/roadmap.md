@@ -83,9 +83,9 @@ fixed origins and source-floor travel beyond the initial window pass checks.
 [Watch the 11-second flight](acceptance.md). Main-thread publication still has
 a measured 50.8 ms peak; this is not headset performance acceptance.
 
-Current local M2 slice: deliberate ground undersides and exposed outer edges.
+Current M2 slice: deliberate ground undersides and exposed outer edges.
 The [connected ground base](connected-ground-base.md) passes desktop checks and
-has a 12-second actual comparison. It remains **local and unmerged**; the
+has a 12-second actual comparison. It remains **in review and unmerged**; the
 broader border/cutaway checklist below stays open.
 Complete coastal geography,
 waterfalls and underwater depth remain open. Route 104
@@ -170,7 +170,7 @@ Catalog and placement audits do not certify a complete game or headset experienc
 |---|---|---|
 | [M0 Common scenery fixes](#m0-common-scenery-fixes) | Initial fixes merged; complete recorded visual acceptance pending | Existing editor/pack |
 | [M1 Coverage ledger](#m1-coverage-ledger) | Inventories, browser, native paths and treatment/ownership rules merged; remaining source/runtime audits pending | Source adapter |
-| [M2 Terrain and placement](#m2-terrain-and-placement) | Active: terrain, connected explorer, model reuse and camera-driven loading merged; ground base locally verified/unmerged; complete geography pending | M1 inventory + stable map identity |
+| [M2 Terrain and placement](#m2-terrain-and-placement) | Active: terrain, connected explorer, model reuse and camera-driven loading merged; ground base in review; complete geography pending | M1 inventory + stable map identity |
 | [M3 Manual authoring](#m3-manual-authoring) | Core workflow and part selection merged; convenience tools and timed user trial pending | Current editor + M2 contract for terrain |
 | [M4 All static scenery](#m4-all-static-scenery) | Common starters and bounded tree fixes merged; foliage art deferred here; full coverage/review pending | M1–M3 |
 | [M5 Live scene data](#m5-live-scene-data) | Prototype foundation; complete capture/routing pending | Public integration + M1 |
@@ -328,7 +328,12 @@ automated/visual/live/headset results, evidence and unresolved defects separatel
   merged in PR #27 for the six-map example. Full immediate-neighbour bodies and
   per-map textures merged in PR #30; global world
   constraints and live transitions remain pending. Bounded desktop streaming
-  is in review above.
+  is merged above.
+- [ ] **In review — [connected ground base](connected-ground-base.md):** close
+  legacy floors and authored Ground at -16 px in the connected explorer, with
+  no buried walls through undefined padding or beyond snapshot boundaries.
+  Water/decks and the single-map editor keep their existing semantics. The
+  inspected GIF and desktop checks cover this bounded preview base only.
 - [ ] Define map undersides, outer borders, cutaway walls/ceilings and occlusion
   so orbit/first-person views do not expose unintended voids or hide the player.
   Maintainer feedback (2026-09-10): the visible outer cutoff/void needs a deliberate

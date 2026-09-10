@@ -76,7 +76,7 @@ Petalburg. Twenty original camera views remain pixel-identical. The
   earlier grants and the runtime constraint under [RV-007 / M5](issues/007-native-integration.md).
   This maintenance change adds no terrain, scenery, gameplay or headset completion.
 
-**In review — [camera-driven map loading](camera-map-streaming.md):** a bounded
+**In review — [PR #20](https://github.com/ChronoHaxx/rubyvr-studio/pull/20), [camera-driven map loading](camera-map-streaming.md):** a bounded
 neighbourhood follows desktop flight, prepares geometry in the background,
 reuses unchanged GPU buffers and releases distant maps. Return/cancellation,
 fixed origins and source-floor travel beyond the initial window pass checks.

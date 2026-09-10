@@ -4,7 +4,7 @@
 
 ![Actual Studio flight with maps loading and unloading](media/camera-map-streaming.gif)
 
-**In review — camera-driven map loading: desktop checks PASS.** Nearby maps
+**[PR #20, in review](https://github.com/ChronoHaxx/rubyvr-studio/pull/20) — camera-driven map loading: desktop checks PASS.** Nearby maps
 prepare in the background, unchanged GPU buffers are reused, and distant maps
 are released. The visible window drops from six maps (**69.4 MiB**) to three
 near Petalburg (**42.0 MiB**), then returns to the same geometry and coordinates.

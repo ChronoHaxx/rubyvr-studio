@@ -36,7 +36,7 @@ with per-map textures, ownership masks, cached buffers and desktop flight.
 That merged baseline loads four maps from Oldale.
 **Merged — [PR #31](https://github.com/ChronoHaxx/rubyvr-studio-archive-20260910/pull/31), [model reuse and six-map exploration](../region-model-reuse.md):**
 the identical four-map allocation falls 76.2%; two authored hops now include
-Littleroot and Petalburg. **In review — [camera-driven map loading](../camera-map-streaming.md):**
+Littleroot and Petalburg. **In review — [PR #20](https://github.com/ChronoHaxx/rubyvr-studio/pull/20), [camera-driven map loading](../camera-map-streaming.md):**
 prepare a moving window in the background, reuse unchanged GPU buffers and
 release distant maps without moving the world or altering the editor.
 The reported outer cutoff/void

@@ -320,13 +320,11 @@
     },
     {
       "id": "RV-014",
-      "title": "Inventory Windows dependencies and prove a Linux batch build boundary",
+      "title": "Native Linux and WSL build, capture and launchers",
       "body": "docs/issues/014-portability.md",
       "milestone": "M10 Performance and reliability",
       "labels": [
-        "help wanted",
-        "area: build",
-        "status: design"
+        "area: build"
       ],
       "depends_on": []
     },

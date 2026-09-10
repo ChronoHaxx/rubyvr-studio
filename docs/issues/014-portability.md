@@ -1,6 +1,6 @@
 # Native Linux and WSL build, capture and launchers
 
-Work package **RV-014** · M10 Performance and reliability · area: build · locally verified, pending publication and merge
+Work package **RV-014** · M10 Performance and reliability · area: build · complete in [PR #22](https://github.com/ChronoHaxx/rubyvr-studio/pull/22)
 
 ## Scope
 
@@ -10,15 +10,16 @@ the earlier requirement to maintain the PowerShell workflow.
 
 ## Acceptance
 
-- [ ] Build and run native Linux batch and GUI executables through Bash.
-- [ ] Preserve serialization, atomic replacement/refusal and stderr restoration.
-- [ ] Run original headless fixtures and existing editor/connected/streaming checks.
-- [ ] Verify fresh/resume/presets before retiring PowerShell launchers.
-- [ ] Record toolchain, actual GUI evidence and unsupported runtime pieces.
-- [ ] Run source-only Linux CI without fetching game assets.
+- [x] Build and run native Linux batch and GUI executables through Bash.
+- [x] Preserve serialization, atomic replacement/refusal and stderr restoration.
+- [x] Run original headless fixtures and existing editor/connected/streaming checks.
+- [x] Verify fresh/resume/presets before retiring PowerShell launchers.
+- [x] Record toolchain, actual GUI evidence and unsupported runtime pieces.
+- [x] Run source-only Linux CI without fetching game assets.
 
-Local checks pass; boxes remain open until merge. Hosted CI has not run for
-this unpublished branch. See [native evidence](../native-wsl.md) and
+The merge is verified and both hosted runs pass, including the
+[PR check](https://github.com/ChronoHaxx/rubyvr-studio/actions/runs/34542217204).
+See [native evidence](../native-wsl.md) and
 [build/run commands](../building.md). Full performance/headset acceptance and
 M2 geography are separate work.
 

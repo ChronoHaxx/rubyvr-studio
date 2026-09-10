@@ -10,7 +10,7 @@ artwork and can be reused wherever their tile pattern matches exactly.
 
 ![RubyVR Studio showing the editable Oldale scenery pack](docs/media/studio-oldale.png)
 
-**Early development:** the Windows editor and common scenery starters work.
+**Early development:** the native Linux/WSL editor and common scenery starters work.
 Initial authored terrain controls and shared neighbour heights are available;
 complete terrain reconstruction, the playable voxel game and runtime time/weather
 are still being built. Artists, testers, documentation writers and AI-assisted programmers
@@ -68,16 +68,27 @@ completion percentage**. See [verification](docs/verification.md) for limits.
 
 The standalone editor builds without a game ROM, BIOS, `gbarecomp` or an
 OpenXR runtime. Its current map loader needs a local, pinned `pret/pokeruby`
-checkout for source art/data; those assets are not bundled here. Windows,
-MSYS2 mingw64, SDL2, zlib, OpenXR headers and Python are the current setup.
+checkout for source art/data; those assets are not bundled here. The supported
+workflow uses Ubuntu/WSL2, Bash, SDL2, OpenGL, zlib, OpenXR headers and Python.
+The GUI needs a working display; native batch checks can run headlessly.
 
 Follow [the build guide](docs/building.md), then run from this repository:
 
-```powershell
-.\tools\build.ps1
-python .\tools\prepare-assets.py
-.\tools\run-studio.ps1 -Fresh
+```bash
+bash tools/build.sh --jobs 4
+python3 tools/prepare-assets.py
+bash tools/run-studio.sh --fresh
 ```
+
+For a worker or CI host without a display:
+
+```bash
+bash tools/build.sh --batch-only --build-dir build-linux
+build-linux/rubyvr_studio --test-connected
+```
+
+The existing editor and connected exploration suites also pass natively on WSLg.
+Linux OpenXR gameplay remains unsupported. [Verification and limits](docs/native-wsl.md).
 
 Your edits save to a personal file under `build/`. The supplied recipes stay
 separate. The [authoring guide](docs/authoring.md) walks through the first model.

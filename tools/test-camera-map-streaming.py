@@ -3,6 +3,7 @@ import hashlib
 import importlib.util
 import json
 from pathlib import Path
+from studio_paths import executable as native_executable, native_environment
 
 ROOT=Path(__file__).resolve().parents[1]
 OUT=ROOT/'build/camera-map-streaming'
@@ -123,7 +124,7 @@ def main():
     assert test.PACK.read_bytes()==original
     cancellation=cancel_pending();beyond=beyond_initial()
     report=dict(status='PASS',scope='Camera-driven residency in the six authored maps; desktop source/GL only',
-        gui_sha256=hashlib.sha256((ROOT/'build/rubyvr_gui.exe').read_bytes()).hexdigest(),
+        gui_sha256=hashlib.sha256((native_executable('rubyvr_gui')).read_bytes()).hexdigest(),
         input_sha256=hashlib.sha256(original).hexdigest(),checkpoints=len(states),fixed_origins=known,
         settled={name:{key:states[name][key] for key in ['stream_anchor','region_maps','region_bytes','region_hash',
             'stream_updates','stream_loaded','stream_unloaded','stream_reused','stream_build_ms','stream_main_ms','stream_pending_frames']}

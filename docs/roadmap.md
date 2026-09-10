@@ -5,7 +5,7 @@ game integration.** It replaces the local research workspace's
 `_docs/full-vr-roadmap-v1.md`; its detailed M0–M11 scope is retained here.
 Work-package documents explain individual contributions; they are not another
 roadmap. Last reconciled **2026-09-10**: archived PRs #19–#31 and the new
-repository's GPL PR #19 and camera-driven loading PR #20 are merged.
+repository's GPL PR #19, camera-driven loading PR #20 and ground-base PR #21 are merged.
 Experimental foliage art remains unapproved.
 
 **Prefer the short version? [Watch the acceptance GIF and verdict](acceptance.md).**
@@ -71,6 +71,13 @@ deformation and map-local materials. The same four-map scene drops from
 Petalburg. Twenty original camera views remain pixel-identical. The
 [13-second flight](acceptance.md) shows the wider connected view.
 
+**Local verification — [RV-014](issues/014-portability.md), native Linux/WSL:**
+the batch tool and SDL editor run as native Linux executables. Original headless
+fixtures and the existing editor, connected-area and streaming checks pass with
+local assets. Bash replaces the PowerShell workflow; Linux OpenXR runtime
+support remains outside this change. Publication and merge are pending.
+M2 bridge terrain remains the next scenery task. [Evidence and limits](native-wsl.md).
+
 - [x] **Merged — [PR #19](https://github.com/ChronoHaxx/rubyvr-studio/pull/19), standard GPL licence:**
   replace the custom no-sales terms with [GPLv3-or-later](licensing.md), retaining
   earlier grants and the runtime constraint under [RV-007 / M5](issues/007-native-integration.md).
@@ -83,10 +90,11 @@ fixed origins and source-floor travel beyond the initial window pass checks.
 [Watch the 11-second flight](acceptance.md). Main-thread publication still has
 a measured 50.8 ms peak; this is not headset performance acceptance.
 
-Current M2 slice: deliberate ground undersides and exposed outer edges.
-The [connected ground base](connected-ground-base.md) passes desktop checks and
-has a 12-second actual comparison. It remains **in review and unmerged**; the
-broader border/cutaway checklist below stays open.
+**Merged — [PR #21](https://github.com/ChronoHaxx/rubyvr-studio/pull/21):** the
+[connected ground base](connected-ground-base.md) closes ground undersides and
+exposed edges, with a 12-second actual comparison. The broader border/cutaway
+checklist stays open. Next M2 slice: a source-backed bridge over water with
+its banks and approach heights.
 Complete coastal geography,
 waterfalls and underwater depth remain open. Route 104
 and Route 110 remain explicit frontiers of this example. A cliff's corner belongs
@@ -170,7 +178,7 @@ Catalog and placement audits do not certify a complete game or headset experienc
 |---|---|---|
 | [M0 Common scenery fixes](#m0-common-scenery-fixes) | Initial fixes merged; complete recorded visual acceptance pending | Existing editor/pack |
 | [M1 Coverage ledger](#m1-coverage-ledger) | Inventories, browser, native paths and treatment/ownership rules merged; remaining source/runtime audits pending | Source adapter |
-| [M2 Terrain and placement](#m2-terrain-and-placement) | Active: terrain, connected explorer, model reuse and camera-driven loading merged; ground base in review; complete geography pending | M1 inventory + stable map identity |
+| [M2 Terrain and placement](#m2-terrain-and-placement) | Terrain, connected explorer, model reuse, camera-driven loading and ground base merged; bridge fixture next; complete geography pending | M1 inventory + stable map identity |
 | [M3 Manual authoring](#m3-manual-authoring) | Core workflow and part selection merged; convenience tools and timed user trial pending | Current editor + M2 contract for terrain |
 | [M4 All static scenery](#m4-all-static-scenery) | Common starters and bounded tree fixes merged; foliage art deferred here; full coverage/review pending | M1–M3 |
 | [M5 Live scene data](#m5-live-scene-data) | Prototype foundation; complete capture/routing pending | Public integration + M1 |
@@ -178,7 +186,7 @@ Catalog and placement audits do not certify a complete game or headset experienc
 | [M7 UI, battles and game loop](#m7-ui-battles-and-game-loop) | Original frame available; complete routing/acceptance pending | M5 |
 | [M8 Sky, lighting, time and weather](#m8-sky-lighting-time-and-weather) | Editor preview merged; runtime cycle/weather/water pending | M2, M5 for runtime |
 | [M9 Controls and comfort](#m9-controls-and-comfort) | Editor cameras implemented; VR controls/comfort acceptance pending | M5–M8 |
-| [M10 Performance and reliability](#m10-performance-and-reliability) | Editor caching/local measurements; full-world/headset budgets pending | Representative M2–M9 scenes |
+| [M10 Performance and reliability](#m10-performance-and-reliability) | Native WSL editor/batch locally verified, pending merge; full-world/headset budgets pending | Representative M2–M9 scenes |
 | [M11 Completion and release](#m11-completion-and-release) | Public contributor foundation exists; game release pending | M1–M10 |
 
 M2 and M5 are separate foundations. M3/M4 can progress as their contracts
@@ -329,7 +337,7 @@ automated/visual/live/headset results, evidence and unresolved defects separatel
   per-map textures merged in PR #30; global world
   constraints and live transitions remain pending. Bounded desktop streaming
   is merged above.
-- [ ] **In review — [connected ground base](connected-ground-base.md):** close
+- [x] **Merged — PR #21, [connected ground base](connected-ground-base.md):** close
   legacy floors and authored Ground at -16 px in the connected explorer, with
   no buried walls through undefined padding or beyond snapshot boundaries.
   Water/decks and the single-map editor keep their existing semantics. The
@@ -558,6 +566,11 @@ mandatory developer console. Camera changes remain independent of authored data.
 
 ## M10: performance and reliability
 
+- [ ] **Locally verified — RV-014, native Linux/WSL:** batch and GUI builds,
+  Bash launchers, source preparation, portable file/capture fixtures and the
+  existing editor/connected/streaming checks. Publication and merge are pending.
+  Headless tests need no assets or display; GUI checks use local source data
+  and WSLg. OpenXR runtime support remains outside this change. [Evidence](native-wsl.md).
 - [x] Verify bounded editor caching behavior: part selection and lighting
   changes cause no mesh uploads; retain local draw measurements with their
   scope/limitations ([verification](verification.md), [lighting](environment-verification.md)).

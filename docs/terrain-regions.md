@@ -12,14 +12,14 @@ that follow-up. Complete banks/coastal depth remain open.
 
 After the [local source setup and build](building.md):
 
-```powershell
-./tools/run-studio.ps1 -TerrainRegions
-./tools/run-studio.ps1 -TerrainRegions -Map MAP_ROUTE102
+```bash
+bash tools/run-studio.sh --terrain-regions
+bash tools/run-studio.sh --terrain-regions --map MAP_ROUTE102
 ```
 
 The launcher compiles `build/terrain-regions/regions.json`, starts Oldale by
 default and gives the session a fresh personal output path. The default starter
-and existing personal files stay unchanged. `-TerrainExample` still opens the
+and existing personal files stay unchanged. `--terrain-example` still opens the
 older two-map example. The two switches cannot be combined with each other or
 with `-Overrides`.
 
@@ -34,7 +34,7 @@ with the same loaded pack. **Light** above the 3D view provides the existing
 editor lighting presets. These are preview phases, not a running day/night cycle.
 
 The generated pack authors 4,700 map-body cells. The editing view displays one
-map plus copied padding. Add **`-Connected`** to the launcher or click **Explore
+map plus copied padding. Add **`--connected`** to the launcher or click **Explore
 area**. The four-map explorer merged in PR #30; the [six-map follow-up](region-model-reuse.md)
 merged in PR #31 and includes Littleroot and Petalburg through model reuse.
 [Fly controls and bounds](connected-scene.md). This preloads the area; it does
@@ -83,7 +83,7 @@ discarding that terrain. Generated packs and source assets stay local.
 
 ## Verification
 
-```powershell
+```bash
 python tools/test-terrain-regions.py
 python tools/test-terrain-region-source.py
 python tools/render-terrain-regions.py

@@ -2,17 +2,11 @@
 // pattern_io.cpp â€” see pattern_io.h.
 
 #include "pattern_io.h"
+#include "platform_io.h"
 #include "terrain.h"
 
 #include <cstdio>
 #include <algorithm>
-#include <atomic>
-#include <io.h>
-#include <fcntl.h>
-#ifndef NOMINMAX
-#define NOMINMAX
-#endif
-#include <windows.h>
 #include <set>
 
 namespace studio {
@@ -123,19 +117,15 @@ bool write(const char* path, const vr::overrides::OverrideSet& set) {
         if (!vr::cutout::valid(pattern) || !vr::overrides::valid_parts(pattern) ||
             (pattern.voxel && set.version<vr::overrides::kVoxelVersion)) return false;
     if (!path || !*path) return false;
-    static std::atomic<unsigned> sequence{0};
-    const std::string temporary = std::string(path) + ".tmp." +
-        std::to_string(GetCurrentProcessId()) + "." + std::to_string(++sequence);
-    HANDLE handle = CreateFileA(temporary.c_str(), GENERIC_WRITE, 0, nullptr, CREATE_NEW,
-                                FILE_ATTRIBUTE_NORMAL, nullptr);
-    if (handle == INVALID_HANDLE_VALUE) {
+    // The temporary is a sibling of `path`, created exclusively. That is what
+    // lets the publication below be a single atomic rename and keeps a failed
+    // write from touching the previous file at all. See platform_io.h.
+    std::string temporary;
+    std::FILE* f = platform_io::create_sibling_temporary(path, &temporary);
+    if (!f) {
         std::fprintf(stderr, "[pattern] cannot create temporary output for %s\n", path);
         return false;
     }
-    const int fd = _open_osfhandle(reinterpret_cast<intptr_t>(handle), _O_WRONLY | _O_BINARY);
-    if (fd < 0) { CloseHandle(handle); std::remove(temporary.c_str()); return false; }
-    std::FILE* f = _fdopen(fd, "wb");
-    if (!f) { _close(fd); std::remove(temporary.c_str()); return false; }
 
     // No BOM, ever. A UTF-8 BOM made the JSON reader report "expected a value
     // at byte 0", which reads like a corrupt file rather than an encoding â€” and
@@ -271,14 +261,23 @@ bool write(const char* path, const vr::overrides::OverrideSet& set) {
     std::fputs("  ]",f);
     if(set.version==vr::overrides::kTerrainVersion) vr::terrain::write(f,set.terrain);
     std::fputs("\n}\n",f);
-    const bool wrote = !std::ferror(f) && std::fflush(f) == 0 && _commit(_fileno(f)) == 0;
+    // Flush, then synchronise the bytes to the device BEFORE the rename. A
+    // crash between the two must not leave a published file whose contents
+    // were still sitting in a page cache.
+    const bool wrote = !std::ferror(f) && platform_io::sync_file(f);
     const bool closed = std::fclose(f) == 0;
     vr::overrides::OverrideSet verified;
     const bool valid = wrote && closed && vr::overrides::load(temporary.c_str(), &verified);
-    const bool replaced = valid && MoveFileExA(temporary.c_str(), path,
-        MOVEFILE_REPLACE_EXISTING | MOVEFILE_WRITE_THROUGH);
-    if (!replaced) {
-        std::remove(temporary.c_str());
+    const bool replaced = valid && platform_io::replace_file(temporary.c_str(), path);
+    if (replaced) {
+        // Best effort: makes the rename itself durable on filesystems that
+        // support directory fsync. Its limitation is documented in
+        // platform_io.h and docs/native-wsl.md; it never invalidates a
+        // replacement that already happened.
+        platform_io::sync_parent_directory(path);
+    } else {
+        // The destination was never touched, so the previous output is intact.
+        platform_io::remove_file(temporary.c_str());
         std::fprintf(stderr, "[pattern] write to %s failed; previous output preserved\n", path);
     }
     return replaced;

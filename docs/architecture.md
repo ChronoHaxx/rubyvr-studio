@@ -26,6 +26,7 @@ flowchart LR
 | `tools/dynamic_inventory.py`, `native_trace.py`, `coverage-ledger.py` | Source candidates, conservative native helper/callback witnesses and persistent independent reviews | `inventory-dynamics.py`, `sync`, `report --category native_mutation_trace` |
 | `tools/coverage_disposition.py` | Read-only treatment rules and next-action ownership; recorded intent overrides defaults | Shared by CLI reports/show and Studio export; `--milestone`, `--disposition` |
 | `src/studio/group.*`, `pattern_io.*` | Source membership, selection, document persistence | Group document and pattern writer |
+| `src/studio/platform_io.*`, `capture.*` | One portable implementation of exclusive same-directory temporaries, synchronise-before-rename publication, directory sync and stderr capture | `replace_file`, `capture_stderr`; [Linux boundary](native-wsl.md) |
 | `src/vr/overrides.*`, `cutout.*` | Versioned patterns, structural matching, source-role masks | `OverrideSet` and load/validation |
 | `src/vr/diorama.*`, `part_geometry.*`, `voxel_parts.inl` | The renderer used by editor, batch tool and integration | Segmentation, accepted instances, exposed voxel faces |
 | `src/vr/tileset.*` | Indexed source material sampling and texture data | Tile definitions, palette/texel identity |
@@ -37,10 +38,12 @@ flowchart LR
 | `recipes/`, `tools/` | Reproducible starter generation and review | Recipes, pack audit and hidden SDL journeys |
 | `integration/runtime/` | Our existing native capture and OpenXR presentation prototype | See [integration notes](../integration/README.md) |
 
-The GUI uses SDL2, OpenGL and vendored Dear ImGui. zlib reads compressed source
-images. OpenXR headers supply shared pose/FOV types; the standalone targets do
-not link the OpenXR loader or `gbarecomp`. Windows file/capture APIs currently
-prevent a supported Linux/macOS build.
+The GUI uses SDL2, OpenGL and vendored Dear ImGui; zlib reads indexed source
+images. OpenXR headers provide shared pose/FOV types without an XR loader.
+CMake builds native Linux batch and GUI targets; platform_io owns file/path
+portability. Bash is the supported launcher workflow. Native editor, connected
+exploration and streaming checks pass on WSLg with local source data; Linux
+OpenXR runtime integration remains unsupported. See [native verification](native-wsl.md).
 
 ## Data and rendering contracts
 

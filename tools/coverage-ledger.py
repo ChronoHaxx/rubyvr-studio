@@ -11,6 +11,7 @@ from collections import Counter, defaultdict
 import json
 import os
 from pathlib import Path
+from studio_paths import executable as native_executable, native_environment
 import sqlite3
 import subprocess
 import sys
@@ -475,7 +476,7 @@ def main():
     sync.add_argument("--catalog", type=Path, default=ROOT / "build/sprite-catalog")
     sync.add_argument("--pack", type=Path, default=ROOT / "mod-assets/voxel-world-v6.json")
     sync.add_argument("--source", type=Path, default=ROOT / "third_party/pokeruby")
-    sync.add_argument("--batch", type=Path, default=ROOT / "build/rubyvr_studio.exe")
+    sync.add_argument("--batch", type=Path, default=native_executable('rubyvr_studio'))
     sync.add_argument("--defects", type=Path, default=ROOT / "docs/known-scenery-defects.json")
     query = sub.add_parser("report", help="Write remaining work, independently tracked states and known defects")
     query.add_argument("--map")
@@ -510,8 +511,7 @@ def main():
             audit_path = args.db.parent / "current-matches.json"
             previous_stamp = audit_path.stat().st_mtime_ns if audit_path.exists() else None
             pack_hash = file_hash(args.pack)
-            env = os.environ.copy()
-            env["PATH"] = env.get("RUBYVR_MINGW_BIN", r"C:\msys64\mingw64\bin") + os.pathsep + env["PATH"]
+            env = native_environment()
             with audit_path.with_suffix(".log").open("w") as log:
                 result = subprocess.run([str(args.batch.resolve()), "--audit-assets", str(audit_path.resolve()),
                                          "--overrides", str(args.pack.resolve())], cwd=ROOT, env=env,

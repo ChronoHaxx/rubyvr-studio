@@ -1,6 +1,18 @@
 # Watch the acceptance check
 
-**In review, unmerged: [solid ground base](connected-ground-base.md).**
+**Locally verified, awaiting publication: [native Linux/WSL editor](native-wsl.md).**
+The 12-second slideshow shows actual native Linux captures: the six-map
+explorer, roof-part selection and a saved editing session. Bash launch/save/
+resume, existing editor regressions and headless geometry checks pass.
+This completes the local RV-014 editor checks; Linux OpenXR remains unsupported.
+
+![Actual native Linux Studio explorer, selection and saved session](media/native-wsl.gif)
+
+[Build and run](building.md) · [Checks and limitations](native-wsl.md) · [Roadmap](roadmap.md).
+
+## Merged solid ground base — PR #21
+
+**Merged — [PR #21](https://github.com/ChronoHaxx/rubyvr-studio/pull/21): [solid ground base](connected-ground-base.md).**
 The 12-second comparison shows the underside and exposed edge closing while
 existing scenery stays in place. Native and desktop regressions pass; this
 does not finish outer geography or headset acceptance.

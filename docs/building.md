@@ -1,76 +1,83 @@
 # Building and trying the editor
 
-The supported development setup is Windows x64, PowerShell and MSYS2 mingw64.
-The standalone CMake build compiles our editor and the shared production mesher
-without compiling or linking the game runtime. New editor UX work lives here;
-the native integration remains a separate prototype.
+The supported workflow is native Linux on Ubuntu 22.04 or WSL2. Studio and
+its batch tool are ELF executables. The editor needs WSLg or another working
+SDL/OpenGL display. Headless checks need no display. PowerShell launchers are
+retired; the native game/OpenXR integration remains separate.
 
-## Dependencies
+## Install and build
 
-Install [MSYS2](https://www.msys2.org/) and these packages in its terminal:
+In an Ubuntu/WSL Bash terminal, from the repository:
 
-```sh
-pacman -S --needed mingw-w64-x86_64-gcc mingw-w64-x86_64-cmake mingw-w64-x86_64-ninja mingw-w64-x86_64-SDL2 mingw-w64-x86_64-zlib mingw-w64-x86_64-openxr-sdk
+```bash
+sudo apt-get update
+sudo apt-get install build-essential cmake ninja-build pkg-config libsdl2-dev zlib1g-dev libgl1-mesa-dev libopenxr-dev python3-venv git
+python3 -m venv .venv
+source .venv/bin/activate
+python3 -m pip install -r requirements.txt
+bash tools/build.sh --jobs 4
 ```
 
-Install Python 3.10+ and Git. From PowerShell in this repository:
-
-```powershell
-python -m pip install -r requirements.txt
-.\tools\build.ps1
-```
-
-`-Mingw <path>` supports a different mingw64 installation. The build script copies
-the executables' MinGW runtime DLLs beside them, including SDL2 and transitive
-dependencies. Re-run it if an older build reports a missing DLL. The compiler uses
-your normal writable temporary directory; do not point TEMP at Windows system
-directories. Dear ImGui 1.91.9b is vendored with its MIT notice.
+Keeping the repository and source assets in the Linux filesystem avoids slow
+cross-filesystem reads of thousands of files. The default output is
+`build-linux/`; `--batch-only` omits the GUI. `--build-dir DIR` selects another
+folder, relative to the repository. Set `RUBYVR_BUILD_DIR` to use that folder
+in launchers and portable tests. Existing Windows build outputs stay intact.
+Dear ImGui is vendored with its MIT notice.
 
 ## Local source assets
 
-The current editor reads map data and indexed PNGs from a local pokeruby
-checkout. It does not compile that project's gameplay C. This dependency is
-source data for the editor, not an independently licensed game asset pack.
+The editor reads map data and indexed PNGs from a pinned local pokeruby
+checkout. It does not compile that project's gameplay C or download a ROM.
 
-```powershell
+```bash
 git clone https://github.com/pret/pokeruby.git third_party/pokeruby
 git -C third_party/pokeruby checkout 63a8cbf0016b351a4e68f7036fa0b77e23d2f2c1
-python .\tools\prepare-assets.py
-.\tools\run-studio.ps1 -Fresh
+python3 tools/prepare-assets.py
+bash tools/run-studio.sh --fresh
 ```
 
-The catalog reports eight oversized terrain proposals and retains their source
-and 22 fragments. `prepare-assets.py` permits that known incomplete-export
-condition after validating the catalog; it does not mark terrain complete.
+An existing local checkout can be used at `third_party/pokeruby`. Asset
+preparation accepts only the known eight oversized terrain proposals and their
+22 retained fragments; it does not mark terrain complete. Catalogs and model
+packs remain in ignored local folders. Never commit game assets, ROMs or saves.
 
-The generated catalog, PNGs and model packs stay under ignored local paths.
-Do not commit them. A future verified-ROM source adapter is a separate work
-package. The playable native game requires user-provided supported ROM/BIOS
-inputs and the upstream runtime; it is not built by these commands.
+## Explore or keep editing
 
-## Commands for everyday work
-
-```powershell
-python .\tools\check-repo.py
-python .\tools\test-editor.py
-python .\tools\test-studio-guided.py
-python .\tools\review-voxel-world.py
-python .\tools\test-voxel-emblems.py
+```bash
+bash tools/run-studio.sh
+bash tools/run-studio.sh --terrain-regions --connected
+bash tools/run-studio.sh --terrain-regions --map MAP_ROUTE102
+bash tools/run-studio.sh --terrain-example
 ```
 
-Graphics checks need a working OpenGL driver, even when their SDL window is
-hidden. See [verification](verification.md) for what each command proves.
-Use `-Map MAP_RUSTBORO_CITY` with the launcher to inspect another town.
+The first command resumes `build/my-scenery.json` when it exists. `--fresh`
+creates a new personal output. `--overrides FILE` opens a read-only template;
+`--out FILE` chooses the Save destination. A resume session uses a temporary
+input baseline so the personal output remains writable. Paths with spaces work.
 
-For the local connected-terrain example, use
-`./tools/run-studio.ps1 -TerrainRegions`. It opens Oldale with a new personal
-output and leaves the default starter unchanged. Add `-Map MAP_ROUTE102` or
-`-Map MAP_ROUTE103` to inspect the authored ledges. [Scope and limitations](terrain-regions.md).
+The connected example includes Littleroot, Oldale, Petalburg and Routes
+101/102/103. Explore area in DIORAMA opens the same view. Hold RMB to look;
+WASD flies, Q/E changes height, Shift speeds up, and Escape releases flight.
+This is a scenery explorer; full geography and playable gameplay remain open.
 
-Add `-Connected` to fly across the six-map authored area, including Littleroot,
-Oldale, Petalburg and Routes 101/102/103: `./tools/run-studio.ps1 -TerrainRegions -Connected`. You can also
-click **Explore area** in DIORAMA. [Controls and preview limits](connected-scene.md).
+For the Review browser, run `python3 tools/coverage-ledger.py sync` after
+preparing assets. The launcher exports recorded review queues before opening
+Studio; stale review data warns without blocking launch.
 
-For the **Review…** browser, run `python tools/coverage-ledger.py sync` after
-preparing assets. The launcher then exports the recorded static review queues
-automatically. [Browser usage and snapshot limits](coverage-ledger.md#browse-static-reviews-in-studio).
+## Verify locally
+
+```bash
+python3 tools/check-repo.py
+python3 tools/test-native-portability.py
+python3 tools/test-bash-launcher.py
+python3 tools/test-editor.py
+python3 tools/test-connected-studio.py
+python3 tools/test-camera-map-streaming.py
+```
+
+The last three use local source assets and hidden real SDL windows. They verify
+editor saving/controls, frozen geometry, connected ownership and streaming.
+See [native evidence and limits](native-wsl.md) and [verification](verification.md).
+Historical rendering scripts beyond these portable suites retain their original
+platform assumptions.

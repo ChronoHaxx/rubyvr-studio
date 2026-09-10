@@ -7,6 +7,7 @@ import hashlib
 import json
 import os
 from pathlib import Path
+from studio_paths import executable as native_executable, native_environment
 import re
 import subprocess
 import sys
@@ -24,8 +25,7 @@ FROZEN = {
 
 def main():
     BUILD.mkdir(exist_ok=True)
-    env = os.environ.copy()
-    env['PATH'] = env.get('RUBYVR_MINGW_BIN', r'C:\msys64\mingw64\bin') + os.pathsep + env['PATH']
+    env = native_environment()
     report = {
         'status': 'RUNNING', 'started_utc': datetime.now(timezone.utc).isoformat(),
         'scope': 'standalone editor; disk source; no live/headset validation', 'checks': [],
@@ -51,9 +51,9 @@ def main():
 
     save()
     try:
-        for executable in ('rubyvr_gui.exe', 'rubyvr_studio.exe'):
-            report[executable + '_sha256'] = hashlib.sha256((BUILD / executable).read_bytes()).hexdigest()
-        gui, batch = BUILD / 'rubyvr_gui.exe', BUILD / 'rubyvr_studio.exe'
+        for name in ('rubyvr_gui', 'rubyvr_studio'):
+            report[name + '_sha256'] = hashlib.sha256(native_executable(name).read_bytes()).hexdigest()
+        gui, batch = native_executable('rubyvr_gui'), native_executable('rubyvr_studio')
         if not (ROOT / 'mod-assets/voxel-house-v6.json').is_file():
             raise RuntimeError('Run tools/prepare-assets.py first.')
         run('editor-selftest', [gui, '--selftest', '--out', BUILD / 'editor-selftest.json'], r'^\[gui-selftest\] PASS ')

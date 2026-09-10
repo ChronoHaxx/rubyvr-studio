@@ -28,5 +28,6 @@ recomp_cache/
 .idea/
 .claude/
 .codex/
+.venv/
 Thumbs.db
 .DS_Store

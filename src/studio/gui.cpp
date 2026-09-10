@@ -53,6 +53,7 @@
 #include "capture.h"
 #include "decomp_source.h"
 #include "pattern_io.h"
+#include "platform_io.h"
 #include "png_write.h"
 #include "snapshot_build.h"
 #include "room2d.h"
@@ -1206,15 +1207,16 @@ void switch_mode(App& a, int mode) {
 
 // ── Files ────────────────────────────────────────────────────────────────────
 
-// CANONICAL, not string equality. tools/x.json and TOOLS\X.JSON are one file,
-// and a string compare would wave the second one through — which is exactly the
-// case that ends with a committed test fixture silently rewritten.
+// CANONICAL, not string equality. On Windows tools/x.json and TOOLS\X.JSON are
+// one file, and a string compare would wave the second one through — which is
+// exactly the case that ends with a committed test fixture silently rewritten.
+// On Linux the same job needs the opposite rule for case: build/Foo.json and
+// build/foo.json are two files there, and refusing to save to the second
+// because the first is the input would be a different bug. platform_io::same_file
+// owns that platform split; see platform_io.h.
 bool same_file(const std::string& a, const std::string& b) {
     if (a.empty() || b.empty()) return false;
-    char pa[_MAX_PATH] = {}, pb[_MAX_PATH] = {};
-    if (!_fullpath(pa, a.c_str(), _MAX_PATH)) return false;
-    if (!_fullpath(pb, b.c_str(), _MAX_PATH)) return false;
-    return _stricmp(pa, pb) == 0;
+    return studio::platform_io::same_file(a, b);
 }
 
 bool do_save(App& a) {
@@ -1995,14 +1997,26 @@ int run_selftest(App& a) {
     if(voxel_checks<0) return selftest_fail(passed,"manual voxel workflow");
     passed+=voxel_checks;
 
-    // Exercise the actual Save refusal using a case- and separator-variant of
-    // the same path. _fullpath + _stricmp must recognize it as the input file.
+    // Exercise the actual Save refusal using an alias of the same path, but
+    // only the alias that is genuinely the same file on this platform. On
+    // Windows that is a case/separator variant; on Linux filenames are
+    // case-sensitive and a backslash is an ordinary character inside a name,
+    // so the honest alias is the same file spelled with a "./" segment. Making
+    // the Linux check use the Windows alias would "pass" only by comparing two
+    // different paths, which is the opposite of what the guard is for.
     std::string alias = a.out_path;
+#ifdef _WIN32
     for (char& ch : alias) {
         if (ch == '/') ch = '\\';
         else if (ch >= 'a' && ch <= 'z') ch = static_cast<char>(ch - 'a' + 'A');
         else if (ch >= 'A' && ch <= 'Z') ch = static_cast<char>(ch - 'A' + 'a');
     }
+#else
+    {
+        const size_t slash = alias.find_last_of('/');
+        alias.insert(slash == std::string::npos ? 0 : slash + 1, "./");
+    }
+#endif
     if (!require(same_file(a.out_path, alias),
                  "canonical guard recognizes a path alias"))
         return selftest_fail(passed, "path guard");
@@ -3236,11 +3250,10 @@ int probe_fail(const Probe& p, int passed, const char* check) {
             std::fprintf(stderr,
                          "[visual-probe]   resolved cell %d,%d object #%d\n",
                          o.sel_x, o.sel_y, o.sel_obj);
-    char abs_png[_MAX_PATH] = {}, abs_json[_MAX_PATH] = {};
-    _fullpath(abs_png, p.png_path.c_str(), _MAX_PATH);
-    _fullpath(abs_json, p.json_path.c_str(), _MAX_PATH);
-    std::fprintf(stderr, "[visual-probe]   image=%s state=%s\n", abs_png,
-                 abs_json);
+    const std::string abs_png = studio::platform_io::absolute_path(p.png_path);
+    const std::string abs_json = studio::platform_io::absolute_path(p.json_path);
+    std::fprintf(stderr, "[visual-probe]   image=%s state=%s\n", abs_png.c_str(),
+                 abs_json.c_str());
     return 1;
 }
 
@@ -3526,12 +3539,11 @@ int probe_report(App& a, Probe& p) {
                  "MODEL preserves opacity and seeds one billboard in one undo transaction"))
         return probe_fail(p,passed,"mask brush and production preview");
 
-    char abs_png[_MAX_PATH] = {}, abs_json[_MAX_PATH] = {};
-    _fullpath(abs_png, p.png_path.c_str(), _MAX_PATH);
-    _fullpath(abs_json, p.json_path.c_str(), _MAX_PATH);
+    const std::string abs_png = studio::platform_io::absolute_path(p.png_path);
+    const std::string abs_json = studio::platform_io::absolute_path(p.json_path);
     std::fprintf(stdout,
                  "[visual-probe] PASS scenario=%s checks=%d image=%s state=%s\n",
-                 s.id.c_str(), passed, abs_png, abs_json);
+                 s.id.c_str(), passed, abs_png.c_str(), abs_json.c_str());
     return 0;
 }
 

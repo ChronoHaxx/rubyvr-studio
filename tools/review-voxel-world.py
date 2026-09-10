@@ -35,7 +35,7 @@ def main():
         return result.returncode
     audit_code=run("rubyvr_studio.exe",["--audit-assets",out/"topology.json","--overrides",immutable],"audit")
     if audit_code:
-        raise SystemExit(f"Asset audit failed ({audit_code}); see {out/'audit.err.log'}. Run tools/build.ps1 to refresh runtime DLLs.")
+        raise SystemExit(f"Asset audit failed ({audit_code}); see {out/'audit.err.log'}. Rebuild the matching target; see docs/building.md.")
     render_dir=out/"renders"
     render_code=run("rubyvr_gui.exe",["--map","MAP_OLDALE_TOWN","--overrides",immutable,"--asset-review",render_dir],"renders")
     if render_code:

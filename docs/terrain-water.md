@@ -24,8 +24,8 @@ banks, underwater depth, waterfalls and complete coastal geography remain M2.
 
 After the [source setup and build](building.md):
 
-```powershell
-./tools/run-studio.ps1 -TerrainRegions -Map MAP_ROUTE102
+```bash
+bash tools/run-studio.sh --terrain-regions --map MAP_ROUTE102
 ```
 
 Use the map dropdown for Route 103 or Petalburg. [Fly controls and the
@@ -51,7 +51,7 @@ field. Generated packs stay local; existing personal terrain is not overwritten.
 
 ## Checked scope
 
-```powershell
+```bash
 python tools/test-terrain-regions.py
 python tools/test-terrain-region-source.py
 python tools/render-terrain-water.py

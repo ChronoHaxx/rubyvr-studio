@@ -1,0 +1,227 @@
+{
+  "scope": "M1 static review browser; desktop agent acceptance only",
+  "status": "PASS",
+  "visual_review": "Actual captures inspected at 1600x950 and 1280x720; filters, evidence, source outlines and framing legible. Cancel preserves the edited draft.",
+  "gui_sha256": "f255c3dfffc4ed1e2f59969940f6e0544c879d7cbedbd08a99cfd97366393857",
+  "batch_sha256": "64bfe2948a723e236674e6fdbe4149d2938fffc831c2243bf1ac8154a4d56a63",
+  "pack_sha256": "53ba55e86a560b338a541602c637cde53c415e651b6318de58e9f9eba03090a1",
+  "gif": {
+    "path": "docs/media/review-browser-acceptance.gif",
+    "sha256": "c457004a3dca50abc030284840c1bd168d567dbe2ca250ea1c815272478139f5",
+    "frames": 8,
+    "duration_ms": 19800
+  },
+  "synthetic_tests": {
+    "static_ledger": 13,
+    "source_inventory": 13,
+    "review_export_and_native_reader": 9
+  },
+  "recorded_snapshot": {
+    "maps": 394,
+    "rows": 165777,
+    "default_nonflat_map_body_rows": 26284,
+    "filter_counts_including_flat_and_padding": [
+      165777,
+      155617,
+      159945,
+      165776,
+      10
+    ],
+    "mode": "Read-only export; no fresh source/renderer resync or review decisions"
+  },
+  "ui_checks": [
+    {
+      "size": "wide",
+      "status": "PASS",
+      "checkpoints": 12,
+      "prefix": "build/studio-review-wide"
+    },
+    {
+      "size": "small",
+      "status": "PASS",
+      "checkpoints": 12,
+      "prefix": "build/studio-review-small"
+    },
+    {
+      "status": "PASS",
+      "checkpoints": 8,
+      "prefix": "build/studio-review-guard"
+    }
+  ],
+  "editor_checks": [
+    {
+      "name": "editor-selftest",
+      "exit_code": 0,
+      "passed": true
+    },
+    {
+      "name": "editor-objects",
+      "exit_code": 0,
+      "passed": true
+    },
+    {
+      "name": "editor-scenes",
+      "exit_code": 0,
+      "passed": true
+    },
+    {
+      "name": "eight-frozen-geometry-hashes",
+      "passed": true,
+      "hashes": {
+        "route101": "f3a1bd5a56a98d41",
+        "house": "92d76bb11e408a83",
+        "pokecenter": "94dc8b44ccd9cb97",
+        "tree": "cac8b0cd5ca32253",
+        "trees-stacked": "683ce96a70b24e56",
+        "forest": "d6b432b23316aaf3",
+        "ledge": "29c7362056392a43",
+        "littleroot-clipped": "9b283dac1177116b"
+      }
+    },
+    {
+      "name": "editor-layout-scene",
+      "exit_code": 0,
+      "passed": true
+    },
+    {
+      "name": "editor-layout-view",
+      "exit_code": 0,
+      "passed": true
+    },
+    {
+      "name": "editor-layout-small",
+      "exit_code": 0,
+      "passed": true
+    },
+    {
+      "name": "editor-layout-scaled",
+      "exit_code": 0,
+      "passed": true
+    },
+    {
+      "name": "editor-camera",
+      "exit_code": 0,
+      "passed": true
+    },
+    {
+      "name": "editor-voxel-ui",
+      "exit_code": 0,
+      "passed": true
+    },
+    {
+      "name": "editor-part-selection",
+      "exit_code": 0,
+      "passed": true
+    }
+  ],
+  "captures": [
+    {
+      "capture": "build/studio-review-wide.png.failed.png",
+      "sha256": "68796b4983cf246816408eb0bd422139d7ae838108cb0d13536b238d48e50d9e",
+      "crop": [
+        232,
+        136,
+        1364,
+        814
+      ],
+      "caption": "1  Find failed scenery reviews",
+      "duration_ms": 3000
+    },
+    {
+      "capture": "build/studio-review-wide.png.gym.png",
+      "sha256": "c53770c4e8b0f9318d2ace1c59820b9d7de4e8c5c94388fb012b156f053856c9",
+      "crop": [
+        200,
+        76,
+        1600,
+        908
+      ],
+      "caption": "2  Open the exact map placement",
+      "duration_ms": 1800
+    },
+    {
+      "capture": "build/studio-review-wide.png.orbit.png",
+      "sha256": "8b67a89b35810b3315f74b7a2ffeb13f5cf034a1ed813745538c54cfc4fbf9f3",
+      "crop": [
+        200,
+        76,
+        1600,
+        908
+      ],
+      "caption": "3  Orbit to inspect it; the gym remains an M4 defect",
+      "duration_ms": 2500
+    },
+    {
+      "capture": "build/studio-review-wide.png.missing.png",
+      "sha256": "73bc4f47606af4a81004990b4bc4a5bff47d3f37bf17ee3a0578d1f3106ca6b3",
+      "crop": [
+        232,
+        136,
+        1364,
+        814
+      ],
+      "caption": "4  Find missing or partially modeled scenery",
+      "duration_ms": 2300
+    },
+    {
+      "capture": "build/studio-review-wide.png.source.png",
+      "sha256": "bc1fa0ab76ce7336a17789a646896c86b53b64821e3f274019f102f06797b3af",
+      "crop": [
+        200,
+        76,
+        1600,
+        908
+      ],
+      "caption": "5  Locate the missed tree; its source is outlined above",
+      "duration_ms": 2800
+    },
+    {
+      "capture": "build/studio-review-wide.png.unresolved.png",
+      "sha256": "c787473fd1811a679b92228f97b29c2f739ab0d1757e94bc209bef8dc7b5e0c6",
+      "crop": [
+        232,
+        136,
+        1364,
+        814
+      ],
+      "caption": "6  Switch to unresolved or unreviewed work",
+      "duration_ms": 2200
+    },
+    {
+      "capture": "build/studio-review-wide.png.all-copies.png",
+      "sha256": "25a7bd64103a2b9af449349186a7aca222dde013d8b61433b6606a5103cb0df6",
+      "crop": [
+        232,
+        136,
+        1364,
+        814
+      ],
+      "caption": "7  Include flat details and edge copies when needed",
+      "duration_ms": 2200
+    },
+    {
+      "capture": "build/studio-review-guard.png.guard.png",
+      "sha256": "610415eb572d4a4b4fd2aa3a5855c8240b39fa2d10f6438f8f813fcdd26cbb93",
+      "crop": [
+        0,
+        0,
+        1600,
+        950
+      ],
+      "caption": "8  Unsaved edits are protected; Cancel keeps the draft",
+      "duration_ms": 3000
+    }
+  ],
+  "remaining": [
+    "M1 disposition classification, indirect/native/reachability and UI/battle audits",
+    "M2 terrain heights",
+    "M3 selection-outline UX and broader manual authoring",
+    "M4 missing scenery and gym geometry/material defects",
+    "Live-game and headset acceptance"
+  ],
+  "limits": [
+    "Static placement browser only; source-state candidates and review writing remain CLI",
+    "Exported ledger snapshot, not a live audit; source changes with identical map dimensions need re-sync",
+    "Scripted desktop actions and edited pauses are not a human usability or performance benchmark"
+  ]
+}

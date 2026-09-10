@@ -1,0 +1,163 @@
+{
+  "status": "PASS",
+  "scope": "M1 intended-treatment rules and Studio explanations; desktop agent acceptance",
+  "policy": {
+    "version": 1,
+    "sha256": "02741c9d456e96f2069221189e44385ae812c41008d5619b9826e4bd50bdf19e",
+    "scope": "Intended treatment of the recorded ledger snapshot; no review approval or runtime proof"
+  },
+  "reporter_sha256": "a62fcc98e5a75ceb7e3a8fb8f6c9bc04ee5355211a7a15591bd02267c944ffab",
+  "exporter_sha256": "c8309fb6b56bc89a093188942aba3541ab54f37de5875d50c3241a087208014a",
+  "inputs": {
+    "source_version": "fc5431534b1eeb910ddbc8386f33ed651c00b520c246b2fc8e5242cfca7debce",
+    "dynamic_source_sha256": "3f2e2848d2e16a13b28797449f957b767870dde91781fc5f5ee23d833e372515",
+    "dynamic_adapter_sha256": "4e4f97ef87cbf65ef840ce7fa0cc7934929cfa4934734d7b5816abf808b1f036",
+    "batch_sha256": "64bfe2948a723e236674e6fdbe4149d2938fffc831c2243bf1ac8154a4d56a63",
+    "pack_sha256": "53ba55e86a560b338a541602c637cde53c415e651b6318de58e9f9eba03090a1"
+  },
+  "inventory": {
+    "entries": 199335,
+    "maps": 394,
+    "treatments": {
+      "unresolved": 163271,
+      "model": 8374,
+      "intentional_flat": 1850,
+      "runtime_state": 21965,
+      "animated_effect": 3875
+    },
+    "next_action_milestones": {
+      "M2": 249,
+      "M1": 163263,
+      "M4": 10259,
+      "M5": 13579,
+      "M7": 4644,
+      "M6": 7268,
+      "M8": 73
+    },
+    "every_entry_has_reason_evidence_and_next_action": true,
+    "native_trace_gaps_kept_unresolved": 374
+  },
+  "synthetic_tests": {
+    "static_ledger": 13,
+    "source_inventory": 13,
+    "native_trace": 10,
+    "review_export_and_native_reader": 9,
+    "disposition_policy": 12
+  },
+  "persistence": {
+    "database_sha256": "6e052ac0c89471435b78daff0b1b2e1120bba9fc17da545d6632ea896db221f2",
+    "database_byte_identical": true,
+    "authored_pack_byte_identical": true,
+    "existing_reviews_retained": 2,
+    "new_reviews": 0,
+    "new_approvals": 0
+  },
+  "studio": {
+    "verification": {
+      "status": "PASS",
+      "layouts": [
+        {
+          "size": "wide",
+          "status": "PASS",
+          "checkpoints": 14,
+          "prefix": "build/studio-review-wide"
+        },
+        {
+          "size": "small",
+          "status": "PASS",
+          "checkpoints": 14,
+          "prefix": "build/studio-review-small"
+        }
+      ],
+      "gui_sha256": "f255c3dfffc4ed1e2f59969940f6e0544c879d7cbedbd08a99cfd97366393857",
+      "edit_guard": {
+        "status": "PASS",
+        "checkpoints": 8,
+        "prefix": "build/studio-review-guard"
+      }
+    },
+    "exported_rows": 165777,
+    "export_generation": "snapshot-92c1b97eea37ce85971d2588",
+    "native_reader": "PASS",
+    "oldale_filter_results": {
+      "wide": {
+        "unresolved": 0,
+        "unresolved-ground": 208,
+        "unreviewed": 65,
+        "all-copies": 393
+      },
+      "small": {
+        "unresolved": 0,
+        "unresolved-ground": 208,
+        "unreviewed": 65,
+        "all-copies": 393
+      }
+    },
+    "visual_review": "Actual notes, empty/resolved-intent queue, unresolved ground, unreviewed objects and edit guard inspected at both window sizes."
+  },
+  "gif": {
+    "path": "docs/media/disposition-acceptance.gif",
+    "sha256": "5e1372d55750b7e4064541353a67dacaa2df8e03b102406627252ad742199b34",
+    "bytes": 828807,
+    "frames": 8,
+    "duration_ms": 20000,
+    "captures": [
+      {
+        "layout": "wide",
+        "checkpoint": "failed",
+        "sha256": "44ddc7adac93506f4ba7ba3b8bbfbaec2e2fb40d4975bc9f87f22672737d9073",
+        "duration_ms": 4000
+      },
+      {
+        "layout": "wide",
+        "checkpoint": "gym",
+        "sha256": "c53770c4e8b0f9318d2ace1c59820b9d7de4e8c5c94388fb012b156f053856c9",
+        "duration_ms": 2000
+      },
+      {
+        "layout": "wide",
+        "checkpoint": "source-intent",
+        "sha256": "6565ae70b01d317f4eba4aa44a219d1e4b9ed726262baca5967d32e5a7dd3a96",
+        "duration_ms": 4000
+      },
+      {
+        "layout": "wide",
+        "checkpoint": "source",
+        "sha256": "bc1fa0ab76ce7336a17789a646896c86b53b64821e3f274019f102f06797b3af",
+        "duration_ms": 2000
+      },
+      {
+        "layout": "wide",
+        "checkpoint": "unresolved",
+        "sha256": "b75a70abb7310886bbc9e2b29df77eb5b6be193921aa37c60a61db2ce3dd586d",
+        "duration_ms": 1500
+      },
+      {
+        "layout": "wide",
+        "checkpoint": "unresolved-ground",
+        "sha256": "73e80182c90adc290359fc8bd66e00e3954e7a19e7ae2bcbd2d4242dd7eb7be3",
+        "duration_ms": 2500
+      },
+      {
+        "layout": "wide",
+        "checkpoint": "unreviewed",
+        "sha256": "bbc7b209a51a6238e7de4ea798a2d10fea8b0d67bf505d48e3d965527aa0d80c",
+        "duration_ms": 2000
+      },
+      {
+        "layout": "guard",
+        "checkpoint": "guard",
+        "sha256": "610415eb572d4a4b4fd2aa3a5855c8240b39fa2d10f6438f8f813fcdd26cbb93",
+        "duration_ms": 2000
+      }
+    ]
+  },
+  "limits": [
+    "Defaults use the recorded inventory, not current live gameplay or automatic image understanding.",
+    "Ambiguous and mixed roles stay unresolved; no terrain height or collision inference from labels/numbers.",
+    "Field/battle path rules cover inspected declarations only; unknown sprite domains and native traces need further audit.",
+    "Known variable graphics and saved warp control roles do not resolve their runtime values.",
+    "Model intent does not approve pixel ownership, appearance, gameplay or headset presentation.",
+    "GIF pauses are edited from actual application captures. GUI/batch binaries are unchanged; this checks their new data and notes."
+  ]
+}

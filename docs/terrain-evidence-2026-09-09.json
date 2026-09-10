@@ -1,0 +1,438 @@
+{
+  "date": "2026-09-09",
+  "scope": "Studio desktop; first authored terrain foundation, not complete geography",
+  "source_revision": "63a8cbf0016b351a4e68f7036fa0b77e23d2f2c1",
+  "base_commit": "8880416851350829b5b89fab40e61b4775409ee4",
+  "gui_sha256": "77636da6c62c5a6b05f8412d3d90683cbb1463810e35a3f16a0723d04aa67f82",
+  "batch_sha256": "7bbe36dc4e0505ab227fa66140728393f763db5cea7e8674e83075d024533532",
+  "source_pack_sha256": "53ba55e86a560b338a541602c637cde53c415e651b6318de58e9f9eba03090a1",
+  "gif": {
+    "path": "media/terrain-acceptance.gif",
+    "sha256": "10799a92e859479e18eb62c1c0ac0eb9050381115df14ee81c101f33b690f698",
+    "duration_seconds": 16,
+    "rendering": "Actual SDL production DIORAMA captures; viewport cropped, captions and pauses edited"
+  },
+  "verification": {
+    "standalone_build": "PASS",
+    "synthetic_terrain_checks": 133,
+    "SDL_checkpoints": 43,
+    "existing_editor_suite": "PASS",
+    "frozen_geometry_hashes_unchanged": 8,
+    "source_maps_built": 394,
+    "source_copied_cells_checked": 36834,
+    "canonical_terrain_copies_checked": 720,
+    "two_map_seam_edges": 40,
+    "internal_terrain_walls_at_join": 0,
+    "input_pack_unchanged": true,
+    "unchanged_terrain_GPU_uploads": 0
+  },
+  "checkpoints": {
+    "wide": [
+      {
+        "name": "baseline",
+        "room_hash": "f468442e81902768",
+        "terrain_cells": 0,
+        "terrain_rejected": 0,
+        "unresolved_placements": 0,
+        "undo": 0,
+        "unsaved": false
+      },
+      {
+        "name": "selected",
+        "room_hash": "f468442e81902768",
+        "terrain_cells": 0,
+        "terrain_rejected": 0,
+        "unresolved_placements": 0,
+        "undo": 0,
+        "unsaved": false
+      },
+      {
+        "name": "plateau",
+        "room_hash": "d51722720b95ff94",
+        "terrain_cells": 42,
+        "terrain_rejected": 0,
+        "unresolved_placements": 0,
+        "undo": 1,
+        "unsaved": true
+      },
+      {
+        "name": "contact",
+        "room_hash": "d51722720b95ff94",
+        "terrain_cells": 42,
+        "terrain_rejected": 0,
+        "unresolved_placements": 0,
+        "undo": 1,
+        "unsaved": true
+      },
+      {
+        "name": "steps",
+        "room_hash": "e2feb94b36dd00b4",
+        "terrain_cells": 54,
+        "terrain_rejected": 0,
+        "unresolved_placements": 0,
+        "undo": 2,
+        "unsaved": true
+      },
+      {
+        "name": "undo",
+        "room_hash": "d51722720b95ff94",
+        "terrain_cells": 42,
+        "terrain_rejected": 0,
+        "unresolved_placements": 0,
+        "undo": 1,
+        "unsaved": true
+      },
+      {
+        "name": "redo",
+        "room_hash": "e2feb94b36dd00b4",
+        "terrain_cells": 54,
+        "terrain_rejected": 0,
+        "unresolved_placements": 0,
+        "undo": 2,
+        "unsaved": true
+      },
+      {
+        "name": "saved",
+        "room_hash": "e2feb94b36dd00b4",
+        "terrain_cells": 54,
+        "terrain_rejected": 0,
+        "unresolved_placements": 0,
+        "undo": 2,
+        "unsaved": false
+      },
+      {
+        "name": "reverse",
+        "room_hash": "e2feb94b36dd00b4",
+        "terrain_cells": 54,
+        "terrain_rejected": 0,
+        "unresolved_placements": 0,
+        "undo": 2,
+        "unsaved": false
+      }
+    ],
+    "reopened": [
+      {
+        "name": "reopened",
+        "room_hash": "e2feb94b36dd00b4",
+        "terrain_cells": 54,
+        "terrain_rejected": 0,
+        "unresolved_placements": 0,
+        "undo": 0,
+        "unsaved": false
+      }
+    ],
+    "small": [
+      {
+        "name": "baseline",
+        "room_hash": "e2feb94b36dd00b4",
+        "terrain_cells": 54,
+        "terrain_rejected": 0,
+        "unresolved_placements": 0,
+        "undo": 0,
+        "unsaved": false
+      },
+      {
+        "name": "picked",
+        "room_hash": "e2feb94b36dd00b4",
+        "terrain_cells": 54,
+        "terrain_rejected": 0,
+        "unresolved_placements": 0,
+        "undo": 0,
+        "unsaved": false
+      },
+      {
+        "name": "plateau",
+        "room_hash": "3e327d2242aa56c4",
+        "terrain_cells": 66,
+        "terrain_rejected": 0,
+        "unresolved_placements": 0,
+        "undo": 1,
+        "unsaved": true
+      },
+      {
+        "name": "undo",
+        "room_hash": "e2feb94b36dd00b4",
+        "terrain_cells": 54,
+        "terrain_rejected": 0,
+        "unresolved_placements": 0,
+        "undo": 0,
+        "unsaved": false
+      },
+      {
+        "name": "redo",
+        "room_hash": "3e327d2242aa56c4",
+        "terrain_cells": 66,
+        "terrain_rejected": 0,
+        "unresolved_placements": 0,
+        "undo": 1,
+        "unsaved": true
+      },
+      {
+        "name": "erased",
+        "room_hash": "e2feb94b36dd00b4",
+        "terrain_cells": 54,
+        "terrain_rejected": 0,
+        "unresolved_placements": 0,
+        "undo": 2,
+        "unsaved": false
+      },
+      {
+        "name": "restored",
+        "room_hash": "3e327d2242aa56c4",
+        "terrain_cells": 66,
+        "terrain_rejected": 0,
+        "unresolved_placements": 0,
+        "undo": 1,
+        "unsaved": true
+      },
+      {
+        "name": "saved",
+        "room_hash": "3e327d2242aa56c4",
+        "terrain_cells": 66,
+        "terrain_rejected": 0,
+        "unresolved_placements": 0,
+        "undo": 1,
+        "unsaved": false
+      }
+    ],
+    "deck": [
+      {
+        "name": "panel",
+        "room_hash": "e2feb94b36dd00b4",
+        "terrain_cells": 54,
+        "terrain_rejected": 0,
+        "unresolved_placements": 0,
+        "undo": 0,
+        "unsaved": false
+      },
+      {
+        "name": "added",
+        "room_hash": "b09abb1258ef7b6c",
+        "terrain_cells": 60,
+        "terrain_rejected": 0,
+        "unresolved_placements": 0,
+        "undo": 1,
+        "unsaved": true
+      },
+      {
+        "name": "rejected",
+        "room_hash": "b09abb1258ef7b6c",
+        "terrain_cells": 60,
+        "terrain_rejected": 0,
+        "unresolved_placements": 0,
+        "undo": 1,
+        "unsaved": true
+      },
+      {
+        "name": "saved",
+        "room_hash": "b09abb1258ef7b6c",
+        "terrain_cells": 60,
+        "terrain_rejected": 0,
+        "unresolved_placements": 0,
+        "undo": 1,
+        "unsaved": false
+      },
+      {
+        "name": "undo",
+        "room_hash": "e2feb94b36dd00b4",
+        "terrain_cells": 54,
+        "terrain_rejected": 0,
+        "unresolved_placements": 0,
+        "undo": 0,
+        "unsaved": true
+      },
+      {
+        "name": "redo",
+        "room_hash": "b09abb1258ef7b6c",
+        "terrain_cells": 60,
+        "terrain_rejected": 0,
+        "unresolved_placements": 0,
+        "undo": 1,
+        "unsaved": false
+      }
+    ],
+    "seam-before": [
+      {
+        "name": "front",
+        "room_hash": "b92c9351d08cef14",
+        "terrain_cells": 0,
+        "terrain_rejected": 0,
+        "unresolved_placements": 0,
+        "undo": 0,
+        "unsaved": false
+      }
+    ],
+    "seam-after": [
+      {
+        "name": "front",
+        "room_hash": "c6336cb0a0bb4650",
+        "terrain_cells": 540,
+        "terrain_rejected": 0,
+        "unresolved_placements": 0,
+        "undo": 0,
+        "unsaved": false
+      },
+      {
+        "name": "orbit-55",
+        "room_hash": "c6336cb0a0bb4650",
+        "terrain_cells": 540,
+        "terrain_rejected": 0,
+        "unresolved_placements": 0,
+        "undo": 0,
+        "unsaved": false
+      },
+      {
+        "name": "orbit-60",
+        "room_hash": "c6336cb0a0bb4650",
+        "terrain_cells": 540,
+        "terrain_rejected": 0,
+        "unresolved_placements": 0,
+        "undo": 0,
+        "unsaved": false
+      },
+      {
+        "name": "orbit-65",
+        "room_hash": "c6336cb0a0bb4650",
+        "terrain_cells": 540,
+        "terrain_rejected": 0,
+        "unresolved_placements": 0,
+        "undo": 0,
+        "unsaved": false
+      },
+      {
+        "name": "orbit-70",
+        "room_hash": "c6336cb0a0bb4650",
+        "terrain_cells": 540,
+        "terrain_rejected": 0,
+        "unresolved_placements": 0,
+        "undo": 0,
+        "unsaved": false
+      },
+      {
+        "name": "orbit-75",
+        "room_hash": "c6336cb0a0bb4650",
+        "terrain_cells": 540,
+        "terrain_rejected": 0,
+        "unresolved_placements": 0,
+        "undo": 0,
+        "unsaved": false
+      },
+      {
+        "name": "orbit-80",
+        "room_hash": "c6336cb0a0bb4650",
+        "terrain_cells": 540,
+        "terrain_rejected": 0,
+        "unresolved_placements": 0,
+        "undo": 0,
+        "unsaved": false
+      },
+      {
+        "name": "orbit-85",
+        "room_hash": "c6336cb0a0bb4650",
+        "terrain_cells": 540,
+        "terrain_rejected": 0,
+        "unresolved_placements": 0,
+        "undo": 0,
+        "unsaved": false
+      },
+      {
+        "name": "orbit-90",
+        "room_hash": "c6336cb0a0bb4650",
+        "terrain_cells": 540,
+        "terrain_rejected": 0,
+        "unresolved_placements": 0,
+        "undo": 0,
+        "unsaved": false
+      },
+      {
+        "name": "orbit-95",
+        "room_hash": "c6336cb0a0bb4650",
+        "terrain_cells": 540,
+        "terrain_rejected": 0,
+        "unresolved_placements": 0,
+        "undo": 0,
+        "unsaved": false
+      },
+      {
+        "name": "orbit-100",
+        "room_hash": "c6336cb0a0bb4650",
+        "terrain_cells": 540,
+        "terrain_rejected": 0,
+        "unresolved_placements": 0,
+        "undo": 0,
+        "unsaved": false
+      },
+      {
+        "name": "orbit-105",
+        "room_hash": "c6336cb0a0bb4650",
+        "terrain_cells": 540,
+        "terrain_rejected": 0,
+        "unresolved_placements": 0,
+        "undo": 0,
+        "unsaved": false
+      },
+      {
+        "name": "orbit-110",
+        "room_hash": "c6336cb0a0bb4650",
+        "terrain_cells": 540,
+        "terrain_rejected": 0,
+        "unresolved_placements": 0,
+        "undo": 0,
+        "unsaved": false
+      },
+      {
+        "name": "orbit-115",
+        "room_hash": "c6336cb0a0bb4650",
+        "terrain_cells": 540,
+        "terrain_rejected": 0,
+        "unresolved_placements": 0,
+        "undo": 0,
+        "unsaved": false
+      },
+      {
+        "name": "orbit-120",
+        "room_hash": "c6336cb0a0bb4650",
+        "terrain_cells": 540,
+        "terrain_rejected": 0,
+        "unresolved_placements": 0,
+        "undo": 0,
+        "unsaved": false
+      },
+      {
+        "name": "orbit-125",
+        "room_hash": "c6336cb0a0bb4650",
+        "terrain_cells": 540,
+        "terrain_rejected": 0,
+        "unresolved_placements": 0,
+        "undo": 0,
+        "unsaved": false
+      },
+      {
+        "name": "orbit-130",
+        "room_hash": "c6336cb0a0bb4650",
+        "terrain_cells": 540,
+        "terrain_rejected": 0,
+        "unresolved_placements": 0,
+        "undo": 0,
+        "unsaved": false
+      },
+      {
+        "name": "reverse",
+        "room_hash": "c6336cb0a0bb4650",
+        "terrain_cells": 540,
+        "terrain_rejected": 0,
+        "unresolved_placements": 0,
+        "undo": 0,
+        "unsaved": false
+      }
+    ]
+  },
+  "limitations": [
+    "Local authored 16px Oldale/Route101 example; not a default pack or automatic region solver",
+    "Route101 lower ledge unfinished and walk-around steps provisional; other Oldale neighbours need continuity authoring",
+    "Different tileset pairs report terrain mismatch; full neighbour bodies and global origin constraints pending",
+    "Multi-cell foundations, negative heights, partial-cell slopes and detailed water/shore rendering pending",
+    "Live identity/feet/camera integration and runtime prototype compilation not verified here",
+    "No live traversal, human usability, headset or whole-map visual acceptance inferred from these checks"
+  ]
+}

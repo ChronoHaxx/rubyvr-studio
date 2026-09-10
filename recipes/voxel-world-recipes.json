@@ -1,0 +1,1514 @@
+{
+  "assumptions": [
+    "The accepted Oldale house is retained unchanged. Other roof depths use the same editable 45-degree projection assumption unless explicitly specified.",
+    "Building source crops exclude adjoining trees and signs. Palette roles are authored per building region; palette 2 is the surrounding outdoor ground in these drawings, not a universal green-color filter.",
+    "Unseen walls repeat a selected wall patch, and roofs repeat a selected roof patch at one source pixel per voxel. Named emblems and roof fixtures are separate parts.",
+    "Tree and shrub depth follows the inspected silhouette with circular horizontal sections. Leaf shading does not set depth. Painted forest shadows and neighbouring canopy fragments are excluded from tree geometry.",
+    "Broad trees include the five-pixel pointed crown above the repeating 32-pixel unit. Six adjacent floor variants clear matching fragments; optional experimental foliage adds upright clumps to the two encounter-grass variants.",
+    "Where painted shadow obscures the lowest trunk row, repeat the last visible wood cross-section down to the ground at native pixel scale.",
+    "The Oldale Mart and adjoining tree share a source metatile. The tree owns that cell; the Mart retains its tile-definition guard so cropping cannot make it match unrelated city variants.",
+    "The pack contains static scenery. Characters, field effects, interiors, cave terrain and bespoke landmarks require separate recipes.",
+    "Experimental encounter grass uses four clumps with six-to-twelve-pixel blades and separate one-pixel stepped leaf bases. Their connecting roots sit below the floor so source ground can show between tufts. Source palette 2 indices 4, 12 and 15 supply leaves, with green shoulders and sparse pale tips; ground index 13 remains floor-owned. Height is authored separately from the elevated sprite projection; voxels and native texels retain their scale. Flexible geometry follows authored terrain; it is opt-in and visually unapproved. Round shrubs keep their own native edge texels instead of repeating a rectangular side patch."
+  ],
+  "recipes": [
+    {
+      "asset": "asset-660725f1996e07c8",
+      "name": "Petalburg red-roof house",
+      "kind": "gable",
+      "facade_start": 40,
+      "roof_art": [
+        2,
+        14,
+        60,
+        20
+      ],
+      "wall_art": [
+        5,
+        40,
+        3,
+        20
+      ],
+      "recesses": [
+        [
+          26,
+          47,
+          12,
+          15
+        ],
+        [
+          44,
+          42,
+          12,
+          13
+        ]
+      ]
+    },
+    {
+      "asset": "asset-8c40aea50e0288d8",
+      "name": "Oldale Pokemon Center",
+      "kind": "hipped",
+      "facade_start": 40,
+      "rise": 10,
+      "hip": 18,
+      "wall_margin": 6,
+      "wall_art": [
+        5,
+        43,
+        5,
+        15
+      ],
+      "roof_art": [
+        28,
+        2,
+        8,
+        8
+      ],
+      "badge": [
+        22,
+        25,
+        20,
+        14
+      ],
+      "object_palettes": [
+        1
+      ],
+      "badge_along": 0.62,
+      "trim_art": [
+        8,
+        36,
+        8,
+        4
+      ]
+    },
+    {
+      "asset": "asset-5e860929c099b760",
+      "name": "Pokemon Center on grass",
+      "kind": "hipped",
+      "facade_start": 40,
+      "rise": 10,
+      "hip": 18,
+      "wall_margin": 6,
+      "wall_art": [
+        5,
+        43,
+        5,
+        15
+      ],
+      "roof_art": [
+        28,
+        2,
+        8,
+        8
+      ],
+      "badge": [
+        22,
+        25,
+        20,
+        14
+      ],
+      "object_palettes": [
+        1
+      ],
+      "badge_along": 0.62,
+      "trim_art": [
+        8,
+        36,
+        8,
+        4
+      ]
+    },
+    {
+      "asset": "asset-0658851a0ead8380",
+      "name": "Dewford Pokemon Center",
+      "kind": "hipped",
+      "facade_start": 40,
+      "rise": 10,
+      "hip": 18,
+      "wall_margin": 6,
+      "wall_art": [
+        5,
+        43,
+        5,
+        15
+      ],
+      "roof_art": [
+        28,
+        2,
+        8,
+        8
+      ],
+      "badge": [
+        22,
+        25,
+        20,
+        14
+      ],
+      "object_palettes": [
+        1
+      ],
+      "badge_along": 0.62,
+      "trim_art": [
+        8,
+        36,
+        8,
+        4
+      ]
+    },
+    {
+      "asset": "asset-88dbd9a6603673b4",
+      "name": "Rustboro Pokemon Center",
+      "kind": "hipped",
+      "facade_start": 40,
+      "rise": 10,
+      "hip": 18,
+      "wall_margin": 6,
+      "wall_art": [
+        5,
+        43,
+        5,
+        15
+      ],
+      "roof_art": [
+        28,
+        2,
+        8,
+        8
+      ],
+      "badge": [
+        22,
+        25,
+        20,
+        14
+      ],
+      "object_palettes": [
+        1
+      ],
+      "badge_along": 0.62,
+      "trim_art": [
+        8,
+        36,
+        8,
+        4
+      ]
+    },
+    {
+      "asset": "asset-a45ce46dbfd22877",
+      "name": "Oldale Mart",
+      "exclude_cells": [
+        [
+          3,
+          0
+        ]
+      ],
+      "kind": "hipped",
+      "crop": [
+        0,
+        1,
+        4,
+        4
+      ],
+      "facade_start": 40,
+      "roof_start": 8,
+      "rise": 8,
+      "hip": 10,
+      "wall_margin": 6,
+      "wall_art": [
+        5,
+        44,
+        5,
+        14
+      ],
+      "roof_art": [
+        8,
+        9,
+        48,
+        14
+      ],
+      "badge": [
+        22,
+        25,
+        20,
+        14
+      ],
+      "object_palettes": [
+        0,
+        1
+      ],
+      "badge_along": 0.62,
+      "trim_art": [
+        8,
+        36,
+        8,
+        4
+      ]
+    },
+    {
+      "asset": "asset-715b1dc2c9f09f4c",
+      "name": "Petalburg Mart",
+      "kind": "hipped",
+      "crop": [
+        0,
+        1,
+        4,
+        4
+      ],
+      "facade_start": 40,
+      "roof_start": 8,
+      "rise": 8,
+      "hip": 10,
+      "wall_margin": 6,
+      "wall_art": [
+        5,
+        44,
+        5,
+        14
+      ],
+      "roof_art": [
+        8,
+        9,
+        48,
+        14
+      ],
+      "badge": [
+        22,
+        25,
+        20,
+        14
+      ],
+      "object_palettes": [
+        0,
+        1
+      ],
+      "badge_along": 0.62,
+      "trim_art": [
+        8,
+        36,
+        8,
+        4
+      ]
+    },
+    {
+      "asset": "asset-c3b16e8e17c6c781",
+      "name": "Slateport Mart",
+      "kind": "hipped",
+      "facade_start": 40,
+      "roof_start": 8,
+      "rise": 8,
+      "hip": 10,
+      "wall_margin": 6,
+      "wall_art": [
+        5,
+        44,
+        5,
+        14
+      ],
+      "roof_art": [
+        8,
+        9,
+        48,
+        14
+      ],
+      "badge": [
+        22,
+        25,
+        20,
+        14
+      ],
+      "object_palettes": [
+        0,
+        1
+      ],
+      "badge_along": 0.62,
+      "trim_art": [
+        8,
+        36,
+        8,
+        4
+      ]
+    },
+    {
+      "asset": "asset-0f3eae9932158caf",
+      "name": "Fallarbor Mart",
+      "kind": "hipped",
+      "facade_start": 40,
+      "roof_start": 8,
+      "rise": 8,
+      "hip": 10,
+      "wall_margin": 6,
+      "wall_art": [
+        5,
+        44,
+        5,
+        14
+      ],
+      "roof_art": [
+        8,
+        9,
+        48,
+        14
+      ],
+      "badge": [
+        22,
+        25,
+        20,
+        14
+      ],
+      "object_palettes": [
+        0,
+        1
+      ],
+      "badge_along": 0.62,
+      "trim_art": [
+        8,
+        36,
+        8,
+        4
+      ]
+    },
+    {
+      "asset": "asset-4e2864904f72f76c",
+      "name": "Rustboro Mart",
+      "kind": "hipped",
+      "facade_start": 40,
+      "roof_start": 8,
+      "rise": 8,
+      "hip": 10,
+      "wall_margin": 6,
+      "wall_art": [
+        5,
+        44,
+        5,
+        14
+      ],
+      "roof_art": [
+        8,
+        9,
+        48,
+        14
+      ],
+      "badge": [
+        22,
+        25,
+        20,
+        14
+      ],
+      "object_palettes": [
+        0,
+        1
+      ],
+      "badge_along": 0.62,
+      "trim_art": [
+        8,
+        36,
+        8,
+        4
+      ]
+    },
+    {
+      "asset": "asset-5d407d636ac3ed88",
+      "name": "Littleroot west house",
+      "kind": "gable",
+      "crop": [
+        0,
+        0,
+        5,
+        5
+      ],
+      "facade_start": 56,
+      "trim": 6,
+      "wall_art": [
+        5,
+        58,
+        5,
+        17
+      ],
+      "roof_art": [
+        8,
+        13,
+        64,
+        30
+      ],
+      "ridge_art": [
+        8,
+        8,
+        64,
+        3
+      ]
+    },
+    {
+      "asset": "asset-f93bbbbb5d472e07",
+      "name": "Littleroot east house",
+      "kind": "gable",
+      "crop": [
+        1,
+        0,
+        5,
+        5
+      ],
+      "facade_start": 56,
+      "trim": 6,
+      "wall_art": [
+        62,
+        58,
+        6,
+        17
+      ],
+      "roof_art": [
+        8,
+        13,
+        64,
+        30
+      ],
+      "ridge_art": [
+        8,
+        8,
+        64,
+        3
+      ]
+    },
+    {
+      "asset": "asset-7519b8731f9d6eea",
+      "name": "Professor Birch's laboratory",
+      "kind": "gable",
+      "crop": [
+        0,
+        0,
+        7,
+        5
+      ],
+      "facade_start": 54,
+      "trim": 6,
+      "wall_art": [
+        3,
+        58,
+        7,
+        17
+      ],
+      "roof_art": [
+        56,
+        3,
+        46,
+        42
+      ],
+      "roof_details": [
+        {
+          "x": 18,
+          "size": [
+            22,
+            7,
+            12
+          ],
+          "art": [
+            20,
+            16,
+            20,
+            10
+          ]
+        }
+      ]
+    },
+    {
+      "asset": "asset-72dd609a2e7c17f9",
+      "name": "Dewford blue-roof house",
+      "kind": "gable",
+      "crop": [
+        0,
+        1,
+        4,
+        4
+      ],
+      "facade_start": 40,
+      "wall_art": [
+        3,
+        42,
+        6,
+        17
+      ],
+      "roof_art": [
+        3,
+        12,
+        58,
+        22
+      ]
+    },
+    {
+      "asset": "asset-e977205ac8b933aa",
+      "name": "Fallarbor orange-roof house",
+      "kind": "gable",
+      "facade_start": 40,
+      "wall_art": [
+        4,
+        43,
+        7,
+        16
+      ],
+      "roof_art": [
+        3,
+        12,
+        58,
+        22
+      ]
+    },
+    {
+      "asset": "asset-85812d1b99a81025",
+      "name": "Lilycove blue-roof house",
+      "kind": "gable",
+      "facade_start": 40,
+      "wall_art": [
+        4,
+        42,
+        7,
+        17
+      ],
+      "roof_art": [
+        3,
+        12,
+        58,
+        22
+      ]
+    },
+    {
+      "asset": "asset-727fdf88a3e3dd05",
+      "name": "Mossdeep stone house",
+      "kind": "gable",
+      "facade_start": 40,
+      "wall_art": [
+        4,
+        45,
+        8,
+        12
+      ],
+      "roof_art": [
+        3,
+        12,
+        58,
+        22
+      ]
+    },
+    {
+      "asset": "asset-75ceed5dba39c702",
+      "name": "Mossdeep stone house variant",
+      "kind": "gable",
+      "facade_start": 40,
+      "wall_art": [
+        4,
+        45,
+        8,
+        12
+      ],
+      "roof_art": [
+        3,
+        12,
+        58,
+        22
+      ]
+    },
+    {
+      "asset": "asset-3abc659eb2c7285a",
+      "name": "Verdanturf green-roof house",
+      "kind": "gable",
+      "facade_start": 40,
+      "wall_art": [
+        3,
+        42,
+        6,
+        17
+      ],
+      "roof_art": [
+        3,
+        12,
+        58,
+        22
+      ]
+    },
+    {
+      "asset": "asset-5587f03654c87091",
+      "name": "Mauville gym",
+      "kind": "flat",
+      "facade_start": 48,
+      "roof_start": 2,
+      "trim": 3,
+      "wall_art": [
+        1,
+        50,
+        2,
+        12
+      ],
+      "roof_art": [
+        3,
+        3,
+        88,
+        39
+      ],
+      "rise": 2
+    },
+    {
+      "asset": "asset-3c48462ed2d7e1db",
+      "name": "Rustboro gym",
+      "kind": "flat",
+      "facade_start": 48,
+      "roof_start": 2,
+      "trim": 3,
+      "wall_art": [
+        1,
+        50,
+        2,
+        12
+      ],
+      "roof_art": [
+        3,
+        3,
+        88,
+        39
+      ],
+      "rise": 2
+    },
+    {
+      "asset": "asset-544bfd83afef3991",
+      "name": "Sootopolis gym",
+      "kind": "flat",
+      "facade_start": 48,
+      "roof_start": 2,
+      "trim": 3,
+      "wall_art": [
+        1,
+        50,
+        2,
+        12
+      ],
+      "roof_art": [
+        3,
+        3,
+        88,
+        39
+      ],
+      "rise": 2
+    },
+    {
+      "asset": "asset-751b89188e94df3c",
+      "name": "Broad tree - Oldale east border",
+      "kind": "foliage",
+      "profile": "broad_tree"
+    },
+    {
+      "asset": "asset-a45ce46dbfd22877",
+      "id": "asset-a45ce46dbfd22877-tree",
+      "name": "Broad tree - beside Oldale Mart",
+      "kind": "foliage",
+      "profile": "broad_tree",
+      "crop": [
+        3,
+        0,
+        2,
+        2
+      ],
+      "occluder_palettes": [
+        0,
+        1
+      ]
+    },
+    {
+      "asset": "asset-c7d99e57555b302e",
+      "name": "Tree crown footprint - grass left",
+      "kind": "tree_ground",
+      "crown_side": "left"
+    },
+    {
+      "asset": "asset-1332c85859194046",
+      "name": "Tree crown footprint - grass right",
+      "kind": "tree_ground",
+      "crown_side": "right"
+    },
+    {
+      "asset": "asset-24a973d63c33c290",
+      "name": "Tree crown footprint - Oldale grass edge left",
+      "kind": "tree_ground",
+      "crown_side": "left"
+    },
+    {
+      "asset": "asset-d2fe3c4fc6d63a46",
+      "name": "Tree crown footprint - Oldale Center edge",
+      "kind": "tree_ground",
+      "crown_side": "right"
+    },
+    {
+      "asset": "asset-0fc233364f9ae191",
+      "name": "Encounter grass - tree crown left",
+      "kind": "grass",
+      "blade_height_px": 12,
+      "crown_side": "left"
+    },
+    {
+      "asset": "asset-baace6a3ee679103",
+      "name": "Encounter grass - tree crown right",
+      "kind": "grass",
+      "blade_height_px": 12,
+      "crown_side": "right"
+    },
+    {
+      "asset": "asset-fddd3779331738d9",
+      "name": "Broad tree - forest",
+      "kind": "foliage",
+      "profile": "broad_tree"
+    },
+    {
+      "asset": "asset-ddcf7e4cb4d375a0",
+      "name": "Broad tree - clearing edge",
+      "kind": "foliage",
+      "profile": "broad_tree"
+    },
+    {
+      "asset": "asset-927c3340e2bb9e23",
+      "name": "Broad tree - west edge",
+      "kind": "foliage",
+      "profile": "broad_tree"
+    },
+    {
+      "asset": "asset-ef737fee677940f5",
+      "name": "Broad tree - east edge",
+      "kind": "foliage",
+      "profile": "broad_tree"
+    },
+    {
+      "asset": "asset-bab5b51f08ee88d3",
+      "name": "Broad tree - south edge",
+      "kind": "foliage",
+      "profile": "broad_tree"
+    },
+    {
+      "asset": "asset-a19663ba2952616f",
+      "name": "Broad tree - corner",
+      "kind": "foliage",
+      "profile": "broad_tree"
+    },
+    {
+      "asset": "asset-6c0743cb0f36a883",
+      "name": "Broad tree - open crown",
+      "kind": "foliage",
+      "profile": "broad_tree"
+    },
+    {
+      "asset": "asset-c0a176a1b5c8cb0c",
+      "name": "Broad tree - path edge",
+      "kind": "foliage",
+      "profile": "broad_tree"
+    },
+    {
+      "asset": "asset-0797945614a8c3b8",
+      "name": "Broad tree - tall grass",
+      "kind": "foliage",
+      "profile": "broad_tree"
+    },
+    {
+      "asset": "asset-3560a87596ef7f75",
+      "name": "Broad tree - single trunk",
+      "kind": "foliage",
+      "profile": "broad_tree"
+    },
+    {
+      "asset": "asset-ff0ab0ee9d97f005",
+      "name": "Broad tree - grass corner",
+      "kind": "foliage",
+      "profile": "broad_tree"
+    },
+    {
+      "asset": "asset-e4b7bf9e96411c6d",
+      "name": "Broad tree - clearing corner",
+      "kind": "foliage",
+      "profile": "broad_tree"
+    },
+    {
+      "asset": "asset-479d5c50e948d732",
+      "name": "Broad tree - woodland",
+      "kind": "foliage",
+      "profile": "broad_tree"
+    },
+    {
+      "asset": "asset-771df027cb89e89e",
+      "name": "Slender tree",
+      "kind": "foliage",
+      "profile": "slender_tree"
+    },
+    {
+      "asset": "asset-45a1be7ac5ef771e",
+      "name": "Slender tree - path edge",
+      "kind": "foliage",
+      "profile": "slender_tree"
+    },
+    {
+      "asset": "asset-7997682defa9472e",
+      "name": "Slender tree - isolated",
+      "kind": "foliage",
+      "profile": "slender_tree"
+    },
+    {
+      "asset": "asset-78524535dc5d1bc5",
+      "name": "Round bush - grass",
+      "kind": "foliage",
+      "profile": "bush",
+      "depth_ratio": 1.0
+    },
+    {
+      "asset": "asset-e50c86d219e0c4a1",
+      "name": "Round bush - garden",
+      "kind": "foliage",
+      "profile": "bush",
+      "depth_ratio": 1.0
+    },
+    {
+      "asset": "asset-5b57b6c63ae2ba99",
+      "name": "Round bush - Slateport",
+      "kind": "foliage",
+      "profile": "bush",
+      "depth_ratio": 1.0
+    },
+    {
+      "asset": "asset-a087ec4efd0ff4b5",
+      "name": "Round bush - border",
+      "kind": "foliage",
+      "profile": "bush",
+      "depth_ratio": 1.0
+    },
+    {
+      "asset": "asset-16b1be1795e7b460",
+      "name": "Town information sign",
+      "kind": "sign"
+    },
+    {
+      "asset": "asset-d794673a919541e0",
+      "name": "Woodland sign",
+      "kind": "sign",
+      "panel": [
+        0,
+        0,
+        15,
+        11
+      ],
+      "legs": [
+        [
+          6,
+          11,
+          3,
+          2
+        ]
+      ],
+      "baseline": 13,
+      "object_palettes": [
+        3
+      ]
+    },
+    {
+      "asset": "asset-ac2b2eae9bf261f5",
+      "name": "Mauville pink-roof house",
+      "kind": "gable",
+      "facade_start": 40,
+      "wall_art": [
+        3,
+        43,
+        3,
+        17
+      ],
+      "roof_art": [
+        3,
+        12,
+        58,
+        22
+      ],
+      "crop": [
+        0,
+        0,
+        4,
+        4
+      ]
+    },
+    {
+      "asset": "asset-ac2b2eae9bf261f5",
+      "name": "Mauville Mart",
+      "kind": "hipped",
+      "id": "asset-ac2b2eae9bf261f5-mart",
+      "crop": [
+        4,
+        0,
+        4,
+        4
+      ],
+      "facade_start": 40,
+      "roof_start": 8,
+      "rise": 8,
+      "hip": 10,
+      "wall_margin": 6,
+      "wall_art": [
+        5,
+        44,
+        5,
+        14
+      ],
+      "roof_art": [
+        8,
+        9,
+        48,
+        14
+      ],
+      "badge": [
+        22,
+        25,
+        20,
+        14
+      ],
+      "object_palettes": [
+        0,
+        1
+      ],
+      "badge_along": 0.62,
+      "trim_art": [
+        8,
+        36,
+        8,
+        4
+      ]
+    },
+    {
+      "asset": "asset-a77a7ca212fbf1b1",
+      "name": "Route 114 double-window house",
+      "kind": "gable",
+      "facade_start": 40,
+      "wall_art": [
+        3,
+        43,
+        3,
+        17
+      ],
+      "roof_art": [
+        3,
+        12,
+        74,
+        22
+      ],
+      "crop": [
+        0,
+        0,
+        5,
+        4
+      ]
+    },
+    {
+      "asset": "asset-9c025fc5672460d9",
+      "name": "Route 124 seaside house",
+      "kind": "gable",
+      "facade_start": 40,
+      "wall_art": [
+        3,
+        43,
+        3,
+        17
+      ],
+      "roof_art": [
+        3,
+        12,
+        58,
+        22
+      ],
+      "crop": [
+        0,
+        0,
+        4,
+        4
+      ]
+    },
+    {
+      "asset": "asset-e3443d17a21931d0",
+      "name": "Route 117 daycare",
+      "kind": "gable",
+      "facade_start": 40,
+      "wall_art": [
+        3,
+        43,
+        3,
+        17
+      ],
+      "roof_art": [
+        3,
+        12,
+        58,
+        22
+      ],
+      "crop": [
+        1,
+        0,
+        4,
+        4
+      ]
+    },
+    {
+      "asset": "asset-6889955a7d005b15",
+      "name": "Safari entrance house",
+      "kind": "gable",
+      "facade_start": 40,
+      "wall_art": [
+        3,
+        43,
+        3,
+        17
+      ],
+      "roof_art": [
+        3,
+        12,
+        58,
+        22
+      ],
+      "crop": [
+        1,
+        0,
+        4,
+        4
+      ]
+    },
+    {
+      "asset": "asset-3be3779e5fbc4303",
+      "name": "Slateport purple-roof house",
+      "kind": "gable",
+      "facade_start": 40,
+      "wall_art": [
+        3,
+        43,
+        3,
+        17
+      ],
+      "roof_art": [
+        3,
+        12,
+        58,
+        22
+      ],
+      "crop": [
+        0,
+        0,
+        4,
+        4
+      ]
+    },
+    {
+      "asset": "asset-7f1ba030b09c26a5",
+      "name": "Slateport west terrace",
+      "kind": "gable",
+      "facade_start": 40,
+      "wall_art": [
+        3,
+        43,
+        3,
+        17
+      ],
+      "roof_art": [
+        3,
+        12,
+        58,
+        22
+      ],
+      "crop": [
+        0,
+        0,
+        4,
+        4
+      ]
+    },
+    {
+      "asset": "asset-7f1ba030b09c26a5",
+      "name": "Slateport east terrace",
+      "kind": "gable",
+      "id": "asset-7f1ba030b09c26a5-east",
+      "crop": [
+        4,
+        0,
+        6,
+        4
+      ],
+      "facade_start": 40,
+      "wall_art": [
+        3,
+        43,
+        3,
+        17
+      ],
+      "roof_art": [
+        3,
+        12,
+        90,
+        22
+      ]
+    },
+    {
+      "asset": "asset-27eba7a5818c928d",
+      "name": "Route 104 cottage",
+      "kind": "gable",
+      "crop": [
+        0,
+        1,
+        6,
+        4
+      ],
+      "facade_start": 38,
+      "wall_art": [
+        1,
+        44,
+        3,
+        14
+      ],
+      "roof_art": [
+        3,
+        2,
+        88,
+        25
+      ]
+    },
+    {
+      "asset": "asset-c605c813c85cd411",
+      "name": "Verdanturf hall",
+      "kind": "gable",
+      "crop": [
+        1,
+        0,
+        5,
+        4
+      ],
+      "facade_start": 40,
+      "wall_art": [
+        3,
+        43,
+        3,
+        17
+      ],
+      "roof_art": [
+        3,
+        12,
+        74,
+        22
+      ]
+    },
+    {
+      "asset": "asset-e0db084766b3f8be",
+      "name": "Rustboro metal-roof building",
+      "kind": "flat",
+      "facade_start": 48,
+      "roof_start": 2,
+      "trim": 3,
+      "wall_art": [
+        5,
+        51,
+        7,
+        19
+      ],
+      "roof_art": [
+        3,
+        3,
+        74,
+        39
+      ],
+      "rise": 2
+    },
+    {
+      "asset": "asset-24f40c2eabce6bef",
+      "name": "Rustboro long apartment building",
+      "kind": "flat",
+      "facade_start": 48,
+      "roof_start": 2,
+      "trim": 3,
+      "wall_art": [
+        5,
+        54,
+        8,
+        20
+      ],
+      "roof_art": [
+        3,
+        3,
+        119,
+        39
+      ],
+      "roof_details": [
+        {
+          "x": 124,
+          "size": [
+            15,
+            4,
+            14
+          ],
+          "art": [
+            126,
+            4,
+            13,
+            13
+          ]
+        }
+      ],
+      "rise": 2
+    },
+    {
+      "asset": "asset-0e0320a41b6b7afa",
+      "name": "Rustboro school",
+      "kind": "flat",
+      "crop": [
+        0,
+        0,
+        7,
+        5
+      ],
+      "facade_start": 40,
+      "roof_start": 2,
+      "trim": 3,
+      "wall_art": [
+        5,
+        47,
+        8,
+        22
+      ],
+      "roof_art": [
+        3,
+        3,
+        84,
+        31
+      ],
+      "roof_details": [
+        {
+          "x": 88,
+          "size": [
+            17,
+            4,
+            16
+          ],
+          "art": [
+            90,
+            4,
+            14,
+            14
+          ]
+        }
+      ],
+      "rise": 2
+    },
+    {
+      "asset": "asset-5dc0755e1704f9e8",
+      "name": "Rustboro apartment with roof vent",
+      "kind": "flat",
+      "crop": [
+        0,
+        0,
+        5,
+        5
+      ],
+      "facade_start": 40,
+      "roof_start": 2,
+      "trim": 3,
+      "wall_art": [
+        5,
+        47,
+        8,
+        22
+      ],
+      "roof_art": [
+        3,
+        3,
+        51,
+        31
+      ],
+      "roof_details": [
+        {
+          "x": 58,
+          "size": [
+            17,
+            4,
+            16
+          ],
+          "art": [
+            60,
+            4,
+            14,
+            14
+          ]
+        }
+      ],
+      "rise": 2
+    },
+    {
+      "asset": "asset-53e97bd76f95a90c",
+      "name": "Rustboro apartment building",
+      "kind": "flat",
+      "facade_start": 40,
+      "roof_start": 2,
+      "trim": 3,
+      "wall_art": [
+        5,
+        47,
+        8,
+        22
+      ],
+      "roof_art": [
+        3,
+        3,
+        90,
+        31
+      ],
+      "rise": 2
+    },
+    {
+      "asset": "asset-10addb457e8d4c63",
+      "name": "Rustboro tall apartment building",
+      "kind": "flat",
+      "facade_start": 48,
+      "roof_start": 2,
+      "trim": 3,
+      "depth": 54,
+      "wall_art": [
+        5,
+        54,
+        8,
+        24
+      ],
+      "roof_art": [
+        3,
+        3,
+        106,
+        39
+      ],
+      "rise": 2
+    },
+    {
+      "asset": "asset-4950ba392eea1171",
+      "name": "Dewford gym",
+      "kind": "flat",
+      "crop": [
+        0,
+        0,
+        6,
+        5
+      ],
+      "facade_start": 48,
+      "roof_start": 2,
+      "trim": 3,
+      "wall_art": [
+        1,
+        50,
+        2,
+        12
+      ],
+      "roof_art": [
+        3,
+        3,
+        88,
+        39
+      ],
+      "rise": 2
+    },
+    {
+      "asset": "asset-7c30c31d55198987",
+      "name": "Field boulder",
+      "kind": "rock",
+      "profile": "rock",
+      "palette": 3,
+      "indices": [
+        9,
+        10,
+        11,
+        12,
+        13,
+        14
+      ],
+      "depth_ratio": 1,
+      "shadow_palette": 3,
+      "shadow_indices": [
+        5
+      ]
+    },
+    {
+      "asset": "asset-34cbd81031e981ba",
+      "name": "Boulder on sand",
+      "kind": "rock",
+      "profile": "rock",
+      "palette": 3,
+      "indices": [
+        9,
+        10,
+        11,
+        12,
+        13,
+        14
+      ],
+      "depth_ratio": 1,
+      "shadow_palette": 3,
+      "shadow_indices": [
+        5
+      ]
+    },
+    {
+      "asset": "asset-a7a56a6c2cb556d1",
+      "name": "Coastal grey rock",
+      "kind": "rock",
+      "profile": "rock",
+      "palette": 1,
+      "indices": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "depth_ratio": 1
+    },
+    {
+      "asset": "asset-13241f9603605880",
+      "name": "Sea rock",
+      "kind": "rock",
+      "profile": "rock",
+      "palette": 1,
+      "indices": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "depth_ratio": 1,
+      "object_rect": [
+        8,
+        8,
+        16,
+        16
+      ],
+      "baseline": 24,
+      "center_z": -2,
+      "edge_art": [
+        11,
+        11,
+        10,
+        10
+      ]
+    },
+    {
+      "asset": "asset-27c7255566f25c4c",
+      "name": "Large sea boulder",
+      "kind": "rock",
+      "profile": "rock",
+      "palette": 3,
+      "indices": [
+        9,
+        10,
+        11,
+        12,
+        13,
+        14
+      ],
+      "depth_ratio": 1,
+      "shadow_palette": 3,
+      "shadow_indices": [
+        5
+      ]
+    },
+    {
+      "asset": "asset-b049b934b773bb0e",
+      "name": "Encounter grass - common",
+      "kind": "grass",
+      "blade_height_px": 12
+    }
+  ]
+}

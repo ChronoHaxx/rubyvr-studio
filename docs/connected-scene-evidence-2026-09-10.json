@@ -1,0 +1,321 @@
+{
+  "date": "2026-09-10",
+  "scope": "M2 bounded desktop connected explorer; merged in PR #30",
+  "base_commit": "c2029b406bee151609c1992d397d51d2523c2093",
+  "source_revision": "63a8cbf0016b351a4e68f7036fa0b77e23d2f2c1",
+  "source_files_sha256": {
+    ".github/workflows/ci.yml": "ae7e68edb1cd272f09f021ac31d7a96e4ccf192eafabf06031ee06b5189ff01e",
+    "CMakeLists.txt": "ded54071b8913f3b5eac2c514277516f539654efd5396d767acc585d7c02d6b0",
+    "src/studio/compare.cpp": "ae63075afb0219a8e3e87c724b8b24df419e2e6c0249dc11d035c518311f2351",
+    "src/studio/connected_scene.cpp": "b1ccbeabb4a0269a2c8950169e0df44cc07703799a7d846747fff8c080eb5146",
+    "src/studio/connected_scene.h": "7d855a47cfe3bc723cb5378cba961cf8e115341472d10a3faf85f6bdd93bdfc6",
+    "src/studio/connected_test.cpp": "21bc8b53a5cfcbbe1de32fdeb54ac0d1e7511f51b957475a9ab72016668834f7",
+    "src/studio/gui.cpp": "0fdec11efb25ab01211730bee3e2860075a15c1f7fe0551466a1a9a798d56f36",
+    "src/studio/gui_connected.inl": "5a921daf7fb015e120cbb8122815e3d503334f12d941424b5fbb6a169f12c06d",
+    "src/studio/gui_showcase.inl": "f11fcb0431d9d963b51afff2483c082a8d8b52973a51dd9266adafd4709fc6ad",
+    "src/vr/diorama.cpp": "dd54cc9c321f1535c3ecfcd336034e1eae1cbca7143e209fc814e3164e0080cd",
+    "src/vr/diorama.h": "a5df3179f83776e855b23fd54484215149ff6bcb04365c1fd8dc0d0ad93fa458",
+    "src/vr/region_mesh.inl": "5d386b1a35803bdac40e3b00cdf581a068bfb411b796c3f53d2c968c73c52ee7",
+    "tools/render-connected-scene.py": "691183c885f8679146f4d5bc114860f46afa0b37b4f9faa44e32bff661659314",
+    "tools/run-studio.ps1": "a478330b77c44466dcba9b176781a5b27d1394424f9111478536f0148bcf65e7",
+    "tools/test-connected-studio.py": "9c99696a9590d6791d97c28f6b53e420195a622bc305bd8ee178c648a4feca35",
+    "tools/test-studio-launcher.py": "35fd6e248812ff876c86d79f433cd2b065c743897cb0183eb34ff06fec69f3d3"
+  },
+  "gui_sha256": "4c9a237c43b92c8f8f0967404bff9e9c9d516ed988f96f93864b50da45fabf5e",
+  "batch_sha256": "f78ec95ab30897aa7ca05289ebf74cdbdde0e85fbb42ddd9fb49c0a0fd3f6b1b",
+  "input_sha256": "e76ed940e012a6b804e1a5e8e43e8f3a11219a13574e0e32995c5909617ea220",
+  "verification": {
+    "build": "PASS",
+    "synthetic_connected_checks": 17,
+    "connected_SDL_checkpoints": 20,
+    "atlas_pixels_identical": 32000,
+    "synthetic_terrain_checks": 197,
+    "synthetic_foundation_checks": 23,
+    "terrain_SDL_checkpoints": 49,
+    "foundation_SDL_checkpoints": 14,
+    "regional_source_free_tests": 13,
+    "native_boundary_checks": 200,
+    "level_water_cells": 495,
+    "flat_shore_cells": 266,
+    "editor_regression": "PASS including all eight unchanged frozen geometry hashes",
+    "environment_regression": "PASS at three sizes/scales",
+    "direct_connected_launch": "Original direct CLI check passed; actual launcher boundary is additionally covered by launcher_fix.",
+    "source_unchanged": true,
+    "document_unchanged": true,
+    "zero_camera_mesh_uploads": true,
+    "review": "Codex local code review; all 18 final actual-render frames and two editor sizes inspected. Claude subscription review attempt was rate-limited and supplied no review.",
+    "launcher_checks": "PASS: six source-free native-argument cases on Windows PowerShell 5.1 and PowerShell 7; real launcher reaches four-map GL scene in both"
+  },
+  "scene_meshes": [
+    {
+      "maps": 4,
+      "atlases": 1,
+      "vertices": 7421814,
+      "gpu_bytes": 208077032,
+      "primary_cells": 3400,
+      "padding_cells": 601,
+      "hidden_cells": 916,
+      "raised": 331,
+      "geometry_hash": "3b0d708d12ea9e5b",
+      "placements": [
+        {
+          "map": "MAP_OLDALE_TOWN",
+          "x": 0,
+          "z": 0
+        },
+        {
+          "map": "MAP_ROUTE103",
+          "x": 0,
+          "z": -20
+        },
+        {
+          "map": "MAP_ROUTE101",
+          "x": 0,
+          "z": 20
+        },
+        {
+          "map": "MAP_ROUTE102",
+          "x": -50,
+          "z": 0
+        }
+      ]
+    },
+    {
+      "maps": 3,
+      "atlases": 2,
+      "vertices": 279360,
+      "gpu_bytes": 8021760,
+      "primary_cells": 5100,
+      "padding_cells": 720,
+      "hidden_cells": 848,
+      "raised": 0,
+      "geometry_hash": "d61e8a1572e73746",
+      "placements": [
+        {
+          "map": "MAP_PETALBURG_CITY",
+          "x": 0,
+          "z": 0
+        },
+        {
+          "map": "MAP_ROUTE104",
+          "x": -40,
+          "z": -50
+        },
+        {
+          "map": "MAP_ROUTE102",
+          "x": 30,
+          "z": 10
+        }
+      ]
+    }
+  ],
+  "layouts": [
+    {
+      "viewport": [
+        1600,
+        1100
+      ],
+      "checkpoints": 10,
+      "vertices": 7421814,
+      "gpu_bytes": 208077032,
+      "region_hash": "3b0d708d12ea9e5b",
+      "crossed_eye_z": 2.60001278,
+      "loaded_draw_ms": 0.839263,
+      "crossed_draw_ms": 0.340331,
+      "crossed_draw_calls": 1
+    },
+    {
+      "viewport": [
+        1280,
+        720
+      ],
+      "checkpoints": 10,
+      "vertices": 7421814,
+      "gpu_bytes": 208077032,
+      "region_hash": "3b0d708d12ea9e5b",
+      "crossed_eye_z": 2.60001278,
+      "loaded_draw_ms": 0.817662,
+      "crossed_draw_ms": 0.337888,
+      "crossed_draw_calls": 1
+    }
+  ],
+  "render_measurement": "Synchronized single-eye GL draw, including sky; excludes UI, CPU builds and driver overhead; not headset frame time",
+  "material_test_scope": "Petalburg + Route104 + Route102; empty patterns and no terrain isolate source-floor atlas binding, not voxel scenery coverage",
+  "gif": {
+    "path": "media/connected-scene.gif",
+    "sha256": "5699499533299ffb872ad1d46bf7aa2faa54321ff5e508b1b6e7dbabfdb973ff",
+    "duration_seconds": 11.34,
+    "frames": 18,
+    "rendering": "Actual SDL input and production captures; sampled flight with held before/after views, Fit area and three zoom clicks; no mocked or interpolated views"
+  },
+  "limits": {
+    "loader_hops": 1,
+    "loader_maps": 5,
+    "mesher_maps": 9,
+    "source_cells": 65536,
+    "vertices": 8000000
+  },
+  "limitations": [
+    "Desktop preview only; no collision, live movement, animated source state or headset acceptance",
+    "Map loading is explicit and synchronous; no loading further maps as the camera travels",
+    "Terrain packs stop at unauthored neighbours; remaining outer padding, borders and undersides are incomplete",
+    "198.4 MiB covers region vertices and indexed textures only; excludes retained editor mesh, CPU copies and driver allocation",
+    "Six-map full-scenery trial exceeded ten million vertices; broader travel needs model reuse and streaming",
+    "Draw measurements are not whole-app FPS or VR frame times",
+    "Foliage quality remains unapproved M4 work; horizon/fog remains M8"
+  ],
+  "tested_working_file_hashes": {
+    "tools/run-studio.ps1": "0ca335801f1226999840cc3660773e392f249c74637a053cd5e7b71f315a0241"
+  },
+  "hash_basis": "source_files_sha256 hashes staged Git blobs; tested_working_file_hashes records the PowerShell file before Git line-ending normalization. Other tested source bytes match the staged blobs.",
+  "pull_request": "https://github.com/ChronoHaxx/rubyvr-studio-archive-20260910/pull/30",
+  "implementation_commit": "c38d950b2826e6addb9bbab1e79201ec21194b77",
+  "previous_preview": {
+    "input_sha256": "ca47bc2ff1b0900cbf187db39e522f6908c1f5033cfeed3d51493b0bf58affde",
+    "gif": {
+      "path": "media/connected-scene.gif",
+      "sha256": "c32363805d5bdcaeba15eeb88b50bbb3af4050812da6853eb7a7265afb80d2f0",
+      "duration_seconds": 11.34,
+      "frames": 18,
+      "rendering": "Actual SDL input and production captures; sampled flight with held before/after views, Fit area and three zoom clicks; no mocked or interpolated views"
+    },
+    "scene_meshes": [
+      {
+        "maps": 4,
+        "atlases": 1,
+        "vertices": 7431390,
+        "gpu_bytes": 208345160,
+        "primary_cells": 3400,
+        "padding_cells": 601,
+        "hidden_cells": 916,
+        "raised": 331,
+        "geometry_hash": "538dfe5b4d512fbc",
+        "placements": [
+          {
+            "map": "MAP_OLDALE_TOWN",
+            "x": 0,
+            "z": 0
+          },
+          {
+            "map": "MAP_ROUTE103",
+            "x": 0,
+            "z": -20
+          },
+          {
+            "map": "MAP_ROUTE101",
+            "x": 0,
+            "z": 20
+          },
+          {
+            "map": "MAP_ROUTE102",
+            "x": -50,
+            "z": 0
+          }
+        ]
+      },
+      {
+        "maps": 3,
+        "atlases": 2,
+        "vertices": 279360,
+        "gpu_bytes": 8021760,
+        "primary_cells": 5100,
+        "padding_cells": 720,
+        "hidden_cells": 848,
+        "raised": 0,
+        "geometry_hash": "d61e8a1572e73746",
+        "placements": [
+          {
+            "map": "MAP_PETALBURG_CITY",
+            "x": 0,
+            "z": 0
+          },
+          {
+            "map": "MAP_ROUTE104",
+            "x": -40,
+            "z": -50
+          },
+          {
+            "map": "MAP_ROUTE102",
+            "x": 30,
+            "z": 10
+          }
+        ]
+      }
+    ],
+    "note": "The first captured pack was generated before the level-water update. This launcher fix refreshes the pack, connected checks and GIF; model patterns are unchanged."
+  },
+  "launcher_fix": {
+    "parent_commit": "5ff9d0baf847255222e1d959a66b9a8ee558d448",
+    "problem": "A one-item PowerShell if-expression unwrapped to a string; splatting passed --connected one character at a time.",
+    "solution": "Build and splat one explicit string array for the full native command.",
+    "original_failure_reproduced": true,
+    "native_argument_checks": [
+      {
+        "powershell": "5.1.19041.6456",
+        "case": "plain",
+        "status": "PASS"
+      },
+      {
+        "powershell": "5.1.19041.6456",
+        "case": "connected",
+        "status": "PASS"
+      },
+      {
+        "powershell": "5.1.19041.6456",
+        "case": "stale-review",
+        "status": "PASS"
+      },
+      {
+        "powershell": "7.6.5",
+        "case": "plain",
+        "status": "PASS"
+      },
+      {
+        "powershell": "7.6.5",
+        "case": "connected",
+        "status": "PASS"
+      },
+      {
+        "powershell": "7.6.5",
+        "case": "stale-review",
+        "status": "PASS"
+      }
+    ],
+    "actual_GUI_checks": [
+      {
+        "powershell": "5.1.19041.6456",
+        "maps": 4,
+        "region_hash": "3b0d708d12ea9e5b",
+        "stale_review_nonfatal": true
+      },
+      {
+        "powershell": "7.6.5",
+        "maps": 4,
+        "region_hash": "3b0d708d12ea9e5b",
+        "stale_review_nonfatal": true
+      }
+    ],
+    "actual_GUI_scope": "Actual launcher; test-only alias appends existing hidden SDL probe/showcase arguments to the real GUI invocation",
+    "coverage_ledger_unchanged": true,
+    "note": "Earlier direct GUI CLI checks bypassed the launcher. CI now exercises the launcher with native argv capture; the full hidden SDL launcher checks run locally."
+  },
+  "merge_verification": {
+    "pr": 30,
+    "merge_commit": "92760efcfa148ed82df08d93330a913d3558f50a",
+    "source_head": "94e540583ce499edcf970d989faac52e0b498bfc",
+    "merged_at": "2026-09-10T14:25:50Z",
+    "checked_at": "2026-09-10T14:27:00Z",
+    "checks": [
+      {
+        "run": 34488250866,
+        "job": 102907984720,
+        "conclusion": "SUCCESS"
+      },
+      {
+        "run": 34488245446,
+        "job": 102907965372,
+        "conclusion": "SUCCESS"
+      }
+    ]
+  }
+}

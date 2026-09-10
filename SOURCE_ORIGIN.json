@@ -1,0 +1,647 @@
+{
+  "format": 1,
+  "date": "2026-09-08",
+  "game_upstream": "https://github.com/mstan/RubySapphireRecomp",
+  "game_base": "4d49909cbc6dccd3fbb0087cb68347ffbe55ce5d",
+  "development_head": "dad4c68251aa3adde77be47884b17870a151f429",
+  "includes_uncommitted_editor_work": true,
+  "gbarecomp_upstream": "https://github.com/mstan/gbarecomp",
+  "gbarecomp_base": "a1de406b179addf10a534369b64f449e5fe28c4a",
+  "reference_dramaless": "5ccc0e25417bd8b16cefd50cf08f61c44223e3d4",
+  "imgui_version": "1.91.9b",
+  "imgui_vendor_revision": "76392fb215652a94f5b3b113806b9492731e2807",
+  "pokeruby_revision": "63a8cbf0016b351a4e68f7036fa0b77e23d2f2c1",
+  "files": [
+    {
+      "path": "src/studio/asset_catalog.cpp",
+      "source": "RubySapphireRecomp/src/studio/asset_catalog.cpp",
+      "source_sha256": "5b20111a9bad78d92aec81797711f4cfb18c8487883b11382d26590cecc4b308",
+      "sha256": "5b20111a9bad78d92aec81797711f4cfb18c8487883b11382d26590cecc4b308",
+      "path_adapted": false
+    },
+    {
+      "path": "src/studio/asset_catalog.h",
+      "source": "RubySapphireRecomp/src/studio/asset_catalog.h",
+      "source_sha256": "fc9f9dee619a26fefad42151c16761b9dc77b3d4528e98e22758d1e1690dc5ac",
+      "sha256": "fc9f9dee619a26fefad42151c16761b9dc77b3d4528e98e22758d1e1690dc5ac",
+      "path_adapted": false
+    },
+    {
+      "path": "src/studio/capture.cpp",
+      "source": "RubySapphireRecomp/src/studio/capture.cpp",
+      "source_sha256": "6893f24b5f5d1d0a3620af67d079d24b2390cc040093aab5bb0ccd1df92da963",
+      "sha256": "6893f24b5f5d1d0a3620af67d079d24b2390cc040093aab5bb0ccd1df92da963",
+      "path_adapted": false
+    },
+    {
+      "path": "src/studio/capture.h",
+      "source": "RubySapphireRecomp/src/studio/capture.h",
+      "source_sha256": "34ac0afdbe85142b1e4a257f174ca8ead4ca526a801957954ab1d33eba0534ea",
+      "sha256": "34ac0afdbe85142b1e4a257f174ca8ead4ca526a801957954ab1d33eba0534ea",
+      "path_adapted": false
+    },
+    {
+      "path": "src/studio/compare.cpp",
+      "source": "RubySapphireRecomp/src/studio/compare.cpp",
+      "source_sha256": "b09d58c2f55f4fa35bfbdb96bc89dcf1bf1dc966a500c551f568c1a9ec31c8e7",
+      "sha256": "b09d58c2f55f4fa35bfbdb96bc89dcf1bf1dc966a500c551f568c1a9ec31c8e7",
+      "path_adapted": false
+    },
+    {
+      "path": "src/studio/decomp_source.cpp",
+      "source": "RubySapphireRecomp/src/studio/decomp_source.cpp",
+      "source_sha256": "feaa949624d36ba0deab503dcdbd82de4e50bb90689771cb505bde1063367ef7",
+      "sha256": "feaa949624d36ba0deab503dcdbd82de4e50bb90689771cb505bde1063367ef7",
+      "path_adapted": false
+    },
+    {
+      "path": "src/studio/decomp_source.h",
+      "source": "RubySapphireRecomp/src/studio/decomp_source.h",
+      "source_sha256": "d3eea8f296049343417a5ddf88b5a9b4d4df82488a9e404baf0f11ac1098e4de",
+      "sha256": "d3eea8f296049343417a5ddf88b5a9b4d4df82488a9e404baf0f11ac1098e4de",
+      "path_adapted": false
+    },
+    {
+      "path": "src/studio/group.cpp",
+      "source": "RubySapphireRecomp/src/studio/group.cpp",
+      "source_sha256": "077afa0404740b719e61a6c48e12f1c06fd32b5d7f1fec22cbc19a33542489c6",
+      "sha256": "077afa0404740b719e61a6c48e12f1c06fd32b5d7f1fec22cbc19a33542489c6",
+      "path_adapted": false
+    },
+    {
+      "path": "src/studio/group.h",
+      "source": "RubySapphireRecomp/src/studio/group.h",
+      "source_sha256": "473d8f6ba0f50f92fa43e3f450da4cd3b9ed5d095689c2e079c408c1f01feaed",
+      "sha256": "473d8f6ba0f50f92fa43e3f450da4cd3b9ed5d095689c2e079c408c1f01feaed",
+      "path_adapted": false
+    },
+    {
+      "path": "src/studio/group_test.cpp",
+      "source": "RubySapphireRecomp/src/studio/group_test.cpp",
+      "source_sha256": "64b87953c0acbebb4ef3e3cdf0a65bea22aacc43b64ab2326ec5b1cd68138481",
+      "sha256": "64b87953c0acbebb4ef3e3cdf0a65bea22aacc43b64ab2326ec5b1cd68138481",
+      "path_adapted": false
+    },
+    {
+      "path": "src/studio/gui.cpp",
+      "source": "RubySapphireRecomp/src/studio/gui.cpp",
+      "source_sha256": "91056ecd6dd65e4de2fd3a633ad94bab74360ba1d110e68e6f370a6f5015e0b5",
+      "sha256": "91056ecd6dd65e4de2fd3a633ad94bab74360ba1d110e68e6f370a6f5015e0b5",
+      "path_adapted": false
+    },
+    {
+      "path": "src/studio/gui_asset_review.inl",
+      "source": "RubySapphireRecomp/src/studio/gui_asset_review.inl",
+      "source_sha256": "5ce412c26fbf47006299e57292338688c67b2afd495ba5c93b6bb55862a7c98e",
+      "sha256": "5ce412c26fbf47006299e57292338688c67b2afd495ba5c93b6bb55862a7c98e",
+      "path_adapted": false
+    },
+    {
+      "path": "src/studio/gui_showcase.inl",
+      "source": "RubySapphireRecomp/src/studio/gui_showcase.inl",
+      "source_sha256": "df5795af1eda465af0227e2dd2be3b08f33905a26b059aa20e72f54feb9d5e4e",
+      "sha256": "df5795af1eda465af0227e2dd2be3b08f33905a26b059aa20e72f54feb9d5e4e",
+      "path_adapted": false
+    },
+    {
+      "path": "src/studio/gui_voxel.inl",
+      "source": "RubySapphireRecomp/src/studio/gui_voxel.inl",
+      "source_sha256": "30c3653e97603715746da92818251dc9feb7d8e6e1372ee850b7a26ef5a1021a",
+      "sha256": "30c3653e97603715746da92818251dc9feb7d8e6e1372ee850b7a26ef5a1021a",
+      "path_adapted": false
+    },
+    {
+      "path": "src/studio/mesh_audit.cpp",
+      "source": "RubySapphireRecomp/src/studio/mesh_audit.cpp",
+      "source_sha256": "4aa8ac1e74900c12d98ec63d19022e29e7d50f990ea6345713cf1d00cf2937a4",
+      "sha256": "4aa8ac1e74900c12d98ec63d19022e29e7d50f990ea6345713cf1d00cf2937a4",
+      "path_adapted": false
+    },
+    {
+      "path": "src/studio/mesh_audit.h",
+      "source": "RubySapphireRecomp/src/studio/mesh_audit.h",
+      "source_sha256": "466ba1af0b55403f236c6a55d7808d2313965e085df38f255ffd0bce6e75582f",
+      "sha256": "466ba1af0b55403f236c6a55d7808d2313965e085df38f255ffd0bce6e75582f",
+      "path_adapted": false
+    },
+    {
+      "path": "src/studio/pattern_io.cpp",
+      "source": "RubySapphireRecomp/src/studio/pattern_io.cpp",
+      "source_sha256": "7dadbbac5d3f0a80fefe13f8cc0093e834d3bb2fe3353e28168d6df0a852b044",
+      "sha256": "7dadbbac5d3f0a80fefe13f8cc0093e834d3bb2fe3353e28168d6df0a852b044",
+      "path_adapted": false
+    },
+    {
+      "path": "src/studio/pattern_io.h",
+      "source": "RubySapphireRecomp/src/studio/pattern_io.h",
+      "source_sha256": "2561f8580aa6cee191c0d7a516d91fe2dad0d8815c1aa18b5a1dc8086bcb4fff",
+      "sha256": "2561f8580aa6cee191c0d7a516d91fe2dad0d8815c1aa18b5a1dc8086bcb4fff",
+      "path_adapted": false
+    },
+    {
+      "path": "src/studio/png4bpp.cpp",
+      "source": "RubySapphireRecomp/src/studio/png4bpp.cpp",
+      "source_sha256": "a7c68f284fd9b7e1a153fe07e2ff6d3d89cd69ebe1e54276214c64124751f312",
+      "sha256": "a7c68f284fd9b7e1a153fe07e2ff6d3d89cd69ebe1e54276214c64124751f312",
+      "path_adapted": false
+    },
+    {
+      "path": "src/studio/png4bpp.h",
+      "source": "RubySapphireRecomp/src/studio/png4bpp.h",
+      "source_sha256": "546123de6b58cdbf92f84ab8fe364e8309fe9705cc0abc76ae2b9c7f0b76013c",
+      "sha256": "546123de6b58cdbf92f84ab8fe364e8309fe9705cc0abc76ae2b9c7f0b76013c",
+      "path_adapted": false
+    },
+    {
+      "path": "src/studio/png_write.cpp",
+      "source": "RubySapphireRecomp/src/studio/png_write.cpp",
+      "source_sha256": "8743a2840717fdeaec27bba608f08065e222fb578517db5c2be33a6946788331",
+      "sha256": "8743a2840717fdeaec27bba608f08065e222fb578517db5c2be33a6946788331",
+      "path_adapted": false
+    },
+    {
+      "path": "src/studio/png_write.h",
+      "source": "RubySapphireRecomp/src/studio/png_write.h",
+      "source_sha256": "ee8d2157f6513cb275058a968b1cbf9acca58dc0f9cc1784500e1388d8e246c4",
+      "sha256": "ee8d2157f6513cb275058a968b1cbf9acca58dc0f9cc1784500e1388d8e246c4",
+      "path_adapted": false
+    },
+    {
+      "path": "src/studio/room2d.cpp",
+      "source": "RubySapphireRecomp/src/studio/room2d.cpp",
+      "source_sha256": "a2deba775fed081df4093ecc89ed02067806bd34971bf9788a73ee44fbcff745",
+      "sha256": "a2deba775fed081df4093ecc89ed02067806bd34971bf9788a73ee44fbcff745",
+      "path_adapted": false
+    },
+    {
+      "path": "src/studio/room2d.h",
+      "source": "RubySapphireRecomp/src/studio/room2d.h",
+      "source_sha256": "648822a058efdc47c5ab2d02100117623854d082bb7b026cef10142285c69b0f",
+      "sha256": "648822a058efdc47c5ab2d02100117623854d082bb7b026cef10142285c69b0f",
+      "path_adapted": false
+    },
+    {
+      "path": "src/studio/snapshot_build.cpp",
+      "source": "RubySapphireRecomp/src/studio/snapshot_build.cpp",
+      "source_sha256": "5ecc16b4e2b1b68bd6640033dc0c5d19b3cc9b2d26414cbe848ea2cc2ab281f0",
+      "sha256": "5ecc16b4e2b1b68bd6640033dc0c5d19b3cc9b2d26414cbe848ea2cc2ab281f0",
+      "path_adapted": false
+    },
+    {
+      "path": "src/studio/snapshot_build.h",
+      "source": "RubySapphireRecomp/src/studio/snapshot_build.h",
+      "source_sha256": "6890e3eccfd1d772c1cecdf1c8a5e9a75fa6499155c9876f22a01b6af678623b",
+      "sha256": "6890e3eccfd1d772c1cecdf1c8a5e9a75fa6499155c9876f22a01b6af678623b",
+      "path_adapted": false
+    },
+    {
+      "path": "src/studio/voxel_authoring.h",
+      "source": "RubySapphireRecomp/src/studio/voxel_authoring.h",
+      "source_sha256": "10a346adcdba4e14430c3dbc4498ee201620d72266e5c416c51a77ad4d77108e",
+      "sha256": "10a346adcdba4e14430c3dbc4498ee201620d72266e5c416c51a77ad4d77108e",
+      "path_adapted": false
+    },
+    {
+      "path": "src/studio/voxel_test.inl",
+      "source": "RubySapphireRecomp/src/studio/voxel_test.inl",
+      "source_sha256": "791b9b8da0995c8a6ec64d082bcef13291b6f10dc2ce051590e2b4c313b7404b",
+      "sha256": "791b9b8da0995c8a6ec64d082bcef13291b6f10dc2ce051590e2b4c313b7404b",
+      "path_adapted": false
+    },
+    {
+      "path": "src/studio/workspace.h",
+      "source": "RubySapphireRecomp/src/studio/workspace.h",
+      "source_sha256": "ecf6621d6c5b15294eaf7c96f84b92705127899bea43d40b8e1e98ad4c69d7f4",
+      "sha256": "ecf6621d6c5b15294eaf7c96f84b92705127899bea43d40b8e1e98ad4c69d7f4",
+      "path_adapted": false
+    },
+    {
+      "path": "src/vr/diorama.cpp",
+      "source": "RubySapphireRecomp/src/vr/diorama.cpp",
+      "source_sha256": "2961c552db9b8999fe3c34d322c64925c69573feba587bc9b81b828a6b56a64c",
+      "sha256": "2961c552db9b8999fe3c34d322c64925c69573feba587bc9b81b828a6b56a64c",
+      "path_adapted": false
+    },
+    {
+      "path": "src/vr/diorama.h",
+      "source": "RubySapphireRecomp/src/vr/diorama.h",
+      "source_sha256": "455ed72ef732dcac4f37c0a4cee569d258bb76662b28e3fe5eec0063d48ac2c8",
+      "sha256": "455ed72ef732dcac4f37c0a4cee569d258bb76662b28e3fe5eec0063d48ac2c8",
+      "path_adapted": false
+    },
+    {
+      "path": "src/vr/gl_loader.cpp",
+      "source": "RubySapphireRecomp/src/vr/gl_loader.cpp",
+      "source_sha256": "262d99b6a15662cdc0837a431deecfb9511ea687fac8dab9748fd78ad800ba56",
+      "sha256": "262d99b6a15662cdc0837a431deecfb9511ea687fac8dab9748fd78ad800ba56",
+      "path_adapted": false
+    },
+    {
+      "path": "src/vr/gl_loader.h",
+      "source": "RubySapphireRecomp/src/vr/gl_loader.h",
+      "source_sha256": "1da66f0989aa94a193ac4663467d63d9cc7d254ab1122b861c10d07fc3ad87dc",
+      "sha256": "1da66f0989aa94a193ac4663467d63d9cc7d254ab1122b861c10d07fc3ad87dc",
+      "path_adapted": false
+    },
+    {
+      "path": "src/vr/json_scan.cpp",
+      "source": "RubySapphireRecomp/src/vr/json_scan.cpp",
+      "source_sha256": "493ad5bf4b3f3e45bfb270138e0169eb72be9983a3c99c88f30bc8d95cc263a2",
+      "sha256": "493ad5bf4b3f3e45bfb270138e0169eb72be9983a3c99c88f30bc8d95cc263a2",
+      "path_adapted": false
+    },
+    {
+      "path": "src/vr/json_scan.h",
+      "source": "RubySapphireRecomp/src/vr/json_scan.h",
+      "source_sha256": "e549c84684ba7543e913144bedfab6c3a865ce3e8e4f09d0789999725448001d",
+      "sha256": "e549c84684ba7543e913144bedfab6c3a865ce3e8e4f09d0789999725448001d",
+      "path_adapted": false
+    },
+    {
+      "path": "src/vr/overrides.cpp",
+      "source": "RubySapphireRecomp/src/vr/overrides.cpp",
+      "source_sha256": "82ef4daa3c976da6fdd2e3a6d0b7ee3477f2724c06d4657ff54892a631b75730",
+      "sha256": "82ef4daa3c976da6fdd2e3a6d0b7ee3477f2724c06d4657ff54892a631b75730",
+      "path_adapted": false
+    },
+    {
+      "path": "src/vr/overrides.h",
+      "source": "RubySapphireRecomp/src/vr/overrides.h",
+      "source_sha256": "787493ba64ebd67c6bba224dfe9cf792649ebff95c1407068795e20ea5dc9e45",
+      "sha256": "787493ba64ebd67c6bba224dfe9cf792649ebff95c1407068795e20ea5dc9e45",
+      "path_adapted": false
+    },
+    {
+      "path": "src/vr/cutout.cpp",
+      "source": "RubySapphireRecomp/src/vr/cutout.cpp",
+      "source_sha256": "b075f97dd20aaf4a432a14d17df115987dfbc6ecf58a4f4eac8da9ff03b592ea",
+      "sha256": "b075f97dd20aaf4a432a14d17df115987dfbc6ecf58a4f4eac8da9ff03b592ea",
+      "path_adapted": false
+    },
+    {
+      "path": "src/vr/cutout.h",
+      "source": "RubySapphireRecomp/src/vr/cutout.h",
+      "source_sha256": "4bf904193967b1a3a418574a7097f3305125b676fa53260c4ea8d40d6bcb7625",
+      "sha256": "4bf904193967b1a3a418574a7097f3305125b676fa53260c4ea8d40d6bcb7625",
+      "path_adapted": false
+    },
+    {
+      "path": "src/vr/part_geometry.cpp",
+      "source": "RubySapphireRecomp/src/vr/part_geometry.cpp",
+      "source_sha256": "6106f8f12bdbe61484eb93af59c53c088ab4b1060426c1ba66597b85780ea3ae",
+      "sha256": "6106f8f12bdbe61484eb93af59c53c088ab4b1060426c1ba66597b85780ea3ae",
+      "path_adapted": false
+    },
+    {
+      "path": "src/vr/part_geometry.h",
+      "source": "RubySapphireRecomp/src/vr/part_geometry.h",
+      "source_sha256": "3d0f81f136fe7b31756e3ca5e6492233356ee82abe4727d839c73239db546c95",
+      "sha256": "3d0f81f136fe7b31756e3ca5e6492233356ee82abe4727d839c73239db546c95",
+      "path_adapted": false
+    },
+    {
+      "path": "src/vr/tileset.cpp",
+      "source": "RubySapphireRecomp/src/vr/tileset.cpp",
+      "source_sha256": "02433c9721f3747ecab3cc164f9264886c829db31ac0aa54ae5a0e6508646b51",
+      "sha256": "02433c9721f3747ecab3cc164f9264886c829db31ac0aa54ae5a0e6508646b51",
+      "path_adapted": false
+    },
+    {
+      "path": "src/vr/tileset.h",
+      "source": "RubySapphireRecomp/src/vr/tileset.h",
+      "source_sha256": "b9351cdd2fa4539384837c40dc2458b2347c397c79a83535c744387f33a0ee6a",
+      "sha256": "b9351cdd2fa4539384837c40dc2458b2347c397c79a83535c744387f33a0ee6a",
+      "path_adapted": false
+    },
+    {
+      "path": "src/vr/world_io.cpp",
+      "source": "RubySapphireRecomp/src/vr/world_io.cpp",
+      "source_sha256": "d84df2191e17c96f6b19c0a7859e07ee6b8932d3e12aa0a468deb59ed1e2f2f7",
+      "sha256": "d84df2191e17c96f6b19c0a7859e07ee6b8932d3e12aa0a468deb59ed1e2f2f7",
+      "path_adapted": false
+    },
+    {
+      "path": "src/vr/world_io.h",
+      "source": "RubySapphireRecomp/src/vr/world_io.h",
+      "source_sha256": "06afa452cda12cc81554b4a0dddd5425a7a1661ecbb1a434cc5dfff55013c72e",
+      "sha256": "06afa452cda12cc81554b4a0dddd5425a7a1661ecbb1a434cc5dfff55013c72e",
+      "path_adapted": false
+    },
+    {
+      "path": "src/vr/ruby_world.h",
+      "source": "RubySapphireRecomp/src/vr/ruby_world.h",
+      "source_sha256": "922ff2bef45d2d36b4131e3d20c0649b5d9b524b9e6bfd86a4611946e0df0b00",
+      "sha256": "922ff2bef45d2d36b4131e3d20c0649b5d9b524b9e6bfd86a4611946e0df0b00",
+      "path_adapted": false
+    },
+    {
+      "path": "src/vr/vr_math.h",
+      "source": "RubySapphireRecomp/src/vr/vr_math.h",
+      "source_sha256": "bc4dad7502db57706b3d631911e7fdaed99a9b74d7fdfa9504c6588397501d2c",
+      "sha256": "bc4dad7502db57706b3d631911e7fdaed99a9b74d7fdfa9504c6588397501d2c",
+      "path_adapted": false
+    },
+    {
+      "path": "src/vr/voxel_parts.inl",
+      "source": "RubySapphireRecomp/src/vr/voxel_parts.inl",
+      "source_sha256": "d7418203f173efde402e8a6ced90a0c6106057aff08b5c4fc526ac9251c01c12",
+      "sha256": "d7418203f173efde402e8a6ced90a0c6106057aff08b5c4fc526ac9251c01c12",
+      "path_adapted": false
+    },
+    {
+      "path": "integration/runtime/ruby_world.cpp",
+      "source": "RubySapphireRecomp/src/vr/ruby_world.cpp",
+      "source_sha256": "4825c426e028cc19282461e7f51dc519b1bfe345bfa8ffa1279b439b7e28e808",
+      "sha256": "4825c426e028cc19282461e7f51dc519b1bfe345bfa8ffa1279b439b7e28e808",
+      "path_adapted": false
+    },
+    {
+      "path": "integration/runtime/renderer.cpp",
+      "source": "RubySapphireRecomp/src/vr/renderer.cpp",
+      "source_sha256": "0d0882cbbd94bf2af22feb858cfcefd796f7bb9b834d9976dc680cbe890275d8",
+      "sha256": "0d0882cbbd94bf2af22feb858cfcefd796f7bb9b834d9976dc680cbe890275d8",
+      "path_adapted": false
+    },
+    {
+      "path": "integration/runtime/renderer.h",
+      "source": "RubySapphireRecomp/src/vr/renderer.h",
+      "source_sha256": "3a54179a95efcc1efe67ad9f82ab5e364450ecb4ef60d656cc58bb219f155f1a",
+      "sha256": "3a54179a95efcc1efe67ad9f82ab5e364450ecb4ef60d656cc58bb219f155f1a",
+      "path_adapted": false
+    },
+    {
+      "path": "integration/runtime/vr_layer.cpp",
+      "source": "RubySapphireRecomp/src/vr/vr_layer.cpp",
+      "source_sha256": "7a57472ba47e620d23d57052a31f84399437893b7127121656cf38d2743ca55c",
+      "sha256": "7a57472ba47e620d23d57052a31f84399437893b7127121656cf38d2743ca55c",
+      "path_adapted": false
+    },
+    {
+      "path": "integration/runtime/vr_layer.h",
+      "source": "RubySapphireRecomp/src/vr/vr_layer.h",
+      "source_sha256": "0cc86f4ddfdb4587a2951090befd88f004818744561ee5c8c0d9c3c2fe85d6cb",
+      "sha256": "0cc86f4ddfdb4587a2951090befd88f004818744561ee5c8c0d9c3c2fe85d6cb",
+      "path_adapted": false
+    },
+    {
+      "path": "integration/runtime/map_view.cpp",
+      "source": "RubySapphireRecomp/src/vr/map_view.cpp",
+      "source_sha256": "03342a65e50f70feb99f504c38538ae01c5892b211dd78fe7e5612f30f4dfffb",
+      "sha256": "03342a65e50f70feb99f504c38538ae01c5892b211dd78fe7e5612f30f4dfffb",
+      "path_adapted": false
+    },
+    {
+      "path": "integration/runtime/map_view.h",
+      "source": "RubySapphireRecomp/src/vr/map_view.h",
+      "source_sha256": "1d10b303daf3f2de221084788bb5fe9e20a9ec28a2a10558934c950305d4191c",
+      "sha256": "1d10b303daf3f2de221084788bb5fe9e20a9ec28a2a10558934c950305d4191c",
+      "path_adapted": false
+    },
+    {
+      "path": "integration/runtime/viewer.cpp",
+      "source": "RubySapphireRecomp/src/vr/viewer.cpp",
+      "source_sha256": "59248254094d1596c6e62749bcfcf8142f04e2137f01ecf9e78ba67bc07b1278",
+      "sha256": "59248254094d1596c6e62749bcfcf8142f04e2137f01ecf9e78ba67bc07b1278",
+      "path_adapted": false
+    },
+    {
+      "path": "integration/runtime/viewer.h",
+      "source": "RubySapphireRecomp/src/vr/viewer.h",
+      "source_sha256": "a2ef16ac5476a4284e918c65fad749370a9019d0ba813f19ea53726211b902b3",
+      "sha256": "a2ef16ac5476a4284e918c65fad749370a9019d0ba813f19ea53726211b902b3",
+      "path_adapted": false
+    },
+    {
+      "path": "tools/build-voxel-house.py",
+      "source": "tools/build-voxel-house.py",
+      "source_sha256": "4026550f276a2b47062e4e8a56d9a2e2d6e03e520fe53a9a91e965501b0874b2",
+      "sha256": "3c616f6284196992ddc580c11738310400c47a04a7b67af598bbc3a03dc21e0c",
+      "path_adapted": true
+    },
+    {
+      "path": "tools/build-voxel-world.py",
+      "source": "tools/build-voxel-world.py",
+      "source_sha256": "13c03fc38dab70f20ccf1faca1918289a7f0e7ed670c82a23c3a0b5167c60274",
+      "sha256": "4866a38fc3614e028044be12c37874d56574ac29940bb04623e88d623c3a3a87",
+      "path_adapted": true
+    },
+    {
+      "path": "tools/catalog-sprites.py",
+      "source": "tools/catalog-sprites.py",
+      "source_sha256": "937d680f6ee40865eb05326c0222d1cca5614b39f63437ccaffd578977e1bb1b",
+      "sha256": "55e03f9f8c5834c09ed50600e7b2830633031fa657ef9042d5a50d4906703317",
+      "path_adapted": true
+    },
+    {
+      "path": "tools/review-voxel-world.py",
+      "source": "tools/review-voxel-world.py",
+      "source_sha256": "9d36aa3431b5d75fdf2e0f43b699cff7d179dea21f9079fd91feccafd6cd4e8a",
+      "sha256": "1f10898efa7298d80d34f1d8eab43dd1199530f92251751b7753429198ec9f4f",
+      "path_adapted": true
+    },
+    {
+      "path": "tools/test-voxel-emblems.py",
+      "source": "tools/test-voxel-emblems.py",
+      "source_sha256": "77487bf8dc1ac142b8b331570bfb1dc5ae81220ac8d790a8b524d105739744d5",
+      "sha256": "9825b6d33dde7913ca90164038d5e99f64a4983f3a4dfb90054fc537efba0ca8",
+      "path_adapted": true
+    },
+    {
+      "path": "tools/test-studio-camera.py",
+      "source": "tools/test-studio-camera.py",
+      "source_sha256": "a677582c3798fbd1fb7491857b4dfcff658c0ac10cef6c51316fe03d0aa506b0",
+      "sha256": "4a4c5f9b4f273bb7876c0131aaafaea04b40e9b48c5a36210b0986e7cc362184",
+      "path_adapted": true
+    },
+    {
+      "path": "tools/test-studio-voxel-ui.py",
+      "source": "tools/test-studio-voxel-ui.py",
+      "source_sha256": "13b470b547b57bf3757d71c09141cd8461ee80ac8db203ac1ce09f51853f2b79",
+      "sha256": "a7745db2b004fa3acc44e16b759abf5f34308e015246863dae303bc1a9903982",
+      "path_adapted": true
+    },
+    {
+      "path": "tools/gui-probe-scene.json",
+      "source": "tools/gui-probe-scene.json",
+      "source_sha256": "c1c739f3a23a2557ad988b258f30816694dd797e809b6b6d5b9d1b6fa7f8e180",
+      "sha256": "c1c739f3a23a2557ad988b258f30816694dd797e809b6b6d5b9d1b6fa7f8e180",
+      "path_adapted": false
+    },
+    {
+      "path": "tools/gui-probe-small.json",
+      "source": "tools/gui-probe-small.json",
+      "source_sha256": "081677e442c50106968c17ec5e51c2fc34bc89b73a716e17b12c270ef75687a7",
+      "sha256": "081677e442c50106968c17ec5e51c2fc34bc89b73a716e17b12c270ef75687a7",
+      "path_adapted": false
+    },
+    {
+      "path": "tools/gui-probe-scaled.json",
+      "source": "tools/gui-probe-scaled.json",
+      "source_sha256": "d9320f41b9448e721bb2b7e76c4d15282b76e21f3d954b8b3ab237ab3c04bfb6",
+      "sha256": "d9320f41b9448e721bb2b7e76c4d15282b76e21f3d954b8b3ab237ab3c04bfb6",
+      "path_adapted": false
+    },
+    {
+      "path": "tools/gui-probe-view.json",
+      "source": "tools/gui-probe-view.json",
+      "source_sha256": "db21ab10e63f35449728fee08030ca8d2b1d659de6c2eec387b8926e023cc2d1",
+      "sha256": "db21ab10e63f35449728fee08030ca8d2b1d659de6c2eec387b8926e023cc2d1",
+      "path_adapted": false
+    },
+    {
+      "path": "tools/uat-scenes.json",
+      "source": "tools/uat-scenes.json",
+      "source_sha256": "9f4cba4061984ba35c8fa53bbe46ff95f662ec39df14a65835c178def4483ed2",
+      "sha256": "9f4cba4061984ba35c8fa53bbe46ff95f662ec39df14a65835c178def4483ed2",
+      "path_adapted": false
+    },
+    {
+      "path": "recipes/voxel-world-recipes.json",
+      "source": "mod-assets/voxel-world-recipes.json",
+      "source_sha256": "2161d4ef7cec2c552f6c31378deb574a0db3d9b00e1fb4795472458eddf144a3",
+      "sha256": "2161d4ef7cec2c552f6c31378deb574a0db3d9b00e1fb4795472458eddf144a3",
+      "path_adapted": false
+    },
+    {
+      "path": "third_party/imgui/imgui.cpp",
+      "source": "RubySapphireRecomp/recomp-ui/src/third_party/imgui/imgui.cpp",
+      "source_sha256": "53c75988381cb52158ea6704d3e3060647258e9ed389780fb1f58b17bea14500",
+      "sha256": "53c75988381cb52158ea6704d3e3060647258e9ed389780fb1f58b17bea14500",
+      "path_adapted": false
+    },
+    {
+      "path": "third_party/imgui/imgui_draw.cpp",
+      "source": "RubySapphireRecomp/recomp-ui/src/third_party/imgui/imgui_draw.cpp",
+      "source_sha256": "98043978cc3102ac03f1f1997865a89fa0b2e0466896271653f8f3443626f5ce",
+      "sha256": "98043978cc3102ac03f1f1997865a89fa0b2e0466896271653f8f3443626f5ce",
+      "path_adapted": false
+    },
+    {
+      "path": "third_party/imgui/imgui_tables.cpp",
+      "source": "RubySapphireRecomp/recomp-ui/src/third_party/imgui/imgui_tables.cpp",
+      "source_sha256": "b8a82cf385a5189ed2fa6d6172b79cfb56ec4a9490eaccb095faa9006d3ba72e",
+      "sha256": "b8a82cf385a5189ed2fa6d6172b79cfb56ec4a9490eaccb095faa9006d3ba72e",
+      "path_adapted": false
+    },
+    {
+      "path": "third_party/imgui/imgui_widgets.cpp",
+      "source": "RubySapphireRecomp/recomp-ui/src/third_party/imgui/imgui_widgets.cpp",
+      "source_sha256": "09f78c5cdbe0772be94a45646209319629e00790a047e50cb5b1fd4e0ad7ab41",
+      "sha256": "09f78c5cdbe0772be94a45646209319629e00790a047e50cb5b1fd4e0ad7ab41",
+      "path_adapted": false
+    },
+    {
+      "path": "third_party/imgui/imgui.h",
+      "source": "RubySapphireRecomp/recomp-ui/src/third_party/imgui/imgui.h",
+      "source_sha256": "7f074c70232dfdacc7e48d65cebdbf91b78d7b33f4a8a60753fd151426b14189",
+      "sha256": "7f074c70232dfdacc7e48d65cebdbf91b78d7b33f4a8a60753fd151426b14189",
+      "path_adapted": false
+    },
+    {
+      "path": "third_party/imgui/imgui_internal.h",
+      "source": "RubySapphireRecomp/recomp-ui/src/third_party/imgui/imgui_internal.h",
+      "source_sha256": "bad81a4c711209101420ee519c47c33ffed3c5b85e0976d7dac80a7ef0002215",
+      "sha256": "bad81a4c711209101420ee519c47c33ffed3c5b85e0976d7dac80a7ef0002215",
+      "path_adapted": false
+    },
+    {
+      "path": "third_party/imgui/imconfig.h",
+      "source": "RubySapphireRecomp/recomp-ui/src/third_party/imgui/imconfig.h",
+      "source_sha256": "37ca22da65d287534510630a12de2edef7d0524c2f6f1982aa50fc46ed8f25c7",
+      "sha256": "37ca22da65d287534510630a12de2edef7d0524c2f6f1982aa50fc46ed8f25c7",
+      "path_adapted": false
+    },
+    {
+      "path": "third_party/imgui/imstb_rectpack.h",
+      "source": "RubySapphireRecomp/recomp-ui/src/third_party/imgui/imstb_rectpack.h",
+      "source_sha256": "bb53504995e983d54b1ae06ea727f0b39647e5e205b4bf7da01343953974951c",
+      "sha256": "bb53504995e983d54b1ae06ea727f0b39647e5e205b4bf7da01343953974951c",
+      "path_adapted": false
+    },
+    {
+      "path": "third_party/imgui/imstb_textedit.h",
+      "source": "RubySapphireRecomp/recomp-ui/src/third_party/imgui/imstb_textedit.h",
+      "source_sha256": "d9deebe52c76276c42ca030e4ab92ea145552d2aa7e92fd7dea27ffc64eb7166",
+      "sha256": "d9deebe52c76276c42ca030e4ab92ea145552d2aa7e92fd7dea27ffc64eb7166",
+      "path_adapted": false
+    },
+    {
+      "path": "third_party/imgui/imstb_truetype.h",
+      "source": "RubySapphireRecomp/recomp-ui/src/third_party/imgui/imstb_truetype.h",
+      "source_sha256": "941a95c9f36771aab45062e977596785aa9cfaa508a523f6c34ace84b5916780",
+      "sha256": "941a95c9f36771aab45062e977596785aa9cfaa508a523f6c34ace84b5916780",
+      "path_adapted": false
+    },
+    {
+      "path": "third_party/imgui/LICENSE.txt",
+      "source": "RubySapphireRecomp/recomp-ui/src/third_party/imgui/LICENSE.txt",
+      "source_sha256": "55e058cc5899e6077a819ad1005d6d1f4528f65ae100795c9692f9fa6525a8ce",
+      "sha256": "55e058cc5899e6077a819ad1005d6d1f4528f65ae100795c9692f9fa6525a8ce",
+      "path_adapted": false
+    },
+    {
+      "path": "third_party/imgui/backends/imgui_impl_sdl2.cpp",
+      "source": "RubySapphireRecomp/recomp-ui/src/third_party/imgui/backends/imgui_impl_sdl2.cpp",
+      "source_sha256": "77fa4b8654b811d1f0863bc34fb25c4bedce34a70e98371bf1f76a137f7d1480",
+      "sha256": "77fa4b8654b811d1f0863bc34fb25c4bedce34a70e98371bf1f76a137f7d1480",
+      "path_adapted": false
+    },
+    {
+      "path": "third_party/imgui/backends/imgui_impl_sdl2.h",
+      "source": "RubySapphireRecomp/recomp-ui/src/third_party/imgui/backends/imgui_impl_sdl2.h",
+      "source_sha256": "b5070f9721308fdcd5ecefe5b148b343e9dce0d2d86af0ac231794b989f79061",
+      "sha256": "b5070f9721308fdcd5ecefe5b148b343e9dce0d2d86af0ac231794b989f79061",
+      "path_adapted": false
+    },
+    {
+      "path": "third_party/imgui/backends/imgui_impl_opengl3.cpp",
+      "source": "RubySapphireRecomp/recomp-ui/src/third_party/imgui/backends/imgui_impl_opengl3.cpp",
+      "source_sha256": "b182c17cb7ca99674a411e613343c713a8a8f16ebb6ce88b9737efd900c082e3",
+      "sha256": "b182c17cb7ca99674a411e613343c713a8a8f16ebb6ce88b9737efd900c082e3",
+      "path_adapted": false
+    },
+    {
+      "path": "third_party/imgui/backends/imgui_impl_opengl3.h",
+      "source": "RubySapphireRecomp/recomp-ui/src/third_party/imgui/backends/imgui_impl_opengl3.h",
+      "source_sha256": "0cc33088d0ded76dc5e07a2d91e574b32496c9b24b768ee7e04563a16b37e8f2",
+      "sha256": "0cc33088d0ded76dc5e07a2d91e574b32496c9b24b768ee7e04563a16b37e8f2",
+      "path_adapted": false
+    },
+    {
+      "path": "third_party/imgui/backends/imgui_impl_opengl3_loader.h",
+      "source": "RubySapphireRecomp/recomp-ui/src/third_party/imgui/backends/imgui_impl_opengl3_loader.h",
+      "source_sha256": "e2ff7e693c20063c938291b7750a7570bc73321c231bbb37c8eaa4719a89da69",
+      "sha256": "e2ff7e693c20063c938291b7750a7570bc73321c231bbb37c8eaa4719a89da69",
+      "path_adapted": false
+    },
+    {
+      "path": "LICENSES/DRAMALESS_SHAPE-MIT.txt",
+      "source": "_ref/DRAMALESS_SHAPE/LICENSE",
+      "source_sha256": "9d47c70c280b337dbd56ef08e5ea3cf86a72f07448f8210f22966f8fc6dbea8b",
+      "sha256": "9d47c70c280b337dbd56ef08e5ea3cf86a72f07448f8210f22966f8fc6dbea8b",
+      "path_adapted": false
+    },
+    {
+      "path": "docs/media/center-turnaround.gif",
+      "source": "RubySapphireRecomp/build/voxel-world-review/shape-symmetry/center-turnaround.gif",
+      "source_sha256": "b05a6576a416fa32ce3ae40e227b50bedb818d038a32fefdbb66db24f0852814",
+      "sha256": "b05a6576a416fa32ce3ae40e227b50bedb818d038a32fefdbb66db24f0852814",
+      "path_adapted": false
+    },
+    {
+      "path": "docs/media/house-turnaround.gif",
+      "source": "RubySapphireRecomp/build/voxel-world-review/shape-symmetry/house-turnaround.gif",
+      "source_sha256": "4b0cc92cd517ca9458f536745419a01bfaa871d1ee4441eafe1b60771480fb79",
+      "sha256": "4b0cc92cd517ca9458f536745419a01bfaa871d1ee4441eafe1b60771480fb79",
+      "path_adapted": false
+    },
+    {
+      "path": "docs/media/studio-oldale.png",
+      "source": "RubySapphireRecomp/build/voxel-world-review/shape-symmetry/after/oldale_town.png.town.png",
+      "source_sha256": "c0601fd1508b3dfd32a06b669c2f76b54a95b4a14d17a02a1a5fb9982a0a9a80",
+      "sha256": "c0601fd1508b3dfd32a06b669c2f76b54a95b4a14d17a02a1a5fb9982a0a9a80",
+      "path_adapted": false
+    }
+  ],
+  "hash_scope": "Initial extraction hashes before standalone build, path and UX adjustments; not a current tree checksum."
+}

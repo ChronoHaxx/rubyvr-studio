@@ -1,0 +1,190 @@
+{
+  "_comment": [
+    "Acceptance scenes for the voxel diorama. Data, not code, so adding a scene",
+    "is one entry and never a change to the runner.",
+    "",
+    "Rewritten 2026-09-01. The first version was written BACKWARDS: the [stats]",
+    "line came first and checks were written against whatever it exposed, so a",
+    "scene could pass on 'carved == 0' while drawing its roof twice. These",
+    "criteria encode OBJECT INTEGRITY instead - the 2D art reinterpreted as",
+    "coherent 3D objects: one drawing is one object, at one height, with one",
+    "classification, drawn once. Every rectangle below was verified against the",
+    "decomp's own map grids (data/layouts/*/map.bin, stitched the way the game",
+    "stitches Oldale above and Littleroot below Route 101) so it contains WHOLE",
+    "objects, and every expected count was derived from those grids, not from",
+    "the mesher. They are written to FAIL against the mesher as of this date.",
+    "",
+    "Counts assume the ruby_usa.state1 snapshot (player on Route 101, Oldale and",
+    "Littleroot stitched into the 35x34 backup window). A different save",
+    "position stitches different neighbours and changes the whole-map numbers.",
+    "",
+    "isolate: 'x,y,w,h' lifts that rectangle of the map onto empty ground.",
+    "         omit it to render the whole assembled map.",
+    "checks:  assertions against the [stats] line the mesher prints, and the",
+    "         [object] lines that follow it. Each is {field, op, value}.",
+    "         Integer fields: vertices objects masses carved boxed tufts dupart.",
+    "         ops: eq min max.",
+    "         'heights' takes op 'only' (the set of column extents present must",
+    "         be exactly this list) or 'max'.",
+    "         'objects' with op 'list' matches the [object] lines as a MULTISET",
+    "         of {w,h,extent,class}: w x h is the footprint's bounding box in",
+    "         cells, extent the art rows, class prop or structure. A count alone",
+    "         is not a criterion - nine tree halves can total nine objects.",
+    "watch:   what a human should look for. NOT machine-checked - it is printed",
+    "         beside the render in the report so the eye knows where to go."
+  ],
+
+  "scenes": [
+    {
+      "name": "route101",
+      "title": "The whole assembled map",
+      "checks": [
+        { "field": "vertices", "op": "max", "value": 1500000 },
+        { "field": "objects",  "op": "eq",  "value": 62 },
+        { "field": "masses",   "op": "eq",  "value": 3 },
+        { "field": "carved",   "op": "eq",  "value": 60 },
+        { "field": "boxed",    "op": "eq",  "value": 5 },
+        { "field": "dupart",   "op": "eq",  "value": 0 },
+        { "field": "heights",  "op": "max", "value": 4 }
+      ],
+      "watch": [
+        "Forests read as individual round trees, not one fused mass and not two half-blobs per tree",
+        "Classification tile: yellow forests, red buildings, grey ground, no slab of red where a forest is",
+        "The Oldale house's east wall is present behind the trees at (25,1)-(26,4)",
+        "No roof art lying on the grass behind either building"
+      ]
+    },
+    {
+      "name": "house",
+      "title": "Oldale house - four rows, door on the bottom row (647)",
+      "isolate": "21,0,4,4",
+      "checks": [
+        { "field": "objects", "op": "eq",   "value": 1 },
+        { "field": "boxed",   "op": "eq",   "value": 1 },
+        { "field": "carved",  "op": "eq",   "value": 0 },
+        { "field": "heights", "op": "only", "value": [4] },
+        { "field": "dupart",  "op": "eq",   "value": 0 },
+        { "field": "objects", "op": "list", "value": [ { "w": 4, "h": 3, "extent": 4, "class": "structure" } ] }
+      ],
+      "watch": [
+        "ONE building at ONE height with ONE roof - no towers, no notch over the door",
+        "Door and ground-floor windows at ground level, first-floor windows above them, roof above that",
+        "No eroded rounded pillar at either corner",
+        "Roof rises to a ridge and falls back - not a ramp; no gap under the north eave",
+        "No roof art lying on the grass behind the building"
+      ]
+    },
+    {
+      "name": "pokecenter",
+      "title": "Pokemon Centre - four rows, door on the bottom row (97)",
+      "isolate": "12,0,4,4",
+      "checks": [
+        { "field": "objects", "op": "eq",   "value": 1 },
+        { "field": "boxed",   "op": "eq",   "value": 1 },
+        { "field": "carved",  "op": "eq",   "value": 0 },
+        { "field": "heights", "op": "only", "value": [4] },
+        { "field": "dupart",  "op": "eq",   "value": 0 },
+        { "field": "objects", "op": "list", "value": [ { "w": 4, "h": 3, "extent": 4, "class": "structure" } ] }
+      ],
+      "watch": [
+        "One building, one roof: the Pokeball logo appears ONCE, on the roof, not again up the facade",
+        "Facade reads: sliding door and P.C sign at ground level, walls showing their own art not grass",
+        "No notch at the rounded ground-floor corners (96/99)",
+        "No roof art lying on the grass behind the building"
+      ]
+    },
+    {
+      "name": "tree",
+      "title": "One tree - 468/469 canopy over 476/477 base",
+      "isolate": "9,25,2,2",
+      "checks": [
+        { "field": "objects", "op": "eq",   "value": 1 },
+        { "field": "carved",  "op": "eq",   "value": 1 },
+        { "field": "boxed",   "op": "eq",   "value": 0 },
+        { "field": "heights", "op": "only", "value": [2] },
+        { "field": "objects", "op": "list", "value": [ { "w": 2, "h": 2, "extent": 2, "class": "prop" } ] }
+      ],
+      "watch": [
+        "ONE tree, not two half-blobs of different heights",
+        "The two halves join across the seam into one round crown",
+        "Plain grass underneath - no tree-shaped patch on the floor",
+        "The crown stays inside the tree's own 2x2 plot"
+      ]
+    },
+    {
+      "name": "trees-stacked",
+      "title": "Two stacked trees whose canopy and base variants differ (468 471 / 476 477 / 468 469 / 484 487)",
+      "isolate": "15,25,2,4",
+      "checks": [
+        { "field": "objects", "op": "eq",   "value": 2 },
+        { "field": "carved",  "op": "eq",   "value": 2 },
+        { "field": "boxed",   "op": "eq",   "value": 0 },
+        { "field": "heights", "op": "only", "value": [2] },
+        { "field": "objects", "op": "list", "value": [
+            { "w": 2, "h": 2, "extent": 2, "class": "prop" },
+            { "w": 2, "h": 2, "extent": 2, "class": "prop" } ] }
+      ],
+      "watch": [
+        "Two trees of the same height, one behind the other - not one four-cell tower",
+        "Each canopy sits on its own base; the front tree does not wear the back tree's trunk"
+      ]
+    },
+    {
+      "name": "forest",
+      "title": "A block of forest - one tree, then five in a row",
+      "isolate": "7,23,10,4",
+      "checks": [
+        { "field": "objects", "op": "eq",   "value": 6 },
+        { "field": "carved",  "op": "eq",   "value": 6 },
+        { "field": "boxed",   "op": "eq",   "value": 0 },
+        { "field": "heights", "op": "only", "value": [2] },
+        { "field": "objects", "op": "list", "value": [
+            { "w": 2, "h": 2, "extent": 2, "class": "prop" },
+            { "w": 2, "h": 2, "extent": 2, "class": "prop" },
+            { "w": 2, "h": 2, "extent": 2, "class": "prop" },
+            { "w": 2, "h": 2, "extent": 2, "class": "prop" },
+            { "w": 2, "h": 2, "extent": 2, "class": "prop" },
+            { "w": 2, "h": 2, "extent": 2, "class": "prop" } ] }
+      ],
+      "watch": [
+        "Six distinct trees with gaps, not a hedge",
+        "No tree noticeably taller than its neighbours",
+        "Tall grass tufts in front of the row stay ankle-high"
+      ]
+    },
+    {
+      "name": "ledge",
+      "title": "A ledge (110 135 135 135 214 / 213 135 135 135 142) - must NOT stand",
+      "isolate": "9,13,9,2",
+      "checks": [
+        { "field": "objects", "op": "max", "value": 1 },
+        { "field": "masses",  "op": "eq",  "value": 0 },
+        { "field": "boxed",   "op": "eq",  "value": 0 },
+        { "field": "heights", "op": "max", "value": 1 }
+      ],
+      "watch": [
+        "The ledge lies flat - a lip at most, nothing a metre tall across the route",
+        "The rounded end cap (110) is a small lump, not a post"
+      ]
+    },
+    {
+      "name": "littleroot-clipped",
+      "title": "A Littleroot house cut off by the map border - the only door-less structure on the window",
+      "isolate": "9,31,5,3",
+      "checks": [
+        { "field": "objects", "op": "eq",   "value": 0 },
+        { "field": "masses",  "op": "eq",   "value": 1 },
+        { "field": "boxed",   "op": "eq",   "value": 1 },
+        { "field": "carved",  "op": "eq",   "value": 0 },
+        { "field": "heights", "op": "only", "value": [3] },
+        { "field": "dupart",  "op": "eq",   "value": 0 },
+        { "field": "objects", "op": "list", "value": [] }
+      ],
+      "watch": [
+        "Solid - no black notches you can see through",
+        "Ridged roof survives the fallback path; no gable-end holes on the flanks",
+        "Roof planks appear once, on the roof, not again down the wall"
+      ]
+    }
+  ]
+}

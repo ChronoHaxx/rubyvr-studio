@@ -1,0 +1,72 @@
+{
+  "version": 1,
+  "anchor": "OldaleTown",
+  "assumptions": [
+    "An authored M2 regional example. Source connections and ledge drawings constrain adjacency; physical rises are chosen, not recovered from gameplay elevation bits.",
+    "Preserve the existing Route 101 two-ledge profile: Littleroot is 0 px and Oldale is 16 px.",
+    "Route 102's central terrace rises to 24 px and its southern pocket drops to 8 px; the Oldale and Petalburg approaches meet at 16 px.",
+    "Route 103's western approach rises from 16 to 24 to 32 px. Complete coastal cliffs and Petalburg city geography remain unfinished.",
+    "Petalburg and Route 102 ponds and Route 103 ocean water are authored at a level 16 px, with one cell of flat shore contact. Water behaviors identify material, not height; source guards protect the selected areas. Water has no solid underside or vertical water walls.",
+    "Each short ledge tapers where its two sides meet around an endpoint. Open paths are graded by shared corners; no stair artwork or gameplay collision is invented."
+  ],
+  "maps": [
+    {"name":"OldaleTown","size":[20,20],"flat":16,"review":"town foundations and three connections"},
+    {"name":"LittlerootTown","size":[20,20],"flat":0,"review":"southern connection context; complete town review remains open"},
+    {"name":"PetalburgCity","size":[30,30],"flat":16,
+      "review":"offset eastern connection and level pond surfaces; complete city geography remains open",
+      "water":[{"name":"PetalburgCity-water","bounds":[0,0,30,30],"behaviors":[16],"height":16,"shore":1,"guard":"af2c94fb8d1da3247198e43afcb640cbc7ca54bb59640aea01f3d6d7eed65063"}]},
+    {
+      "name":"Route101","size":[20,20],"fixed_profile":"route101","base":0,
+      "review":"existing two ledges and complete connected corner field retained",
+      "cliffs":[
+        {"axis":"s","start":[2,7],"length":4,"before":16,"after":8},
+        {"axis":"s","start":[6,6],"length":5,"before":16,"after":8},
+        {"axis":"e","start":[5,7],"length":1,"before":16,"after":8},
+        {"axis":"s","start":[8,13],"length":4,"before":8,"after":0}
+      ],
+      "guards":[
+        {"start":[6,6],"axis":"x","ids":[110,135,135,135,214]},
+        {"start":[2,7],"axis":"x","ids":[213,135,135,135,142]},
+        {"start":[8,13],"axis":"x","ids":[213,135,135,214]}
+      ]
+    },
+    {
+      "name":"Route102","size":[50,20],"base":16,
+      "review":"authored ledges, continuous Oldale/Petalburg approaches and level pond/shore contact; underwater depth and live animation remain open",
+      "water":[{"name":"Route102-water","bounds":[38,0,10,10],"behaviors":[16],"height":16,"shore":1,"guard":"4f8d01890289951229d825aa57c795324175438c46bdda1c032a217e4840b035"}],
+      "seed_regions":[[0,0,35,7,24],[26,7,9,2,24],[0,14,12,6,8]],
+      "pins":[[18,1,14,2,24],[18,10,11,1,16],[8,16,2,2,8]],
+      "cliffs":[
+        {"axis":"s","start":[16,6],"length":2,"before":24,"after":16},
+        {"axis":"s","start":[20,6],"length":6,"before":24,"after":16},
+        {"axis":"e","start":[34,4],"length":5,"before":24,"after":16},
+        {"axis":"s","start":[8,13],"length":4,"before":16,"after":8}
+      ],
+      "guards":[
+        {"start":[16,6],"axis":"x","ids":[213,214]},
+        {"start":[20,6],"axis":"x","ids":[213,135,135,135,135,214]},
+        {"start":[34,4],"axis":"y","ids":[255,134,134,134,635]},
+        {"start":[8,13],"axis":"x","ids":[213,135,135,214]}
+      ]
+    },
+    {
+      "name":"Route103","size":[80,20],"base":16,
+      "review":"western two-tier approach to Oldale and level ocean/shore contact; complete coastal cliffs remain unfinished",
+      "water":[{"name":"Route103-water","bounds":[0,0,80,20],"behaviors":[21],"height":16,"shore":1,"guard":"65888c23e298053e79a9871b4525b1f537b7f57c3a232b775c74aaa8b3489b92"}],
+      "seed_regions":[[0,0,24,13,24],[0,0,13,6,32],[13,0,11,7,32]],
+      "pins":[[4,0,16,3,32],[6,9,13,1,24],[3,16,16,3,16],[24,0,56,20,16]],
+      "cliffs":[
+        {"axis":"s","start":[6,5],"length":7,"before":32,"after":24},
+        {"axis":"s","start":[13,6],"length":7,"before":32,"after":24},
+        {"axis":"e","start":[12,6],"length":1,"before":24,"after":32},
+        {"axis":"s","start":[4,12],"length":10,"before":24,"after":16}
+      ],
+      "guards":[
+        {"start":[6,5],"axis":"x","ids":[213,135,135,135,135,135,135]},
+        {"start":[13,5],"axis":"x","ids":[111]},
+        {"start":[13,6],"axis":"x","ids":[141,135,135,135,135,135,214]},
+        {"start":[4,12],"axis":"x","ids":[213,135,135,135,135,135,135,135,135,214]}
+      ]
+    }
+  ]
+}

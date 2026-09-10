@@ -1,0 +1,100 @@
+{
+  "status": "PASS",
+  "started_utc": "2026-09-08T16:45:22.530855+00:00",
+  "gui_sha256": "9d430a4008d8b671fc48e9f32566c880fe5f2a757755255cc4460551bc2e7ad1",
+  "pack_sha256": "372f2e9844d14104c564c05223b3db43538e818c963e432eae75fd16de61d1dd",
+  "layouts": [
+    {
+      "layout": "scene",
+      "framebuffer": [
+        1600,
+        950
+      ],
+      "viewport": [
+        1124,
+        425
+      ],
+      "checked_crop": [
+        1118,
+        419
+      ],
+      "room_hash": "b8a8ca249cbaf224",
+      "mesh_upload_delta": 0,
+      "world_pixels_checked": 40020,
+      "dark_pixels_checked": 993,
+      "baseline_neutral_equal": true,
+      "synchronized_draw_ms": {
+        "neutral": 0.345819,
+        "dawn": 0.398337,
+        "noon": 0.4107,
+        "dusk": 0.394956,
+        "night": 0.461681,
+        "reset": 0.361863
+      },
+      "samples_per_phase": 16,
+      "status": "PASS"
+    },
+    {
+      "layout": "small",
+      "framebuffer": [
+        1280,
+        720
+      ],
+      "viewport": [
+        804,
+        292
+      ],
+      "checked_crop": [
+        798,
+        286
+      ],
+      "room_hash": "b8a8ca249cbaf224",
+      "mesh_upload_delta": 0,
+      "world_pixels_checked": 18880,
+      "dark_pixels_checked": 469,
+      "baseline_neutral_equal": true,
+      "synchronized_draw_ms": {
+        "neutral": 0.374319,
+        "dawn": 0.349956,
+        "noon": 0.380625,
+        "dusk": 0.339481,
+        "night": 0.396194,
+        "reset": 0.317006
+      },
+      "samples_per_phase": 16,
+      "status": "PASS"
+    },
+    {
+      "layout": "scaled",
+      "framebuffer": [
+        1920,
+        1080
+      ],
+      "viewport": [
+        1206,
+        438
+      ],
+      "checked_crop": [
+        1198,
+        430
+      ],
+      "room_hash": "b8a8ca249cbaf224",
+      "mesh_upload_delta": 0,
+      "world_pixels_checked": 42507,
+      "dark_pixels_checked": 1038,
+      "baseline_neutral_equal": true,
+      "synchronized_draw_ms": {
+        "neutral": 0.37815,
+        "dawn": 0.460769,
+        "noon": 0.426856,
+        "dusk": 0.427363,
+        "night": 0.446256,
+        "reset": 0.368044
+      },
+      "samples_per_phase": 16,
+      "status": "PASS"
+    }
+  ],
+  "baseline_gui_sha256": "13a57d2f3e960554ad47f2bc23109f6bf64e4689a47947129631cf301ea98b7c",
+  "finished_utc": "2026-09-08T16:45:34.955996+00:00"
+}

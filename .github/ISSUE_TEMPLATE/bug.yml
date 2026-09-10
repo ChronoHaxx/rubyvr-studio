@@ -1,0 +1,38 @@
+name: Bug report
+description: Report a reproducible editor, geometry or integration defect.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: "Include exact steps and actual evidence. Do not attach ROMs, BIOS, saves, snapshots, extracted art or generated game-data packs."
+  - type: input
+    id: version
+    attributes:
+      label: Build and environment
+      description: Commit/build, Windows version, compiler or binary source, GPU/driver if relevant.
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Where does this happen?
+      options: [Studio editor, Generated model or recipe, Build or source loading, Native integration prototype, Documentation]
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Reproduction
+      description: Map/definition, starting state, exact actions, expected result and actual result. Use identifiers and a small recipe diff, not extracted game data.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence and checks
+      description: Actual application screenshot or scrubbed log, commands run and checks skipped. Geometry issues benefit from front/back/side and neutral views.
+  - type: textarea
+    id: assistance
+    attributes:
+      label: Investigation or AI assistance (optional)
+      description: What did you inspect or try? Describe any unverified assumptions; listing tool/model is optional.

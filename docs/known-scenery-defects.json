@@ -1,0 +1,66 @@
+{
+  "version": 1,
+  "defects": [
+    {
+      "id": "SC-006",
+      "entry_id": "model:asset-fddd3779331738d9",
+      "milestone": "M4",
+      "title": "Repeated trees look too uniform at eye level and in VR",
+      "certainty": "reported",
+      "status": "open",
+      "note": "Maintainer feedback, 2026-09-10: repeated trees feel less natural from first-person/VR views than from the original elevated sprite view; lighting may contribute and the cause is unconfirmed. This entry represents a foliage-wide polish concern, not just this tree. After settling the base foliage style in M4, compare dense repeated placements under neutral and directional lighting before choosing a remedy. Consider a small reusable set of subtle canopy/height variants on the native pixel grid, selected consistently for each canonical placement across reloads and map borders. Preserve palette, source shading, footprints, ground contact and gameplay clearance. Review elevated, eye-level and actual headset views; avoid unique meshes or changing random choices every frame. Continue M2 terrain now. See docs/art-direction.md."
+    },
+    {
+      "id": "SC-005",
+      "entry_id": "model:asset-fddd3779331738d9",
+      "milestone": "M4",
+      "title": "Foliage needs a consistent silhouette, texture and voxel style",
+      "certainty": "reported",
+      "status": "open",
+      "note": "Maintainer rejects current tree/grass quality and requests cohesive original-Ruby styling. Include round shrubs and repeated encounter-grass patches. The 6..12 px height trial was also rejected for dark floor coverage and poor colour cohesion. The revised opt-in recipe exposes pale ground between stepped tuft bases and uses source-palette green tops/pale tips. Repeated post-like clumps and busy side texture remain unresolved. After PR #26 merged, the maintainer deferred further grass/foliage art iteration to M4; continue M2 terrain. Follow docs/art-direction.md; technical topology checks do not close this defect."
+    },
+    {
+      "id": "SC-001",
+      "entry_id": "model:asset-544bfd83afef3991",
+      "map": "MAP_SOOTOPOLIS_CITY",
+      "milestone": "M4",
+      "work_package": "RV-001",
+      "title": "Sootopolis gym entrance needs a projecting front section",
+      "certainty": "observed",
+      "status": "open",
+      "note": "Reconstruct the entrance volume from the coherent source drawing; thin facade relief does not express its forward projection. Recorded from visual feedback; defer geometry work while M1 is active."
+    },
+    {
+      "id": "SC-002",
+      "entry_id": "model:asset-544bfd83afef3991",
+      "map": "MAP_SOOTOPOLIS_CITY",
+      "milestone": "M4",
+      "work_package": "RV-001",
+      "title": "Sootopolis gym side and rear wall extrapolation needs review",
+      "certainty": "observed",
+      "status": "open",
+      "note": "Current repeated horizontal wall bands do not give a convincing continuation of the building. Review volumes and deliberate side/rear material regions in a full turn."
+    },
+    {
+      "id": "SC-003",
+      "entry_id": "map:MAP_SOOTOPOLIS_CITY",
+      "map": "MAP_SOOTOPOLIS_CITY",
+      "milestone": "M4",
+      "title": "Investigate remaining flat buildings and vegetation, including reported Center variants",
+      "certainty": "reported",
+      "status": "open",
+      "note": "Use family and placement coverage to identify missing recipes or partial source groups. A tileset-variant cause is a hypothesis, not a confirmed diagnosis; repeat the audit for other affected maps."
+    },
+    {
+      "id": "SC-004",
+      "entry_id": "map:MAP_SOOTOPOLIS_CITY",
+      "map": "MAP_SOOTOPOLIS_CITY",
+      "milestone": "M2",
+      "work_package": "RV-003",
+      "title": "Sootopolis terraces, stairs and shoreline remain flat",
+      "certainty": "observed",
+      "status": "open",
+      "note": "Requires the authored terrain/layer/placement contract. Do not infer literal height from palette darkness or gameplay elevation bits."
+    }
+  ]
+}

@@ -1,0 +1,290 @@
+{
+  "date": "2026-09-10",
+  "recorded_at": "2026-09-10T14:56:45.075958+00:00",
+  "scope": "M2 model reuse and six-map explorer; merged in PR #31",
+  "base_commit": "92760efcfa148ed82df08d93330a913d3558f50a",
+  "source_revision": "63a8cbf0016b351a4e68f7036fa0b77e23d2f2c1",
+  "source_files_sha256": {
+    "src/studio/connected_scene.cpp": "77d6ba543ac8ec6bab179a77b901803ecb43ae17cd03a4baaf77d75d9f3d8d18",
+    "src/studio/connected_scene.h": "074699c6c9724a4d507b4cca651078cc22703760d67c0877266174b337b55c5b",
+    "src/studio/connected_test.cpp": "5b0235373cccc19056b38b945f9d06a3be61ad9bbf43b61e1b113ebaf7977138",
+    "src/studio/gui_showcase.inl": "fba25a511382a045f48d83967139d23c0433f41fbeee6d5659210ccf80581702",
+    "src/vr/diorama.cpp": "77f8d6c71388c5a5d0c8a3f5df6b2e964af69d3f0b59f8d6fd522f421b013cf2",
+    "src/vr/diorama.h": "25be1a349ca5b936dbf05b0ded8c624ef9d91c42faa6e813b97c8fd22e516a8b",
+    "src/vr/gl_loader.h": "ac4f9558332881f5a7f3b1834a36c7950a1513a2b158f851a9a55a547ea2a0c5",
+    "src/vr/placed_mesh.inl": "d8074aad61dd533f582ffe126e0a833d4dd90f37b4f1ad15882fcfcedca4dd84",
+    "src/vr/region_mesh.inl": "c2ee8a45d4ee6e126452db004a33a410198e8cb7c577987a695a3b6710d856b1",
+    "tools/render-connected-scene.py": "9bce5e5544a0af2ed7a5c9be2f013ca6b403c36a8b77eb736a5e21508f971bd4",
+    "tools/render-region-model-reuse.py": "afc77ab0240171c4bef39477d4171fddee1b2d5c6c1372b704ef060fa3f858ee",
+    "tools/test-connected-studio.py": "4ee3a1ee519b12ba55801cb5348051f5582fd098c18731785fba18352ae7b6d2",
+    "tools/test-region-model-reuse.py": "aa6dc5b106b64ac6ce7435cc4cd658fc3e854bf60eed0b446dd80b9c45e1849f"
+  },
+  "gui_sha256": "2c63f0c10d78bbeeeef73c03078449120cef6faff5b093ac9d860bc592ea03d1",
+  "batch_sha256": "87c12b01dc5850bc13dad561bc7721477caa29e6de79cdf063b5be6e13f83d2f",
+  "input_sha256": "e76ed940e012a6b804e1a5e8e43e8f3a11219a13574e0e32995c5909617ea220",
+  "baseline": {
+    "merged_pr": 30,
+    "merge_commit": "92760efcfa148ed82df08d93330a913d3558f50a",
+    "gui_sha256": "4c9a237c43b92c8f8f0967404bff9e9c9d516ed988f96f93864b50da45fabf5e",
+    "input_sha256": "e76ed940e012a6b804e1a5e8e43e8f3a11219a13574e0e32995c5909617ea220",
+    "gpu_bytes": 208077032,
+    "geometry_hash": "3b0d708d12ea9e5b"
+  },
+  "verification": {
+    "build": "PASS",
+    "synthetic_connected_checks": 28,
+    "synthetic_terrain_checks": 197,
+    "synthetic_foundation_checks": 23,
+    "native_boundary_checks": 200,
+    "water_cells": 495,
+    "shore_cells": 266,
+    "connected_SDL_checkpoints": 20,
+    "additional_travel_SDL_checkpoints": 28,
+    "baseline_views": 20,
+    "baseline_pixels_identical": 8102560,
+    "atlas_pixels_identical": 32000,
+    "terrain_SDL_checkpoints": 49,
+    "foundation_SDL_checkpoints": 14,
+    "environment_viewports": 3,
+    "editor_regression": "PASS including eight unchanged frozen hashes, four layouts, camera, voxel editing and part selection",
+    "sources_and_document_unchanged": true,
+    "zero_camera_mesh_uploads": true,
+    "review": "Codex local code review, all 27 film frames and full overview inspected. Claude included allowance remains within its previously reported five-hour limit (reset 15:20 UTC); no independent review obtained.",
+    "publication": "PASS: 245 source files and staged/tracked bytes checked; staged source/film match manifest"
+  },
+  "scene_meshes": [
+    {
+      "maps": 4,
+      "atlases": 1,
+      "vertices": 7421814,
+      "gpu_bytes": 49427684,
+      "primary_cells": 3400,
+      "padding_cells": 601,
+      "hidden_cells": 916,
+      "raised": 331,
+      "geometry_hash": "3b0d708d12ea9e5b",
+      "placements": [
+        {
+          "map": "MAP_OLDALE_TOWN",
+          "x": 0,
+          "z": 0
+        },
+        {
+          "map": "MAP_ROUTE103",
+          "x": 0,
+          "z": -20
+        },
+        {
+          "map": "MAP_ROUTE101",
+          "x": 0,
+          "z": 20
+        },
+        {
+          "map": "MAP_ROUTE102",
+          "x": -50,
+          "z": 0
+        }
+      ],
+      "stored_vertices": 1755624,
+      "models": 43,
+      "model_instances": 331,
+      "deformed_instances": 0,
+      "batches": 167
+    },
+    {
+      "maps": 6,
+      "atlases": 1,
+      "vertices": 10007814,
+      "gpu_bytes": 72760248,
+      "primary_cells": 4700,
+      "padding_cells": 531,
+      "hidden_cells": 1545,
+      "raised": 442,
+      "geometry_hash": "5b43cb3ab31d22fc",
+      "placements": [
+        {
+          "map": "MAP_OLDALE_TOWN",
+          "x": 0,
+          "z": 0
+        },
+        {
+          "map": "MAP_ROUTE103",
+          "x": 0,
+          "z": -20
+        },
+        {
+          "map": "MAP_ROUTE101",
+          "x": 0,
+          "z": 20
+        },
+        {
+          "map": "MAP_ROUTE102",
+          "x": -50,
+          "z": 0
+        },
+        {
+          "map": "MAP_LITTLEROOT_TOWN",
+          "x": 0,
+          "z": 40
+        },
+        {
+          "map": "MAP_PETALBURG_CITY",
+          "x": -80,
+          "z": -10
+        }
+      ],
+      "stored_vertices": 2584128,
+      "models": 68,
+      "model_instances": 442,
+      "deformed_instances": 0,
+      "batches": 217
+    },
+    {
+      "maps": 3,
+      "atlases": 2,
+      "vertices": 279360,
+      "gpu_bytes": 8021760,
+      "primary_cells": 5100,
+      "padding_cells": 720,
+      "hidden_cells": 848,
+      "raised": 0,
+      "geometry_hash": "d61e8a1572e73746",
+      "placements": [
+        {
+          "map": "MAP_PETALBURG_CITY",
+          "x": 0,
+          "z": 0
+        },
+        {
+          "map": "MAP_ROUTE104",
+          "x": -40,
+          "z": -50
+        },
+        {
+          "map": "MAP_ROUTE102",
+          "x": 30,
+          "z": 10
+        }
+      ],
+      "stored_vertices": 279360,
+      "models": 0,
+      "model_instances": 0,
+      "deformed_instances": 0,
+      "batches": 3
+    }
+  ],
+  "SDL_layouts": [
+    {
+      "viewport": [
+        1600,
+        1100
+      ],
+      "checkpoints": 10,
+      "vertices": 10007814,
+      "stored_vertices": 2584128,
+      "models": 68,
+      "model_instances": 442,
+      "deformed_instances": 0,
+      "batches": 217,
+      "gpu_bytes": 72760248,
+      "region_hash": "5b43cb3ab31d22fc",
+      "crossed_eye_z": 2.60001278,
+      "loaded_draw_ms": 0.851075,
+      "crossed_draw_ms": 0.435969,
+      "crossed_draw_calls": 55
+    },
+    {
+      "viewport": [
+        1280,
+        720
+      ],
+      "checkpoints": 10,
+      "vertices": 10007814,
+      "stored_vertices": 2584128,
+      "models": 68,
+      "model_instances": 442,
+      "deformed_instances": 0,
+      "batches": 217,
+      "gpu_bytes": 72760248,
+      "region_hash": "5b43cb3ab31d22fc",
+      "crossed_eye_z": 2.60001278,
+      "loaded_draw_ms": 0.827675,
+      "crossed_draw_ms": 0.351694,
+      "crossed_draw_calls": 55
+    }
+  ],
+  "north_flight": {
+    "start": [
+      17.0,
+      12.957697634483948,
+      59.94246908970402
+    ],
+    "end": [
+      17.0,
+      6.253805884483947,
+      4.345202419704023
+    ],
+    "checkpoints": 25
+  },
+  "west_flight": {
+    "start": [
+      -35.05753091029598,
+      9.957697634483948,
+      8.999999656844802
+    ],
+    "end": [
+      -52.928166910295985,
+      7.802871474483948,
+      8.999999656844802
+    ],
+    "checkpoints": 3
+  },
+  "visual": {
+    "gui_sha256": "2c63f0c10d78bbeeeef73c03078449120cef6faff5b093ac9d860bc592ea03d1",
+    "input_sha256": "e76ed940e012a6b804e1a5e8e43e8f3a11219a13574e0e32995c5909617ea220",
+    "gif_sha256": "7a8cd0af2523615d322745e5d6c57af7b4ae312fb1ecf694064ec4391473634c",
+    "frames": 27,
+    "duration_seconds": 12.94,
+    "scope": "Actual SDL input and sampled production frames, with pause durations; no generated/interpolated world views"
+  },
+  "logs_sha256": {
+    "native.log": "ef6049234b717960e96edf780d509a32b1307126993ae4050aa73197533e9911",
+    "terrain-native.log": "98fad7f75dc86a8c0804b182eae8100f91dcf2874791e8a1d80c9b471e874948",
+    "foundation-native.log": "8e949a299e6730d8db24e2bbf1fd43df8bfbb9272a8a5245b93969239643400b",
+    "terrain-source.log": "994105c67f19939c00ad69ddaf7cdd50a3df2d1fa2d430fa4f3c533b931322aa",
+    "editor.log": "93f108a4d4d6de19f533f0c247cece739865805f357046f364961bce7595291b",
+    "terrain-studio.log": "6a156b8a4eed6c6d13c9a580bcee285ebf3deadca34126fbed57e7a6bf2fcf3a",
+    "foundation-studio.log": "68d5272d1b5c3ce7ad519009333670cc2d7c2484b37b070fc7b702e3fa9ec432",
+    "environment-studio.log": "43644e7357ddf7d304c38bb46cf46eed34e73698b2890cdc6745dc8786159b25"
+  },
+  "limits": [
+    "Six preloaded maps in this fixture; two authored hops, at most nine maps, no camera-driven loading.",
+    "Eight million stored vertices, sixteen million expanded vertices, 65,536 source cells; not a peak-memory guard.",
+    "Memory is VBO vertices, instance offsets and indexed texture payloads; excludes retained editor mesh, CPU working data and driver overhead.",
+    "Reuse is per pattern per source map; no cross-map/atlas cache. Ground-following models remain expanded.",
+    "Triangle count is unchanged by reuse; 217 ordered draw batches for the six-map scene before map culling.",
+    "Timed draws are synchronized single-eye desktop GL samples, not application/headset frame times.",
+    "Outer frontiers, complete terrain, M4 foliage, live movement/collision and headset acceptance remain open."
+  ],
+  "pull_request": {
+    "number": 31,
+    "url": "https://github.com/ChronoHaxx/rubyvr-studio-archive-20260910/pull/31",
+    "state": "MERGED",
+    "implementation_commit": "0891413afad51213c97aa548f7e6d2c223216f87",
+    "merged_at": "2026-09-10T15:15:23Z",
+    "merge_commit_before_attribution_correction": "64389f8fb8efecccc915b22654dd3c9a009f819d",
+    "merge_commit": "532fc64cf7b5258b499525566994276015d92c6b",
+    "implementation_commit_after_attribution_correction": "d0ff36465f1bcdddb9d6d25e4438ddf9b14b7e23",
+    "attribution_note": "Author/committer metadata was corrected after merge; every file tree is unchanged. Original build/input/evidence hashes remain historical measurements.",
+    "ci_before_attribution_correction": [
+      {
+        "conclusion": "SUCCESS",
+        "url": "https://github.com/ChronoHaxx/rubyvr-studio-archive-20260910/actions/runs/34492670038/job/102923130236"
+      },
+      {
+        "conclusion": "SUCCESS",
+        "url": "https://github.com/ChronoHaxx/rubyvr-studio-archive-20260910/actions/runs/34492637131/job/102923016328"
+      }
+    ]
+  }
+}

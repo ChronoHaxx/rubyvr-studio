@@ -1,0 +1,168 @@
+{
+  "date": "2026-09-10",
+  "scope": "M2 desktop connected terrain example; merged in PR #27",
+  "pull_request": "https://github.com/ChronoHaxx/rubyvr-studio-archive-20260910/pull/27",
+  "implementation_ci": {
+    "commit": "fc12390aaf7082a91ec8a8c27101b96a8d1a82ca",
+    "conclusion": "success",
+    "url": "https://github.com/ChronoHaxx/rubyvr-studio-archive-20260910/actions/runs/34469916721"
+  },
+  "source_revision": "63a8cbf0016b351a4e68f7036fa0b77e23d2f2c1",
+  "base_commit": "0ecae2a",
+  "gui_sha256": "421e70bf97cb1fd9b2dc3ee24bbc06d2d11a3040f69ef21510cc8ba47881e29e",
+  "batch_sha256": "603bf7c6bf1c63bee9b126996732c1c3b9d0292cd4dc577cc78e5b54c55a2c1e",
+  "pack_sha256": "ca47bc2ff1b0900cbf187db39e522f6908c1f5033cfeed3d51493b0bf58affde",
+  "source_files_sha256": {
+    "tools/terrain_regions.py": "74fc504634770c81841813a5f583e784483d7a7083ec7cd1131ff17dd2c5c139",
+    "tools/build-terrain-region-example.py": "d8d0591ed423ded463c7c86db8e4a4dbc164a49c000b425f7e2d08b465c438b8",
+    "tools/test-terrain-regions.py": "a6e9cd1149db0593aed9fc6c71242fec5876fd59d22241b106f3f519217d9a98",
+    "tools/test-terrain-region-source.py": "6b0832d3f5e883f937ebc33395fddc402f1d7e89b652d2d94abe7dc22d48d548",
+    "recipes/terrain-regions.json": "c3a8dbfd65f6dcfc4cb8da169519b06c4506f06b09340d20f9b14710e49068d7",
+    "src/studio/terrain_test.cpp": "6050d63eec565063438634cc868daf33a97c0c49ce2633baae8a90824bdff778"
+  },
+  "gif": {
+    "path": "media/terrain-regions.gif",
+    "sha256": "8ab99bf001aeb9e07b68ff6dd5a57106cb6bf95aa2959883a3991dc43a2e688c",
+    "duration_seconds": 12,
+    "rendering": "actual SDL/production mesher; crops, captions and paused comparison views"
+  },
+  "verification": {
+    "build": "PASS",
+    "solver_tests": 8,
+    "synthetic_native_checks": 197,
+    "SDL_checkpoints": 49,
+    "source_maps": 394,
+    "copied_cells": 36834,
+    "canonical_terrain_copies": 1925,
+    "shared_map_segments": 100,
+    "native_join_checks": 200,
+    "continuous_internal_edges": 8994,
+    "negative_checks": [
+      "1px east join gap rejected",
+      "changed upper-elbow guard rejected",
+      "input with existing authored terrain rejected"
+    ],
+    "unchanged_inputs": true,
+    "unchanged_patterns": 72,
+    "legacy_join_checks": 40,
+    "comparison_captures": 8,
+    "review": "Codex inspected actual captures; additional Petalburg offset view inspected"
+  },
+  "maps": [
+    {
+      "map": "OldaleTown",
+      "cells": 400,
+      "graded_cells": 0,
+      "source_ledge_cells": 0,
+      "minimum_pixels": 16,
+      "maximum_pixels": 16,
+      "review_scope": "town foundations and three connections"
+    },
+    {
+      "map": "LittlerootTown",
+      "cells": 400,
+      "graded_cells": 0,
+      "source_ledge_cells": 0,
+      "minimum_pixels": 0,
+      "maximum_pixels": 0,
+      "review_scope": "southern connection context; complete town review remains open"
+    },
+    {
+      "map": "PetalburgCity",
+      "cells": 900,
+      "graded_cells": 0,
+      "source_ledge_cells": 0,
+      "minimum_pixels": 16,
+      "maximum_pixels": 16,
+      "review_scope": "offset eastern connection context; complete city geography remains open"
+    },
+    {
+      "map": "Route101",
+      "cells": 400,
+      "graded_cells": 219,
+      "source_ledge_cells": 14,
+      "minimum_pixels": 0,
+      "maximum_pixels": 16,
+      "review_scope": "existing two ledges and complete connected corner field retained"
+    },
+    {
+      "map": "Route102",
+      "cells": 1000,
+      "graded_cells": 457,
+      "source_ledge_cells": 17,
+      "minimum_pixels": 8,
+      "maximum_pixels": 24,
+      "review_scope": "authored ledges and continuous Oldale/Petalburg approaches; detailed pond treatment remains open"
+    },
+    {
+      "map": "Route103",
+      "cells": 1600,
+      "graded_cells": 226,
+      "source_ledge_cells": 25,
+      "minimum_pixels": 16,
+      "maximum_pixels": 32,
+      "review_scope": "western two-tier approach to Oldale; eastern coast/cliffs/water remain connection context"
+    }
+  ],
+  "origins": {
+    "OldaleTown": [
+      0,
+      0
+    ],
+    "Route103": [
+      0,
+      -20
+    ],
+    "Route101": [
+      0,
+      20
+    ],
+    "Route102": [
+      -50,
+      0
+    ],
+    "LittlerootTown": [
+      0,
+      40
+    ],
+    "PetalburgCity": [
+      -80,
+      -10
+    ]
+  },
+  "frontiers": [
+    {
+      "map": "PetalburgCity",
+      "direction": "left",
+      "neighbour": "MAP_ROUTE104",
+      "status": "not authored by this example"
+    },
+    {
+      "map": "Route103",
+      "direction": "right",
+      "neighbour": "MAP_ROUTE110",
+      "status": "not authored by this example"
+    }
+  ],
+  "assumptions": [
+    "An authored M2 regional example. Source connections and ledge drawings constrain adjacency; physical rises are chosen, not recovered from gameplay elevation bits.",
+    "Preserve the existing Route 101 two-ledge profile: Littleroot is 0 px and Oldale is 16 px.",
+    "Route 102's central terrace rises to 24 px and its southern pocket drops to 8 px; the Oldale and Petalburg approaches meet at 16 px.",
+    "Route 103's western approach rises from 16 to 24 to 32 px. The eastern coastal area and Petalburg body are flat connection context, not completed geography.",
+    "Each short ledge tapers where its two sides meet around an endpoint. Open paths are graded by shared corners; no stair artwork or gameplay collision is invented."
+  ],
+  "remaining": [
+    "complete coastal/pond geography",
+    "rigid multi-cell foundations",
+    "different-atlas neighbours",
+    "full neighbour rendering/world streaming",
+    "live traversal and headset acceptance",
+    "M4 foliage appearance"
+  ],
+  "independent_review": "Claude handoff rejected by automatic approval review before execution; no Claude review received",
+  "merge": {
+    "commit": "0a5c2193bbc253a7995e9668e55324ab9f2c31b5",
+    "merged_at": "2026-09-10T11:41:49Z",
+    "source_and_build_ci": "success"
+  }
+}

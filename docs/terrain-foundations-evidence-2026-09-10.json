@@ -1,0 +1,132 @@
+{
+  "date": "2026-09-10",
+  "scope": "M2 explicit rigid foundation editor action; merged in PR #29",
+  "base_commit": "507ece06b01469bbdcfc66c5c640e4412264a2c5",
+  "source_revision": "63a8cbf0016b351a4e68f7036fa0b77e23d2f2c1",
+  "source_files_sha256": {
+    "CMakeLists.txt": "0a6f6516f12370588029b1085d12f1acfe20315657371d3a146523b647fac9e6",
+    ".github/workflows/ci.yml": "cdd838d771851691c79e64310c537549aed2651b0dad50b5dcd80ae2c336b26c",
+    "src/studio/foundation.cpp": "bca788b1b7bf94a38db9d1dce945d4cec836922a760fdda4abf2ef147c54c7bf",
+    "src/studio/foundation.h": "efed3e602f0b82950794b3574c4eaf6bf675a082e01724afa91242ba72396343",
+    "src/studio/foundation_test.cpp": "4f4ea1b9ce514b87f2e731ed66f3c2cce1f6d0ecfe6a6ba1f41943a24734a639",
+    "src/studio/gui.cpp": "16f9a5853b6bff6ee75d7300772c2e7dac9862315af2ada5d11d41e2420f45b7",
+    "src/studio/gui_terrain.inl": "04869869a900373c42d41e73957a9988a851498d4f6e28fc16298ea9bd4a52d2",
+    "src/studio/compare.cpp": "5644ee56bbc28c33fc68277cd91272cafdbd7ec9f8899aea3d866f333783dc01",
+    "tools/test-studio-foundation.py": "46cda196a1f2430685e0112ee1b398d53d579984690cd8ea2addc436e993da7b",
+    "tools/render-terrain-foundations.py": "7bbb13d59a40d3a68141e01f5a42c2c20e4bfd350bdd98dcba929321a5016db2"
+  },
+  "gui_sha256": "a726f3fa2cd5ae0b04d1e0083bcc22071263aaf70ea3412d3c9dd37e84ef353f",
+  "batch_sha256": "b3096c8e67b27b2697ccee9a111e8b2890a410c1b00a69d5ef002dbe5a20dfcb",
+  "input_sha256": "6b48a652be92bcb8e2e359c27f041bc397c0c548707effd58f779407a9e2ab4b",
+  "verification": {
+    "build": "PASS",
+    "synthetic_foundation_checks": 23,
+    "foundation_SDL_checkpoints": 14,
+    "synthetic_terrain_checks": 197,
+    "terrain_SDL_checkpoints": 49,
+    "region_source_free_tests": 13,
+    "native_boundary_checks": 200,
+    "level_water_cells": 495,
+    "flat_shore_cells": 266,
+    "editor_regression": "PASS including all eight unchanged frozen geometry hashes",
+    "source_unchanged": true,
+    "models_unchanged": true,
+    "review": "Codex local code review and visual inspection of all three paired actual renders and two editor sizes; no external review"
+  },
+  "layouts": [
+    {
+      "viewport": [
+        1600,
+        1100
+      ],
+      "checkpoints": 7,
+      "changed_cells": 16,
+      "before_hash": "28c4694d3d297a3c",
+      "after_hash": "9a24623f1ebfc34b"
+    },
+    {
+      "viewport": [
+        1280,
+        720
+      ],
+      "checkpoints": 7,
+      "changed_cells": 16,
+      "before_hash": "28c4694d3d297a3c",
+      "after_hash": "9a24623f1ebfc34b"
+    }
+  ],
+  "gif": {
+    "path": "media/terrain-foundations.gif",
+    "sha256": "4688bf1aa2495d231510376f7a225d0212ebdebdc463d78d18d8a525ebf2f99e",
+    "duration_seconds": 12,
+    "frames": 3,
+    "rendering": "Actual SDL production renderer; identical paired cameras, crops, captions and paused views"
+  },
+  "captures": [
+    {
+      "view": "Front / right",
+      "state": "Before",
+      "room_hash": "28c4694d3d297a3c"
+    },
+    {
+      "view": "Front / right",
+      "state": "After",
+      "room_hash": "9a24623f1ebfc34b"
+    },
+    {
+      "view": "Rear",
+      "state": "Before",
+      "room_hash": "28c4694d3d297a3c"
+    },
+    {
+      "view": "Rear",
+      "state": "After",
+      "room_hash": "9a24623f1ebfc34b"
+    },
+    {
+      "view": "Front / left",
+      "state": "Before",
+      "room_hash": "28c4694d3d297a3c"
+    },
+    {
+      "view": "Front / left",
+      "state": "After",
+      "room_hash": "9a24623f1ebfc34b"
+    }
+  ],
+  "height_rule": "Maximum ground corner across the whole-cell rectangle bounding horizontal model base faces and the existing placement anchor; higher roof overhang excluded",
+  "fixture": {
+    "scope": "Controlled manually authored Oldale slope, not proposed game geography",
+    "changed_cells": 16,
+    "pad_height_pixels": 24,
+    "default_and_regional_recipes_unchanged": true
+  },
+  "limitations": [
+    "Whole-cell rectangular pad; entrance steps, approach grading and complex/shared foundations still need authoring",
+    "Conservative overlap refusal uses other rigid objects source membership rather than exact physical overlap",
+    "Water, decks, stacked or partial terrain, copied neighbours and stale source are preserved by refusal",
+    "Full neighbour meshes, continuous multi-map flight and visible outer edge/underside treatment remain M2",
+    "Neutral editor backdrop is dark; Daylight preview exists; outdoor horizon blending and distance fog remain M8",
+    "Live gameplay, human usability and headset acceptance not tested",
+    "Foliage appearance deferred to M4"
+  ],
+  "pull_request": "https://github.com/ChronoHaxx/rubyvr-studio-archive-20260910/pull/29",
+  "implementation_commit": "458e55e58527bdde7bfb205e028daf920c816cf7",
+  "merge_verification": {
+    "merged_at": "2026-09-10T13:01:37Z",
+    "merge_commit": "c2029b406bee151609c1992d397d51d2523c2093",
+    "checks": [
+      {
+        "run": 34479591659,
+        "conclusion": "SUCCESS",
+        "completed_at": "2026-09-10T13:00:07Z"
+      },
+      {
+        "run": 34479587145,
+        "conclusion": "SUCCESS",
+        "completed_at": "2026-09-10T12:59:52Z"
+      }
+    ],
+    "note": "Historical source/binary/media hashes and check counts retained; limits describe the PR #29 baseline. Current UI sky phase is named Noon, not Daylight."
+  }
+}

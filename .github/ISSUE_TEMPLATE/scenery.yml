@@ -1,0 +1,28 @@
+name: Scenery review
+description: Claim or report a specific building, tree, prop or terrain defect.
+labels: ["area: art"]
+body:
+  - type: input
+    id: subject
+    attributes:
+      label: Source and definition
+      description: Map ID, recipe/definition ID and source coordinates; distinguish primary map and padding.
+    validations:
+      required: true
+  - type: textarea
+    id: issue
+    attributes:
+      label: Intended shape and observed problem
+      description: Proportions, roof ridge, source roles, logo, hidden side/back art, ground contact or another specific issue.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Actual views and validation
+      description: Build/pack identity, front/back/sides/roof/neutral views and a second placement if available. Do not upload generated packs or ripped sprite sheets.
+  - type: textarea
+    id: scope
+    attributes:
+      label: Proposed contribution
+      description: A recipe correction, visual review, editor improvement or terrain contract. State the exact slice you would like to work on.

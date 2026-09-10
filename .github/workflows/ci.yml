@@ -1,0 +1,76 @@
+name: Source and Windows build
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-and-build:
+    runs-on: windows-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Check source and contributor metadata
+        shell: pwsh
+        run: |
+          python -m pip install -r requirements.txt
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python tools/check-repo.py --publication
+          exit $LASTEXITCODE
+      - name: Test coverage ledger with original synthetic inputs
+        shell: pwsh
+        run: |
+          python tools/test-coverage-ledger.py
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python tools/test-dynamic-inventory.py
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python tools/test-native-trace.py
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python tools/test-coverage-disposition.py
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python tools/test-terrain-regions.py
+          exit $LASTEXITCODE
+      - name: Install compiler and editor dependencies
+        id: msys2
+        uses: msys2/setup-msys2@66cd2cce69caa17b53920067426061ca1de3a884 # v2
+        with:
+          msystem: MINGW64
+          update: true
+          install: >-
+            mingw-w64-x86_64-gcc
+            mingw-w64-x86_64-cmake
+            mingw-w64-x86_64-ninja
+            mingw-w64-x86_64-SDL2
+            mingw-w64-x86_64-zlib
+            mingw-w64-x86_64-openxr-sdk
+      - name: Build standalone GUI and batch tools
+        shell: pwsh
+        env:
+          MSYS2_ROOT: ${{ steps.msys2.outputs.msys2-location }}
+        run: ./tools/build.ps1 -Mingw (Join-Path $env:MSYS2_ROOT 'mingw64/bin') -Jobs 2
+      # No ROM/decomp assets or GPU/headset fixtures are downloaded or uploaded.
+      - name: Test Studio review export and native reader
+        shell: pwsh
+        env:
+          MSYS2_ROOT: ${{ steps.msys2.outputs.msys2-location }}
+        run: |
+          $env:PATH = (Join-Path $env:MSYS2_ROOT 'mingw64/bin') + ';' + $env:PATH
+          $env:RUBYVR_REVIEW_BATCH = Join-Path $PWD 'build/rubyvr_studio.exe'
+          python tools/test-coverage-review.py
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          ./build/rubyvr_studio.exe --test-terrain build/terrain-test
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          ./build/rubyvr_studio.exe --test-foundation build/foundation-test
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          ./build/rubyvr_studio.exe --test-connected
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          $env:RUBYVR_MINGW_BIN = Join-Path $env:MSYS2_ROOT 'mingw64/bin'
+          python tools/test-studio-launcher.py
+          exit $LASTEXITCODE
+      # Interactive/render checks are run locally as documented in verification.md.

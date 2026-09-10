@@ -1,0 +1,257 @@
+{
+  "date": "2026-09-10",
+  "scope": "M2 desktop level water and shore contact; merged in PR #28",
+  "pull_request": "https://github.com/ChronoHaxx/rubyvr-studio-archive-20260910/pull/28",
+  "implementation_commit": "82e66a1023cd9372d91c5ac58df4c4eb7047eceb",
+  "base_commit": "0a5c2193bbc253a7995e9668e55324ab9f2c31b5",
+  "source_revision": "63a8cbf0016b351a4e68f7036fa0b77e23d2f2c1",
+  "source_files_sha256": {
+    "recipes/terrain-regions.json": "37016e90b094cf7b9ee259292d67c7cf2105b8662cf79b00857910f6f44da79b",
+    "tools/terrain_water.py": "488173717946f4720267dbe168c372bda880071a2029f7f6125175b8fc062fa5",
+    "tools/build-terrain-region-example.py": "80394646b4e461f2faaf8d8932ac9289f10d9040ab13ef51f4a8f83ce252981a",
+    "tools/test-terrain-regions.py": "a4d5b825f31a401613c8a5c521bc25c5d9d67409482c7d76cdeb8d254a8fdad4",
+    "tools/test-terrain-region-source.py": "1d37165030d16fc99b6b015320ca3a25a0134f009ce5ee196b2287f5fd843361",
+    "tools/render-terrain-water.py": "7fca31cba73e92c6cf0c2e9884c1035f9513e9fa0c39d1175939a692b6be8154",
+    "src/studio/terrain_test.cpp": "3358d9e7d24cd167c028c65cc9ccad1da1282cc1a57cfc9c80b0e09cff49271b"
+  },
+  "gui_sha256": "421e70bf97cb1fd9b2dc3ee24bbc06d2d11a3040f69ef21510cc8ba47881e29e",
+  "batch_sha256": "9ff509b32a2e5772139a802d65cded7133757cd2e9ebad13c09505a0d67bdc5d",
+  "pack_sha256": {
+    "before": "ca47bc2ff1b0900cbf187db39e522f6908c1f5033cfeed3d51493b0bf58affde",
+    "after": "e76ed940e012a6b804e1a5e8e43e8f3a11219a13574e0e32995c5909617ea220"
+  },
+  "gif": {
+    "path": "media/terrain-water.gif",
+    "sha256": "48c2c5c4a72371c6f3e75e41a3e02180732e55cb815379dd67afce1f87241c96",
+    "duration_seconds": 12,
+    "frames": 4,
+    "rendering": "Actual SDL production renderer; identical paired cameras/source art; crops, captions and paused views"
+  },
+  "verification": {
+    "build": "PASS",
+    "source_free_tests": 13,
+    "synthetic_native_checks": 197,
+    "SDL_checkpoints": 49,
+    "source_maps": 394,
+    "copied_cells": 36834,
+    "canonical_terrain_copies": 1925,
+    "water_cells": 495,
+    "flat_shore_cells": 266,
+    "level_water_surface_triangles": 7920,
+    "water_bottom_faces": 0,
+    "shared_map_segments": 100,
+    "native_join_checks": 200,
+    "continuous_internal_edges": 8994,
+    "negative_checks": [
+      "1px east join gap rejected",
+      "changed upper-elbow guard rejected",
+      "1px internal water step rejected",
+      "changed water/shore guard rejected",
+      "conflicting water and land anchors rejected",
+      "input with existing authored terrain rejected"
+    ],
+    "preserved_inputs": true,
+    "preserved_source_art": true,
+    "preserved_route101_profile": true,
+    "unchanged_patterns": 72,
+    "legacy_join_checks": 40,
+    "comparison_captures": 8,
+    "review": "Codex inspected all four paired captures; code/source/mesh review performed locally"
+  },
+  "previous_water": [
+    {
+      "map": "PetalburgCity",
+      "water_cells": 141,
+      "previous_height_range_pixels": [
+        16,
+        16
+      ],
+      "previous_graded_water_cells": 0
+    },
+    {
+      "map": "Route102",
+      "water_cells": 26,
+      "previous_height_range_pixels": [
+        17,
+        18
+      ],
+      "previous_graded_water_cells": 7
+    },
+    {
+      "map": "Route103",
+      "water_cells": 328,
+      "previous_height_range_pixels": [
+        16,
+        20
+      ],
+      "previous_graded_water_cells": 8
+    }
+  ],
+  "maps": [
+    {
+      "map": "OldaleTown",
+      "cells": 400,
+      "graded_cells": 0,
+      "source_ledge_cells": 0,
+      "water_regions": [],
+      "minimum_pixels": 16,
+      "maximum_pixels": 16,
+      "review_scope": "town foundations and three connections"
+    },
+    {
+      "map": "LittlerootTown",
+      "cells": 400,
+      "graded_cells": 0,
+      "source_ledge_cells": 0,
+      "water_regions": [],
+      "minimum_pixels": 0,
+      "maximum_pixels": 0,
+      "review_scope": "southern connection context; complete town review remains open"
+    },
+    {
+      "map": "PetalburgCity",
+      "cells": 900,
+      "graded_cells": 0,
+      "source_ledge_cells": 0,
+      "water_regions": [
+        {
+          "name": "PetalburgCity-water",
+          "height_pixels": 16,
+          "water_cells": 141,
+          "shore_cells": 84,
+          "guard": "af2c94fb8d1da3247198e43afcb640cbc7ca54bb59640aea01f3d6d7eed65063"
+        }
+      ],
+      "minimum_pixels": 16,
+      "maximum_pixels": 16,
+      "review_scope": "offset eastern connection and level pond surfaces; complete city geography remains open"
+    },
+    {
+      "map": "Route101",
+      "cells": 400,
+      "graded_cells": 219,
+      "source_ledge_cells": 14,
+      "water_regions": [],
+      "minimum_pixels": 0,
+      "maximum_pixels": 16,
+      "review_scope": "existing two ledges and complete connected corner field retained"
+    },
+    {
+      "map": "Route102",
+      "cells": 1000,
+      "graded_cells": 438,
+      "source_ledge_cells": 17,
+      "water_regions": [
+        {
+          "name": "Route102-water",
+          "height_pixels": 16,
+          "water_cells": 26,
+          "shore_cells": 26,
+          "guard": "4f8d01890289951229d825aa57c795324175438c46bdda1c032a217e4840b035"
+        }
+      ],
+      "minimum_pixels": 8,
+      "maximum_pixels": 24,
+      "review_scope": "authored ledges, continuous Oldale/Petalburg approaches and level pond/shore contact; underwater depth and live animation remain open"
+    },
+    {
+      "map": "Route103",
+      "cells": 1600,
+      "graded_cells": 198,
+      "source_ledge_cells": 25,
+      "water_regions": [
+        {
+          "name": "Route103-water",
+          "height_pixels": 16,
+          "water_cells": 328,
+          "shore_cells": 156,
+          "guard": "65888c23e298053e79a9871b4525b1f537b7f57c3a232b775c74aaa8b3489b92"
+        }
+      ],
+      "minimum_pixels": 16,
+      "maximum_pixels": 32,
+      "review_scope": "western two-tier approach to Oldale and level ocean/shore contact; complete coastal cliffs remain unfinished"
+    }
+  ],
+  "frontiers": [
+    {
+      "map": "PetalburgCity",
+      "direction": "left",
+      "neighbour": "MAP_ROUTE104",
+      "status": "not authored by this example"
+    },
+    {
+      "map": "Route103",
+      "direction": "right",
+      "neighbour": "MAP_ROUTE110",
+      "status": "not authored by this example"
+    }
+  ],
+  "captures": [
+    {
+      "view": "pond",
+      "version": "before",
+      "room_hash": "dba9fa138fc8a9c0",
+      "terrain_rejected": 0
+    },
+    {
+      "view": "pond",
+      "version": "after",
+      "room_hash": "80f14395d59512cb",
+      "terrain_rejected": 0
+    },
+    {
+      "view": "pond-above",
+      "version": "before",
+      "room_hash": "dba9fa138fc8a9c0",
+      "terrain_rejected": 0
+    },
+    {
+      "view": "pond-above",
+      "version": "after",
+      "room_hash": "80f14395d59512cb",
+      "terrain_rejected": 0
+    },
+    {
+      "view": "ocean",
+      "version": "before",
+      "room_hash": "4ca5cad5939a7aa9",
+      "terrain_rejected": 0
+    },
+    {
+      "view": "ocean",
+      "version": "after",
+      "room_hash": "5e40f18a2d733817",
+      "terrain_rejected": 0
+    },
+    {
+      "view": "ocean-reverse",
+      "version": "before",
+      "room_hash": "4ca5cad5939a7aa9",
+      "terrain_rejected": 0
+    },
+    {
+      "view": "ocean-reverse",
+      "version": "after",
+      "room_hash": "5e40f18a2d733817",
+      "terrain_rejected": 0
+    }
+  ],
+  "limitations": [
+    "Water and immediate shore share the authored 16px height; this does not lower water below the bank",
+    "Complete raised banks, underwater depth, waterfalls and coastal geography remain open",
+    "Rigid multi-cell foundations remain open",
+    "Renderer still shows one map plus copied padding; full neighbour meshes and continuous multi-map flight remain open",
+    "Live gameplay, animated water, surf traversal and headset acceptance not tested",
+    "Foliage appearance deferred to M4"
+  ],
+  "merge": {
+    "commit": "507ece06b01469bbdcfc66c5c640e4412264a2c5",
+    "merged_at": "2026-09-10T12:23:05Z",
+    "source_and_build_CI": "PASS",
+    "verified_runs": [
+      34475415654,
+      34475410944
+    ]
+  }
+}

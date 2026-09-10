@@ -1,0 +1,28 @@
+name: Scoped contribution proposal
+description: Propose a bounded capability or take a roadmap work package; AI-assisted work is welcome.
+labels: [enhancement]
+body:
+  - type: input
+    id: roadmap
+    attributes:
+      label: Work package or roadmap milestone
+      description: Existing issue URL, RV identifier, or M0–M11 milestone. Search existing issues first.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Concrete task and current obstacle
+      description: Describe the user action that is hard or impossible today, and the smallest useful improvement.
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Scope and acceptance
+      description: What changes, what evidence will show it works, and which dependencies remain? Include real visual checks for geometry/UI work.
+    validations:
+      required: true
+  - type: textarea
+    id: references
+    attributes:
+      label: Sources, dependencies and approach
+      description: Exact source links/revisions/licences for any adapted code. Distinguish inspected ideas from tools actually tested. Mention AI assistance if useful.

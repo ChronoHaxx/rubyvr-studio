@@ -1,0 +1,227 @@
+# Verification and its limits
+
+Checks use the production renderer and real document/input paths. They do not
+replace human visual review or prove complete gameplay. Initial standalone
+verification ran on 2026-09-08 on Windows with MSYS2 mingw64, an NVIDIA OpenGL
+3.3 context and the pinned local source checkout in the build guide.
+
+## Reproduce locally
+
+```powershell
+.\tools\build.ps1
+python tools/prepare-assets.py
+python tools/check-repo.py
+python tools/test-coverage-ledger.py
+python tools/test-dynamic-inventory.py
+python tools/test-native-trace.py
+python tools/test-coverage-disposition.py
+python tools/test-coverage-review.py
+python tools/test-studio-review.py
+python tools/test-editor.py
+./build/rubyvr_studio.exe --test-terrain build/terrain-test
+./build/rubyvr_studio.exe --test-foundation build/foundation-test
+./build/rubyvr_studio.exe --test-connected
+python tools/test-studio-launcher.py
+python tools/test-connected-studio.py
+python tools/test-region-model-reuse.py
+python tools/render-region-model-reuse.py
+python tools/test-studio-foundation.py
+python tools/render-terrain-foundations.py
+python tools/test-studio-terrain.py
+python tools/test-terrain-regions.py
+python tools/test-terrain-region-source.py
+python tools/test-studio-guided.py
+python tools/test-studio-environment.py
+python tools/review-voxel-world.py
+python tools/test-voxel-emblems.py
+python tools/test-voxel-trees.py
+```
+
+The build script adds mingw64 to that process's PATH. In a fresh terminal, put
+the same mingw64 `bin` directory on PATH before running the Python commands.
+`test-editor.py` also supports `RUBYVR_MINGW_BIN` for a custom installation.
+Graphics checks need an OpenGL driver even when SDL windows stay hidden.
+Artifacts remain in ignored local folders. Failed commands remain failures;
+do not substitute old outputs or change frozen hashes to obtain a pass.
+
+| Check | What it verifies | Limits |
+|---|---|---|
+| `check-repo.py` | Python/JSON/YAML syntax, local doc links, notices and issue metadata | Not a full security/legal audit or hosted Actions run |
+| `check-repo.py --publication` | Exact staged/tracked bytes, including force-added forbidden paths | Does not audit unstaged edits, private history or image ownership |
+| `test-coverage-ledger.py` | Original synthetic source/recipe/renderer changes, retained independent reviews, removed/duplicate entries, exact placements, padding and export fragments | No game data or GL required; the local 394-map merge is separate evidence |
+| `test-dynamic-inventory.py` | Original source events, aliases/variables, conditional scripts, generated movement macros, native calls, dependency retention, malformed/mutated input and independent review states | Source parsing only; no game execution, GL or network |
+| `test-native-trace.py` | Ten original fixtures for helper paths, same-file static binding, ambiguous definitions/cycles, literal callback candidates, unresolved calls/macros/stores, false declarations and retained independent reviews | Conservative lexical source audit; no full C semantics, game execution, art or GL |
+| `test-coverage-disposition.py` | Twelve original fixtures for complete/partial/mixed authored roles, field/battle ownership, runtime controls, variable identities, manual/stale intent, map/treatment/milestone filters, read-only reports, concurrent sync and CLI/Studio agreement | Intended treatment only; no automatic source-role guessing or visual/runtime approval |
+| `test-coverage-review.py` | Read-only deterministic export, padded coordinates/anchors, partial coverage, independent and stale reviews, atomic publication, malformed paths/footprints; native filters/reader when `RUBYVR_REVIEW_BATCH` names the built batch executable | Nine original synthetic tests; native check enabled in CI after build, no art/GL/network |
+| `test-studio-review.py` | Actual SDL review filters, source/model navigation and orbit at two sizes, flat/padding toggles, search, unchanged save/ledger, unsaved-edit cancellation and keyboard ownership | Requires local synced/exported coverage and source/GL; static placements only; no human usability/live/headset claim |
+| Standalone build | GUI/batch compile/link without gbarecomp or the XR loader | Does not build a game or establish other platforms |
+| `--test-terrain` | 197 original synthetic checks of surfaces/layers, guards, native UV bands, corner grades, neighbour projection, shared model height, persistence and memory bounds | No source art or GL; included in CI |
+| `--test-foundation` | 23 original synthetic checks: actual base bounds exclude roof overhang, highest-corner pad, rigid movement/contact, native art, source/outside-terrain preservation, atomic refusal and exact v7 persistence | No source art or GL; included in CI; rectangular ground pads only |
+| `--test-connected` | 28 synthetic checks of ownership, overhangs, seams, source indices, atomic refusal, rigid reuse and ordered equivalence with ground-following deformation | No source art or GL; included in CI |
+| `test-studio-launcher.py` | Six cases in Windows PowerShell 5.1 and PowerShell 7: exact native arguments, paths with spaces, plain/connected launch and nonfatal stale coverage | Runs the real launcher with a source-free native argv recorder; included in CI; rendering is checked separately |
+| `--test-connected-source` | Four- and six-map authored fixtures plus a three-map/two-atlas source-floor fixture: offsets, expanded/stored counts and geometry hashes | Requires pinned local source and generated regional pack; third fixture deliberately has no scenery patterns |
+| `test-connected-studio.py` | 20 SDL checkpoints at two sizes: enter, fly across a boundary, stop, blocked edits, return, repeat, save and unchanged source; 32,000 rendered pixels match a neighbour's own source-floor view | Cached uploads and whole-map culling checked; timings cover synchronized single-eye GL draw only, not whole-app or headset frame time |
+| `test-region-model-reuse.py` | Native reuse/source audit, existing 20 SDL checkpoints plus 28 north/west flight/overview checkpoints; optional PR #30 same-camera pixel comparison | Six maps preloaded; no camera-driven loading; [exact evidence](region-model-reuse-evidence-2026-09-10.json) |
+| `render-region-model-reuse.py` (also `render-connected-scene.py`) | 27 actual production frames in a 13-second GIF: Littleroot through Oldale, Petalburg's offset join, and the full area | Uses verified captures; [scope and memory limits](region-model-reuse.md); outer frontiers and foliage unfinished |
+| `test-studio-foundation.py` | 14 SDL checkpoints at two sizes: application, undo/redo, repeated no-op, save/reopen, 16 changed terrain cells and unchanged models/source | Controlled test slope, not proposed Oldale geography; [evidence](terrain-foundations-evidence-2026-09-10.json) |
+| `render-terrain-foundations.py` | Six actual SDL captures from the tested executable, three paired views in a 12-second GIF | Inspected desktop evidence; no live/headset or entrance-route acceptance |
+| `test-studio-terrain.py` | 49 SDL checkpoints: plateau/stairs/slopes, material pick, deck, refusal, history/save/reopen; real corner/seam orbit. Builds all 394 maps to check copied source ownership, 720 terrain copies and 40 two-map seam edges | [Authored local example](terrain-authoring.md); not complete geography, live traversal or headset acceptance |
+| `test-terrain-regions.py` | 13 original synthetic tests: offset joins, integer continuity, tapered ends/reversed elbow, level concave water/shore constraints, source guards and malformed input refusal | Source-free; included in CI |
+| `test-terrain-region-source.py` | 200 native boundary checks, 495 level water cells/7,920 surface triangles and 266 flat shore cells; rejects broken seam/water levels, changed guards, conflicting anchors and input with existing terrain; source art, Route 101 and patterns retained | Pinned local source; [bounded region example](terrain-regions.md) and [water contact](terrain-water.md), not complete geography |
+| `render-terrain-water.py` | Eight actual SDL captures, paired at identical cameras/source art in a 12-second GIF | [Inspected desktop evidence](terrain-water-evidence-2026-09-10.json); no gameplay/headset claim |
+| `prepare-assets.py` | Exact catalog map set, retained export diagnostics/fragments, starter generation | Does not establish visual approval or terrain completion |
+| `test-editor.py` | Self-checks, object invariants, eight frozen hashes, four layouts, SDL camera/authoring and save/reopen | Disk source only; no live/headset claim |
+| `test-studio-guided.py` | Visible next actions, part selection, mask/model/scene navigation and saving at two window sizes | A reproducible UI journey, not a timed human usability result |
+| `test-studio-part-selection.py` | Direct roof, door, pane and frame selection in perspective/orthographic views at two sizes; focus, orbit, empty clicks, unchanged saves and zero mesh uploads | Starter-house coverage; included in `test-editor.py` |
+| `test-studio-environment.py` | Lighting dropdown, real sky bands, source-art tint, neutral reset, immutable model/source data, zero mesh uploads and draw cost at three sizes/scales | Fixed editor phases; [recorded evidence](environment-verification.md); no game clock/weather or headset test |
+| `review-voxel-world.py` | Geometry, matching, actual isolated/town renders and exact resave | Does not approve every placement visually |
+| `test-voxel-emblems.py` | Complete source rows and roof-riser mapping for nine emblems | Does not establish subjective appearance at every distance |
+| `test-voxel-trees.py` | All 28 Oldale broad-tree placements, complete native-scale crowns, trunk contact, adjacent ground masks and shared Mart/tree ownership | Requires a fresh pack review; does not establish coverage of every tree family |
+
+`rubyvr_studio --scenes` alone prints disk-built geometry. The Python wrapper
+explicitly checks the eight frozen hashes. It runs object invariants in a
+separate process so a warm mesh cache cannot suppress the first scene's output.
+This is disk-source regression, not a new comparison with a live game snapshot.
+
+## Recorded standalone baseline
+
+The intended-treatment continuation passes 57 synthetic checks across the five
+coverage suites. Every one of 199,335 entries has a reason, evidence and a
+milestone owning its next action; 163,271 remain unresolved. Reports and Studio
+use the same policy, and recorded/stale decisions take precedence. Reporting,
+exporting and the actual SDL journeys leave the ledger and authored pack
+byte-identical. The native reader validates the new 165,777-row export.
+
+Fresh Studio journeys pass 36 checkpoints at 1600×950 and 1280×720, including
+navigation, search, notes, save and unsaved-edit protection. The updated filter
+check verifies zero unresolved nonflat Oldale objects with known authored intent,
+then 208 unresolved ground entries when included; 65 nonflat entries remain
+visually unreviewed. It does not weaken visual approval or geometry checks.
+[Watch the 20-second acceptance](acceptance.md) or inspect
+[the recorded identities/results](disposition-evidence-2026-09-09.json).
+This verifies the new report/export data with the existing GUI/batch renderer;
+no new live-game or headset acceptance is claimed.
+
+The native-path continuation passed all 45 synthetic tests across the static
+ledger, source adapter, native trace and review-export suites (including the
+built native review reader). Its real 394-map scan adds 374 target audits,
+including helper/callback witnesses for Petalburg's doors and direct tile changes
+for Mauville's switches and Sootopolis's cracked ice. All remain pending runtime
+review. Existing entries and review payloads survive; the two gym rejection
+records become stale because the batch renderer changed since their original
+receipt, with their result/evidence and open defects retained. The authored pack
+is byte-identical. [Concise acceptance](native-audit-acceptance.md) records exact
+counts, input identities and limitations. This backend change does not supply
+new GUI, live-game or headset acceptance.
+
+The M1 source-state continuation scans all 394 maps and records 27,927 source
+candidates: map events/connections, script blocks and changes, movement commands,
+animation/sprite declarations, tileset frames/callbacks, behavior constants and
+native mutation references. There are 1,156 warp entries, including 41 intentional
+saved-destination warps; all fixed targets resolve in the source inventory.
+The 56 used tilesets have 21 named callbacks and 35 explicit null callbacks.
+The scanner recognizes every command name in this pinned source; this does not
+prove complete execution-path or C-memory-write coverage.
+
+The ledger adds these records without promoting visual/live/headset approval.
+The 13 static ledger tests and 13 source-adapter tests use original fixtures.
+The real merge retained both saved gym rejection records exactly, and a repeat
+sync left all 198,961 present entries unchanged. The native audit checked all
+394 maps with 5,832 accepted model/floor-mask placements and no rejected claims.
+Local manifests, source fingerprints and the native match audit remain under
+`build/coverage/`; they are separate from any rendered or runtime evidence.
+
+The subsequent tree-boundary correction adds the two previously flat Oldale
+trees, including the one sharing a roof tile with the Mart. Fifteen broad-tree
+models now include the five-pixel crown above their repeating source unit.
+Four variants also needed the lowest visible wood row continued one voxel to
+the ground. Six source-only masks clear 102 crown pixels across neighbouring
+ground-tile variants while preserving the other 239 pixels in each tile.
+These masks emit no solid geometry; the existing closed/connected and positive
+volume checks still apply to every actual model. They are omitted from the
+model browser and retain ordinary source-role editing and exact persistence.
+
+The final pack passed all 394 maps with no rejected claims: 3,653 model
+placements inside maps and 1,121 in padding, plus 786/272 floor-mask placements.
+The full editor suite, nine complete emblems and the new tree regression passed.
+Actual four-angle Oldale views and textured/neutral tree views were inspected.
+This is editor evidence; other source families and full-game/headset coverage
+remain pending. Pack SHA-256:
+`53ba55e86a560b338a541602c637cde53c415e651b6318de58e9f9eba03090a1`.
+Local reports are in `build/tree-ground-final/`, `build/tree-context/` and
+`build/editor-verification.json`.
+
+![Corrected Oldale trees from the rear in the actual editor](media/studio-tree-correction.png)
+
+The 2026-09-08 part-selection follow-up passed the editor suite (including both
+direct-picking layouts) and guided navigation. Picking produced no GPU uploads,
+undo entries or changed saved geometry. The tree recipe correction reclassified
+1,045 retained floor pixels across 13 broad and three slender tree variants.
+All 64 patterns retain their prior parts, source mapping and object masks; only
+those 16 ground/shadow masks changed. Production before/after renders for forest,
+west-edge and slender trees retained the same isolated geometry hashes, closed
+meshes and exact save/reopen. This does not approve every adjacent map tile.
+That earlier mask-only pack SHA-256 was
+`2969481395519e1c88a1e22af62ed94dd2e0e7abded0c609c1fef0e1f969efad`.
+Local evidence is in `build/part-selection-verification.json`,
+`build/editor-verification.json` and `build/tree-cleanup-*-renders/`.
+
+![Directly selected roof part in the actual editor](media/studio-part-selection.png)
+
+The following measurements describe the earlier standalone extraction:
+
+- Both standalone executables built without the game runtime.
+- 394 source maps loaded, 4,787 source families inventoried, zero map failures;
+  eight oversized proposals remain with 22 retained fragments.
+- Generated pack SHA-256:
+  `372f2e9844d14104c564c05223b3db43538e818c963e432eae75fd16de61d1dd`.
+  Local regeneration matched the prior development pack exactly.
+- 270 GUI/document self-checks, eight unchanged inference hashes, four layouts,
+  37 camera checks and 36 manual voxel input checks passed on the UX build.
+  The visible next-action/save journey also passed at 1600Ã—950 and 1280Ã—720.
+  Current local results are in `build/editor-verification.json` and
+  `build/guided-verification.json`.
+- Pack audit passed 64 definitions, closed/connected solids and exact resaves:
+  3,651 map-body placements in 64 maps plus 1,119 in padding, across 394 checked
+  maps. Oldale, Littleroot, Petalburg and Rustboro loaded and rendered.
+- Nine emblems and 2,520 complete source pixels passed their source-row audit.
+
+The compact, asset-free [verification record](verification-2026-09-08.json)
+records the exact tested executable hashes and check scopes.
+
+Local reports contain exact binary hashes, timestamps and artifact paths. They
+remain local because nearby fixtures/images contain game-derived data. The
+documentation screenshots/GIFs are actual application output. The geometry
+comparison GIFs show before on the left and after on the right; they are not a
+measurement of human authoring speed.
+
+## UX follow-up
+
+The initial usability pass adds a contextual next action, current-room model
+filter/search, a selected-object scene panel and a consistent save action.
+Scene diagnostics and output-path editing move out of the normal flow. This
+does not establish full [Dramatic Studio parity](reference-parity.md) or prove
+intuitive authoring; a timed human trial remains work package RV-004.
+
+After inspecting fresh frames, adjust test input coordinates only where a
+control moved. Keep semantic checks for source pixels, exact documents,
+geometry, history and input ownership unchanged.
+
+## Evidence still needed
+
+Earlier development live/batch comparisons and short runtime fixtures remain
+historical evidence for their exact inputs. They are not a current full-pack
+runtime run. This extraction does not ship those captures or build the runner.
+Full-pack live gameplay, complete playthrough, strict-static coverage and
+current target-headset acceptance remain unverified.
+
+[GitHub Actions](https://github.com/ChronoHaxx/rubyvr-studio/actions) records
+hosted source metadata checks and Windows target builds with read-only
+permissions. Those jobs do not fetch ROM/decomp assets, run graphics/headset
+checks or upload game data. The dated local baseline predates the first hosted
+run; consult the result for the revision being reviewed.
+
+Visual changes need actual front, back, both sides, roof and ground-contact
+views plus a neutral view. Check native scale, object/ground/shadow ownership,
+unseen materials and another compatible placement. A closed mesh or a passing
+count does not substitute for that inspection.

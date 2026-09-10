@@ -1,0 +1,80 @@
+{
+  "status": "PASS",
+  "scope": "Three opt-in encounter grass families; ground and leaf colour balance",
+  "blade_height_px": [
+    6,
+    12
+  ],
+  "source_roles_and_matching_unchanged": true,
+  "root_layer_below_ground_px": [
+    -2,
+    -1
+  ],
+  "gui_sha256": "92cd4070a63dfb5505881c1126da37ebab504288c5fa59a351271338ac1b01f7",
+  "pack_sha256": "d2b563433d2708d5b32ac92f9a69c2b20bdef0a83e2865c038c93336e6a546e7",
+  "assets": [
+    {
+      "id": "asset-0fc233364f9ae191",
+      "triangles": 2480,
+      "bounds_min": [
+        0.0,
+        -0.125,
+        -0.5
+      ],
+      "bounds_max": [
+        1.0,
+        0.75,
+        0.5
+      ],
+      "closed_connected": true,
+      "exact_resave": true
+    },
+    {
+      "id": "asset-baace6a3ee679103",
+      "triangles": 2476,
+      "bounds_min": [
+        0.0,
+        -0.125,
+        -0.5
+      ],
+      "bounds_max": [
+        1.0,
+        0.75,
+        0.5
+      ],
+      "closed_connected": true,
+      "exact_resave": true
+    },
+    {
+      "id": "asset-b049b934b773bb0e",
+      "triangles": 2476,
+      "bounds_min": [
+        0.0,
+        -0.125,
+        -0.5
+      ],
+      "bounds_max": [
+        1.0,
+        0.75,
+        0.5
+      ],
+      "closed_connected": true,
+      "exact_resave": true
+    }
+  ],
+  "visual_acceptance": "pending; ground visibility corrected, foliage silhouette and texture remain under review",
+  "headset_tested": false,
+  "default_starter_byte_identical": true,
+  "common_source_ground_pixels": 89,
+  "source_tile_pixels": 256,
+  "above_ground_open_pixels": 124,
+  "top_surface_palette_indices": [
+    15,
+    12
+  ],
+  "views": [
+    "original sprite / previous / revised at identical elevated camera",
+    "original sprite / previous / revised at identical eye-level camera"
+  ],
+  "discarded_experiment": "Literal source-mask extrusion failed topology due to diagonal pixel contacts; not included."
+}

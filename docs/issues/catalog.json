@@ -1,0 +1,383 @@
+{
+  "version": 1,
+  "labels": [
+    {
+      "name": "help wanted",
+      "color": "008672",
+      "description": "Contributions welcome within the described scope."
+    },
+    {
+      "name": "good first issue",
+      "color": "7057ff",
+      "description": "Bounded entry task; no engine architecture experience required."
+    },
+    {
+      "name": "status: ready",
+      "color": "0e8a16",
+      "description": "Ready to reproduce or take with the documented inputs."
+    },
+    {
+      "name": "status: design",
+      "color": "fbca04",
+      "description": "Resolve the concrete contract in the issue before broad implementation."
+    },
+    {
+      "name": "status: blocked",
+      "color": "b60205",
+      "description": "Depends on another work package before implementation."
+    },
+    {
+      "name": "bug",
+      "color": "d73a4a",
+      "description": "Reproducible incorrect behavior."
+    },
+    {
+      "name": "enhancement",
+      "color": "a2eeef",
+      "description": "A scoped capability or improvement."
+    },
+    {
+      "name": "area: art",
+      "color": "1d76db",
+      "description": "Work involving art."
+    },
+    {
+      "name": "area: tooling",
+      "color": "1d76db",
+      "description": "Work involving tooling."
+    },
+    {
+      "name": "area: terrain",
+      "color": "1d76db",
+      "description": "Work involving terrain."
+    },
+    {
+      "name": "area: usability",
+      "color": "1d76db",
+      "description": "Work involving usability."
+    },
+    {
+      "name": "area: editor",
+      "color": "1d76db",
+      "description": "Work involving editor."
+    },
+    {
+      "name": "area: geometry",
+      "color": "1d76db",
+      "description": "Work involving geometry."
+    },
+    {
+      "name": "area: runtime",
+      "color": "1d76db",
+      "description": "Work involving runtime."
+    },
+    {
+      "name": "area: rendering",
+      "color": "1d76db",
+      "description": "Work involving rendering."
+    },
+    {
+      "name": "area: research",
+      "color": "1d76db",
+      "description": "Work involving research."
+    },
+    {
+      "name": "area: build",
+      "color": "1d76db",
+      "description": "Work involving build."
+    },
+    {
+      "name": "area: docs",
+      "color": "1d76db",
+      "description": "Work involving docs."
+    },
+    {
+      "name": "status: in review",
+      "color": "6f42c1",
+      "description": "A bounded implementation has a pull request and recorded evidence."
+    }
+  ],
+  "milestones": [
+    {
+      "title": "M0 Common scenery",
+      "description": "Close starter sign, emblem, symmetry and ground-contact defects."
+    },
+    {
+      "title": "M1 Coverage ledger",
+      "description": "Every discovered source and placement has a disposition and separate evidence states."
+    },
+    {
+      "title": "M2 Terrain",
+      "description": "Authored layers, surfaces, underlays and shared placement heights."
+    },
+    {
+      "title": "M3 Manual authoring",
+      "description": "Practical editing and reuse proven on held-out human authoring tasks."
+    },
+    {
+      "title": "M4 Static world",
+      "description": "Review all outdoor/interior scenery and conditional source variants."
+    },
+    {
+      "title": "M5 Live integration",
+      "description": "Supported native adapter, immutable capture, map identity and invalidation."
+    },
+    {
+      "title": "M6 Actors and effects",
+      "description": "Animated actors and field effects with deliberate placement and live evidence."
+    },
+    {
+      "title": "M7 Game presentation",
+      "description": "Complete usable UI, battle and special-gameplay presentation."
+    },
+    {
+      "title": "M8 Environment",
+      "description": "Sky, time, lighting, weather and water with readable source art."
+    },
+    {
+      "title": "M9 Controls and comfort",
+      "description": "Named headset/input/comfort acceptance matrix."
+    },
+    {
+      "title": "M10 Performance and reliability",
+      "description": "Measured rendering, streaming, memory and long-session reliability."
+    },
+    {
+      "title": "M11 Release",
+      "description": "Complete coverage, playthrough, reproducible packaging and compatible rights."
+    }
+  ],
+  "issues": [
+    {
+      "id": "RV-001",
+      "title": "Review one starter building or prop from all sides",
+      "body": "docs/issues/001-scenery-review.md",
+      "milestone": "M0 Common scenery",
+      "labels": [
+        "help wanted",
+        "good first issue",
+        "area: art",
+        "status: ready"
+      ],
+      "depends_on": []
+    },
+    {
+      "id": "RV-002",
+      "title": "Track source families and placement review without losing prior evidence",
+      "body": "docs/issues/002-coverage-ledger.md",
+      "milestone": "M1 Coverage ledger",
+      "labels": [
+        "help wanted",
+        "area: tooling",
+        "status: design"
+      ],
+      "depends_on": []
+    },
+    {
+      "id": "RV-003",
+      "title": "Add the first versioned authored terrain surface and shared height query",
+      "body": "docs/issues/003-terrain-contract.md",
+      "milestone": "M2 Terrain",
+      "labels": [
+        "help wanted",
+        "area: terrain",
+        "status: ready"
+      ],
+      "depends_on": [
+        "RV-008"
+      ]
+    },
+    {
+      "id": "RV-004",
+      "title": "Time a held-out house and tree authoring workflow against the demo checklist",
+      "body": "docs/issues/004-manual-workflow.md",
+      "milestone": "M3 Manual authoring",
+      "labels": [
+        "help wanted",
+        "good first issue",
+        "area: usability",
+        "status: ready"
+      ],
+      "depends_on": []
+    },
+    {
+      "id": "RV-005",
+      "title": "Add part hide, solo and lock for crowded models",
+      "body": "docs/issues/005-part-visibility.md",
+      "milestone": "M3 Manual authoring",
+      "labels": [
+        "help wanted",
+        "area: editor",
+        "status: design"
+      ],
+      "depends_on": []
+    },
+    {
+      "id": "RV-006",
+      "title": "Add centered depth and geometry mirroring with intentional face art",
+      "body": "docs/issues/006-symmetry-depth.md",
+      "milestone": "M3 Manual authoring",
+      "labels": [
+        "help wanted",
+        "area: editor",
+        "area: geometry",
+        "status: design"
+      ],
+      "depends_on": []
+    },
+    {
+      "id": "RV-007",
+      "title": "Define a supported public RubySapphireRecomp integration boundary",
+      "body": "docs/issues/007-native-integration.md",
+      "milestone": "M5 Live integration",
+      "labels": [
+        "help wanted",
+        "area: runtime",
+        "status: design"
+      ],
+      "depends_on": []
+    },
+    {
+      "id": "RV-008",
+      "title": "Version map identity in source-built and live snapshots",
+      "body": "docs/issues/008-map-identity.md",
+      "milestone": "M5 Live integration",
+      "labels": [
+        "help wanted",
+        "area: runtime",
+        "area: terrain",
+        "status: design"
+      ],
+      "depends_on": []
+    },
+    {
+      "id": "RV-009",
+      "title": "Preview starter-pack updates while preserving personal edits",
+      "body": "docs/issues/009-pack-updates.md",
+      "milestone": "M3 Manual authoring",
+      "labels": [
+        "help wanted",
+        "area: editor",
+        "status: design"
+      ],
+      "depends_on": []
+    },
+    {
+      "id": "RV-010",
+      "title": "Capture one animated actor sequence with correct source identity",
+      "body": "docs/issues/010-actor-capture.md",
+      "milestone": "M6 Actors and effects",
+      "labels": [
+        "help wanted",
+        "area: runtime",
+        "status: blocked"
+      ],
+      "depends_on": [
+        "RV-007",
+        "RV-008"
+      ]
+    },
+    {
+      "id": "RV-011",
+      "title": "Route field, dialogue, menu and battle transitions without stale scenery",
+      "body": "docs/issues/011-scene-routing.md",
+      "milestone": "M7 Game presentation",
+      "labels": [
+        "help wanted",
+        "area: runtime",
+        "status: blocked"
+      ],
+      "depends_on": [
+        "RV-007",
+        "RV-008"
+      ]
+    },
+    {
+      "id": "RV-012",
+      "title": "Add a deterministic sky and time-of-day preview to Studio",
+      "body": "docs/issues/012-sky-day-preview.md",
+      "milestone": "M8 Environment",
+      "labels": [
+        "help wanted",
+        "area: rendering",
+        "status: design"
+      ],
+      "depends_on": []
+    },
+    {
+      "id": "RV-013",
+      "title": "Benchmark one external sprite converter on the same house and tree",
+      "body": "docs/issues/013-converter-benchmark.md",
+      "milestone": "M3 Manual authoring",
+      "labels": [
+        "help wanted",
+        "area: research",
+        "status: ready"
+      ],
+      "depends_on": [
+        "RV-004"
+      ]
+    },
+    {
+      "id": "RV-014",
+      "title": "Inventory Windows dependencies and prove a Linux batch build boundary",
+      "body": "docs/issues/014-portability.md",
+      "milestone": "M10 Performance and reliability",
+      "labels": [
+        "help wanted",
+        "area: build",
+        "status: design"
+      ],
+      "depends_on": []
+    },
+    {
+      "id": "RV-015",
+      "title": "Design a verified user-ROM source adapter for standalone authoring",
+      "body": "docs/issues/015-rom-source-adapter.md",
+      "milestone": "M11 Release",
+      "labels": [
+        "help wanted",
+        "area: tooling",
+        "status: design"
+      ],
+      "depends_on": []
+    },
+    {
+      "id": "RV-016",
+      "title": "Add role-aware bulk mask actions with a preview",
+      "body": "docs/issues/016-mask-shortcuts.md",
+      "milestone": "M3 Manual authoring",
+      "labels": [
+        "help wanted",
+        "area: editor",
+        "status: design"
+      ],
+      "depends_on": []
+    },
+    {
+      "id": "RV-017",
+      "title": "Add one voxel primitive justified by an unmodeled scenery family",
+      "body": "docs/issues/017-needed-primitives.md",
+      "milestone": "M3 Manual authoring",
+      "labels": [
+        "help wanted",
+        "area: geometry",
+        "status: design"
+      ],
+      "depends_on": []
+    },
+    {
+      "id": "RV-018",
+      "title": "Try the standalone build guide on a clean Windows machine",
+      "body": "docs/issues/018-clean-setup.md",
+      "milestone": "M11 Release",
+      "labels": [
+        "help wanted",
+        "good first issue",
+        "area: docs",
+        "status: ready"
+      ],
+      "depends_on": []
+    }
+  ]
+}

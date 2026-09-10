@@ -1,0 +1,208 @@
+{
+  "scope": "M1 script-native source audit; no runtime, GUI or headset acceptance",
+  "status": "PASS",
+  "inputs": {
+    "dynamic_source_sha256": "3f2e2848d2e16a13b28797449f957b767870dde91781fc5f5ee23d833e372515",
+    "dynamic_adapter_sha256": "4e4f97ef87cbf65ef840ce7fa0cc7934929cfa4934734d7b5816abf808b1f036",
+    "catalog_sha256": "9459e29fc863748cfaab9eccf473b678a3df74171bab13b733229d92eaf426ff",
+    "batch_sha256": "64bfe2948a723e236674e6fdbe4149d2938fffc831c2243bf1ac8154a4d56a63",
+    "pack_sha256": "53ba55e86a560b338a541602c637cde53c415e651b6318de58e9f9eba03090a1"
+  },
+  "synthetic_tests": {
+    "static_ledger": 13,
+    "source_inventory": 13,
+    "native_trace": 10,
+    "review_export_and_native_reader": 9
+  },
+  "static_studio_export_and_native_reader": {
+    "status": "PASS",
+    "maps": 394,
+    "rows": 165777,
+    "generation": "snapshot-fc5ef77316e52e72c7996ffd",
+    "scope": "Re-export of the refreshed ledger; no new GUI journey"
+  },
+  "inventory": {
+    "maps": 394,
+    "source_records": 28301,
+    "present_ledger_entries": 199335,
+    "new_trace_records": 374,
+    "all_new_traces_unresolved_pending_runtime": true,
+    "native_audit": {
+      "function_definitions": 11882,
+      "call_sites": 45052,
+      "call_kinds": {
+        "direct_call": 34697,
+        "callback_assignment": 1755,
+        "indirect_call": 213,
+        "registered_callback_candidate": 889,
+        "unresolved_callback": 64,
+        "unexpanded_macro": 4942,
+        "missing_body": 2419,
+        "local_or_pointer_call": 27,
+        "ambiguous_call": 46
+      },
+      "traced_targets": 374,
+      "targets_with_mutations": 46,
+      "targets_with_frontiers": 296
+    }
+  },
+  "persistence": {
+    "original_entries_retained": true,
+    "original_category_counts_unchanged": true,
+    "review_payloads_retained": 2,
+    "reviews_marked_stale": 2,
+    "invalidation_reason": "recipe or renderer dependency changed",
+    "reason_context": "Previous merged browser rebuilt the batch renderer after the earlier review receipt; pack and catalog bytes are unchanged.",
+    "new_approvals": 0,
+    "authored_pack_unchanged": true,
+    "catalog_unchanged": true,
+    "initial_sync_changes": {
+      "changed": 198949,
+      "unchanged": 12,
+      "added": 374
+    },
+    "remerge_verified_inputs": {
+      "unchanged": 199335
+    }
+  },
+  "native_match_audit": {
+    "status": "PASS",
+    "maps": 394,
+    "accepted_model_and_floor_mask_placements": 5832,
+    "rejected_claims": 0
+  },
+  "catalog_refresh": {
+    "failed_maps": 0,
+    "known_unexportable_proposals": 8,
+    "retained_fragments": 22,
+    "exit_code": 1,
+    "meaning": "Known incomplete export retained; not an all-terrain pass"
+  },
+  "witnesses": [
+    {
+      "target": "PetalburgGymSlideOpenDoors",
+      "related_maps": [
+        "MAP_PETALBURG_CITY_GYM"
+      ],
+      "mutation_sites": 2,
+      "first_witness": {
+        "reference": "state:native:src/field_specials.c:SetPetalburgGymDoorTiles:MapGridSetMetatileIdAt:1",
+        "callee": "MapGridSetMetatileIdAt",
+        "source": {
+          "path": "src/field_specials.c",
+          "line": 657
+        },
+        "witness": [
+          {
+            "function": "PetalburgGymSlideOpenDoors",
+            "definition": {
+              "path": "src/field_specials.c",
+              "line": 571
+            },
+            "via": "script_target"
+          },
+          {
+            "function": "Task_SlideOpenPetalburgGymDoors",
+            "definition": {
+              "path": "src/field_specials.c",
+              "line": 579
+            },
+            "via": "registered_callback_candidate",
+            "call": {
+              "path": "src/field_specials.c",
+              "line": 576
+            },
+            "ambiguous": false
+          },
+          {
+            "function": "SetPetalburgGymDoorTiles",
+            "definition": {
+              "path": "src/field_specials.c",
+              "line": 597
+            },
+            "via": "direct_call",
+            "call": {
+              "path": "src/field_specials.c",
+              "line": 583
+            },
+            "ambiguous": false
+          }
+        ]
+      },
+      "frontier_counts": {
+        "callback_assignment": 3,
+        "missing_body": 7,
+        "unexpanded_macro": 13,
+        "indirect_call": 2
+      }
+    },
+    {
+      "target": "MauvilleGymSpecial1",
+      "related_maps": [
+        "MAP_MAUVILLE_CITY_GYM"
+      ],
+      "mutation_sites": 2,
+      "first_witness": {
+        "reference": "state:native:src/field_specials.c:MauvilleGymSpecial1:MapGridSetMetatileIdAt:1",
+        "callee": "MapGridSetMetatileIdAt",
+        "source": {
+          "path": "src/field_specials.c",
+          "line": 397
+        },
+        "witness": [
+          {
+            "function": "MauvilleGymSpecial1",
+            "definition": {
+              "path": "src/field_specials.c",
+              "line": 390
+            },
+            "via": "script_target"
+          }
+        ]
+      },
+      "frontier_counts": {
+        "unexpanded_macro": 3
+      }
+    },
+    {
+      "target": "SetSootopolisGymCrackedIceMetatiles",
+      "related_maps": [
+        "MAP_SOOTOPOLIS_CITY_GYM_1F"
+      ],
+      "mutation_sites": 1,
+      "first_witness": {
+        "reference": "state:native:src/field_tasks.c:SetSootopolisGymCrackedIceMetatiles:MapGridSetMetatileIdAt:1",
+        "callee": "MapGridSetMetatileIdAt",
+        "source": {
+          "path": "src/field_tasks.c",
+          "line": 551
+        },
+        "witness": [
+          {
+            "function": "SetSootopolisGymCrackedIceMetatiles",
+            "definition": {
+              "path": "src/field_tasks.c",
+              "line": 540
+            },
+            "via": "script_target"
+          }
+        ]
+      },
+      "frontier_counts": {
+        "unexpanded_macro": 1,
+        "missing_body": 1
+      }
+    }
+  ],
+  "limits": [
+    "Source references are candidates, not an enumerated set of reachable gameplay states.",
+    "Conditional source branches, script variables and native call expressions are not executed.",
+    "Shared script associations conservatively follow source-file symbol references.",
+    "Native paths follow direct helpers and literal registered callback candidates; pointer/table calls and macros remain frontiers. Arbitrary memory writes require further audit.",
+    "Runtime animation, UI/battle routing, time combinations and headset presentation remain untested.",
+    "Lexical inspected C conventions only; no preprocessor or full C type system.",
+    "One shortest witness per reached mutation site; not every possible path.",
+    "Unresolved references and zero-mutation traces are never automatically cleared or approved.",
+    "Earlier browser GIF is separate editor evidence; no new visual footage is claimed."
+  ]
+}

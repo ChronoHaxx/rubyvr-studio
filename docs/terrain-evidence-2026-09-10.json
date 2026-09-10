@@ -1,0 +1,153 @@
+{
+  "date": "2026-09-10",
+  "scope": "Desktop editor: authored terrain and unapproved foliage experiments",
+  "source_revision": "63a8cbf0016b351a4e68f7036fa0b77e23d2f2c1",
+  "base_commit": "65dbde241b4461768574e7224341fb668ff6bcc1",
+  "gui_sha256": "92cd4070a63dfb5505881c1126da37ebab504288c5fa59a351271338ac1b01f7",
+  "batch_sha256": "3f3b991ba2031376d579be5027e2e1b802452ae85e454a8a7af5e1b820d8a853",
+  "default_pack_sha256": "6592665e1e429947d908b9d5ec5509aed306950ca8a4f53a3986f8915f25cce0",
+  "experimental_pack_sha256": "971e3aa067170ffcdd0fc780a86908b9612597060fd3ca78c56b1952c32a73a6",
+  "gif": {
+    "path": "media/terrain-acceptance.gif",
+    "sha256": "2f40a63303c96cfb50f5923febbb6cde8fded0df6ca0455e9a9891031fa96851",
+    "duration_seconds": 16,
+    "rendering": "Actual production SDL viewport captures, cropped and captioned"
+  },
+  "verification": {
+    "build": "PASS",
+    "runtime_DLLs": "Copied local MinGW dependencies; Python render launches pass",
+    "synthetic_terrain_checks": 197,
+    "SDL_checkpoints": 49,
+    "existing_editor_suite": "PASS",
+    "frozen_hashes_unchanged": 8,
+    "source_maps": 394,
+    "copied_cells": 36834,
+    "canonical_terrain_copies": 720,
+    "seam_edges": 40,
+    "continuous_Route101_edges": 746,
+    "ledge_drops_pixels": [
+      8,
+      8
+    ],
+    "south_boundary_pixels": 0,
+    "default_model_count": 66,
+    "default_ground_masks": 6,
+    "default_pack_review": "PASS",
+    "experimental_model_count": 69,
+    "experimental_ground_masks": 4,
+    "experimental_pack_review": "PASS",
+    "default_tree_regression": {
+      "status": "PASS",
+      "oldale_trees": 28,
+      "crown_models": 15,
+      "crown_height_pixels": 35,
+      "floor_variants": 6,
+      "cleared_pixels": 102,
+      "all_trunks_touch_ground": true,
+      "front_back_without_gaps": true,
+      "all_map_source_claims_preserved": true
+    },
+    "experimental_tree_regression": {
+      "status": "PASS",
+      "oldale_trees": 28,
+      "crown_models": 15,
+      "crown_height_pixels": 35,
+      "floor_variants": 6,
+      "cleared_pixels": 102,
+      "all_trunks_touch_ground": true,
+      "front_back_without_gaps": true,
+      "all_map_source_claims_preserved": true
+    },
+    "blender_trial": [
+      {
+        "id": "asset-fddd3779331738d9",
+        "triangles": 3912,
+        "closed_connected": true,
+        "exact_resave": true
+      },
+      {
+        "id": "asset-b049b934b773bb0e",
+        "triangles": 1362,
+        "closed_connected": true,
+        "exact_resave": true
+      }
+    ],
+    "gallery": {
+      "status": "PASS",
+      "families": 69,
+      "angle_selections": 207,
+      "widths": [
+        736,
+        360
+      ],
+      "themes": [
+        "light",
+        "dark"
+      ],
+      "library_selection": true,
+      "page_errors": []
+    }
+  },
+  "terrain": {
+    "status": "PASS",
+    "scope": "Studio desktop; authored terrain lab, not canonical Ruby geography",
+    "gui_sha256": "92cd4070a63dfb5505881c1126da37ebab504288c5fa59a351271338ac1b01f7",
+    "source_pack_sha256": "6592665e1e429947d908b9d5ec5509aed306950ca8a4f53a3986f8915f25cce0",
+    "checkpoints": 49,
+    "terrain_cells": 54,
+    "synthetic_tests": "Run rubyvr_studio --test-terrain separately",
+    "room_hash": "e2feb94b36dd00b4",
+    "raised": 92,
+    "seam_room_hash": "0d2df1f93f6ac314",
+    "seam_source_check": "[terrain-source-test] PASS: 394 source maps, 36834 copied cells, 720 canonical terrain copies, 40 equal-height seam edges; 746 continuous Route 101 edges and two 8px ledges; no internal seam walls"
+  },
+  "performance": {
+    "cpu": "Intel Core i9-13900",
+    "registered_GPU": "NVIDIA GeForce RTX 3080",
+    "GL_version": "3.3.0 NVIDIA 596.36",
+    "route101": {
+      "room": "35x34",
+      "geom": "0d2df1f93f6ac314",
+      "vertices": "1429710",
+      "triangles": "476570",
+      "raised": "59",
+      "flat_vertices": "174354",
+      "authored_vertices": "1255356",
+      "rebuild_ms": "273.038",
+      "draw_1024x768_ms": "0.274",
+      "samples": "16",
+      "synchronized": "yes",
+      "local_desktop": "yes"
+    },
+    "oldale": {
+      "room": "35x34",
+      "geom": "9891b87db90e9649",
+      "vertices": "2182368",
+      "triangles": "727456",
+      "raised": "92",
+      "flat_vertices": "232992",
+      "authored_vertices": "1949376",
+      "rebuild_ms": "325.904",
+      "draw_1024x768_ms": "0.399",
+      "samples": "16",
+      "synchronized": "yes",
+      "local_desktop": "yes"
+    },
+    "limits": "One synchronized 16-frame 1024x768 room draw per scene; fixed distant camera, no GUI, traversal, stereo or headset. Forced rebuild/upload measured separately. Not a full-frame or standalone Quest result."
+  },
+  "visual_review": {
+    "terrain": "Actual captures inspected; full geography/foundations still open",
+    "foliage": "Unapproved after maintainer feedback; Blender tiers/leaves remain experiments",
+    "reference_video": "New DramaticShape post opened; reliable frame inspection unavailable"
+  },
+  "limitations": [
+    "Other neighbours and different tileset atlases",
+    "Full region terrain authoring and visual review",
+    "Rigid multi-cell foundation fit",
+    "Live feet/camera/traversal",
+    "Foliage style and complete coverage",
+    "General Blender/Blockbench round trip",
+    "Headset and standalone performance"
+  ],
+  "external_review": "No independent external critique obtained; automated and visual verification performed locally."
+}

@@ -1,0 +1,56 @@
+{
+  "status": "PASS",
+  "scope": "Three opt-in grass families; authored height correction",
+  "previous_height_px": [
+    3,
+    6
+  ],
+  "trial_height_px": [
+    6,
+    12
+  ],
+  "footprint_and_source_roles_unchanged": true,
+  "gui_sha256": "92cd4070a63dfb5505881c1126da37ebab504288c5fa59a351271338ac1b01f7",
+  "pack_sha256": "35f213e9ff4ce2fa25d70313ed4289fe20dacf290cff5b99af4e1dea0ba6dbda",
+  "assets": [
+    {
+      "id": "asset-0fc233364f9ae191",
+      "triangles": 2256,
+      "bounds_max": [
+        1.0,
+        0.75,
+        0.5
+      ],
+      "closed_connected": true,
+      "exact_resave": true
+    },
+    {
+      "id": "asset-baace6a3ee679103",
+      "triangles": 2244,
+      "bounds_max": [
+        1.0,
+        0.75,
+        0.5
+      ],
+      "closed_connected": true,
+      "exact_resave": true
+    },
+    {
+      "id": "asset-b049b934b773bb0e",
+      "triangles": 2244,
+      "bounds_max": [
+        1.0,
+        0.75,
+        0.5
+      ],
+      "closed_connected": true,
+      "exact_resave": true
+    }
+  ],
+  "views": [
+    "same elevated camera before/after",
+    "same eye-level camera before/after"
+  ],
+  "visual_acceptance": "pending; height feedback addressed, full foliage art remains open",
+  "headset_tested": false
+}

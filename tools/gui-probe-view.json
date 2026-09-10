@@ -1,0 +1,56 @@
+{
+  "version": 1,
+  "id": "oldale-shell-view-v2",
+  "viewport": {
+    "w": 1600,
+    "h": 950
+  },
+  "camera": {
+    "yaw": 0.6,
+    "pitch": 0.9,
+    "dist": 43.4,
+    "tx": 17.5,
+    "ty": 0.0,
+    "tz": 17.0
+  },
+  "click_px": [
+    863,
+    600
+  ],
+  "park_px": [
+    600,
+    200
+  ],
+  "expect": {
+    "cell": [
+      21,
+      0
+    ],
+    "object": {
+      "x": 21,
+      "y": 0,
+      "w": 4,
+      "footprint_rows": 3,
+      "extent": 4,
+      "class": "structure",
+      "has_door": true,
+      "authored": false
+    },
+    "geom": "f3a1bd5a56a98d41",
+    "surface": 2
+  },
+  "negative": {
+    "click_px": [
+      416,
+      116
+    ],
+    "motion_only_px": [
+      552,
+      116
+    ],
+    "bogus_window_px": [
+      552,
+      116
+    ]
+  }
+}

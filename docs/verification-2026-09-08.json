@@ -1,0 +1,67 @@
+{
+  "date": "2026-09-08",
+  "scope": "Standalone Windows editor and local source-data scenery pack; no runtime/headset validation",
+  "status": "PASS",
+  "gui_sha256": "13a57d2f3e960554ad47f2bc23109f6bf64e4689a47947129631cf301ea98b7c",
+  "batch_sha256": "69f1b40b091341e7305508eba4ad43e17382a284ae16f93ec3657bb08c8cc0fb",
+  "pack_sha256": "372f2e9844d14104c564c05223b3db43538e818c963e432eae75fd16de61d1dd",
+  "editor_finished_utc": "2026-09-08T15:03:20.091170+00:00",
+  "gui_self_checks": 270,
+  "frozen_inference_hashes": 8,
+  "rendered_layouts": 4,
+  "camera_checks": 37,
+  "manual_voxel_checks": 36,
+  "guided_layouts": [
+    {
+      "size": "wide",
+      "status": "PASS",
+      "checkpoints": 8
+    },
+    {
+      "size": "small",
+      "status": "PASS",
+      "checkpoints": 8
+    }
+  ],
+  "pack": {
+    "patterns": 64,
+    "maps_checked": 394,
+    "failed_maps": [],
+    "full_map_placements": 3651,
+    "connection_padding_placements": 1119,
+    "maps_with_full_placements": 64,
+    "source_masks_match_production": true,
+    "exact_resave": true,
+    "closed_connected": true,
+    "rendered_patterns": 64
+  },
+  "towns": [
+    {
+      "map": "MAP_OLDALE_TOWN",
+      "passed": true,
+      "geometry": "b8a8ca249cbaf224"
+    },
+    {
+      "map": "MAP_LITTLEROOT_TOWN",
+      "passed": true,
+      "geometry": "c5f72f921c41f5c0"
+    },
+    {
+      "map": "MAP_PETALBURG_CITY",
+      "passed": true,
+      "geometry": "044755aad69c4998"
+    },
+    {
+      "map": "MAP_RUSTBORO_CITY",
+      "passed": true,
+      "geometry": "23297e4131cb912f"
+    }
+  ],
+  "emblem_models": 9,
+  "complete_emblem_source_pixels": 2520,
+  "hosted_ci": "not run at the local baseline; see GitHub Actions for later builds",
+  "live_game": "not run",
+  "headset": "not run",
+  "human_usability_trial": "pending",
+  "all_placement_visual_review": "pending"
+}

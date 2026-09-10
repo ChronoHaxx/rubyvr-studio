@@ -1,0 +1,322 @@
+{
+  "recorded_on": "2026-09-08",
+  "packaged_at": "2026-09-08T21:01:54.722532+00:00",
+  "gif": "media/acceptance-preview.gif",
+  "gif_sha256": "d474cf2476347acb1feb9ae4a5872d00f49aaab22156e9cf44f36e147071bfde",
+  "frames": 13,
+  "duration_ms": 19100,
+  "gui_sha256": "38921ee4044e1978c8f399a851e2ad631f4db3a19c7e344b0367838ec6f59c4e",
+  "pack_sha256": "53ba55e86a560b338a541602c637cde53c415e651b6318de58e9f9eba03090a1",
+  "evidence_kind": "Actual SDL/OpenGL checkpoints, cropped and captioned; illustrative GIF encoding.",
+  "part_selection": {
+    "status": "PASS",
+    "layouts": [
+      {
+        "size": "wide",
+        "status": "PASS",
+        "checkpoints": 14,
+        "prefix": "build/part-selection-wide"
+      },
+      {
+        "size": "small",
+        "status": "PASS",
+        "checkpoints": 14,
+        "prefix": "build/part-selection-small"
+      }
+    ]
+  },
+  "lighting": {
+    "status": "PASS",
+    "layouts": [
+      {
+        "layout": "scene",
+        "framebuffer": [
+          1600,
+          950
+        ],
+        "viewport": [
+          1124,
+          425
+        ],
+        "checked_crop": [
+          1118,
+          419
+        ],
+        "room_hash": "f468442e81902768",
+        "mesh_upload_delta": 0,
+        "world_pixels_checked": 40202,
+        "dark_pixels_checked": 1130,
+        "baseline_neutral_equal": null,
+        "synchronized_draw_ms": {
+          "neutral": 0.3223,
+          "dawn": 0.343481,
+          "noon": 0.354144,
+          "dusk": 0.344381,
+          "night": 0.332025,
+          "reset": 0.314181
+        },
+        "samples_per_phase": 16,
+        "status": "PASS"
+      },
+      {
+        "layout": "small",
+        "framebuffer": [
+          1280,
+          720
+        ],
+        "viewport": [
+          804,
+          292
+        ],
+        "checked_crop": [
+          798,
+          286
+        ],
+        "room_hash": "f468442e81902768",
+        "mesh_upload_delta": 0,
+        "world_pixels_checked": 18968,
+        "dark_pixels_checked": 533,
+        "baseline_neutral_equal": null,
+        "synchronized_draw_ms": {
+          "neutral": 0.3233,
+          "dawn": 0.341869,
+          "noon": 0.339694,
+          "dusk": 0.325181,
+          "night": 0.352519,
+          "reset": 0.330831
+        },
+        "samples_per_phase": 16,
+        "status": "PASS"
+      },
+      {
+        "layout": "scaled",
+        "framebuffer": [
+          1920,
+          1080
+        ],
+        "viewport": [
+          1206,
+          438
+        ],
+        "checked_crop": [
+          1198,
+          430
+        ],
+        "room_hash": "f468442e81902768",
+        "mesh_upload_delta": 0,
+        "world_pixels_checked": 42700,
+        "dark_pixels_checked": 1179,
+        "baseline_neutral_equal": null,
+        "synchronized_draw_ms": {
+          "neutral": 0.344769,
+          "dawn": 0.355719,
+          "noon": 0.359962,
+          "dusk": 0.3564,
+          "night": 0.416175,
+          "reset": 0.379175
+        },
+        "samples_per_phase": 16,
+        "status": "PASS"
+      }
+    ]
+  },
+  "tree_regression": {
+    "status": "PASS",
+    "oldale_trees": 28,
+    "crown_models": 15,
+    "crown_height_pixels": 35,
+    "floor_variants": 6,
+    "cleared_pixels": 102,
+    "all_trunks_touch_ground": true,
+    "front_back_without_gaps": true,
+    "all_map_source_claims_preserved": true
+  },
+  "visual_review": {
+    "reviewer": "Codex",
+    "result": "PARTIAL",
+    "observations": [
+      "Roof selection/focus is visible; selected names match the clicked parts.",
+      "Door/window outlines span the facade despite correct picks; M3 follow-up remains open.",
+      "Matched-camera Oldale comparison shows the two raised trees and complete crowns.",
+      "Fixed lighting phases remain visible; neutral reset restores the original view."
+    ]
+  },
+  "reports": [
+    {
+      "path": "build/part-selection-verification.json",
+      "sha256": "3ef28271391cc9e7315c4d4b331b90fa4384c3ad426dbb61518bd1941e8a512f"
+    },
+    {
+      "path": "build/environment-review/report.json",
+      "sha256": "6a9a50e8c7881f63dc6fd1867f4028c465490c9d5cead77af58f7563f64dca54"
+    },
+    {
+      "path": "build/tree-ground-final/tree-regression.json",
+      "sha256": "d68021876cdf8c889f9e1b8f87a276b37a20ac6da27411ed5fdfe6950230eabe"
+    }
+  ],
+  "limitations": [
+    "Tree before/after checkpoints were retained from the earlier correction of the same pack.",
+    "The timing is edited; it is not a human usability or performance benchmark.",
+    "GIF palette encoding does not prove pixel identity; native captures and assertions do.",
+    "No live game, continuous runtime clock, weather, terrain-height or headset acceptance."
+  ],
+  "shots": [
+    {
+      "source": "build/part-selection-wide.png.roof.png",
+      "source_sha256": "3eead61e08aff42749cb9ad283643dc86754896025c6b1fbe6537e5ce538241b",
+      "crop": [
+        208,
+        425,
+        1332,
+        878
+      ],
+      "caption": "Roof selected",
+      "duration_ms": 1500
+    },
+    {
+      "source": "build/part-selection-wide.png.door.png",
+      "source_sha256": "bd92430ea372a72db981958e8beb928c9deeca8647d45cfae8791aafe85c94e1",
+      "crop": [
+        208,
+        425,
+        1332,
+        878
+      ],
+      "caption": "Door picked correctly; outline is too broad",
+      "duration_ms": 1300
+    },
+    {
+      "source": "build/part-selection-wide.png.window.png",
+      "source_sha256": "71322d593bd4e12ea9883e98024318e6120f8d8895b925c9830c0d855643e6f1",
+      "crop": [
+        208,
+        425,
+        1332,
+        878
+      ],
+      "caption": "Window picked correctly; same outline issue",
+      "duration_ms": 1300
+    },
+    {
+      "source": "build/part-selection-wide.png.focused.png",
+      "source_sha256": "3fb0c8f9ee5c0edea5485dbe48449b953d62205a14ecb378686524309b2075cd",
+      "crop": [
+        208,
+        425,
+        1332,
+        878
+      ],
+      "caption": "Shift+F focuses the selected roof",
+      "duration_ms": 1500
+    },
+    {
+      "source": "build/tree-context/before.png.town.png",
+      "source_sha256": "3fb8759766e62eb113fabe891971065716c746a7425399fa281b8651bc9bf62f",
+      "crop": [
+        208,
+        425,
+        1332,
+        878
+      ],
+      "caption": "Before: flat leftovers and clipped crowns",
+      "duration_ms": 1800
+    },
+    {
+      "source": "build/tree-context/after-2.png.town.png",
+      "source_sha256": "6024c9ec92969d196b054c245dbf047352e7081f416274d1108a6952c8260cac",
+      "crop": [
+        208,
+        425,
+        1332,
+        878
+      ],
+      "caption": "After: same camera, corrected trees and ground",
+      "duration_ms": 2400
+    },
+    {
+      "source": "build/tree-context/after-0.png.town.png",
+      "source_sha256": "e1fd6af076f816bdf73f1791af99049a487cbd037c90045b55ed5389d860ec56",
+      "crop": [
+        208,
+        425,
+        1332,
+        878
+      ],
+      "caption": "Inspect another side",
+      "duration_ms": 1400
+    },
+    {
+      "source": "build/tree-context/after-1.png.town.png",
+      "source_sha256": "7c33f8b0d443fe5a65e8352373a0d6b8f1803fd0afecef5e2b5580e457d99828",
+      "crop": [
+        208,
+        425,
+        1332,
+        878
+      ],
+      "caption": "Inspect ground contact and crowns",
+      "duration_ms": 1400
+    },
+    {
+      "source": "build/environment-review/scene.png.noon.png",
+      "source_sha256": "7afab2a093f20756a8e5a376b366e0126390d4ec1f368e21d5478fb1d456b0ed",
+      "crop": [
+        208,
+        425,
+        1332,
+        878
+      ],
+      "caption": "Noon",
+      "duration_ms": 1100
+    },
+    {
+      "source": "build/environment-review/scene.png.dawn.png",
+      "source_sha256": "1c07f117145a356c3c68a5f9713aa5c4d58e60d1c1ed562cc75a4b61f86a675e",
+      "crop": [
+        208,
+        425,
+        1332,
+        878
+      ],
+      "caption": "Dawn",
+      "duration_ms": 1100
+    },
+    {
+      "source": "build/environment-review/scene.png.dusk.png",
+      "source_sha256": "f772feb3113349a59e94494ef0e19dd81b0f2a996b83932d691eb14f23142a68",
+      "crop": [
+        208,
+        425,
+        1332,
+        878
+      ],
+      "caption": "Dusk",
+      "duration_ms": 1300
+    },
+    {
+      "source": "build/environment-review/scene.png.night.png",
+      "source_sha256": "f181790dabc479711fe9bf5e568e25e23877ed68c869db9523df8693d4607ed8",
+      "crop": [
+        208,
+        425,
+        1332,
+        878
+      ],
+      "caption": "Night",
+      "duration_ms": 1300
+    },
+    {
+      "source": "build/environment-review/scene.png.reset.png",
+      "source_sha256": "081962586459502a918ee28de6416bec241d51b2b4b4c401d8e2b97b45bc265e",
+      "crop": [
+        208,
+        425,
+        1332,
+        878
+      ],
+      "caption": "Reset: neutral lighting, model unchanged",
+      "duration_ms": 1700
+    }
+  ]
+}

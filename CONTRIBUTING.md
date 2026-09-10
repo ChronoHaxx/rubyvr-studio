@@ -74,19 +74,20 @@ source-pixel roles and the shared mesher intact. No new renderer just for demos.
 ## Licence for contributions
 
 By submitting original contributions for inclusion, you offer them under the
-**RubyVR Studio Noncommercial and No-Sales License 1.0**
-(`LicenseRef-RubyVR-Noncommercial-NoSales-1.0`). This covers original code,
+**GNU General Public License, version 3 or any later version**
+(`GPL-3.0-or-later`). This covers original code,
 tools, recipes, documentation and accepted original models/assets. You must
 have the rights to make that offer; no copyright assignment is required.
 Identify separately licensed material and retain its notices.
 
-Noncommercial development and free sharing are welcome. Distributed modified
-versions must provide source for the covered material and keep these terms
-for their changes. Private changes do not have to be published. Sales and
-paid access are not licensed. See [the licensing guide](docs/licensing.md),
-including the earlier MIT/GPL grants and third-party/output boundaries.
+Commercial and noncommercial development and redistribution are welcome.
+Distributed covered derivatives must remain under the GPL and provide their
+corresponding source as it requires. Private changes do not have to be
+published. Recipients retain the right to modify and redistribute, including
+for free. See [the licensing guide](docs/licensing.md), including earlier
+grants and third-party/output boundaries.
 
-Add `SPDX-License-Identifier: LicenseRef-RubyVR-Noncommercial-NoSales-1.0`
+Add `SPDX-License-Identifier: GPL-3.0-or-later`
 to new original source files where the format supports comments. Do not
 replace a third-party file's existing licence header.
 

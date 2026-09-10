@@ -43,9 +43,8 @@ user-supplied-input flow, notices for shipped libraries and an artifact audit.
 No ROM/BIOS distribution is part of the release plan. No emulator save or full
 game extraction should become a CI artifact.
 
-Our Noncommercial and No-Sales terms do not override upstream permissions or
-supply rights to the pinned game base. A sales ban does not guarantee protection
-against game-rightsholder claims. Distribution still requires compatible rights,
+Our GPLv3-or-later terms do not override upstream permissions or supply rights
+to the pinned game base. Distribution still requires compatible rights,
 as described in
 [the licensing guide](licensing.md#separate-native-game-integration). The project is unaffiliated with
 Nintendo, Game Freak and The Pokémon Company. Maintainers should resolve

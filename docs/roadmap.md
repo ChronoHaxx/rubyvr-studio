@@ -70,9 +70,10 @@ deformation and map-local materials. The same four-map scene drops from
 Petalburg. Twenty original camera views remain pixel-identical. The
 [13-second flight](acceptance.md) shows the wider connected view.
 
-The fresh repository uses [Noncommercial and No-Sales terms](licensing.md) and retains the
-runtime distribution constraint under [RV-007 / M5](issues/007-native-integration.md).
-It adds no terrain, scenery, gameplay or headset completion claim.
+**In review — standard GPL licence:** replace the custom no-sales terms with
+[GPLv3-or-later](licensing.md), retaining earlier grants and the runtime
+distribution constraint under [RV-007 / M5](issues/007-native-integration.md).
+This maintenance change adds no terrain, scenery, gameplay or headset completion.
 
 Next M2 slice: load/unload further neighbours as the camera travels, then
 deliberate outer borders/undersides. This contribution preloads a bounded area;

@@ -131,11 +131,11 @@ This is an initial usability pass, not a claim of complete feature parity.
 Copyright (c) 2026 ChronoHaxx and RubyVR Studio contributors.
 
 Original code, tools, recipes, documentation and accepted original models/assets
-use the [RubyVR Studio Noncommercial and No-Sales License 1.0](LICENSE)
-(`LicenseRef-RubyVR-Noncommercial-NoSales-1.0`), except where separately noted.
-Noncommercial use, modification, contribution and free sharing are welcome.
-Sales, paid access and paid bundles containing the covered software are not
-licensed, including for modified versions. This is **source-available, not FOSS**.
+are free software under the [GNU General Public License, version 3 or later](LICENSE)
+(`GPL-3.0-or-later`), except where separately noted. Use, modification and
+redistribution, including commercial distribution, are welcome under the GPL.
+Distributed covered derivatives must retain GPL freedoms and provide their
+corresponding source as the GPL requires. There is no custom sales ban.
 See [licensing and earlier grants](docs/licensing.md) for the precise scope.
 
 Dear ImGui and the credited DRAMALESS_SHAPE techniques retain their MIT notices. The external

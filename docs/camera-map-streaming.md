@@ -16,9 +16,9 @@ are unchanged. Outer borders remain M2 work; foliage appearance remains M4.
 
 After the [local setup](building.md), rebuild and launch:
 
-```powershell
-./tools/build.ps1
-./tools/run-studio.ps1 -TerrainRegions -Connected
+```bash
+bash tools/build.sh
+bash tools/run-studio.sh --terrain-regions --connected
 ```
 
 Hold right mouse in the view and use **WASD**; **Q/E** changes height and
@@ -76,7 +76,7 @@ a desktop exploration step, not a claim of hitch-free VR or completed gameplay.
 
 ## Verification
 
-```powershell
+```bash
 ./build/rubyvr_studio.exe --test-connected
 python tools/test-camera-map-streaming.py
 python tools/test-region-model-reuse.py

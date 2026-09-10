@@ -1,4 +1,4 @@
-// gl_loader.h — reach OpenGL past version 1.1 on Windows.
+// gl_loader.h — reach OpenGL past version 1.1.
 //
 // THE PROBLEM, which is a Windows-specific historical accident:
 //
@@ -7,6 +7,12 @@
 //   framebuffer objects, i.e. everything needed to render a 3D scene — exists
 //   in the driver but is NOT exported by the system library. You get at it by
 //   asking the driver for a function pointer at runtime, per context.
+//
+// THE SAME LOADER WORKS ON LINUX, which is why this file has no platform
+// branch: SDL_GL_GetProcAddress wraps the platform's own lookup (wglGetProcAddress
+// there, glXGetProcAddress here). The batch target links libGL for the GL 1.1
+// symbols and the loader; it never creates a context unless a caller asks for
+// one, which the headless checks do not.
 //
 //   So <GL/gl.h> declaring only 1.1 is not the header being out of date. It is
 //   telling the truth about what you can link against. That is why Phase 0-4's

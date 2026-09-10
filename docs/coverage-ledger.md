@@ -62,7 +62,7 @@ family decisions do not silently replace placement decisions.
 
 ## Browse static reviews in Studio
 
-After the first successful `sync`, `tools/run-studio.ps1` exports a read-only
+After the first successful `sync`, `tools/run-studio.sh` exports a read-only
 view of the ledger before opening the editor. Click **Review…**, find a map,
 choose **No model**, **Unresolved**, **Unreviewed** or **Failed**, select an item,
 then **OPEN IN MAP**. The source rectangle is outlined and the scene camera

@@ -10,11 +10,21 @@
 
 #include <cmath>
 
-// windows.h + unknwn.h before the OpenXR platform header; see renderer.h.
+// The studio targets use XrFovf/XrPosef from openxr.h only; they never create
+// a session or link the XR loader. The platform header is what needs windows.h
+// (and unknwn.h for IUnknown) to be included first, so it is included only
+// when a platform macro actually selected one — on Linux the standalone build
+// deliberately has neither and therefore pulls in no X11/Wayland headers.
+#ifdef _WIN32
 #include <windows.h>
 #include <unknwn.h>
+#endif
 #include <openxr/openxr.h>
+#if defined(XR_USE_PLATFORM_WIN32) || defined(XR_USE_PLATFORM_XLIB) || \
+    defined(XR_USE_PLATFORM_XCB) || defined(XR_USE_PLATFORM_WAYLAND) || \
+    defined(XR_USE_PLATFORM_ANDROID)
 #include <openxr/openxr_platform.h>
+#endif
 
 namespace vr {
 namespace math {

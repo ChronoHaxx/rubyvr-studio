@@ -1,6 +1,6 @@
 # Solid ground in the connected explorer
 
-**M2 / RV-003 — desktop checks pass; in review, unmerged.** Ground no
+**M2 / RV-003 — desktop checks pass; merged in PR #21.** Ground no
 longer disappears when the camera flies below the loaded area. Legacy floors
 and authored Ground now close at **-16 source pixels**, one map cell below the
 original floor. Existing terrain heights and scenery placement stay unchanged.
@@ -33,9 +33,9 @@ results, not a headset frame-time or whole-process memory measurement.
 
 From a checkout containing this change, use the same launch options:
 
-```powershell
-.\tools\build.ps1
-.\tools\run-studio.ps1 -TerrainRegions -Connected
+```bash
+bash tools/build.sh
+bash tools/run-studio.sh --terrain-regions --connected
 ```
 
 Complete coastlines, water depth, caves/cutaways and authored outer geography

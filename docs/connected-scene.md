@@ -14,8 +14,8 @@ bounded window as you fly, retaining the same world coordinates.
 
 After the [local setup and build](building.md), run from this repository:
 
-```powershell
-./tools/run-studio.ps1 -TerrainRegions -Connected
+```bash
+bash tools/run-studio.sh --terrain-regions --connected
 ```
 
 Or open the terrain example normally and click **Explore area** in DIORAMA.
@@ -30,7 +30,7 @@ the document. Pending model edits must be saved/applied before entering.
 The batch GUI switch is `--connected`, which selects DIORAMA automatically.
 
 The PowerShell launcher passes native arguments as an explicit array. This
-fixes the reported usage/exit-code-2 failure with `-Connected` in PowerShell
+fixes the reported usage/exit-code-2 failure with `--connected` in PowerShell
 5.1 and 7. A **Review export failed** warning concerns the optional review
 browser; an out-of-date coverage ledger does not prevent exploration.
 
@@ -101,9 +101,9 @@ Those launcher checks belong to merged PR #30. Its [original evidence](connected
 retains the four-map measurements, historical GIF hashes and verified merge/CI.
 The current tests use that same level-water pack with the wider loader.
 
-```powershell
+```bash
 ./build/rubyvr_studio.exe --test-connected
-python tools/test-studio-launcher.py
+python3 tools/test-bash-launcher.py
 ./build/rubyvr_studio.exe --test-connected-source third_party/pokeruby build/terrain-regions/regions.json build/connected-scene/source-verification.json
 python tools/test-region-model-reuse.py
 python tools/render-region-model-reuse.py

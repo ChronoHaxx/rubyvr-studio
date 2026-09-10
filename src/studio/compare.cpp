@@ -631,12 +631,15 @@ int terrain_source_selftest(const char* source,const char* pack);
 int foundation_selftest(const char* output);
 int connected_selftest();
 int connected_source_test(const char* root,const char* pack,const char* output);
+int portability_selftest(const char* workdir);
 int main(int argc, char** argv) {
     if(argc==2 && !std::strcmp(argv[1],"--test-connected")) return connected_selftest();
     if(argc==5 && !std::strcmp(argv[1],"--test-connected-source")) return connected_source_test(argv[2],argv[3],argv[4]);
     if(argc==3 && !std::strcmp(argv[1],"--test-foundation")) return foundation_selftest(argv[2]);
     if(argc==3 && !std::strcmp(argv[1],"--test-terrain")) return studio::terrain_selftest(argv[2]);
     if(argc==4 && !std::strcmp(argv[1],"--test-terrain-source")) return studio::terrain_source_selftest(argv[2],argv[3]);
+    // Native file/capture portability fixtures; no source art, window or GL.
+    if(argc==3 && !std::strcmp(argv[1],"--test-portability")) return portability_selftest(argv[2]);
     // Validate review snapshots without source art, a ROM, a window or GL.
     if(argc==3 && !std::strcmp(argv[1],"--check-review-index")) {
         studio::coverage::Index index;std::string error;
@@ -705,6 +708,7 @@ int main(int argc, char** argv) {
                 "                     --cells x,y,w,h\n"
                 "                     --catalog <directory> (all-map source inventory; no GL)\n"
                 "                     --audit-assets <report.json> --overrides <closed-solid-pack.json> (no GL)\n"
+                "                     --test-portability <dir> (native file/capture fixtures; no GL)\n"
                 "\n"
                 "  --cells   print that rectangle of the disk-built backup map and\n"
                 "            stop. Needs no capture and no emulator, so it is the\n"

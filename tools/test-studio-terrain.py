@@ -5,6 +5,7 @@ Uses local source assets and a separate output pack. No live/headset claim.
 import json
 import os
 from pathlib import Path
+from studio_paths import executable as native_executable, native_environment
 import subprocess
 import hashlib
 import struct
@@ -29,10 +30,9 @@ def run(name, events, checkpoints, *, source=None, width=1600, height=950, frame
     script_path.write_text(json.dumps(dict(frames=frames, record=0, chapters=[], events=events,
         checkpoints=[dict(frame=f, name=n) for f, n in checkpoints])), encoding='utf-8')
     prefix = BUILD / name
-    env = os.environ.copy()
-    env['PATH'] = env.get('RUBYVR_MINGW_BIN', r'C:\msys64\mingw64\bin') + os.pathsep + env['PATH']
+    env = native_environment()
     with (BUILD / f'{name}.log').open('w', encoding='utf-8') as log:
-        subprocess.run([str(ROOT / 'build/rubyvr_gui.exe'), '--map', map_id, '--mode', 'diorama',
+        subprocess.run([str(native_executable('rubyvr_gui')), '--map', map_id, '--mode', 'diorama',
             '--overrides', str(source), '--out', str(prefix)+'-saved.json', '--probe', str(scenario_path),
             '--showcase', str(script_path), '--probe-out', str(prefix)], cwd=ROOT, env=env,
             stdout=log, stderr=subprocess.STDOUT, check=True, timeout=180,
@@ -211,12 +211,12 @@ def main():
     assert baseline['checkpoints'][0]['terrain_cells']==0
     assert all(s['terrain_cells']==540 and s['terrain_rejected']==0 and s['undo']==0 for s in seam['checkpoints'])
     assert len({s['room_hash'] for s in seam['checkpoints']})==1
-    env=os.environ.copy();env['PATH']=env.get('RUBYVR_MINGW_BIN',r'C:\msys64\mingw64\bin')+os.pathsep+env['PATH']
+    env=native_environment()
     with (BUILD/'source-check.log').open('w',encoding='utf-8') as log:
-        subprocess.run([str(ROOT/'build/rubyvr_studio.exe'),'--test-terrain-source',str(ROOT/'third_party/pokeruby'),
+        subprocess.run([str(native_executable('rubyvr_studio')),'--test-terrain-source',str(ROOT/'third_party/pokeruby'),
                         str(BUILD/'seam-fixture.json')],cwd=ROOT,env=env,stdout=log,stderr=subprocess.STDOUT,check=True)
     report = dict(status='PASS', scope='Studio desktop; authored terrain lab, not canonical Ruby geography',
-        gui_sha256=hashlib.sha256((ROOT/'build/rubyvr_gui.exe').read_bytes()).hexdigest(),
+        gui_sha256=hashlib.sha256((native_executable('rubyvr_gui')).read_bytes()).hexdigest(),
         source_pack_sha256=hashlib.sha256(before).hexdigest(), checkpoints=len(states)+1+len(ss)+len(ds)+1+len(seam['checkpoints'])+len(sl),
         terrain_cells=54, synthetic_tests='Run rubyvr_studio --test-terrain separately',
         room_hash=states['saved']['room_hash'], raised=states['saved']['raised'],

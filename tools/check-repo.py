@@ -11,10 +11,10 @@ from urllib.parse import unquote
 import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
-SKIP_DIRS = {'.git', 'build', 'mod-assets', 'release-stage', '__pycache__', '.idea', '.vscode'}
+SKIP_DIRS = {'.git', 'build', 'mod-assets', 'release-stage', '__pycache__', '.idea', '.vscode', '.venv'}
 ROOT_FILES = {'README.md', 'CONTRIBUTING.md', 'AGENTS.md', 'LICENSE', 'THIRD_PARTY_NOTICES.md',
               'SOURCE_ORIGIN.json', 'CMakeLists.txt', 'requirements.txt', '.gitignore', '.gitattributes'}
-TEXT = {'.md', '.cpp', '.h', '.inl', '.py', '.ps1', '.json', '.yml', '.yaml', '.txt'}
+TEXT = {'.md', '.cpp', '.h', '.inl', '.py', '.ps1', '.sh', '.json', '.yml', '.yaml', '.txt'}
 FORBIDDEN = {'.gba', '.gb', '.gbc', '.rom', '.sav', '.srm', '.fla', '.flash', '.snap',
              '.bin', '.exe', '.dll', '.obj', '.pdb', '.zip', '.7z', '.mp4', '.apk'}
 SECRET = re.compile(r'\b(?:gh[pousr]_[A-Za-z0-9]{30,}|github_pat_[A-Za-z0-9_]{40,})\b|-----BEGIN (?:RSA |OPENSSH |EC )?PRIVATE KEY-----')

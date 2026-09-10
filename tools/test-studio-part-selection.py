@@ -3,6 +3,7 @@ import hashlib
 import json
 import os
 from pathlib import Path
+from studio_paths import executable as native_executable, native_environment
 import subprocess
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -11,10 +12,9 @@ ROOT = Path(__file__).resolve().parents[1]
 def main():
     source = ROOT / 'mod-assets/voxel-world-v6.json'
     original = source.read_bytes()
-    env = os.environ.copy()
-    env['PATH'] = env.get('RUBYVR_MINGW_BIN', r'C:\msys64\mingw64\bin') + os.pathsep + env['PATH']
+    env = native_environment()
     report = dict(status='RUNNING', layouts=[],
-                  gui_sha256=hashlib.sha256((ROOT/'build/rubyvr_gui.exe').read_bytes()).hexdigest())
+                  gui_sha256=hashlib.sha256((native_executable('rubyvr_gui')).read_bytes()).hexdigest())
     try:
         for size, scenario, center, height in [('wide', 'scene', (770, 665.5), 425),
                                               ('small', 'small', (610, 502), 292)]:
@@ -81,7 +81,7 @@ def main():
             event(196, 'quit')
             script = dict(frames=201, events=events, checkpoints=points, chapters=[], record=0)
             (ROOT/(prefix+'-events.json')).write_text(json.dumps(script), encoding='utf-8')
-            command = [str(ROOT/'build/rubyvr_gui.exe'), '--map', 'MAP_OLDALE_TOWN',
+            command = [str(native_executable('rubyvr_gui')), '--map', 'MAP_OLDALE_TOWN',
                        '--mode', 'diorama', '--overrides', str(source), '--out', prefix+'-saved.json',
                        '--probe', f'tools/gui-probe-{scenario}.json', '--showcase', prefix+'-events.json',
                        '--probe-out', prefix]

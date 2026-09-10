@@ -7,43 +7,37 @@ verification ran on 2026-09-08 on Windows with MSYS2 mingw64, an NVIDIA OpenGL
 
 ## Reproduce locally
 
-```powershell
-.\tools\build.ps1
-python tools/prepare-assets.py
-python tools/check-repo.py
-python tools/test-coverage-ledger.py
-python tools/test-dynamic-inventory.py
-python tools/test-native-trace.py
-python tools/test-coverage-disposition.py
-python tools/test-coverage-review.py
-python tools/test-studio-review.py
-python tools/test-editor.py
-./build/rubyvr_studio.exe --test-terrain build/terrain-test
-./build/rubyvr_studio.exe --test-foundation build/foundation-test
-./build/rubyvr_studio.exe --test-connected
-python tools/test-studio-launcher.py
-python tools/test-connected-studio.py
-python tools/test-region-model-reuse.py
-python tools/test-camera-map-streaming.py
-python tools/render-camera-map-streaming.py
-python tools/test-studio-foundation.py
-python tools/render-terrain-foundations.py
-python tools/test-studio-terrain.py
-python tools/test-terrain-regions.py
-python tools/test-terrain-region-source.py
-python tools/test-studio-guided.py
-python tools/test-studio-environment.py
-python tools/review-voxel-world.py
-python tools/test-voxel-emblems.py
-python tools/test-voxel-trees.py
+Use the native Ubuntu/WSL setup in [building](building.md). The supported
+entrypoints are Bash and native Linux executables:
+
+```bash
+bash tools/build.sh --jobs 4
+python3 tools/prepare-assets.py
+python3 tools/check-repo.py
+python3 tools/test-native-portability.py
+python3 tools/test-bash-launcher.py
+python3 tools/test-editor.py
+python3 tools/test-connected-studio.py
+python3 tools/test-camera-map-streaming.py
 ```
 
-The build script adds mingw64 to that process's PATH. In a fresh terminal, put
-the same mingw64 `bin` directory on PATH before running the Python commands.
-`test-editor.py` also supports `RUBYVR_MINGW_BIN` for a custom installation.
-Graphics checks need an OpenGL driver even when SDL windows stay hidden.
-Artifacts remain in ignored local folders. Failed commands remain failures;
-do not substitute old outputs or change frozen hashes to obtain a pass.
+The file/capture and launcher fixtures need no game data or display. The
+editor/connected/streaming suites use local source assets and hidden real SDL
+windows on WSLg. They passed on the reviewed native build; all eight frozen
+geometry hashes and 32,000 connected atlas pixels remain unchanged.
+
+The headless batch suites pass with DISPLAY unset: terrain 197, foundation 23,
+connected 69 and portability 29 checks. The Bash suite passes 22 original cases,
+including a real minimal CMake build from outside a repository with spaces.
+The native review reader and all original coverage/source-inventory suites pass.
+Asset preparation completed all 394 maps, retaining the eight known oversized
+proposals. Native launch/save/resume of the six-map preset also passed.
+
+[Native evidence, toolchain and limitations](native-wsl.md) records the support
+boundary. Linux OpenXR/live gameplay is unsupported. Historical Windows-only
+rendering scripts below are references; only the portable commands above and
+the headless CI suites have been rerun on Linux. Hosted CI for this contribution
+is pending publication. Do not substitute old captures or change frozen hashes.
 
 | Check | What it verifies | Limits |
 |---|---|---|
@@ -59,7 +53,8 @@ do not substitute old outputs or change frozen hashes to obtain a pass.
 | `--test-terrain` | 197 original synthetic checks of surfaces/layers, guards, native UV bands, corner grades, neighbour projection, shared model height, persistence and memory bounds | No source art or GL; included in CI |
 | `--test-foundation` | 23 original synthetic checks: actual base bounds exclude roof overhang, highest-corner pad, rigid movement/contact, native art, source/outside-terrain preservation, atomic refusal and exact v7 persistence | No source art or GL; included in CI; rectangular ground pads only |
 | `--test-connected` | 69 synthetic checks of ownership, overhangs, seams, source indices, atomic refusal, rigid reuse, ordered equivalence, camera seam hysteresis, fixed/revisited origins, cancellation and closed ground bases including undefined padding and snapshot boundaries | No source art or GL; included in CI |
-| `test-studio-launcher.py` | Six cases in Windows PowerShell 5.1 and PowerShell 7: exact native arguments, paths with spaces, plain/connected launch and nonfatal stale coverage | Runs the real launcher with a source-free native argv recorder; included in CI; rendering is checked separately |
+| `test-native-portability.py` | 29 native checks against the real writer/loader/capture: v5/v6/v7 save and read-back, replace, rejected and failed writes with the previous destination bytes intact, temporary cleanup, caller-stderr restoration and Linux path aliases | Native file/capture boundary only; no GUI journey, rendering or OpenXR runtime |
+| `test-bash-launcher.py` | 22 native Bash cases: exact arguments, build location, fresh/resume, presets, cleanup, capture options and failure propagation | Original fixtures; real GUI launch/save/resume verified separately |
 | `--test-connected-source` | Four- and six-map authored fixtures plus a three-map/two-atlas source-floor fixture: offsets, expanded/stored counts and geometry hashes | Requires pinned local source and generated regional pack; third fixture deliberately has no scenery patterns |
 | `test-connected-studio.py` | 20 SDL checkpoints at two sizes: enter, fly across a boundary, stop, blocked edits, return, repeat, save and unchanged source; 32,000 rendered pixels match a neighbour's own source-floor view | Cached uploads and whole-map culling checked; timings cover synchronized single-eye GL draw only, not whole-app or headset frame time |
 | `test-region-model-reuse.py` | Native reuse/source audit, existing 20 SDL checkpoints plus 28 north/west flight/overview checkpoints, now preserving positions through moving residency | Optional PR #30 same-camera comparison applies before travel/after restoration; changed outer windows are excluded explicitly; [historical evidence](region-model-reuse-evidence-2026-09-10.json) |
@@ -219,8 +214,8 @@ Full-pack live gameplay, complete playthrough, strict-static coverage and
 current target-headset acceptance remain unverified.
 
 [GitHub Actions](https://github.com/ChronoHaxx/rubyvr-studio/actions) records
-hosted source metadata checks and Windows target builds with read-only
-permissions. Those jobs do not fetch ROM/decomp assets, run graphics/headset
+hosted source metadata checks and native Linux builds with read-only
+permissions. Earlier revisions used Windows jobs. Those jobs do not fetch ROM/decomp assets, run graphics/headset
 checks or upload game data. The dated local baseline predates the first hosted
 run; consult the result for the revision being reviewed.
 

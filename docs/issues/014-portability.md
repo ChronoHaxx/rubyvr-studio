@@ -1,36 +1,31 @@
-# Inventory Windows dependencies and prove a Linux batch build boundary
+# Native Linux and WSL build, capture and launchers
 
-Work package **RV-014** · M10 Performance and reliability · help wanted, area: build, status: design
+Work package **RV-014** · M10 Performance and reliability · area: build · locally verified, pending publication and merge
 
-## Problem
+## Scope
 
-The standalone CMake build currently depends on Windows capture/file APIs. Advertising cross-platform support would be premature.
-
-## Bounded contribution
-
-Identify Windows-only calls and isolate the minimum needed for the batch tool. Prove a Linux batch build using synthetic or locally supplied data before attempting a full GUI/OpenXR port.
+The previous CMake build and file/capture helpers required Windows. The user
+prioritized native WSL so tools can build/test without PowerShell, replacing
+the earlier requirement to maintain the PowerShell workflow.
 
 ## Acceptance
 
-- [ ] Keep the supported Windows build passing.
-- [ ] Do not remove existing capture/persistence guarantees to compile.
-- [ ] Record dependency/compiler versions and unsupported GUI/runtime pieces.
-- [ ] Use portable original fixtures in CI without bundling source art.
+- [ ] Build and run native Linux batch and GUI executables through Bash.
+- [ ] Preserve serialization, atomic replacement/refusal and stderr restoration.
+- [ ] Run original headless fixtures and existing editor/connected/streaming checks.
+- [ ] Verify fresh/resume/presets before retiring PowerShell launchers.
+- [ ] Record toolchain, actual GUI evidence and unsupported runtime pieces.
+- [ ] Run source-only Linux CI without fetching game assets.
 
-## Where to start
+Local checks pass; boxes remain open until merge. Hosted CI has not run for
+this unpublished branch. See [native evidence](../native-wsl.md) and
+[build/run commands](../building.md). Full performance/headset acceptance and
+M2 geography are separate work.
 
-`CMakeLists.txt`, `src/studio/capture.cpp`, `src/vr/world_io.cpp`, `src/studio/png_write.cpp`, `src/vr/gl_loader.*`.
+## Boundaries
 
-## Validation and evidence
-
-Windows build plus a named Linux toolchain build and targeted file/capture round trips. No claim that all platforms work from compilation alone.
-
-Dependencies: none beyond the documented local build/source setup.
-
-AI-assisted contributions are welcome. Read `AGENTS.md`, `CONTRIBUTING.md` and
-the relevant architecture/format code first. Reproduce the issue, keep one
-reviewable change, and report what ran and what did not. Do not weaken checks,
-invent visual/headset evidence or upload game data. The human submitting the PR
-owns its correctness and provenance.
+CMake, platform file/capture helpers, GUI file protection and Bash/Python
+entrypoints. Production terrain geometry, foundations and connected ownership
+remain unchanged. Retained Windows branches do not imply a newly tested build.
 
 <!-- rubyvr-work-package:RV-014 -->

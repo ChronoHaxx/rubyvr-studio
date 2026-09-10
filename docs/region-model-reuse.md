@@ -15,10 +15,10 @@ and water heights are preserved. Foliage appearance remains deferred to M4.
 
 ## Try it
 
-Build the current branch with `./tools/build.ps1`, then run:
+Build the current branch with `bash tools/build.sh`, then run:
 
-```powershell
-./tools/run-studio.ps1 -TerrainRegions -Connected
+```bash
+bash tools/run-studio.sh --terrain-regions --connected
 ```
 
 Hold right mouse and **WASD** to fly; **Q/E** changes height, **Shift** moves
@@ -67,7 +67,7 @@ the different-atlas source-floor fixture. Saves/source and camera-only upload
 counts remain unchanged. Terrain, foundation, environment and editor regressions
 are recorded in the [exact evidence](region-model-reuse-evidence-2026-09-10.json).
 
-```powershell
+```bash
 python tools/test-region-model-reuse.py
 python tools/test-camera-map-streaming.py
 python tools/render-camera-map-streaming.py

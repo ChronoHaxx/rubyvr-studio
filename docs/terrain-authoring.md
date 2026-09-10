@@ -140,7 +140,7 @@ of the rise. The [six-map regional follow-up](terrain-regions.md) adds Oldale's
 other neighbours and source-offset constraints. Complete geography and fitting
 rigid foundations remain unfinished.
 
-Launch this local example with `./tools/run-studio.ps1 -TerrainExample`. It
+Launch this local example with `bash tools/run-studio.sh --terrain-example`. It
 opens Route 101 with a new personal output path. The fixture remains under
 `build/terrain-review/`; it does not replace the default starter pack.
 

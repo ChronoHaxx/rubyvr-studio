@@ -19,7 +19,7 @@ Implement a dry-run three-way comparison using a prior starter, new starter and 
 
 ## Where to start
 
-`src/studio/pattern_io.*`, `src/vr/overrides.*`, `tools/run-studio.ps1`, `recipes/`.
+`src/studio/pattern_io.*`, `src/vr/overrides.*`, `tools/run-studio.sh`, `recipes/`.
 
 ## Validation and evidence
 

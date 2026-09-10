@@ -11,6 +11,7 @@ import json
 import math
 import os
 from pathlib import Path
+from studio_paths import executable as native_executable, native_environment
 import subprocess
 from datetime import datetime, timezone
 
@@ -20,7 +21,7 @@ args = parser.parse_args()
 repo = Path(__file__).resolve().parent.parent
 game = repo
 build = game / 'build'
-exe = build / 'rubyvr_gui.exe'
+exe = native_executable('rubyvr_gui')
 asset = repo / 'mod-assets/voxel-house-v6.json'
 original_hash = hashlib.sha256(asset.read_bytes()).hexdigest()
 fixture = json.loads(asset.read_text())

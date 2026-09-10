@@ -19,7 +19,7 @@ Follow docs/building.md from a fresh checkout on another Windows environment. Re
 
 ## Where to start
 
-`docs/building.md`, `tools/build.ps1`, `tools/prepare-assets.py`, `tools/run-studio.ps1`.
+`docs/building.md`, `tools/build.sh`, `tools/prepare-assets.py`, `tools/run-studio.sh`.
 
 ## Validation and evidence
 

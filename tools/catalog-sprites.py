@@ -9,6 +9,7 @@ import argparse
 import collections
 import json
 from pathlib import Path
+from studio_paths import executable as native_executable, native_environment
 import re
 import subprocess
 
@@ -137,15 +138,15 @@ def main() -> int:
     directory.mkdir(parents=True, exist_ok=True)
     exit_code = 0
     if not args.summarize_only:
-        receipt = source_receipt(GAME / "third_party/pokeruby", GAME / "build/rubyvr_studio.exe")
+        receipt = source_receipt(GAME / "third_party/pokeruby", native_executable('rubyvr_studio'))
         report = directory / "catalog.json"
         previous_stamp = report.stat().st_mtime_ns if report.exists() else None
         with (directory / "catalog.log").open("w", encoding="utf-8") as log:
-            result = subprocess.run([str(GAME / "build/rubyvr_studio.exe"), "--catalog", str(directory)], cwd=GAME, stdout=log, stderr=subprocess.STDOUT)
+            result = subprocess.run([str(native_executable('rubyvr_studio')), "--catalog", str(directory)], cwd=GAME, stdout=log, stderr=subprocess.STDOUT)
         exit_code = result.returncode
         if not report.exists() or report.stat().st_mtime_ns == previous_stamp:
             raise RuntimeError(f"Catalog did not produce a report; see {directory / 'catalog.log'}")
-        if receipt != source_receipt(GAME / "third_party/pokeruby", GAME / "build/rubyvr_studio.exe"):
+        if receipt != source_receipt(GAME / "third_party/pokeruby", native_executable('rubyvr_studio')):
             raise RuntimeError("Source inputs changed during export; regenerate the catalog")
         receipt["catalog_sha256"] = file_hash(report)
         (directory / "source-receipt.json").write_text(json.dumps(receipt, indent=2) + "\n")

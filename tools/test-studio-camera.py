@@ -10,6 +10,7 @@ import json
 import math
 import os
 from pathlib import Path
+from studio_paths import executable as native_executable, native_environment
 import subprocess
 from datetime import datetime, timezone
 
@@ -19,7 +20,7 @@ args = parser.parse_args()
 repo = Path(__file__).resolve().parent.parent
 game = repo
 build = game / "build"
-exe = (args.exe or build / "rubyvr_gui.exe").resolve()
+exe = (args.exe or native_executable('rubyvr_gui')).resolve()
 prefix = build / "studio-camera"
 script = build / "studio-camera-events.json"
 report = build / "studio-camera-pass.json"

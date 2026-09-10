@@ -5,6 +5,7 @@ import json
 import math
 import os
 from pathlib import Path
+from studio_paths import executable as native_executable, native_environment
 import subprocess
 from PIL import Image,ImageChops
 
@@ -24,9 +25,9 @@ def run(name,events,points,*,width=1600,height=1100,frames=325,camera=None,map_i
     Path(str(prefix)+'-scenario.json').write_text(json.dumps(scenario))
     script=dict(frames=frames,events=events,record=0,measure_environment=1,chapters=[],checkpoints=[dict(frame=f,name=n) for f,n in points])
     Path(str(prefix)+'-events.json').write_text(json.dumps(script))
-    env=os.environ.copy();env['PATH']=env.get('RUBYVR_MINGW_BIN',r'C:\msys64\mingw64\bin')+os.pathsep+env.get('PATH','')
+    env=native_environment()
     with Path(str(prefix)+'.log').open('w') as log:
-        subprocess.run([str(ROOT/'build/rubyvr_gui.exe')]+(['--connected'] if connected else [])+['--map',map_id,'--mode','diorama','--overrides',str(source),
+        subprocess.run([str(native_executable('rubyvr_gui'))]+(['--connected'] if connected else [])+['--map',map_id,'--mode','diorama','--overrides',str(source),
             '--out',str(prefix)+'-saved.json','--probe',str(prefix)+'-scenario.json','--showcase',str(prefix)+'-events.json',
             '--probe-out',str(prefix)],cwd=ROOT,env=env,stdout=log,stderr=subprocess.STDOUT,check=True,timeout=240,
             creationflags=getattr(subprocess,'CREATE_NO_WINDOW',0))
@@ -106,7 +107,7 @@ def main():
     assert ImageChops.difference(*images).getbbox() is None,'Neighbour atlas differs from its own actual render'
     assert PACK.read_bytes()==original
     result=dict(status='PASS',scope='Six-map desktop preview; no live traversal/headset claim',
-        gui_sha256=hashlib.sha256((ROOT/'build/rubyvr_gui.exe').read_bytes()).hexdigest(),
+        gui_sha256=hashlib.sha256((native_executable('rubyvr_gui')).read_bytes()).hexdigest(),
         input_sha256=hashlib.sha256(original).hexdigest(),layouts=reports,atlas_pixels_identical=32000,
         source_unchanged=True,document_unchanged=True,zero_idle_mesh_uploads=True,
         render_measurement='Synchronized single-eye GL draw, including sky; excludes UI, CPU builds and driver overhead; not headset frame time')

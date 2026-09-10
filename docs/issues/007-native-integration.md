@@ -13,9 +13,11 @@ Document a compatible public upstream revision and required API contract. Establ
 ## Acceptance
 
 - [ ] Record exact upstream licence/API references and unresolved permission questions.
-- [ ] Establish compatible distribution rights for RubyVR's Noncommercial and
-  No-Sales terms, the framework's own terms and the pinned game runner.
-  A similar licence name or a plugin boundary alone is not permission. See [licensing](../licensing.md#separate-native-game-integration).
+- [ ] Establish compatible distribution rights for RubyVR's GPLv3-or-later
+  source, the framework's Noncommercial terms and the pinned game runner.
+  Resolve any required permission or exception with the relevant rightsholders;
+  this licence change grants no linking exception. A plugin boundary alone is
+  not permission. See [licensing](../licensing.md#separate-native-game-integration).
 - [ ] Describe snapshot lifetime, clock ownership, original-frame delivery and renderer lifecycle.
 - [ ] Provide a reproducible source-only integration plan using user-supplied game inputs.
 - [ ] Clearly distinguish implemented adapter work from missing live/full-game/headset validation.

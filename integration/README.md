@@ -37,11 +37,14 @@ the public integration work package must define a reproducible boundary.
 ## Licence compatibility before distribution
 
 Our original integration source and shared renderer use the project's
-Noncommercial and No-Sales terms. The standalone editor does not link the
+GPLv3-or-later terms. The standalone editor does not link the
 runner. The pinned framework has its own Noncommercial terms and clarification;
 the pinned RubySapphireRecomp base has no established redistribution permission.
 Establish compatible rights for the actual combination before distributing it.
-A plugin boundary or a similar licence name does not establish permission.
+Noncommercial restrictions cannot simply be added to a GPL-covered combined
+work. That distribution needs compatible upstream permission or an appropriate
+exception from the relevant rightsholders. No linking exception is granted by
+this licence change. A plugin boundary alone does not establish permission.
 
 This remains [RV-007 / M5](../docs/issues/007-native-integration.md). Standalone
 editor work and private experiments can continue. See [licensing](../docs/licensing.md).

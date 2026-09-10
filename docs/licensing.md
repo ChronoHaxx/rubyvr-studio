@@ -1,76 +1,91 @@
-# Licensing: free community development, no sales
+# Licensing: GPLv3-or-later
 
 Copyright (c) 2026 ChronoHaxx and RubyVR Studio contributors.
 
 Original code, tools, procedural recipes, documentation and accepted original
-models/assets use the **RubyVR Studio Noncommercial and No-Sales License 1.0**
-([full terms](../LICENSE), `LicenseRef-RubyVR-Noncommercial-NoSales-1.0`), except
-where separately noted. This is **source-available, not FOSS/open source**.
-These are custom project terms, not the standard PolyForm licence or the GPL.
+models/assets are licensed under the **GNU General Public License, version 3
+or (at your option) any later version** (`GPL-3.0-or-later`), except where
+separately noted. The [full licence](../LICENSE) is the unmodified standard
+GPLv3 text. This grant has no additional noncommercial or no-sales restriction.
 
-## What is allowed
+## What this means for contributors and users
 
-- Noncommercial play, learning, experiments, modifications and community work.
-- Free sharing of original or modified copies with the licence and notices.
-- Contributions and forks. Distributed changed versions must provide the
-  source for their covered material and retain these terms for their changes.
-- Private changes without a requirement to publish them.
-- Unconditional donations that do not buy access, features, versions or perks.
+- You may use, modify, copy and redistribute the covered work, commercially
+  or noncommercially, subject to the GPL.
+- Distributed covered derivatives must preserve GPL freedoms. When conveying
+  binaries, provide their complete corresponding source by a method allowed
+  by GPLv3 section 6, retaining required notices and identifying changes.
+- Selling copies is allowed. Recipients may modify and redistribute their
+  copies, including for free; sellers cannot take those GPL rights away.
+- Source generally must be available to recipients as the GPL requires, not
+  automatically posted on a public website or submitted back to this project.
+  Some source-offer methods have wider obligations. Private changes need not
+  be published. Merely running a modified program as a hosted service without
+  conveying it does not trigger GPL source-sharing requirements.
+- GPL permissions do not guarantee that resale will be unprofitable or that
+  improvements will return to this repository. They preserve recipients'
+  freedoms when the covered software is distributed.
 
-## What is not licensed
+Read the [GNU FAQ](https://www.gnu.org/licenses/gpl-faq.en.html#GPLRequireSourcePostedPublic)
+and the [licence sections on distribution](https://www.gnu.org/licenses/gpl-3.0.html#section6)
+for the actual obligations. This guide does not add licence restrictions.
 
-Selling original or modified copies, paid downloads, subscriptions, paid
-early access, paid feature unlocks, paid hosted access and paid bundles
-containing the covered software are prohibited. Cost recovery and nonprofit
-status do not create an exception. Renaming or making a few modifications
-does not remove these conditions. Commercial exploitation is not licensed.
-
-The restriction concerns the covered work. Independently licensed third-party
-material and earlier grants keep their own terms. Ordinary use of the editor
-does not automatically place all output under this licence: the output's
-content and any rights in embedded material determine its terms.
+An independently authored output is not automatically GPL merely because the
+editor produced it. Output containing or derived from covered material may
+have different obligations. For original models/assets covered here, the
+preferred editable form is their source; game-derived art remains separate.
 
 ## Earlier versions and the repository restart
 
-The previous repository is retained as a private maintainer archive. The fresh
-public repository starts from the current source snapshot on 2026-09-10, with
-the code, roadmap and checked evidence preserved. Older PR/action links in the
-documents point to the private archive; public verification evidence remains
-in this repository and is not represented as a new build or test run.
+The previous repository remains a private maintainer archive. Historical
+PR/action links point there; the source, roadmap and captured verification
+evidence remain in this public repository. The GPL switch uses the existing
+repository and does not rewrite its history or revoke earlier grants:
 
-The restart does **not** revoke permissions on previously obtained copies:
-
-- Public main at `532fc64cf7b5258b499525566994276015d92c6b` used MIT.
-  The [earlier MIT notice](../LICENSES/RubyVR-Studio-MIT-legacy.txt) is retained.
-- The public GPL proposal at `835268dc719d6dd493319778c352661f885b82af`
+- Previous public main at `532fc64cf7b5258b499525566994276015d92c6b` used MIT.
+  Its [MIT notice](../LICENSES/RubyVR-Studio-MIT-legacy.txt) is retained.
+- The previous public proposal at `835268dc719d6dd493319778c352661f885b82af`
   offered original contributions under GPLv3-or-later. Its
   [GPL text](../LICENSES/RubyVR-Studio-GPL-3.0-legacy.txt) is retained.
-- These legacy files record earlier grants; they do not offer new work under
-  MIT or GPL merely because that work appears in the new repository.
+- The fresh repository's initial commit
+  `947fe47a32a758172bf7f70fa54ceb06c1a31ec2` used custom Noncommercial and
+  No-Sales terms. Its [historical notice](../LICENSES/RubyVR-Studio-Noncommercial-NoSales-1.0-legacy.txt)
+  is retained for that version; it is not an extra condition on this GPL grant.
+- Retaining old notices does not offer future contributions under those old
+  terms. Separately licensed ImGui and DRAMALESS_SHAPE portions keep their MIT
+  permissions and notices. See [third-party notices](../THIRD_PARTY_NOTICES.md)
+  and [contribution terms](../CONTRIBUTING.md#licence-for-contributions).
 
-Separately licensed ImGui and DRAMALESS_SHAPE portions retain their MIT terms.
-See [third-party notices](../THIRD_PARTY_NOTICES.md) and
-[contribution terms](../CONTRIBUTING.md#licence-for-contributions).
+The historical custom licence was adapted from
+[PolyForm Noncommercial 1.0.0](https://github.com/polyformproject/polyform-licenses/blob/76a278c402bc43b8d2b561da140b0f3e17263015/PolyForm-Noncommercial-1.0.0.md)
+under its [licence-text adaptation permission](https://github.com/polyformproject/polyform-licenses/blob/76a278c402bc43b8d2b561da140b0f3e17263015/README.md#license),
+with its original name and URL removed from the changed licence. That
+provenance does not make the current licence a modified GPL or PolyForm licence.
 
 ## Separate native game integration
 
-The standalone editor does not link the game runner or `gbarecomp`. That
+The standalone editor does not link the game runner or `gbarecomp`. The
 external framework has its own Noncommercial terms and clarification; no
 redistribution permission has been established for the pinned runner base.
-Using similar licence names does not establish compatibility or grant rights
-to someone else's work. [RV-007 / M5](issues/007-native-integration.md) retains
-the requirement to establish permissions for the actual integration.
+Noncommercial restrictions cannot simply be attached to a GPL-covered
+combined work. Distribution of that combination needs compatible upstream
+permission or an appropriate exception from the relevant rightsholders.
+This GPL adoption grants no such exception or rights in upstream work.
 
-Game assets, ROMs, BIOS files and trademarks are not licensed here. A no-sales
-rule is not permission from Nintendo or a guarantee against legal claims.
-The [asset policy](asset-policy.md) remains in force. These custom terms have
-not received a lawyer's review; no legal-clearance claim is made.
+[RV-007 / M5](issues/007-native-integration.md) retains that integration task.
+A separate file, native-plugin interface or dynamic link is not, by itself,
+proof of GPL compatibility or upstream permission. This does not block the
+independent editor and its M2 terrain/map-loading work. The full native game
+stack is not represented as FOSS or ready for public redistribution.
 
-## Licence-text provenance
+## Game material and names
 
-The starting text is the
-[PolyForm Noncommercial 1.0.0 source](https://github.com/polyformproject/polyform-licenses/blob/76a278c402bc43b8d2b561da140b0f3e17263015/PolyForm-Noncommercial-1.0.0.md).
-Its [licence-text permission](https://github.com/polyformproject/polyform-licenses/blob/76a278c402bc43b8d2b561da140b0f3e17263015/README.md#license)
-allows adaptation subject to removing its name and URL from the changed
-licence. The root licence is renamed, with explicit no-sales, source-sharing,
-and retained-rights conditions; it does not claim to be that standard licence.
+The code licence does not grant rights in ROMs, BIOS files, game assets or
+third-party trademarks. The [asset policy](asset-policy.md) remains in force.
+Changing the code licence is not permission from game rightsholders.
+
+GPL adoption does not register a trademark or establish exclusive ownership
+of a name. It is not a guarantee of a successful infringement claim or store
+takedown. Any trademark rights and lawful descriptive uses are separate from
+the copyright permissions in this licence; this guide adds no branding
+restriction to the GPL grant.

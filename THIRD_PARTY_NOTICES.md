@@ -1,9 +1,9 @@
 # Third-party notices and source provenance
 
-The project uses the [RubyVR Studio Noncommercial and No-Sales License 1.0](LICENSE)
-for original work offered under those terms. Separately licensed third-party
-portions retain their original permissions and notices. Earlier public MIT
-and GPL grants remain valid; their notices are retained in `LICENSES/`.
+The project uses the [GNU GPL version 3 or later](LICENSE) for original work
+offered under those terms. Separately licensed third-party portions retain
+their original permissions and notices. Earlier public licence grants remain
+valid; their notices are retained in `LICENSES/`.
 See [licensing scope and the repository restart](docs/licensing.md).
 These terms do not grant rights to external runtimes, game data or trademarks.
 
@@ -48,8 +48,11 @@ actually redistributes; this source-only preparation is not that binary bundle.
   `13cab0418106e86708cfd10b817379fe2318b201`. It uses
   [PolyForm Noncommercial 1.0.0 with an upstream clarification](https://github.com/mstan/gbarecomp/blob/main/LICENSE).
   It is not linked into the standalone editor. Its terms and clarification
-  must be assessed for the actual integration; our licence does not grant
-  upstream permissions. We do not advertise the full native game stack as FOSS.
+  must be assessed for the actual integration. Noncommercial restrictions
+  cannot simply be added to a GPL-covered combined work; compatible upstream
+  permission or an appropriate exception from the relevant rightsholders is
+  needed before such distribution. Our licence does not grant upstream
+  permissions. We do not advertise the full native game stack as FOSS.
 - [pret/pokeruby](https://github.com/pret/pokeruby), source-data revision
   `63a8cbf0016b351a4e68f7036fa0b77e23d2f2c1`. Contributors supply their own
   local checkout. Its source art and map data are not included here and are

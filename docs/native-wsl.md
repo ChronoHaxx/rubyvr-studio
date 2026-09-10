@@ -1,6 +1,7 @@
 # Native Linux and WSL support
 
-RV-014 is implemented and locally verified; publication and merge are pending.
+RV-014 is merged in [PR #22](https://github.com/ChronoHaxx/rubyvr-studio/pull/22),
+with local editor acceptance and hosted Linux source/build checks passing.
 Bash builds and launches the batch tool and SDL editor as native Linux ELF
 executables. No Windows executable or PowerShell bridge is involved.
 
@@ -19,7 +20,7 @@ part selection and a saved session, captured from the production GUI on WSLg.
 | Connected exploration | Existing suite passes; 32,000 atlas pixels match and input/source documents remain unchanged |
 | Camera map loading | Authored travel, return, cancellation and source-floor checks pass |
 | Local asset preparation | Full 394-map catalog and starter generation complete; known oversized terrain proposals remain explicit |
-| Linux CI | Source-only job prepared with original fixtures; hosted execution pending publication |
+| Linux CI | Original source fixtures, native batch checks and GUI compilation pass in the [PR run](https://github.com/ChronoHaxx/rubyvr-studio/actions/runs/34542217204) |
 
 The graphics suites exercise the production renderer on WSLg with local
 pokeruby data. Scripted desktop checks do not establish human usability, VR

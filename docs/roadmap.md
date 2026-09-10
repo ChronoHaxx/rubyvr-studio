@@ -4,8 +4,9 @@
 game integration.** It replaces the local research workspace's
 `_docs/full-vr-roadmap-v1.md`; its detailed M0–M11 scope is retained here.
 Work-package documents explain individual contributions; they are not another
-roadmap. Last reconciled **2026-09-10**: archived PRs #19–#31 and the new
-repository's GPL PR #19, camera-driven loading PR #20 and ground-base PR #21 are merged.
+roadmap. Last reconciled **2026-09-11**: archived PRs #19–#31 and the new
+repository's GPL PR #19, camera-driven loading PR #20, ground-base PR #21 and
+native Linux/WSL PR #22 are merged.
 Experimental foliage art remains unapproved.
 
 **Prefer the short version? [Watch the acceptance GIF and verdict](acceptance.md).**
@@ -71,11 +72,12 @@ deformation and map-local materials. The same four-map scene drops from
 Petalburg. Twenty original camera views remain pixel-identical. The
 [13-second flight](acceptance.md) shows the wider connected view.
 
-**Local verification — [RV-014](issues/014-portability.md), native Linux/WSL:**
+**Merged — [PR #22](https://github.com/ChronoHaxx/rubyvr-studio/pull/22), [RV-014](issues/014-portability.md), native Linux/WSL:**
 the batch tool and SDL editor run as native Linux executables. Original headless
 fixtures and the existing editor, connected-area and streaming checks pass with
 local assets. Bash replaces the PowerShell workflow; Linux OpenXR runtime
-support remains outside this change. Publication and merge are pending.
+support remains outside this change. Hosted source checks and native Linux
+batch/GUI builds pass on the merged implementation.
 M2 bridge terrain remains the next scenery task. [Evidence and limits](native-wsl.md).
 
 - [x] **Merged — [PR #19](https://github.com/ChronoHaxx/rubyvr-studio/pull/19), standard GPL licence:**
@@ -186,7 +188,7 @@ Catalog and placement audits do not certify a complete game or headset experienc
 | [M7 UI, battles and game loop](#m7-ui-battles-and-game-loop) | Original frame available; complete routing/acceptance pending | M5 |
 | [M8 Sky, lighting, time and weather](#m8-sky-lighting-time-and-weather) | Editor preview merged; runtime cycle/weather/water pending | M2, M5 for runtime |
 | [M9 Controls and comfort](#m9-controls-and-comfort) | Editor cameras implemented; VR controls/comfort acceptance pending | M5–M8 |
-| [M10 Performance and reliability](#m10-performance-and-reliability) | Native WSL editor/batch locally verified, pending merge; full-world/headset budgets pending | Representative M2–M9 scenes |
+| [M10 Performance and reliability](#m10-performance-and-reliability) | Native WSL editor/batch and Linux CI merged; full-world/headset budgets pending | Representative M2–M9 scenes |
 | [M11 Completion and release](#m11-completion-and-release) | Public contributor foundation exists; game release pending | M1–M10 |
 
 M2 and M5 are separate foundations. M3/M4 can progress as their contracts
@@ -566,9 +568,9 @@ mandatory developer console. Camera changes remain independent of authored data.
 
 ## M10: performance and reliability
 
-- [ ] **Locally verified — RV-014, native Linux/WSL:** batch and GUI builds,
+- [x] **Merged — PR #22, RV-014, native Linux/WSL:** batch and GUI builds,
   Bash launchers, source preparation, portable file/capture fixtures and the
-  existing editor/connected/streaming checks. Publication and merge are pending.
+  existing editor/connected/streaming checks. Hosted Linux source/build CI passes.
   Headless tests need no assets or display; GUI checks use local source data
   and WSLg. OpenXR runtime support remains outside this change. [Evidence](native-wsl.md).
 - [x] Verify bounded editor caching behavior: part selection and lighting

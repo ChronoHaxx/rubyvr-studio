@@ -1,10 +1,11 @@
 # Watch the acceptance check
 
-**Locally verified, awaiting publication: [native Linux/WSL editor](native-wsl.md).**
+**Merged — [PR #22](https://github.com/ChronoHaxx/rubyvr-studio/pull/22): [native Linux/WSL editor](native-wsl.md).**
 The 12-second slideshow shows actual native Linux captures: the six-map
 explorer, roof-part selection and a saved editing session. Bash launch/save/
 resume, existing editor regressions and headless geometry checks pass.
-This completes the local RV-014 editor checks; Linux OpenXR remains unsupported.
+Hosted Linux source/build CI also passes. RV-014 is complete for its native
+editor scope; Linux OpenXR remains unsupported.
 
 ![Actual native Linux Studio explorer, selection and saved session](media/native-wsl.gif)
 

@@ -36,8 +36,9 @@ proposals. Native launch/save/resume of the six-map preset also passed.
 [Native evidence, toolchain and limitations](native-wsl.md) records the support
 boundary. Linux OpenXR/live gameplay is unsupported. Historical Windows-only
 rendering scripts below are references; only the portable commands above and
-the headless CI suites have been rerun on Linux. Hosted CI for this contribution
-is pending publication. Do not substitute old captures or change frozen hashes.
+the headless CI suites have been rerun on Linux. Hosted Linux CI passes for
+[PR #22](https://github.com/ChronoHaxx/rubyvr-studio/actions/runs/34542217204).
+Do not substitute old captures or change frozen hashes.
 
 | Check | What it verifies | Limits |
 |---|---|---|

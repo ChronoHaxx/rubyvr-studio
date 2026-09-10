@@ -1,0 +1,192 @@
+{
+  "status": "PASS",
+  "date": "2026-09-10",
+  "baseline": "0dc33b2b9c4f4d088cacd1cb78ba34ea07140209",
+  "delivery": "Local isolated branch; not pushed, published or merged",
+  "scope": "Connected-ground preview base only; no live-game/headset acceptance",
+  "native_checks": {
+    "connected": 69,
+    "terrain": 197,
+    "foundation": 23
+  },
+  "gui_self_checks": 278,
+  "frozen_geometry_hashes": {
+    "route101": "f3a1bd5a56a98d41",
+    "house": "92d76bb11e408a83",
+    "pokecenter": "94dc8b44ccd9cb97",
+    "tree": "cac8b0cd5ca32253",
+    "trees-stacked": "683ce96a70b24e56",
+    "forest": "d6b432b23316aaf3",
+    "ledge": "29c7362056392a43",
+    "littleroot-clipped": "9b283dac1177116b"
+  },
+  "connected_sdl_checkpoints": 20,
+  "neighbour_atlas_pixels_equal": 32000,
+  "streaming": {
+    "status": "PASS",
+    "scope": "Camera-driven residency in the six authored maps; desktop source/GL only",
+    "gui_sha256": "c3e58f76c574993a9513bc1e4ab02ee7d59a6e27de3779390ac513901a723337",
+    "input_sha256": "e76ed940e012a6b804e1a5e8e43e8f3a11219a13574e0e32995c5909617ea220",
+    "checkpoints": 16,
+    "fixed_origins": {
+      "MAP_OLDALE_TOWN": [
+        0,
+        0
+      ],
+      "MAP_ROUTE103": [
+        0,
+        -20
+      ],
+      "MAP_ROUTE101": [
+        0,
+        20
+      ],
+      "MAP_ROUTE102": [
+        -50,
+        0
+      ],
+      "MAP_LITTLEROOT_TOWN": [
+        0,
+        40
+      ],
+      "MAP_PETALBURG_CITY": [
+        -80,
+        -10
+      ]
+    },
+    "settled": {
+      "oldale": {
+        "stream_anchor": "MAP_OLDALE_TOWN",
+        "region_maps": 6,
+        "region_bytes": 75178440,
+        "region_hash": "6b06c95d85f2473a",
+        "stream_updates": 0,
+        "stream_loaded": 6,
+        "stream_unloaded": 0,
+        "stream_reused": 0,
+        "stream_build_ms": 0.0,
+        "stream_main_ms": 0.0011,
+        "stream_pending_frames": 0
+      },
+      "littleroot": {
+        "stream_anchor": "MAP_LITTLEROOT_TOWN",
+        "region_maps": 3,
+        "region_bytes": 31902960,
+        "region_hash": "d842c5ab8d57f8b3",
+        "stream_updates": 2,
+        "stream_loaded": 6,
+        "stream_unloaded": 3,
+        "stream_reused": 6,
+        "stream_build_ms": 620.9695,
+        "stream_main_ms": 13.8558,
+        "stream_pending_frames": 311
+      },
+      "oldale-return": {
+        "stream_anchor": "MAP_OLDALE_TOWN",
+        "region_maps": 6,
+        "region_bytes": 75178440,
+        "region_hash": "6b06c95d85f2473a",
+        "stream_updates": 4,
+        "stream_loaded": 9,
+        "stream_unloaded": 3,
+        "stream_reused": 12,
+        "stream_build_ms": 1296.8354,
+        "stream_main_ms": 28.6617,
+        "stream_pending_frames": 1115
+      },
+      "petalburg": {
+        "stream_anchor": "MAP_PETALBURG_CITY",
+        "region_maps": 3,
+        "region_bytes": 44987280,
+        "region_hash": "b1326afb83df0cd4",
+        "stream_updates": 6,
+        "stream_loaded": 9,
+        "stream_unloaded": 6,
+        "stream_reused": 18,
+        "stream_build_ms": 885.6475,
+        "stream_main_ms": 28.6617,
+        "stream_pending_frames": 1632
+      },
+      "oldale-again": {
+        "stream_anchor": "MAP_OLDALE_TOWN",
+        "region_maps": 6,
+        "region_bytes": 75178440,
+        "region_hash": "6b06c95d85f2473a",
+        "stream_updates": 8,
+        "stream_loaded": 12,
+        "stream_unloaded": 6,
+        "stream_reused": 24,
+        "stream_build_ms": 1333.3315,
+        "stream_main_ms": 30.7319,
+        "stream_pending_frames": 2367
+      }
+    },
+    "document_unchanged": true,
+    "source_unchanged": true,
+    "cancellation": {
+      "status": "PASS",
+      "checkpoints": 5,
+      "cancelled_while_pending": true,
+      "late_publication": false,
+      "document_unchanged": true,
+      "camera_restored": true
+    },
+    "beyond_initial": {
+      "status": "PASS",
+      "fixture": "Source floors without authored terrain; not new terrain acceptance",
+      "new_maps": [
+        "MAP_ROUTE105",
+        "MAP_RUSTBORO_CITY"
+      ],
+      "checkpoints": 3,
+      "fixed_origins": {
+        "MAP_PETALBURG_CITY": [
+          0,
+          0
+        ],
+        "MAP_ROUTE104": [
+          -40,
+          -50
+        ],
+        "MAP_ROUTE102": [
+          30,
+          10
+        ],
+        "MAP_RUSTBORO_CITY": [
+          -40,
+          -110
+        ],
+        "MAP_ROUTE105": [
+          -40,
+          30
+        ]
+      },
+      "returned_hash": "8ec04978d650b3c4"
+    },
+    "measurements": "Resident GPU mesh/material bytes; main-thread streaming-update maximum excludes rendering/UI and is not headset FPS."
+  },
+  "visual": {
+    "scope": "Actual desktop production renderer; six captures; no live/headset acceptance",
+    "gif": "docs/media/connected-ground-base.gif",
+    "duration_seconds": 12,
+    "frames": 3,
+    "gif_sha256": "007648b8d1adefededa5cc7c37128e2b301f09ae05168399086db47ce847bf89",
+    "before_gui_sha256": "802db8fc7e51182018a1b5f4239796cfd8c1b5052dfe3204e711cf1d7a06f8d6",
+    "after_gui_sha256": "c3e58f76c574993a9513bc1e4ab02ee7d59a6e27de3779390ac513901a723337",
+    "pack_sha256": "e76ed940e012a6b804e1a5e8e43e8f3a11219a13574e0e32995c5909617ea220",
+    "interior_roi": [
+      500,
+      600,
+      950,
+      980
+    ],
+    "interior_pixels_equal": 171000,
+    "before_bytes": 72760248,
+    "after_bytes": 75178440,
+    "views": [
+      "underside",
+      "outer-edge",
+      "above"
+    ]
+  }
+}

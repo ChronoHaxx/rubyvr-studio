@@ -57,6 +57,18 @@ bool region_cpu(const std::vector<RegionMap>& maps,const overrides::OverrideSet&
         const auto& m=maps[i];const auto& s=*m.source;
         if(cancel && cancel->load())return fail("Map preparation cancelled.");
         auto surfaces=land[i];std::vector<uint8_t> visible(s.grid.size(),0);
+        // Resolve occlusion from world owners, including neighbours outside
+        // the backup-map rectangle. These borrowed cells live in set.terrain
+        // throughout this CPU build; no pointers enter the published mesh.
+        std::vector<TerrainNeighbor> neighbors(size_t(s.width+2)*(s.height+2));
+        for(int y=-1;y<=s.height;++y)for(int x=-1;x<=s.width;++x) {
+            const int j=owner(x+m.x,y+m.z);if(j<0)continue;
+            const auto& other=maps[size_t(j)];
+            auto& n=neighbors[size_t(y+1)*(s.width+2)+x+1];
+            n.cell=land[size_t(j)].cell(x+m.x-other.x,y+m.z-other.z);
+            n.ground=!n.cell;
+            if(n.cell)for(const auto& p:n.cell->surfaces)n.ground|=p.kind==terrain::TerrainKind::Ground;
+        }
         for(int y=0;y<s.height;++y) for(int x=0;x<s.width;++x) {
             const int j=owner(x+m.x,y+m.z);const size_t k=size_t(y)*s.width+x;
             visible[k]=j==int(i) && s.cell(x,y)!=world::kGridUndefined;
@@ -74,7 +86,9 @@ bool region_cpu(const std::vector<RegionMap>& maps,const overrides::OverrideSet&
         RegionCPU chunk;
         chunk.placed.vertex_limit=8000000-total.stored_vertices;
         chunk.placed.expanded_limit=16000000-total.vertices;
-        if(!build_authored_diorama(s,set,&chunk.mesh,&chunk.stats,&visible,&surfaces,&chunk.placed))
+        // Only the connected region closes ground to the -16px preview base;
+        // the single-map editor path stays byte-identical.
+        if(!build_authored_diorama(s,set,&chunk.mesh,&chunk.stats,&visible,&surfaces,&chunk.placed,&neighbors,true))
             return fail("A map failed validation or exceeded the desktop mesh budget. The previous view is retained.");
         total.vertices+=chunk.stats.flat_vertices+chunk.stats.authored_vertices;
         total.stored_vertices+=chunk.mesh.size();

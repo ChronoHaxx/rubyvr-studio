@@ -2,6 +2,7 @@
 #include "pattern_io.h"
 #include "terrain.h"
 #include <algorithm>
+#include <array>
 #include <cmath>
 #include <cstdio>
 #include <limits>
@@ -103,7 +104,10 @@ int connected_selftest() {
     for(int edit=0;edit<2;++edit) {
         if(edit)repeated_set.patterns[0].parts[0].transform.size.y=1.5f;
         std::vector<diorama::AuthoredVertex> reference;diorama::DioramaStats reference_stats;
-        if(!check(diorama::inspect_diorama_mesh(repeated,repeated_set,&reference,&reference_stats) &&
+        // The connected region closes ground to the -16px preview base, so the
+        // shared single-map mesher is asked for the same option here; the
+        // editor's default output is checked separately below.
+        if(!check(diorama::inspect_diorama_mesh(repeated,repeated_set,&reference,&reference_stats,true) &&
             diorama::inspect_region_mesh({{&repeated,0,0}},repeated_set,&mesh,&stats,&error),"reference and compact mixed models build"))return 1;
         if(!check(mesh[0].stats.geometry_hash==reference_stats.geometry_hash && stats.vertices==reference.size(),
             "ordered positions, UVs, source indices and face shades equal the original mesher"))return 1;
@@ -120,6 +124,227 @@ int connected_selftest() {
         }
         if(!check(identical,"compact decoding preserves every ordered world vertex and material after translation"))return 1;
     }
+    // ── Connected ground base: one closed slab at -16 source pixels ────────
+    // Authored Ground and legacy floors close one map cell below the floor.
+    // Outward walls exist only where that solid meets empty space or a
+    // non-ground neighbour, so adjoining cells and maps share no buried seam.
+    const float base=-1.f;
+    auto close_to=[](float p,float q){return std::abs(p-q)<1.5e-3f;};
+    auto wall=[](const diorama::AuthoredVertex& p,const diorama::AuthoredVertex& q,
+                 const diorama::AuthoredVertex& r,float* at,bool* xplane) {
+        if(std::abs(p.position.y-q.position.y)<1e-3f && std::abs(q.position.y-r.position.y)<1e-3f) return false;
+        if(std::abs(p.position.x-q.position.x)<1e-4f && std::abs(q.position.x-r.position.x)<1e-4f) {*xplane=true;*at=p.position.x;return true;}
+        if(std::abs(p.position.z-q.position.z)<1e-4f && std::abs(q.position.z-r.position.z)<1e-4f) {*xplane=false;*at=p.position.z;return true;}
+        return false;
+    };
+    auto base_triangle=[](const diorama::AuthoredVertex& p,const diorama::AuthoredVertex& q,
+                          const diorama::AuthoredVertex& r,float y) {
+        return std::abs(p.position.y-y)<2.5e-3f && std::abs(q.position.y-y)<2.5e-3f && std::abs(r.position.y-y)<2.5e-3f;
+    };
+    auto normal_x=[](const diorama::AuthoredVertex& p,const diorama::AuthoredVertex& q,const diorama::AuthoredVertex& r) {
+        return (q.position.y-p.position.y)*(r.position.z-p.position.z)-(q.position.z-p.position.z)*(r.position.y-p.position.y);
+    };
+    auto normal_y=[](const diorama::AuthoredVertex& p,const diorama::AuthoredVertex& q,const diorama::AuthoredVertex& r) {
+        return (q.position.z-p.position.z)*(r.position.x-p.position.x)-(q.position.x-p.position.x)*(r.position.z-p.position.z);
+    };
+    auto normal_z=[](const diorama::AuthoredVertex& p,const diorama::AuthoredVertex& q,const diorama::AuthoredVertex& r) {
+        return (q.position.x-p.position.x)*(r.position.y-p.position.y)-(q.position.y-p.position.y)*(r.position.x-p.position.x);
+    };
+    // Native density on a wall: 16 source pixels per cell and 8 texels per
+    // tile means U and V each advance two units per world unit of wall.
+    auto wall_density=[](const diorama::AuthoredVertex& p,const diorama::AuthoredVertex& q,const diorama::AuthoredVertex& r) {
+        const diorama::AuthoredVertex* v[3]={&p,&q,&r};float bu=0,bu_dist=0,bv=0,bv_dist=0;
+        for(int i=0;i<3;++i)for(int j=i+1;j<3;++j) {
+            const float du=std::abs(v[i]->u-v[j]->u),dv=std::abs(v[i]->v-v[j]->v);
+            const float dx=v[i]->position.x-v[j]->position.x,dz=v[i]->position.z-v[j]->position.z;
+            if(du>bu){bu=du;bu_dist=std::sqrt(dx*dx+dz*dz);}
+            if(dv>bv){bv=dv;bv_dist=std::abs(v[i]->position.y-v[j]->position.y);}
+        }
+        return std::abs(bu_dist-.5f*bu)<1e-4f && std::abs(bv_dist-.5f*bv)<1e-4f;
+    };
+    // A legacy floor with no authored terrain: tops stay at 0, the base sits a
+    // full cell lower, and the body's undefined neighbours become four walls.
+    OverrideSet legacy_set;legacy_set.version=kTerrainVersion;
+    std::vector<diorama::RegionMesh> floor_mesh;diorama::RegionStats floor_stats;
+    if(!check(diorama::inspect_region_mesh({{&repeated,0,0}},legacy_set,&floor_mesh,&floor_stats,&error) &&
+        floor_mesh.size()==1 && floor_mesh[0].stats.terrain_cells==0 && !floor_stats.terrain_rejected,
+        "flat legacy floor region builds without authored terrain"))return 1;
+    {
+        float lowest=1e9f,highest=-1e9f,wall_low=1e9f;int bases=0,bad_base_wind=0,walls=0,dense=0,bad_wall_wind=0;
+        for(size_t k=0;k+2<floor_mesh[0].vertices.size();k+=3) {
+            const auto& p=floor_mesh[0].vertices[k];const auto& q=floor_mesh[0].vertices[k+1];const auto& r=floor_mesh[0].vertices[k+2];
+            lowest=std::min({lowest,p.position.y,q.position.y,r.position.y});
+            highest=std::max({highest,p.position.y,q.position.y,r.position.y});
+            if(base_triangle(p,q,r,base)) {++bases;if(normal_y(p,q,r)<=0)++bad_base_wind;}
+            float at=0;bool xplane=false;
+            if(wall(p,q,r,&at,&xplane)) {
+                ++walls;wall_low=std::min({wall_low,p.position.y,q.position.y,r.position.y});
+                if(!wall_density(p,q,r))++dense;
+                if((xplane&&close_to(at,7)&&normal_x(p,q,r)<=0) || (xplane&&close_to(at,11)&&normal_x(p,q,r)>=0) ||
+                   (!xplane&&close_to(at,7)&&normal_z(p,q,r)<=0) || (!xplane&&close_to(at,11)&&normal_z(p,q,r)>=0))++bad_wall_wind;
+            }
+        }
+        if(!check(close_to(lowest,base-.002f) && close_to(highest,.002f),"legacy tops stay at 0 and close at -16px"))return 1;
+        if(!check(bases==16*16 && !bad_base_wind,"every legacy cell gets a downward-facing base plane (clockwise winding)"))return 1;
+        if(!check(walls>0 && close_to(wall_low,base) && !dense && !bad_wall_wind,
+            "legacy boundary walls reach the base with outward winding and native UV density"))return 1;
+    }
+    {
+        bool interior=false,west=false,east=false,north=false,south=false;
+        for(size_t k=0;k+2<floor_mesh[0].vertices.size();k+=3) {
+            const auto& p=floor_mesh[0].vertices[k];const auto& q=floor_mesh[0].vertices[k+1];const auto& r=floor_mesh[0].vertices[k+2];
+            float at=0;bool xplane=false;if(!wall(p,q,r,&at,&xplane))continue;
+            const bool inside=xplane?(close_to(at,8)||close_to(at,9)||close_to(at,10)):(close_to(at,8)||close_to(at,9)||close_to(at,10));
+            interior|=inside;
+            west|=xplane&&close_to(at,7);east|=xplane&&close_to(at,11);
+            north|=!xplane&&close_to(at,7);south|=!xplane&&close_to(at,11);
+        }
+        if(!check(!interior,"adjoining legacy cells emit no buried vertical seam"))return 1;
+        if(!check(west&&east&&north&&south,"every undefined exterior side has an outward wall"))return 1;
+    }
+    // Raised/graded authored ground keeps its top and closes to the same base.
+    OverrideSet terrain_only=repeated_set;terrain_only.patterns.clear();
+    std::vector<diorama::AuthoredVertex> slope_mesh;diorama::DioramaStats slope_stats;
+    if(!check(diorama::inspect_diorama_mesh(repeated,terrain_only,&slope_mesh,&slope_stats,true) &&
+        slope_stats.terrain_cells==16,"graded authored ground builds with the connected base"))return 1;
+    {
+        float lowest=1e9f,highest=-1e9f;int bases=0,bad=0,walls=0,dense=0,interior=0,exterior=0;
+        for(size_t k=0;k+2<slope_mesh.size();k+=3) {
+            const auto& p=slope_mesh[k];const auto& q=slope_mesh[k+1];const auto& r=slope_mesh[k+2];
+            lowest=std::min({lowest,p.position.y,q.position.y,r.position.y});
+            highest=std::max({highest,p.position.y,q.position.y,r.position.y});
+            if(base_triangle(p,q,r,base)) {++bases;if(normal_y(p,q,r)<=0)++bad;}
+            float at=0;bool xplane=false;
+            if(wall(p,q,r,&at,&xplane)) {
+                ++walls;if(!wall_density(p,q,r))++dense;
+                if(xplane?(close_to(at,8)||close_to(at,9)||close_to(at,10)):(close_to(at,8)||close_to(at,9)||close_to(at,10)))++interior;
+                if(xplane?(close_to(at,7)||close_to(at,11)):(close_to(at,7)||close_to(at,11)))++exterior;
+            }
+        }
+        if(!check(close_to(lowest,base-.002f) && std::abs(highest-2.002f)<3e-3f,"graded tops are unchanged and close at -16px"))return 1;
+        if(!check(bases>0 && !bad,"authored ground base faces downward with clockwise winding"))return 1;
+        if(!check(walls>0 && !dense && !interior && exterior>0,
+            "graded walls repeat native source pixels with no equal-height interior seam"))return 1;
+    }
+    {
+        std::vector<diorama::AuthoredVertex> editor_mesh;diorama::DioramaStats editor_stats;
+        if(!check(diorama::inspect_diorama_mesh(repeated,terrain_only,&editor_mesh,&editor_stats),"single-map editor mesh builds"))return 1;
+        float lowest=1e9f;for(const auto& v:editor_mesh)lowest=std::min(lowest,v.position.y);
+        if(!check(lowest>-.01f && editor_mesh.size()<slope_mesh.size() &&
+            editor_stats.geometry_hash!=slope_stats.geometry_hash,
+            "single-map output keeps its existing shallow underside without the connected base"))return 1;
+    }
+    // A raised neighbour must not fill the lower solid's base seam. `separate`
+    // carries b's rebuilt atlas guards after the map-local material check.
+    auto raised=separate;
+    for(auto& c:raised.terrain[1].cells) for(auto& p:c.surfaces) {p.height=32;p.thickness=32;}
+    std::vector<diorama::RegionMesh> raised_mesh;diorama::RegionStats raised_stats;
+    if(!check(diorama::inspect_region_mesh(inputs,raised,&raised_mesh,&raised_stats,&error) &&
+        !raised_stats.terrain_rejected,"raised adjacent map region builds"))return 1;
+    {
+        int join=0,buried=0;
+        for(const auto& chunk:raised_mesh) for(size_t k=0;k+2<chunk.vertices.size();k+=3) {
+            const auto& p=chunk.vertices[k];const auto& q=chunk.vertices[k+1];const auto& r=chunk.vertices[k+2];
+            float at=0;bool xplane=false;
+            if(!wall(p,q,r,&at,&xplane) || !xplane || !close_to(at,11))continue;
+            ++join;
+            if(std::min({p.position.y,q.position.y,r.position.y})<1.f-1e-3f)++buried;
+        }
+        if(!check(join>0 && !buried,"a raised join exposes only the wall above the lower ground and no buried base seam"))return 1;
+    }
+    // Offset and reversed map ordering must produce the same world geometry.
+    std::vector<diorama::RegionMap> reversed{{&b,4,0},{&a,0,0}};
+    std::vector<diorama::RegionMesh> order_mesh;diorama::RegionStats order_stats;
+    auto canonical=[](const std::vector<diorama::RegionMesh>& chunks) {
+        std::vector<std::array<float,7>> out;
+        for(const auto& chunk:chunks) for(const auto& v:chunk.vertices)
+            out.push_back({v.position.x,v.position.y,v.position.z,v.u,v.v,float(v.tile),float(v.palette)});
+        std::sort(out.begin(),out.end());return out;
+    };
+    if(!check(diorama::inspect_region_mesh(inputs,separate,&mesh,&stats,&error) &&
+        diorama::inspect_region_mesh(reversed,separate,&order_mesh,&order_stats,&error) &&
+        canonical(mesh)==canonical(order_mesh),"offset and reversed map ordering emit identical world geometry"))return 1;
+    // Explicit water and deck cells keep their semantics: no inferred
+    // underwater floor and no base under a floating span.
+    auto mixed=make(4,0);
+    OverrideSet mixed_set;mixed_set.version=kTerrainVersion;
+    TerrainMap mixed_map;mixed_map.group=0;mixed_map.number=4;mixed_map.width=19;mixed_map.height=18;
+    terrain::guard_tile(mixed,1,&mixed_map);
+    auto add_cell=[&](int x,int y,std::vector<TerrainSurface> surfaces) {
+        TerrainCell c;c.x=x;c.y=y;c.expected=mixed.cell(x,y);c.surfaces=std::move(surfaces);mixed_map.cells.push_back(c);
+    };
+    TerrainSurface ground;ground.layer=3;ground.height=ground.thickness=8;ground.kind=TerrainKind::Ground;
+    TerrainSurface water;water.layer=3;water.height=16;water.thickness=0;water.kind=TerrainKind::Water;
+    TerrainSurface deck;deck.layer=3;deck.height=32;deck.thickness=16;deck.kind=TerrainKind::Deck;
+    TerrainSurface mixed_ground=ground;mixed_ground.layer=2;
+    TerrainSurface mixed_deck=deck;mixed_deck.layer=4;
+    add_cell(7,7,{ground});
+    add_cell(8,7,{water});
+    add_cell(9,7,{deck});
+    add_cell(10,7,{mixed_ground,mixed_deck});
+    mixed_set.terrain={mixed_map};
+    const auto mixed_grid=mixed.grid;const auto mixed_before=mixed_set;
+    std::vector<diorama::RegionMesh> mixed_mesh;diorama::RegionStats mixed_stats;
+    if(!check(diorama::inspect_region_mesh({{&mixed,0,0}},mixed_set,&mixed_mesh,&mixed_stats,&error) &&
+        mixed_mesh[0].stats.terrain_cells==4 && !mixed_stats.terrain_rejected,"water/deck fixture builds"))return 1;
+    {
+        int water_floor=0,deck_floor=0,ground_base=0,mixed_base=0,deck_bottom=0;
+        for(size_t k=0;k+2<mixed_mesh[0].vertices.size();k+=3) {
+            const auto& p=mixed_mesh[0].vertices[k];const auto& q=mixed_mesh[0].vertices[k+1];const auto& r=mixed_mesh[0].vertices[k+2];
+            const float cx=(p.position.x+q.position.x+r.position.x)/3,cz=(p.position.z+q.position.z+r.position.z)/3;
+            if(base_triangle(p,q,r,base)) {
+                if(cx>7.01f&&cx<7.99f&&cz>7.01f&&cz<7.99f)++ground_base;
+                if(cx>8.01f&&cx<8.99f&&cz>7.01f&&cz<7.99f)++water_floor;
+                if(cx>9.01f&&cx<9.99f&&cz>7.01f&&cz<7.99f)++deck_floor;
+                if(cx>10.01f&&cx<10.99f&&cz>7.01f&&cz<7.99f)++mixed_base;
+            }
+            if(cx>9.01f&&cx<9.99f&&cz>7.01f&&cz<7.99f&&base_triangle(p,q,r,1.f))++deck_bottom;
+        }
+        if(!check(ground_base>0 && mixed_base>0,"explicit ground gets the base in plain and mixed cells"))return 1;
+        if(!check(!water_floor&&!deck_floor,"water/deck-only cells get no inferred base floor"))return 1;
+        if(!check(deck_bottom>0,"deck underside stays at its authored span"))return 1;
+    }
+    if(!check(mixed.grid==mixed_grid && mixed_set==mixed_before,"water/deck document and source grid remain unchanged"))return 1;
+    // Independent acceptance: neighbouring owners need not exist in this
+    // snapshot's padding, and can lie beyond its complete backup-map bounds.
+    int ownership_failures=0;
+    for(int edge=0;edge<2;++edge) for(int reverse=0;reverse<2;++reverse) {
+        auto left_source=a,right_source=b;
+        left_source.grid.assign(19*18,world::kGridUndefined);
+        right_source.grid.assign(19*18,world::kGridUndefined);
+        if(edge==0) {
+            for(int y=7;y<11;++y)for(int x=7;x<11;++x) {
+                left_source.grid[y*19+x]=right_source.grid[y*19+x]=0x3001;
+            }
+        } else {
+            left_source.grid[8*19+18]=right_source.grid[8*19]=0x3001;
+        }
+        const int offset=edge?19:4,join=edge?19:11;
+        std::vector<diorama::RegionMap> border{{&left_source,-50,37},{&right_source,-50+offset,37}};
+        if(reverse)std::reverse(border.begin(),border.end());
+        if(!check(diorama::inspect_region_mesh(border,legacy_set,&mesh,&stats,&error),
+                  "owner-only neighbouring floors build with missing padding and negative origins"))return 1;
+        bool buried=false;
+        for(const auto& chunk:mesh)for(size_t k=0;k<chunk.vertices.size();k+=3) {
+            float at=0;bool xplane=false;
+            buried|=wall(chunk.vertices[k],chunk.vertices[k+1],chunk.vertices[k+2],&at,&xplane) &&
+                    xplane && close_to(at,float(join-50));
+        }
+        if(!check(!buried,edge?"no buried wall beyond snapshot bounds in either map order":
+                              "no buried wall through undefined copied padding in either map order"))++ownership_failures;
+    }
+    if(ownership_failures)return 1;
+    auto mismatched=repeated;
+    for(int id:{1,3,4})mismatched.metatiles[id*8]^=1;
+    if(!check(diorama::inspect_region_mesh({{&mismatched,0,0}},terrain_only,&mesh,&stats,&error) &&
+        stats.terrain_rejected==16 && mesh[0].stats.terrain_cells==0,
+        "source mismatches stay rejected rather than becoming authored ground"))return 1;
+    float mismatch_low=0,mismatch_high=0;
+    for(const auto& v:mesh[0].vertices) {
+        mismatch_low=std::min(mismatch_low,v.position.y);mismatch_high=std::max(mismatch_high,v.position.y);
+    }
+    if(!check(close_to(mismatch_low,base-.002f) && close_to(mismatch_high,.002f),
+        "rejected terrain keeps its legacy top and only receives the preview base"))return 1;
     studio::connected::Scene scene;
     studio::connected::Map left;left.id="A";left.source=a;
     auto right=left;right.id="B";right.x=4;right.source=b;scene.maps={left,right};

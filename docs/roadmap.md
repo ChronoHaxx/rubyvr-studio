@@ -11,9 +11,9 @@ Experimental foliage art remains unapproved.
 
 **Prefer the short version? [Watch the acceptance GIF and verdict](acceptance.md).**
 The contributor/agent performs routine desktop functional and visual checks;
-the maintainer can give feedback without repeating the test procedure. Actual
-human usability/headset sessions still need a tester and are never inferred
-from a GIF. This changes review ownership, not the required quality or scope.
+the maintainer performs a short, revision-specific human functional check before
+merge. PRs keep its unchecked steps and reported results separate from CI and
+agent results. Human usability/headset acceptance is never inferred from a GIF.
 
 - **[x]** The stated, bounded work is implemented, verified and merged. Evidence
   is linked below. This does not approve an entire milestone or every asset.
@@ -79,6 +79,12 @@ local assets. Bash replaces the PowerShell workflow; Linux OpenXR runtime
 support remains outside this change. Hosted source checks and native Linux
 batch/GUI builds pass on the merged implementation.
 M2 bridge terrain remains the next scenery task. [Evidence and limits](native-wsl.md).
+
+**In review — [PR #24](https://github.com/ChronoHaxx/rubyvr-studio/pull/24), M10 WSL mouse movement:** the maintainer reported excessive turns
+with right mouse after PR #22. Bounded drag input and regression checks are
+prepared; [human functional checks](wsl-mouse-look.md) remain pending before
+merge. The earlier hidden-window acceptance did not exercise the physical
+pointer grab. M2 bridges resume after this usability blocker.
 
 - [x] **Merged — [PR #19](https://github.com/ChronoHaxx/rubyvr-studio/pull/19), standard GPL licence:**
   replace the custom no-sales terms with [GPLv3-or-later](licensing.md), retaining
@@ -573,6 +579,9 @@ mandatory developer console. Camera changes remain independent of authored data.
   existing editor/connected/streaming checks. Hosted Linux source/build CI passes.
   Headless tests need no assets or display; GUI checks use local source data
   and WSLg. OpenXR runtime support remains outside this change. [Evidence](native-wsl.md).
+- [ ] **In review — [PR #24](https://github.com/ChronoHaxx/rubyvr-studio/pull/24), RV-014 follow-up:** correct excessive WSL right-drag
+  movement and verify release, re-grab and focus recovery. Automated evidence
+  and the required human check are [separate](wsl-mouse-look.md).
 - [x] Verify bounded editor caching behavior: part selection and lighting
   changes cause no mesh uploads; retain local draw measurements with their
   scope/limitations ([verification](verification.md), [lighting](environment-verification.md)).

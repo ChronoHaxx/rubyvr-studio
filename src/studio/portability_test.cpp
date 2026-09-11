@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-// portability_test.cpp — original fixtures for the native file/capture boundary.
+// portability_test.cpp — native file/capture and mouse-input fixtures.
 //
 // WHAT THIS PROVES, and what it deliberately does not:
 //
@@ -13,6 +13,8 @@
 //     the caller can keep logging to its redirected stream after the capture.
 //   * Paths with spaces work throughout, and platform_io::same_file recognises
 //     relative/symlink aliases while keeping Linux case variants distinct.
+//   * WSL drag look uses cursor positions, including when relative deltas are
+//     inconsistent. Native desktops retain relative input by default.
 //
 // It does NOT prove rendering, a GUI journey or an OpenXR runtime. It needs no
 // display, no source art and no ROM; DISPLAY may be unset (see docs/native-wsl.md).
@@ -20,6 +22,7 @@
 #include "capture.h"
 #include "pattern_io.h"
 #include "platform_io.h"
+#include "mouse_look.h"
 #include "terrain.h"
 
 #include "overrides.h"
@@ -436,6 +439,29 @@ void path_identity_checks(Checks& c, const std::string& root, const fs::path& ho
     fs::current_path(home, ec);
 }
 
+void mouse_look_checks(Checks& c) {
+    using studio::prefer_relative_mouse;
+    c.check(!prefer_relative_mouse(true,nullptr), "WSL defaults to drag look");
+    c.check(prefer_relative_mouse(false,nullptr), "native desktops retain relative look");
+    c.check(prefer_relative_mouse(true,"relative") && !prefer_relative_mouse(false,"drag"),
+            "explicit mouse backend overrides work");
+    studio::MouseLookInput input;input.relative=false;
+    auto d=input.motion(800,620,32000,-28000,false);
+    c.check(d.x==0 && d.y==0, "inactive mouse movement cannot rotate the camera");
+    d=input.motion(820,606,32000,-28000,true);
+    c.check(d.x==20 && d.y==-14, "drag look ignores oversized remote relative values");
+    d=input.motion(820,606,32000,-28000,true);
+    c.check(d.x==0 && d.y==0, "stationary cursor ignores repeated remote deltas");
+    input.reset();d=input.motion(1400,900,600,294,true);
+    c.check(d.x==0 && d.y==0, "capture reset discards the old cursor anchor");
+    input.motion(300,500,0,0,false);d=input.motion(320,486,99999,99999,true);
+    c.check(d.x==20 && d.y==-14, "regrabbing uses the new cursor position");
+    input.relative=true;d=input.motion(800,600,20,-14,true);
+    c.check(d.x==20 && d.y==-14, "relative mode retains native raw deltas");
+    d=input.motion(800,600,0,0,true);
+    c.check(d.x==0 && d.y==0, "relative mode has no rotation without motion");
+}
+
 }  // namespace
 
 int portability_selftest(const char* workdir) {
@@ -453,6 +479,7 @@ int portability_selftest(const char* workdir) {
     }
 
     Checks checks;
+    mouse_look_checks(checks);
     const vr::world::Snapshot snapshot = synthetic_snapshot();
     persistence_checks(checks, root, snapshot);
     unwritable_directory_check(checks, root, snapshot);

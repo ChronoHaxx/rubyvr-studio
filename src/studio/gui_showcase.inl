@@ -123,6 +123,8 @@ void showcase_frame(Probe& p, const App& a) {
         std::fprintf(f,",\"review_open\":%s,\"review_filter\":%d,\"review_visible\":%zu,\"review_flat\":%s,\"review_padding\":%s,\"review_historical\":%s",
             a.review.open?"true":"false",a.review.filter,a.review.visible.size(),a.review.include_flat?"true":"false",a.review.include_padding?"true":"false",
             a.review.input_fingerprint!=a.review.index.pack_fingerprint || a.working!=a.review.baseline || a.document.draft_dirty()?"true":"false");
+        std::fprintf(f,",\"mouse_look\":\"%s\",\"native_mouse_relative\":%s",
+            a.fly_mouse.relative?"relative":"drag",SDL_GetRelativeMouseMode()?"true":"false");
         std::fprintf(f,",\"camera\":[%.9g,%.9g,%.9g],\"camera_target\":[%.9g,%.9g,%.9g],\"fly_mode\":%s,\"fly_looking\":%s,\"typing\":%s,\"pending\":%d,\"accepted_placements\":[",
             double(a.camera.yaw),double(a.camera.pitch),double(a.camera.dist),double(a.camera.tx),double(a.camera.ty),double(a.camera.tz),
             a.fly_mode?"true":"false",a.fly_looking?"true":"false",ImGui::GetIO().WantTextInput?"true":"false",int(a.pending));

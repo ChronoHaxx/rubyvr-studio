@@ -23,6 +23,19 @@ See [native evidence](../native-wsl.md) and
 [build/run commands](../building.md). Full performance/headset acceptance and
 M2 geography are separate work.
 
+## Post-merge mouse report — 2026-09-11
+
+The maintainer's physical WSL pointer turns the view excessively when moving
+with right mouse held, but not while stationary. Earlier hidden-window tests
+skipped the OS grab, and the production code ignored relative-mode failure.
+This does not invalidate the recorded build/file checks; physical pointer
+acceptance was missing.
+
+The [follow-up](../wsl-mouse-look.md) uses bounded cursor-position drag on WSL,
+tests inconsistent raw deltas and documents its window-edge limitation.
+Automated checks and required human results remain separate. Human acceptance
+and the follow-up merge are pending; PR #22's original evidence is retained.
+
 ## Boundaries
 
 CMake, platform file/capture helpers, GUI file protection and Bash/Python

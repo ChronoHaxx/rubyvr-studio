@@ -1,0 +1,49 @@
+{
+  "date": "2026-09-11",
+  "implementation_commit": "a88dce1834f6474ad48337df1c4cde4f7a6e8887",
+  "scope": "Hidden SDL synthetic mouse faults; physical WSL pointer acceptance pending",
+  "before": {
+    "status": "FAIL",
+    "checks": {
+      "all checkpoints completed": true,
+      "20 pixel movement turns 0.12 radians without pitch clamp": false,
+      "stationary cursor ignores repeated raw deltas": false,
+      "reverse movement follows window coordinates": false,
+      "release stops same-frame motion and keyboard flight": false,
+      "regrab does not reuse the old cursor anchor": true,
+      "new drag retains the original sensitivity": false,
+      "focus loss stops look and movement": true,
+      "outside coordinates release look without a camera jump": false,
+      "Escape releases look": true,
+      "drag never enables native relative mode": false,
+      "geometry draft and history stay unchanged": true
+    },
+    "executable_sha256": "a80b000efc27191bf23a9d43025c725872c90d83bd8a7bd1fca66f484cc467fd",
+    "scope": "Real SDL event loop with synthetic remote-pointer faults; no physical-device UAT"
+  },
+  "after": {
+    "status": "PASS",
+    "checks": {
+      "all checkpoints completed": true,
+      "20 pixel movement turns 0.12 radians without pitch clamp": true,
+      "stationary cursor ignores repeated raw deltas": true,
+      "reverse movement follows window coordinates": true,
+      "release stops same-frame motion and keyboard flight": true,
+      "regrab does not reuse the old cursor anchor": true,
+      "new drag retains the original sensitivity": true,
+      "focus loss stops look and movement": true,
+      "outside coordinates release look without a camera jump": true,
+      "Escape releases look": true,
+      "drag never enables native relative mode": true,
+      "geometry draft and history stay unchanged": true
+    },
+    "executable_sha256": "593e3b2b3275d6b6b0f8f58db8922f3919fa37b0c9addc17d39736bc8fd91f53",
+    "scope": "Real SDL event loop with synthetic remote-pointer faults; no physical-device UAT"
+  },
+  "original_camera_checks": 37,
+  "native_headless_checks": 39,
+  "connected_suite": "PASS",
+  "streaming_suite": "PASS",
+  "geometry_and_documents_unchanged": true,
+  "human_acceptance": "PENDING"
+}

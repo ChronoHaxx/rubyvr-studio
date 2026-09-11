@@ -2,8 +2,9 @@
 
 Short actual-application GIF/video for a visible change, or compact test/report
 output for backend work. State the verdict and remaining defects in a few lines.
-The contributor/agent runs and inspects the checks; do not hand the maintainer a
-routine manual test checklist. Label scripted/edited timing and baseline footage.
+The contributor/agent runs and inspects the automated/visual checks. Keep these
+results separate from the human checks below. Label scripted/edited timing and
+baseline footage. CI passing does not mean the maintainer has tried the change.
 
 ## Problem and result
 
@@ -12,10 +13,30 @@ Related issue / RV work package:
 Describe the concrete trigger and resulting behavior. Include actual before/after
 views for a visual change; distinguish geometry from texture changes.
 
-## Validation
+## Automated and agent validation
 
 Commands run, results and checks not run. State editor, batch, live-game and
 headset evidence separately. Include build/source/recipe identity where relevant.
+
+## Human functional check — required before merge
+
+Tested commit/build: **not yet tested**
+
+Provide exact setup and launch commands, then a short numbered sequence for this
+revision. Each unchecked box must contain the action and its expected result.
+Cover the changed behavior, one adjacent ordinary workflow, and relevant failure
+or recovery paths. Include restart/save/reopen only when the change affects them.
+For noninteractive work, use a small observable check appropriate to the change.
+Do not replace the sequence with a request to read the diff or run all tests.
+
+1. [ ] **Action:** … **Expected:** …
+2. [ ] **Action:** … **Expected:** …
+
+Human verdict / remaining defects: **pending**
+
+Only record a pass after the maintainer reports the result for this revision.
+Keep failed steps and their symptoms; fixes need a relevant retest on the new
+revision. Do not merge with these checks pending, even when CI/agent checks pass.
 
 ## Sources and limitations
 

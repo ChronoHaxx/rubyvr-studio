@@ -78,6 +78,9 @@ distinct case-sensitive filenames distinct.
 
 ## Remaining boundaries
 
+- A physical WSL right-mouse spin was reported after merge. The
+  [mouse follow-up](wsl-mouse-look.md) has separate automated evidence and an
+  unchecked human smoke check; the original hidden tests skipped the OS grab.
 - Linux OpenXR/live-game integration is unsupported and was not exercised.
 - Windows branches remain in shared code, but PowerShell scripts and the
   Windows-only CI workflow are retired. This does not certify a new Windows

@@ -59,6 +59,9 @@ input baseline so the personal output remains writable. Paths with spaces work.
 The connected example includes Littleroot, Oldale, Petalburg and Routes
 101/102/103. Explore area in DIORAMA opens the same view. Hold RMB to look;
 WASD flies, Q/E changes height, Shift speeds up, and Escape releases flight.
+WSL uses bounded cursor-position drag: near a window edge, release right mouse,
+move the cursor back into the view and hold it again. Other Linux desktops use
+relative input by default. [Mouse behavior and diagnostic overrides](wsl-mouse-look.md).
 This is a scenery explorer; full geography and playable gameplay remain open.
 
 For the Review browser, run `python3 tools/coverage-ledger.py sync` after
@@ -70,6 +73,7 @@ Studio; stale review data warns without blocking launch.
 ```bash
 python3 tools/check-repo.py
 python3 tools/test-native-portability.py
+python3 tools/test-studio-mouse-look.py
 python3 tools/test-bash-launcher.py
 python3 tools/test-editor.py
 python3 tools/test-connected-studio.py

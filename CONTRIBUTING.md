@@ -23,11 +23,14 @@ show the object from the front, sides, back and in its placement context.
 
 Lead the handoff with a short actual-application GIF/video, a verdict and the
 remaining defects, as in the [visual acceptance summary](docs/acceptance.md).
-The contributor or agent performs and inspects routine desktop checks; the
-maintainer does not need to repeat them. For backend-only changes, use concise
-test/report results and label any editor footage as baseline evidence. Keep
-logs and reproduction behind links. Human usability and headset evidence still
-require an actual tester; no such acceptance is implied by a GIF.
+The contributor or agent performs and inspects automated and desktop visual
+checks. For backend-only changes, use concise test/report results and label any
+editor footage as baseline evidence. Keep logs and reproduction behind links.
+Every PR also needs a short human functional check with exact setup/launch
+commands, actions, expected results and unchecked boxes for the current revision.
+The maintainer reports the hands-on result before merge. Keep it separate from
+agent/CI results; a GIF or an earlier revision does not establish human or headset
+acceptance. See the [PR template](.github/pull_request_template.md).
 
 1. Follow [building](docs/building.md), branch from the public repository's
    default branch, and reproduce the problem before editing.

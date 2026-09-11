@@ -41,6 +41,10 @@ shared 16 px northern surface. It remains a local authored geography example.
 over continuous water, level bank approaches, and the canonical Petalburg join.
 The six previous maps remain unchanged. Source/native/SDL checks and the actual
 12-second comparison pass; four human checks and merge remain pending.
+The review launch handoff was corrected after main's old executable reproduced
+the mouse issue: explicit PR checkout/rebuild, matching resume paths and GUI
+identity/newer-source warnings. Launcher and real SDL retests pass; human
+start/resume retest remains pending with the bridge checks.
 
 **Merged — [PR #27](https://github.com/ChronoHaxx/rubyvr-studio-archive-20260910/pull/27):** the [connected-region example](terrain-regions.md) extends terrain
 or connection context to six maps, including Oldale's north/west neighbours and

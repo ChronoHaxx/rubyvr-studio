@@ -8,6 +8,7 @@ session cleanup and exit propagation — with no game data, display or renderer.
 It does not prove the GUI renders; docs/native-wsl.md records that separately.
 """
 import argparse
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -172,6 +173,39 @@ def main():
     cases.check('run-studio fresh launch builds the exact native arguments',
                 proc.returncode == 0 and read_argv(record) == expected,
                 f'{read_argv(record)!r} {proc.stderr}')
+
+    cases.check('launch identifies the checkout and exact executable bytes',
+                f'checkout: {fixture}' in proc.stderr and
+                f'GUI: {binary_dir / "rubyvr_gui"}' in proc.stderr and
+                hashlib.sha256((binary_dir / 'rubyvr_gui').read_bytes()).hexdigest()
+                in proc.stderr, proc.stderr)
+    source = fixture / 'src' / 'studio' / 'gui.cpp'
+    source.parent.mkdir(parents=True)
+    source.write_text('// original synthetic source\n')
+    gui_time = (binary_dir / 'rubyvr_gui').stat().st_mtime
+    os.utime(fixture / 'CMakeLists.txt', (gui_time - 60, gui_time - 60))
+    os.utime(source, (gui_time + 60, gui_time + 60))
+    proc, record = run('run-studio.sh', ['--fresh'])
+    cases.check('newer source warns about an outdated GUI without blocking launch',
+                proc.returncode == 0 and 'src/studio/gui.cpp is newer' in proc.stderr
+                and 'bash tools/build.sh --gui' in proc.stderr and record.exists(), proc.stderr)
+
+    proc, record = run('run-studio.sh', ['--overrides', 'build/missing-example.json'])
+    cases.check('missing explicit input names its path without blaming starter assets',
+                proc.returncode != 0 and not record.exists() and
+                str(fixture / 'build/missing-example.json') in proc.stderr and
+                'prepare-assets.py' not in proc.stderr, proc.stderr)
+    relative_personal = fixture / 'build' / 'relative-personal.json'
+    relative_personal.write_text('{"version":6,"patterns":[],"saved":"keep me"}\n')
+    snapshot = out / 'relative-resume-snapshot'
+    snapshot.mkdir()
+    proc, record = run('run-studio.sh', ['--out', 'build/relative-personal.json'],
+                       {'RUBYVR_STUB_SNAPSHOT_DIR': str(snapshot),
+                        'RUBYVR_STUB_SNAPSHOT_ARG': '--overrides'})
+    cases.check('relative resume uses the script checkout even from another directory',
+                proc.returncode == 0 and read_argv(record)[7] == str(relative_personal)
+                and (snapshot / 'input.copy').read_bytes() == relative_personal.read_bytes()
+                and not (out / 'build/relative-personal.json').exists(), proc.stderr)
 
     proc, record = run('run-studio.sh', ['--fresh', '--connected', '--out', str(personal)],
                        {})

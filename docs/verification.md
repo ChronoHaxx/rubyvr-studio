@@ -28,7 +28,7 @@ windows on WSLg. They passed on the reviewed native build; all eight frozen
 geometry hashes and 32,000 connected atlas pixels remain unchanged.
 
 The headless batch suites pass with DISPLAY unset: terrain 197, foundation 23,
-connected 69 and portability 29 checks. The Bash suite passes 22 original cases,
+connected 69 and portability 29 checks. The Bash suite passes 26 cases,
 including a real minimal CMake build from outside a repository with spaces.
 The native review reader and all original coverage/source-inventory suites pass.
 Asset preparation completed all 394 maps, retaining the eight known oversized
@@ -57,7 +57,7 @@ Do not substitute old captures or change frozen hashes.
 | `--test-connected` | 69 synthetic checks of ownership, overhangs, seams, source indices, atomic refusal, rigid reuse, ordered equivalence, camera seam hysteresis, fixed/revisited origins, cancellation and closed ground bases including undefined padding and snapshot boundaries | No source art or GL; included in CI |
 | `test-native-portability.py` | 39 native checks: 29 original writer/loader/capture cases plus ten mouse-input policy cases | Headless file/capture and input policy; no OS pointer grab, GUI journey, rendering or OpenXR runtime |
 | `test-studio-mouse-look.py` | Twelve checks through the actual SDL event loop: inconsistent raw deltas, stationary coordinates, release/re-grab, focus/Escape, window bounds and unchanged documents/geometry | Synthetic input in a hidden window; [physical WSL mouse check](wsl-mouse-look.md) remains separate |
-| `test-bash-launcher.py` | 22 native Bash cases: exact arguments, build location, fresh/resume, presets, cleanup, capture options and failure propagation | Original fixtures; real GUI launch/save/resume verified separately |
+| `test-bash-launcher.py` | 26 native Bash cases: exact arguments, build location, fresh/resume, presets, cleanup, capture options, failure propagation, GUI identity, newer-source warning and cross-directory resume | Original fixtures; real GUI launch/save/resume verified separately |
 | `--test-connected-source` | Four- and six-map authored fixtures plus a three-map/two-atlas source-floor fixture: offsets, expanded/stored counts and geometry hashes | Requires pinned local source and generated regional pack; third fixture deliberately has no scenery patterns |
 | `test-connected-studio.py` | 20 SDL checkpoints at two sizes: enter, fly across a boundary, stop, blocked edits, return, repeat, save and unchanged source; 32,000 rendered pixels match a neighbour's own source-floor view | Cached uploads and whole-map culling checked; timings cover synchronized single-eye GL draw only, not whole-app or headset frame time |
 | `test-region-model-reuse.py` | Native reuse/source audit, existing 20 SDL checkpoints plus 28 north/west flight/overview checkpoints, now preserving positions through moving residency | Optional PR #30 same-camera comparison applies before travel/after restoration; changed outer windows are excluded explicitly; [historical evidence](region-model-reuse-evidence-2026-09-10.json) |

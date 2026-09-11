@@ -25,6 +25,12 @@ folder, relative to the repository. Set `RUBYVR_BUILD_DIR` to use that folder
 in launchers and portable tests. Existing Windows build outputs stay intact.
 Dear ImGui is vendored with its MIT notice.
 
+**Re-run `bash tools/build.sh --jobs 4` after pulling changes or checking out a
+PR.** Git updates the source; it does not update ignored executables in
+`build-linux/`. The launcher prints its checkout, executable and SHA-256, and
+warns when source/build files are newer than the GUI. This timestamp warning
+helps spot old builds; absence of a warning does not verify a matching build.
+
 ## Local source assets
 
 The editor reads map data and indexed PNGs from a pinned local pokeruby
@@ -55,6 +61,9 @@ The first command resumes `build/my-scenery.json` when it exists. `--fresh`
 creates a new personal output. `--overrides FILE` opens a read-only template;
 `--out FILE` chooses the Save destination. A resume session uses a temporary
 input baseline so the personal output remains writable. Paths with spaces work.
+Relative data paths belong to the launcher's checkout, even when the script is
+called by absolute path from another directory. Resume from the same checkout
+and use the same `--out` path as the original session.
 
 The connected example includes Littleroot, Oldale, Petalburg and Routes
 101/102/103. Explore area in DIORAMA opens the same view. Hold RMB to look;

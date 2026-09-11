@@ -28,6 +28,9 @@ Cover the changed behavior, one adjacent ordinary workflow, and relevant failure
 or recovery paths. Include restart/save/reopen only when the change affects them.
 For noninteractive work, use a small observable check appropriate to the change.
 Do not replace the sequence with a request to read the diff or run all tests.
+Give the maintainer one primary launch/reopen workflow matching the chat handoff.
+Collapse alternative developer setup. Keep these steps and relevant docs current
+when pushing updates, then read back the published PR description.
 
 1. [ ] **Action:** … **Expected:** …
 2. [ ] **Action:** … **Expected:** …

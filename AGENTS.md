@@ -5,6 +5,12 @@ Use docs/architecture.md and docs/verification.md for component boundaries and
 checks. The human contributor owns the PR and its claims.
 
 - Work on one bounded issue. Preserve unrelated changes and authored assets.
+- When updating a PR, update its description, human test steps and relevant
+  documentation to match the delivered revision and the commands given in chat.
+  Give the maintainer one primary launch/reopen workflow; put alternative
+  developer setup in a clearly labelled collapsed section. Read back the
+  published PR description before saying it is updated. A new commit alone
+  does not complete the handoff.
 - The maintainer prefers short visual acceptance evidence and delegates routine
   automated and desktop visual review to the contributor or agent. Run the checks,
   inspect the actual captures, and lead with a 10–30 second GIF/video, a concise

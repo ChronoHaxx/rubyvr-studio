@@ -38,6 +38,7 @@ list(APPEND STUDIO_CORE src/vr/terrain.cpp)
 set(RUBYVR_TARGETS rubyvr_studio)
 add_executable(rubyvr_studio src/studio/compare.cpp src/studio/asset_catalog.cpp
     src/studio/terrain_test.cpp
+    src/studio/bridge_test.cpp
     src/studio/foundation_test.cpp
     src/studio/connected_test.cpp
     src/studio/portability_test.cpp

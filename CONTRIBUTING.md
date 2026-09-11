@@ -43,6 +43,9 @@ acceptance. See the [PR template](.github/pull_request_template.md).
 4. Open a pull request explaining the before/after behavior, reproduction,
    commands actually run and remaining limitations. Include real renders for
    visible changes. Mark anything you could not verify explicitly.
+   When pushing a follow-up, also update the PR description, human commands and
+   relevant docs. Give the maintainer one primary workflow matching the chat
+   handoff, collapse developer alternatives, and read back the published text.
 5. Update the relevant roadmap/work-package progress and evidence, or state that
    no implementation status changed. Work in an open PR stays unchecked and
    marked **In review**. After verifying the merge, the maintainer ticks only the

@@ -1,7 +1,7 @@
 {
   "date": "2026-09-11",
   "implementation_commit": "a88dce1834f6474ad48337df1c4cde4f7a6e8887",
-  "scope": "Hidden SDL synthetic mouse faults; physical WSL pointer acceptance pending",
+  "scope": "Hidden SDL synthetic mouse faults, plus a separately reported four-step maintainer WSL pass",
   "before": {
     "status": "FAIL",
     "checks": {
@@ -45,5 +45,12 @@
   "connected_suite": "PASS",
   "streaming_suite": "PASS",
   "geometry_and_documents_unchanged": true,
-  "human_acceptance": "PENDING"
+  "human_acceptance": "PASS",
+  "human_reported_at": "2026-09-11T00:17:02Z",
+  "human_report": "all passes and merged",
+  "human_checks_passed": 4,
+  "prepared_review_head": "bb054dcf893dad28a65d635cca8ee65b88347eee",
+  "tested_build_note": "Maintainer checked the four PR steps and reported a pass for the prepared revision; exact running binary was not separately restated.",
+  "merge_commit": "3252d05c86ce3146744c994a45384bc4f1a3105c",
+  "merged_at": "2026-09-11T00:15:41Z"
 }

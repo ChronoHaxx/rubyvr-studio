@@ -6,7 +6,7 @@ game integration.** It replaces the local research workspace's
 Work-package documents explain individual contributions; they are not another
 roadmap. Last reconciled **2026-09-11**: archived PRs #19–#31 and the new
 repository's GPL PR #19, camera-driven loading PR #20, ground-base PR #21 and
-native Linux/WSL PR #22 are merged.
+native Linux/WSL PR #22 and mouse repair PR #24 are merged.
 Experimental foliage art remains unapproved.
 
 **Prefer the short version? [Watch the acceptance GIF and verdict](acceptance.md).**
@@ -36,6 +36,15 @@ editor controls and copied-neighbour heights are **merged in
 [acceptance GIF](acceptance.md) shows the local Oldale–Route 101 example.
 The revised fixture has two 8 px ledges, continuous walk-around grades and a
 shared 16 px northern surface. It remains a local authored geography example.
+
+**In review — [Route 104 bridge](terrain-bridge.md):** 38 source boardwalk cells
+over continuous water, level bank approaches, and the canonical Petalburg join.
+The six previous maps remain unchanged. Source/native/SDL checks and the actual
+12-second comparison pass; four human checks and merge remain pending.
+The review launch handoff was corrected after main's old executable reproduced
+the mouse issue: explicit PR checkout/rebuild, matching resume paths and GUI
+identity/newer-source warnings. Launcher and real SDL retests pass; human
+start/resume retest remains pending with the bridge checks.
 
 **Merged — [PR #27](https://github.com/ChronoHaxx/rubyvr-studio-archive-20260910/pull/27):** the [connected-region example](terrain-regions.md) extends terrain
 or connection context to six maps, including Oldale's north/west neighbours and
@@ -80,11 +89,10 @@ support remains outside this change. Hosted source checks and native Linux
 batch/GUI builds pass on the merged implementation.
 M2 bridge terrain remains the next scenery task. [Evidence and limits](native-wsl.md).
 
-**In review — [PR #24](https://github.com/ChronoHaxx/rubyvr-studio/pull/24), M10 WSL mouse movement:** the maintainer reported excessive turns
-with right mouse after PR #22. Bounded drag input and regression checks are
-prepared; [human functional checks](wsl-mouse-look.md) remain pending before
-merge. The earlier hidden-window acceptance did not exercise the physical
-pointer grab. M2 bridges resume after this usability blocker.
+**Merged — [PR #24](https://github.com/ChronoHaxx/rubyvr-studio/pull/24), M10 WSL mouse movement:** bounded drag fixes the excessive turns
+reported after PR #22. All four [human functional checks](wsl-mouse-look.md)
+were reported passed on 2026-09-11, separately from automated regression tests.
+The original missed physical-pointer defect remains recorded. M2 bridges resume.
 
 - [x] **Merged — [PR #19](https://github.com/ChronoHaxx/rubyvr-studio/pull/19), standard GPL licence:**
   replace the custom no-sales terms with [GPLv3-or-later](licensing.md), retaining
@@ -101,11 +109,12 @@ a measured 50.8 ms peak; this is not headset performance acceptance.
 **Merged — [PR #21](https://github.com/ChronoHaxx/rubyvr-studio/pull/21):** the
 [connected ground base](connected-ground-base.md) closes ground undersides and
 exposed edges, with a 12-second actual comparison. The broader border/cutaway
-checklist stays open. Next M2 slice: a source-backed bridge over water with
-its banks and approach heights.
+checklist stays open. The bridge/bank fixture is in review above; the next
+geography work is complete shoreline/cliff transitions and unauthored frontiers.
 Complete coastal geography,
 waterfalls and underwater depth remain open. Route 104
-and Route 110 remain explicit frontiers of this example. A cliff's corner belongs
+and Route 110 remain frontiers of the original six-map preset. The optional
+bridge fixture adds Route 104 context, not its complete geography. A cliff's corner belongs
 to a raised region; raising individual cliff tiles is insufficient. The full
 M2 exit criteria below remain open.
 
@@ -186,7 +195,7 @@ Catalog and placement audits do not certify a complete game or headset experienc
 |---|---|---|
 | [M0 Common scenery fixes](#m0-common-scenery-fixes) | Initial fixes merged; complete recorded visual acceptance pending | Existing editor/pack |
 | [M1 Coverage ledger](#m1-coverage-ledger) | Inventories, browser, native paths and treatment/ownership rules merged; remaining source/runtime audits pending | Source adapter |
-| [M2 Terrain and placement](#m2-terrain-and-placement) | Terrain, connected explorer, model reuse, camera-driven loading and ground base merged; bridge fixture next; complete geography pending | M1 inventory + stable map identity |
+| [M2 Terrain and placement](#m2-terrain-and-placement) | Terrain/explorer/loading/base merged; Route 104 bridge fixture in review; complete geography pending | M1 inventory + stable map identity |
 | [M3 Manual authoring](#m3-manual-authoring) | Core workflow and part selection merged; convenience tools and timed user trial pending | Current editor + M2 contract for terrain |
 | [M4 All static scenery](#m4-all-static-scenery) | Common starters and bounded tree fixes merged; foliage art deferred here; full coverage/review pending | M1–M3 |
 | [M5 Live scene data](#m5-live-scene-data) | Prototype foundation; complete capture/routing pending | Public integration + M1 |
@@ -330,6 +339,10 @@ automated/visual/live/headset results, evidence and unresolved defects separatel
   art scale, including dark outlines.
 - [ ] Support multiple surfaces at one horizontal position for bridges over
   water/paths, decks, platforms and overhangs, selected by gameplay layer.
+  - [ ] **In review — [Route 104 example](terrain-bridge.md):** guarded Water +
+    Deck recipe, both banks, correct source atlas, native layer/material/mesh
+    checks, connected Petalburg contact and exact save/reopen. Human checks
+    and merge pending; runtime feet/collision and all bridge families remain open.
 - [ ] Add explicit underlays beneath removed object pixels and source shadows:
   grass, paths, sand, pavement, indoor floors and water. Allow author selection
   when neighboring evidence is insufficient.
@@ -579,9 +592,9 @@ mandatory developer console. Camera changes remain independent of authored data.
   existing editor/connected/streaming checks. Hosted Linux source/build CI passes.
   Headless tests need no assets or display; GUI checks use local source data
   and WSLg. OpenXR runtime support remains outside this change. [Evidence](native-wsl.md).
-- [ ] **In review — [PR #24](https://github.com/ChronoHaxx/rubyvr-studio/pull/24), RV-014 follow-up:** correct excessive WSL right-drag
-  movement and verify release, re-grab and focus recovery. Automated evidence
-  and the required human check are [separate](wsl-mouse-look.md).
+- [x] **Merged — [PR #24](https://github.com/ChronoHaxx/rubyvr-studio/pull/24), RV-014 follow-up:** corrected excessive WSL right-drag
+  movement; maintainer passed all four movement, release, re-grab and focus checks
+  on 2026-09-11. Automated and human evidence remain [separate](wsl-mouse-look.md).
 - [x] Verify bounded editor caching behavior: part selection and lighting
   changes cause no mesh uploads; retain local draw measurements with their
   scope/limitations ([verification](verification.md), [lighting](environment-verification.md)).

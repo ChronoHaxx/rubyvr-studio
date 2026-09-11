@@ -632,7 +632,9 @@ int foundation_selftest(const char* output);
 int connected_selftest();
 int connected_source_test(const char* root,const char* pack,const char* output);
 int portability_selftest(const char* workdir);
+int bridge_source_test(const char* source,const char* pack);
 int main(int argc, char** argv) {
+    if(argc==4 && !std::strcmp(argv[1],"--test-bridge-source")) return bridge_source_test(argv[2],argv[3]);
     if(argc==2 && !std::strcmp(argv[1],"--test-connected")) return connected_selftest();
     if(argc==5 && !std::strcmp(argv[1],"--test-connected-source")) return connected_source_test(argv[2],argv[3],argv[4]);
     if(argc==3 && !std::strcmp(argv[1],"--test-foundation")) return foundation_selftest(argv[2]);

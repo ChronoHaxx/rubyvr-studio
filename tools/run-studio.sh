@@ -15,6 +15,7 @@ else
     build_path="$repo/$build_dir"
 fi
 gui="${RUBYVR_GUI:-$build_path/rubyvr_gui}"
+[[ "$gui" = /* ]] || gui="$PWD/$gui"
 map_id=""
 overrides=""
 out=""
@@ -41,6 +42,9 @@ usage: tools/run-studio.sh [--map MAP] [--overrides FILE] [--out FILE] [--fresh]
   --review-index FILE  coverage review index exported before launch
   -- GUI_OPTIONS...    pass additional native GUI options, including captures
   -h, --help           show this help
+
+Relative data paths are resolved from this script's repository checkout.
+After pulling or checking out a PR, rebuild with bash tools/build.sh --gui.
 EOF
 }
 
@@ -94,7 +98,8 @@ cleanup() {
 }
 trap cleanup EXIT
 
-helper_args=(plan --repo "$repo" --review-index "$review_index")
+cd "$repo" || exit 1
+helper_args=(plan --repo "$repo" --gui "$gui" --review-index "$review_index")
 [[ -n "$map_id" ]] && helper_args+=(--map "$map_id")
 [[ -n "$overrides" ]] && helper_args+=(--overrides "$overrides")
 [[ -n "$out" ]] && helper_args+=(--out "$out")
@@ -121,8 +126,6 @@ if [[ -n "$session_input" ]]; then
 else
     editor_input="${plan[overrides]}"
 fi
-
-cd "$repo" || exit 1
 
 if [[ -n "${plan[generator]:-}" ]]; then
     if ! "$python_bin" "${plan[generator]}" --out "${plan[generator_out]}"; then

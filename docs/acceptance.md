@@ -1,11 +1,23 @@
 # Watch the acceptance check
 
-**In review — [PR #24](https://github.com/ChronoHaxx/rubyvr-studio/pull/24), [WSL mouse repair](wsl-mouse-look.md). Human check and merge pending.**
+**In review — [Route 104 bridge over water](terrain-bridge.md), RV-003 / M2.**
+The original boardwalk now has a solid deck above continuous water, with level
+bank contact at both entrances. Source/native/SDL and save/reopen checks pass;
+the four human checks remain pending. Other Route 104 geography is unfinished.
+
+![Actual bridge comparison, flat source floor left and authored layers right](media/terrain-bridge.gif)
+
+12-second slideshow of three actual paired views, with identical camera/source
+art. [Run it and see the checklist](terrain-bridge.md#run-it).
+
+## Merged WSL mouse repair — PR #24
+
+**Merged — [PR #24](https://github.com/ChronoHaxx/rubyvr-studio/pull/24), [WSL mouse repair](wsl-mouse-look.md). All four maintainer checks passed on 2026-09-11.**
 The old build is on the left and corrected drag input on the right. This is a
 12-second slideshow of actual SDL captures with synthetic inconsistent mouse
 deltas. All twelve new checks and the existing camera/connected/streaming checks
 pass. The physical-pointer [human checklist](wsl-mouse-look.md#human-functional-check--required-before-merge)
-remains unchecked; CI and these captures cannot establish that result.
+was reported passed by the maintainer separately from CI and these captures.
 
 ![Old and corrected WSL mouse input in the actual editor](media/wsl-mouse-look.gif)
 

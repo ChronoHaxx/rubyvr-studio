@@ -45,6 +45,10 @@ to M8. First-person alone is not an edge fix.
 
 ## Acceptance
 
+- [ ] **In review — [Route 104 bridge](../terrain-bridge.md):** guarded source
+  footprint, layered water/deck, bank contacts and canonical Petalburg seam;
+  six original maps retained. Native/SDL/save checks and actual GIF pass;
+  maintainer's four checks and merge pending. Complete geography remains open.
 - [x] Use stable source map identity and guards, not a ROM pointer as a public map key.
 - [x] Keep elevation 0/15 semantics explicit; guest collision remains authoritative.
 - [x] One query resolves the selected surface for model placement; unknown layers remain explicit.

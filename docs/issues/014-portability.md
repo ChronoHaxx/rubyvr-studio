@@ -33,8 +33,9 @@ acceptance was missing.
 
 The [follow-up](../wsl-mouse-look.md) uses bounded cursor-position drag on WSL,
 tests inconsistent raw deltas and documents its window-edge limitation.
-Automated checks and required human results remain separate. Human acceptance
-and the follow-up merge are pending; PR #22's original evidence is retained.
+The maintainer passed all four human checks on 2026-09-11 and PR #24 is verified
+merged. Automated and human results remain separate; PR #22's original evidence
+and this escaped defect are retained.
 
 ## Boundaries
 

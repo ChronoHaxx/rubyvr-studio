@@ -1,6 +1,6 @@
 # WSL right-mouse movement
 
-**In review — [PR #24](https://github.com/ChronoHaxx/rubyvr-studio/pull/24), RV-014 / M10:** automated checks pass; human check and merge pending.
+**Merged — [PR #24](https://github.com/ChronoHaxx/rubyvr-studio/pull/24), RV-014 / M10:** automated checks and all four maintainer checks pass.
 After PR #22, moving the physical mouse with right button held caused excessive
 turning in WSL. Holding it still did not. The original hidden SDL checks skipped
 the real OS pointer grab, so they missed this difference.
@@ -63,8 +63,13 @@ python3 tools/test-camera-map-streaming.py
 
 ## Human functional check — required before merge
 
-**Human verdict: pending. Tested revision: not yet reported.** The maintainer
-reports these results; automated checks above do not tick these boxes.
+**Human verdict: PASS, reported 2026-09-11 at 00:17:02 UTC.** The maintainer
+checked all four PR steps and reported “all passes and merged” for the prepared
+revision `bb054dcf893dad28a65d635cca8ee65b88347eee`. The prepared GUI hash is
+`593e3b2b3275d6b6b0f8f58db8922f3919fa37b0c9addc17d39736bc8fd91f53`;
+the exact binary used was not separately restated. Merge verified at
+`3252d05c86ce3146744c994a45384bc4f1a3105c`. These are user-reported results,
+separate from the automated checks.
 
 From this PR's checkout in an Ubuntu/WSL Bash terminal, with its local source
 assets already prepared:
@@ -81,22 +86,20 @@ The task's prebuilt test command is an alternative for the same implementation;
 record its binary SHA-256 from the compact evidence instead of another checkout's
 commit. No save/restart test is required for this input-only repair.
 
-1. [ ] **Small movement and stillness:** hold right mouse in the 3D view, move
+1. [x] **Small movement and stillness:** hold right mouse in the 3D view, move
    it gently a short distance, then hold still for three seconds. Expect a
    modest turn, no sudden revolutions and no continued turning while still.
-2. [ ] **Release and re-grab:** release right mouse, reposition the cursor and
+2. [x] **Release and re-grab:** release right mouse, reposition the cursor and
    hold again; also try near a window edge. Expect no jump when releasing or
    re-grabbing. Look is bounded at the edge and resumes with a new drag.
-3. [ ] **Focus recovery:** while looking, switch to another app, release right
+3. [x] **Focus recovery:** while looking, switch to another app, release right
    mouse there, then return. Expect an ordinary usable cursor and a stationary
    camera until a fresh right drag. Escape during a drag should release it.
-4. [ ] **Movement and UI:** while holding right mouse, briefly try WASD, Q/E
+4. [x] **Movement and UI:** while holding right mouse, briefly try WASD, Q/E
    and Shift; release it while a movement key is still held. Expect movement
    only during the held drag. Click **Return to editing**, select a map object,
    and use the wheel over the view. Expect ordinary selection/zoom, with no
    stuck capture or spinning.
 
-Report the tested revision/binary and any failed step. Keep failures visible;
-repairs require the relevant steps again on the new revision. The fix remains
-unmerged while this check is pending. M2 bridge/bank work remains next after
-this M10 usability blocker.
+The original post-merge failure is retained above. This M10 usability blocker
+is resolved for the maintainer's tested WSL setup; M2 bridge/bank work resumes.

@@ -32,6 +32,7 @@ jobs:
           python3 tools/test-native-trace.py
           python3 tools/test-coverage-disposition.py
           python3 tools/test-terrain-regions.py
+          python3 tools/test-terrain-bridges.py
       # No ROM/decomp assets, GPU or headset fixtures are downloaded or uploaded.
       - name: Build the native batch tool
         run: bash tools/build.sh --batch-only --build-dir build-linux --jobs 2

@@ -1,5 +1,6 @@
 {
   "date": "2026-09-11",
+  "implementation_commit": "a88dce1834f6474ad48337df1c4cde4f7a6e8887",
   "scope": "Hidden SDL synthetic mouse faults; physical WSL pointer acceptance pending",
   "before": {
     "status": "FAIL",

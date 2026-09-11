@@ -80,7 +80,7 @@ support remains outside this change. Hosted source checks and native Linux
 batch/GUI builds pass on the merged implementation.
 M2 bridge terrain remains the next scenery task. [Evidence and limits](native-wsl.md).
 
-**M10 follow-up — WSL mouse movement:** the maintainer reported excessive turns
+**In review — [PR #24](https://github.com/ChronoHaxx/rubyvr-studio/pull/24), M10 WSL mouse movement:** the maintainer reported excessive turns
 with right mouse after PR #22. Bounded drag input and regression checks are
 prepared; [human functional checks](wsl-mouse-look.md) remain pending before
 merge. The earlier hidden-window acceptance did not exercise the physical
@@ -579,7 +579,7 @@ mandatory developer console. Camera changes remain independent of authored data.
   existing editor/connected/streaming checks. Hosted Linux source/build CI passes.
   Headless tests need no assets or display; GUI checks use local source data
   and WSLg. OpenXR runtime support remains outside this change. [Evidence](native-wsl.md).
-- [ ] **Pending review — RV-014 follow-up:** correct excessive WSL right-drag
+- [ ] **In review — [PR #24](https://github.com/ChronoHaxx/rubyvr-studio/pull/24), RV-014 follow-up:** correct excessive WSL right-drag
   movement and verify release, re-grab and focus recovery. Automated evidence
   and the required human check are [separate](wsl-mouse-look.md).
 - [x] Verify bounded editor caching behavior: part selection and lighting

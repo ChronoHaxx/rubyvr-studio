@@ -1,6 +1,6 @@
 # WSL right-mouse movement
 
-**RV-014 / M10 follow-up: automated checks pass; human check and merge pending.**
+**In review — [PR #24](https://github.com/ChronoHaxx/rubyvr-studio/pull/24), RV-014 / M10:** automated checks pass; human check and merge pending.
 After PR #22, moving the physical mouse with right button held caused excessive
 turning in WSL. Holding it still did not. The original hidden SDL checks skipped
 the real OS pointer grab, so they missed this difference.

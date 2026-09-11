@@ -1,6 +1,6 @@
 # Watch the acceptance check
 
-**Pending human check and merge — [WSL mouse repair](wsl-mouse-look.md).**
+**In review — [PR #24](https://github.com/ChronoHaxx/rubyvr-studio/pull/24), [WSL mouse repair](wsl-mouse-look.md). Human check and merge pending.**
 The old build is on the left and corrected drag input on the right. This is a
 12-second slideshow of actual SDL captures with synthetic inconsistent mouse
 deltas. All twelve new checks and the existing camera/connected/streaming checks

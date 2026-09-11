@@ -6,12 +6,18 @@ checks. The human contributor owns the PR and its claims.
 
 - Work on one bounded issue. Preserve unrelated changes and authored assets.
 - The maintainer prefers short visual acceptance evidence and delegates routine
-  desktop functional/visual review to the contributor or agent. Run the checks,
+  automated and desktop visual review to the contributor or agent. Run the checks,
   inspect the actual captures, and lead with a 10–30 second GIF/video, a concise
   verdict and remaining defects. Keep detailed logs behind a link. For backend
   work, show actual test/report results; do not imply unrelated footage proves
-  it. Do not assign the maintainer a manual test checklist as the default handoff
-  or infer human usability/headset acceptance from agent checks.
+  it. Every PR also needs a short, revision-specific human functional checklist:
+  exact launch/setup, numbered actions, expected results, and unchecked boxes.
+  Keep automated/agent results separate from human results. Do not tick the
+  human boxes or merge until the maintainer reports their hands-on result for
+  that revision. Record failures and retest relevant changed behavior after a
+  fix. For noninteractive changes, specify the small observable human check
+  instead of inventing a GUI journey. Never infer human or headset acceptance
+  from CI, an agent check, a GIF, or an earlier revision.
 - Keep the active roadmap milestone visible. When the user reports another
   defect or idea, name its existing milestone/work package and record it there.
   Continue the active milestone unless the report blocks it or the user

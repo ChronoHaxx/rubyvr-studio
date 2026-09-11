@@ -5,8 +5,9 @@ Runs the real rubyvr_studio --test-portability hook and independently checks
 what it claims: the ELF executable, the PASS/FAIL transcript, the persisted
 v7 document, the caller stderr log and the absence of leftover temporaries.
 
-This proves the native file/capture boundary only. It needs no display, source
-art, ROM or network and runs with DISPLAY removed from the environment.
+This proves the native file/capture boundary and mouse-input policy, not the
+OS pointer grab. It needs no display, source art, ROM or network and runs with
+DISPLAY removed from the environment.
 """
 import argparse
 import datetime
@@ -24,6 +25,16 @@ ROOT = Path(__file__).resolve().parents[1]
 # Check names the native fixture must report as PASS. The unwritable-directory
 # case is environment-dependent (root), so it is asserted separately.
 REQUIRED = [
+    'WSL defaults to drag look',
+    'native desktops retain relative look',
+    'explicit mouse backend overrides work',
+    'inactive mouse movement cannot rotate the camera',
+    'drag look ignores oversized remote relative values',
+    'stationary cursor ignores repeated remote deltas',
+    'capture reset discards the old cursor anchor',
+    'regrabbing uses the new cursor position',
+    'relative mode retains native raw deltas',
+    'relative mode has no rotation without motion',
     'v5 save/readback round trip',
     'v6 save/readback round trip',
     'v7 save/readback round trip',

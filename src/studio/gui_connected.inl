@@ -86,6 +86,8 @@ void connected_inspector(App& a) {
     ImGui::Text("%zu triangles",s.vertices/3);
     ImGui::Text("Mesh + art: %.1f MiB",double(s.gpu_bytes)/1048576);
     ImGui::TextWrapped("Hold right mouse in the view: WASD moves; Q/E down/up; Shift faster. Release to stop.");
+    if(!a.fly_relative_preferred)
+        ImGui::TextWrapped("Drag to look. Near a window edge, release and hold right mouse again.");
     if(ImGui::Button("Fit whole area",ImVec2(-1,26)))focus_connected(a);
     if(ImGui::Button("Return to editing",ImVec2(-1,26)))leave_connected(a);
     if(!a.exploring)return;

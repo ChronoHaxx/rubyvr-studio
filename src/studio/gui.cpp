@@ -54,6 +54,7 @@
 #include "decomp_source.h"
 #include "pattern_io.h"
 #include "platform_io.h"
+#include "mouse_look.h"
 #include "png_write.h"
 #include "snapshot_build.h"
 #include "room2d.h"
@@ -470,6 +471,8 @@ struct App {
     size_t stream_updates=0,stream_loaded=0,stream_unloaded=0,stream_reused=0,stream_errors=0,stream_pending_frames=0;
     double stream_build_ms=0,stream_main_ms=0;
     bool fly_mode=false, fly_looking=false;
+    bool fly_relative_preferred=true, fly_native_relative=false;
+    studio::MouseLookInput fly_mouse;
     float fly_speed=6.f; // map cells / second, Shift multiplies by four
     bool   debug = false;          // false textured, true classification colours
 
@@ -949,7 +952,9 @@ vr::overrides::Part* selected_part(App& a) {
 void stop_fly_look(App& a) {
     if(!a.fly_looking) return;
     a.fly_looking=false;
-    SDL_SetRelativeMouseMode(SDL_FALSE);
+    if(a.fly_native_relative) SDL_SetRelativeMouseMode(SDL_FALSE);
+    a.fly_native_relative=false;
+    a.fly_mouse.reset();
     SDL_CaptureMouse(SDL_FALSE);
 }
 
@@ -4410,6 +4415,14 @@ int main(int argc, char** argv) {
         std::fprintf(stderr, "[gui] SDL video init failed: %s\n", SDL_GetError());
         return 1;
     }
+    bool wsl=false;
+#ifdef __linux__
+    wsl=SDL_getenv("WSL_DISTRO_NAME")!=nullptr;
+#endif
+    app.fly_relative_preferred=studio::prefer_relative_mouse(wsl,SDL_getenv("RUBYVR_MOUSE_LOOK"));
+    app.fly_mouse.relative=app.fly_relative_preferred;
+    std::fprintf(stderr,"[gui] video=%s mouse_look=%s%s\n",SDL_GetCurrentVideoDriver(),
+        app.fly_relative_preferred?"relative":"drag",wsl?" (WSL)":"");
     SDL_GL_ResetAttributes();
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
@@ -4539,11 +4552,27 @@ int main(int argc, char** argv) {
 
         SDL_Event e;
         float look_dx=0,look_dy=0,wheel_steps=0;
-        bool focus_lost=false;
+        bool focus_lost=false,look_released=false;
+        int input_w=0,input_h=0;SDL_GetWindowSize(win,&input_w,&input_h);
         while (SDL_PollEvent(&e)) {
             ImGui_ImplSDL2_ProcessEvent(&e);
-            if(e.type==SDL_MOUSEMOTION && e.motion.windowID==SDL_GetWindowID(win) && app.fly_looking) {
-                look_dx+=float(e.motion.xrel);look_dy+=float(e.motion.yrel);
+            if(e.type==SDL_MOUSEMOTION && e.motion.windowID==SDL_GetWindowID(win)) {
+                if(app.fly_looking && !app.fly_mouse.relative &&
+                   (e.motion.x<0 || e.motion.y<0 || e.motion.x>=input_w || e.motion.y>=input_h)) {
+                    stop_fly_look(app);look_released=true;look_dx=look_dy=0;
+                } else {
+                    const auto delta=app.fly_mouse.motion(e.motion.x,e.motion.y,e.motion.xrel,e.motion.yrel,app.fly_looking);
+                    look_dx+=delta.x;look_dy+=delta.y;
+                }
+            }
+            if((e.type==SDL_MOUSEBUTTONDOWN || e.type==SDL_MOUSEBUTTONUP) &&
+               e.button.windowID==SDL_GetWindowID(win) && e.button.button==SDL_BUTTON_RIGHT) {
+                app.fly_mouse.position(e.button.x,e.button.y);
+                // Consume release immediately, including motion in the same poll.
+                // ImGui's frame queue may expose the button-up one frame later.
+                if(e.type==SDL_MOUSEBUTTONUP && app.fly_looking) {
+                    stop_fly_look(app);look_released=true;look_dx=look_dy=0;
+                }
             }
             if(e.type==SDL_MOUSEWHEEL && e.wheel.windowID==SDL_GetWindowID(win)) {
 #if SDL_VERSION_ATLEAST(2,0,18)
@@ -4589,17 +4618,24 @@ int main(int argc, char** argv) {
         // legitimate UI input; WantCaptureMouse does not mean "ignore it".
         const bool camera_allowed=!focus_lost && camera_input_allowed(app,io.WantTextInput);
         const bool escape=ImGui::IsKeyPressed(ImGuiKey_Escape) && !io.WantTextInput;
-        const bool stopped_flying=app.fly_looking && (escape || !camera_allowed || !ImGui::IsMouseDown(ImGuiMouseButton_Right));
+        const bool stopped_flying=look_released || (app.fly_looking && (escape || !camera_allowed || !ImGui::IsMouseDown(ImGuiMouseButton_Right)));
         if(stopped_flying) stop_fly_look(app);
         if(app.fly_mode && camera_allowed && surface==2 && !ImGui::IsMouseDown(ImGuiMouseButton_Left) &&
            ImGui::IsMouseClicked(ImGuiMouseButton_Right) && !stopped_flying) {
             app.camera.orthographic=false;
             app.fly_looking=true;
-            // Hidden SDL probes consume the same xrel/yrel events without
-            // capturing the user's cursor. Only a focused visible editor may
-            // request native relative mode, so look has no desktop-edge limit.
-            if(SDL_GetKeyboardFocus()==win && (SDL_GetWindowFlags(win)&SDL_WINDOW_SHOWN)) {
-                SDL_SetRelativeMouseMode(SDL_TRUE);SDL_CaptureMouse(SDL_TRUE);
+            app.fly_mouse.relative=app.fly_relative_preferred;
+            // Probes use the selected production input path without grabbing
+            // the desktop. WSL defaults to a bounded drag; only a focused,
+            // visible editor using relative input may request pointer locking.
+            if(app.fly_relative_preferred && SDL_GetKeyboardFocus()==win && (SDL_GetWindowFlags(win)&SDL_WINDOW_SHOWN)) {
+                if(SDL_SetRelativeMouseMode(SDL_TRUE)==0) {
+                    app.fly_native_relative=true;
+                } else {
+                    app.fly_mouse.relative=false;app.fly_relative_preferred=false;
+                    std::fprintf(stderr,"[gui] relative mouse unavailable; using drag look: %s\n",SDL_GetError());
+                    app.status="Drag to look. Release and hold right mouse again near a window edge.";
+                }
             }
             look_dx=look_dy=0;
         }

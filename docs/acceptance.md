@@ -1,5 +1,16 @@
 # Watch the acceptance check
 
+**Pending human check and merge — [WSL mouse repair](wsl-mouse-look.md).**
+The old build is on the left and corrected drag input on the right. This is a
+12-second slideshow of actual SDL captures with synthetic inconsistent mouse
+deltas. All twelve new checks and the existing camera/connected/streaming checks
+pass. The physical-pointer [human checklist](wsl-mouse-look.md#human-functional-check--required-before-merge)
+remains unchecked; CI and these captures cannot establish that result.
+
+![Old and corrected WSL mouse input in the actual editor](media/wsl-mouse-look.gif)
+
+## Merged native Linux and WSL editor — PR #22
+
 **Merged — [PR #22](https://github.com/ChronoHaxx/rubyvr-studio/pull/22): [native Linux/WSL editor](native-wsl.md).**
 The 12-second slideshow shows actual native Linux captures: the six-map
 explorer, roof-part selection and a saved editing session. Bash launch/save/

@@ -15,6 +15,7 @@ bash tools/build.sh --jobs 4
 python3 tools/prepare-assets.py
 python3 tools/check-repo.py
 python3 tools/test-native-portability.py
+python3 tools/test-studio-mouse-look.py
 python3 tools/test-bash-launcher.py
 python3 tools/test-editor.py
 python3 tools/test-connected-studio.py
@@ -54,7 +55,8 @@ Do not substitute old captures or change frozen hashes.
 | `--test-terrain` | 197 original synthetic checks of surfaces/layers, guards, native UV bands, corner grades, neighbour projection, shared model height, persistence and memory bounds | No source art or GL; included in CI |
 | `--test-foundation` | 23 original synthetic checks: actual base bounds exclude roof overhang, highest-corner pad, rigid movement/contact, native art, source/outside-terrain preservation, atomic refusal and exact v7 persistence | No source art or GL; included in CI; rectangular ground pads only |
 | `--test-connected` | 69 synthetic checks of ownership, overhangs, seams, source indices, atomic refusal, rigid reuse, ordered equivalence, camera seam hysteresis, fixed/revisited origins, cancellation and closed ground bases including undefined padding and snapshot boundaries | No source art or GL; included in CI |
-| `test-native-portability.py` | 29 native checks against the real writer/loader/capture: v5/v6/v7 save and read-back, replace, rejected and failed writes with the previous destination bytes intact, temporary cleanup, caller-stderr restoration and Linux path aliases | Native file/capture boundary only; no GUI journey, rendering or OpenXR runtime |
+| `test-native-portability.py` | 39 native checks: 29 original writer/loader/capture cases plus ten mouse-input policy cases | Headless file/capture and input policy; no OS pointer grab, GUI journey, rendering or OpenXR runtime |
+| `test-studio-mouse-look.py` | Twelve checks through the actual SDL event loop: inconsistent raw deltas, stationary coordinates, release/re-grab, focus/Escape, window bounds and unchanged documents/geometry | Synthetic input in a hidden window; [physical WSL mouse check](wsl-mouse-look.md) remains separate |
 | `test-bash-launcher.py` | 22 native Bash cases: exact arguments, build location, fresh/resume, presets, cleanup, capture options and failure propagation | Original fixtures; real GUI launch/save/resume verified separately |
 | `--test-connected-source` | Four- and six-map authored fixtures plus a three-map/two-atlas source-floor fixture: offsets, expanded/stored counts and geometry hashes | Requires pinned local source and generated regional pack; third fixture deliberately has no scenery patterns |
 | `test-connected-studio.py` | 20 SDL checkpoints at two sizes: enter, fly across a boundary, stop, blocked edits, return, repeat, save and unchanged source; 32,000 rendered pixels match a neighbour's own source-floor view | Cached uploads and whole-map culling checked; timings cover synchronized single-eye GL draw only, not whole-app or headset frame time |

@@ -181,6 +181,60 @@ Height Resolved::query(int x,int y,int layer,float u,float v) const {
     if(c->surfaces.size()==1) return {Status::Authored,surface_height(c->surfaces.front(),u,v),&c->surfaces.front()};
     return {Status::Unresolved};
 }
+RegionHeight query_region(const std::vector<RegionMapView>& maps,
+                          double world_x, double world_z, int gameplay_layer) {
+    if(!std::isfinite(world_x) || !std::isfinite(world_z) ||
+       gameplay_layer < -1 || gameplay_layer > 15 || maps.empty() || maps.size()>9)
+        return {};
+
+    // Validate the entire region before selecting an owner or indexing storage.
+    // Dimension bounds precede valid_connections(), which subtracts slice sizes.
+    for(const auto& m:maps) {
+        if(!m.source || !m.resolved || m.x < -8192 || m.x > 8192 ||
+           m.z < -8192 || m.z > 8192) return {};
+        const auto& s=*m.source;
+        const auto& r=*m.resolved;
+        if(!s.valid || s.width<16 || s.width>1024 || s.height<15 || s.height>1024 ||
+           int64_t(s.width)*s.height>10240 || !s.has_map_identity()) return {};
+        using Identity = world::Snapshot::IdentitySource;
+        if((s.identity_source!=Identity::SourceTable && s.identity_source!=Identity::LiveCapture) ||
+           !s.valid_connections()) return {};
+        const size_t count=size_t(s.width)*size_t(s.height);
+        if(s.grid.size()!=count || r.width!=s.width || r.height!=s.height ||
+           r.cells.size()!=count || r.mismatched.size()!=count) return {};
+    }
+    // All dimensions/offsets are now bounded: these integer endpoints cannot
+    // overflow. Strict inequalities permit shared edges/corners and padding.
+    for(size_t i=0;i<maps.size();++i) for(size_t j=0;j<i;++j) {
+        const auto& a=maps[i];const auto& b=maps[j];
+        const auto& s=*a.source;const auto& t=*b.source;
+        if(s.map_group==t.map_group && s.map_number==t.map_number) return {};
+        if(std::max(a.x+7,b.x+7)<std::min(a.x+s.width-8,b.x+t.width-8) &&
+           std::max(a.z+7,b.z+7)<std::min(a.z+s.height-7,b.z+t.height-7)) return {};
+    }
+    for(const auto& m:maps) {
+        const auto& s=*m.source;
+        if(world_x<m.x+7 || world_x>=m.x+s.width-8 ||
+           world_z<m.z+7 || world_z>=m.z+s.height-7) continue;
+
+        // Containment proves that floor/casts are bounded. Floor in world space
+        // first: subtracting an offset from a fractional double near an edge
+        // could round it into the next cell. Integer translation is exact.
+        const double x=std::floor(world_x),z=std::floor(world_z);
+        RegionHeight result;
+        result.map_group=s.map_group;result.map_number=s.map_number;
+        result.cell_x=int(x)-m.x;result.cell_y=int(z)-m.z;
+        result.u=float(world_x-x);result.v=float(world_z-z);
+        // Ownership is rectangular, even for undefined cells. primary_cell()
+        // excludes undefined cells and would lose this diagnostic ownership.
+        if(s.cell(result.cell_x,result.cell_y)==world::kGridUndefined) return result;
+        result.height=m.resolved->query(result.cell_x,result.cell_y,gameplay_layer,
+                                        result.u,result.v);
+        return result;
+    }
+    return {};
+}
+
 Resolved resolve(const world::Snapshot& s,const std::vector<TerrainMap>& maps) {
     Resolved r;r.width=s.width;r.height=s.height;
     if(s.width<=0 || s.height<=0 || int64_t(s.width)*s.height>10240) {r.width=r.height=0;return r;}

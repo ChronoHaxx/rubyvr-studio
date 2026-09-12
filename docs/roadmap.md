@@ -15,10 +15,12 @@ The first original actor/terrain-follow slice merged in PR #28 (`0ea20c0`).
 The PR records five checked human steps for implementation `ae4a3ef`; exact
 check completion time was not recorded. The subsequent camera/control and
 missing-border report remains open; that merge does not accept full live-view fidelity.
-The [north-up/camera-relative input repair](live-camera.md) is **in review** on
-top of developer-tools PR #29, with automated native evidence; physical input
-and both merges remain pending. The normal-player facing repair is also in review;
-NPC/special-pose facing and missing border scenery remain open.
+PR #30's [camera/input](live-camera.md) and [normal-player facing](live-facing.md)
+fixes merged on 2026-09-12 into the developer-tools branch, at `0fc67e2`.
+**Parent PR #29 remains open against main**; this is not yet a main-branch merge.
+The maintainer then reported a ledge geometry/collision mismatch. Detailed new
+physical-input checklist results were not supplied. NPC/special-pose facing
+remains open. [Live border scenery](live-borders.md) is now in review in PR #29.
 Experimental foliage art remains unapproved.
 
 **Prefer the short version? [Watch the acceptance GIF and verdict](acceptance.md).**
@@ -53,18 +55,19 @@ is **merged in PR #28**: real Route 101 walking/turning and five field actors,
 with component, GL and native evidence and five checked human steps. Complete
 connected gameplay and intentional UI routing remain open.
 
-**In review: [camera-relative walking and north-up reset](live-camera.md).**
-The prepared follow-up includes the unmerged developer tools, adds four compass
-presets and maps focused 3D input into Ruby's original four grid directions.
-Ten native scripted checks and a 16-second recording pass; physical-input
-checks remain pending. The older PR #29 test build is preserved independently.
+**In review in the combined PR #29: [live border scenery](live-borders.md).**
+The existing camera-session launcher now includes the developer tools, merged
+PR #30 camera/facing fixes and source-pattern border forest. It preserves that
+session's checkpoints. One launch workflow is documented across the PR and guides.
+The 12-second border comparison, 75 component checks and ten native scripted
+checks pass; current human acceptance and the parent merge remain pending.
 
 **PR #30 report, 2026-09-12 (`6911329`), not accepted:** animation/facing defects,
 distant sprite pop-in and awkward free yaw with grid movement. The
 [Emerald implementation audit](emerald-camera-actor-audit.md) traces their actual
-movement/actor paths and our culling gap. **M9 correction in review:** J/L now
+movement/actor paths and our culling gap. **M9 correction merged into parent PR #29:** J/L now
 request 90-degree turns, deferred until held arrows release. Arbitrary yaw must
-ship with a verified continuous-movement mode. **M6 player follow-up in review:**
+ship with a verified continuous-movement mode. **M6 player follow-up merged into parent PR #29:**
 [normal-player apparent facing and displayed-phase matching](live-facing.md),
 following the maintainer's further report after the `6133cb7` handoff (their exact
 running build was not supplied). Native/GL checks pass; human retest is pending.
@@ -79,17 +82,23 @@ M5 playable proof, not deferred art polish or a new engine migration.
   wrong. Provide a north-up tilted gameplay preset and explicit camera-relative
   directional input for rotatable play, preserving original menu navigation and
   the guest's grid/collision rules. Full continuous free walking is later work.
-  The bounded [camera-input repair](live-camera.md) is now **in review**;
-  quarter-turn movement/menu checks pass, with human focus/keyboard checks pending.
+  The bounded [camera-input repair](live-camera.md) merged into parent PR #29;
+  quarter-turn movement/menu checks pass. Main integration remains pending.
 - **M6/RV-010 facing:** the card turns towards the camera but keeps the original
   2D view's selected sprite frame. Side/back views and steep top-down readability
   need mode-aware frame selection and foot-pivot/card orientation.
-  The [normal-player directional-art repair](live-facing.md) is now in review;
+  The [normal-player directional-art repair](live-facing.md) merged into parent PR #29;
   NPC/special-player profiles and steep-view readability remain open.
 - **M2/M5 border scenery:** the repeated forest outside the map body is missing.
   Capture/present Ruby's real border pattern where the backup grid is undefined;
   preserve real neighbour copies and blocked/non-playable ownership. This is
   missing world data/presentation, distinct from M4's unfinished tree artwork.
+  **Border restoration is in review in PR #29:** [source lookup and native evidence](live-borders.md).
+- **M2/M5 ledge report, 2026-09-12 after PR #30 merge:** apparently walkable
+  space is blocked and the ledge active area feels too deep. Exact map/build was
+  not supplied. Audit rendered edge placement against Ruby's destination-tile
+  jump query, takeoff/landing, reverse approach and walk-around paths. Do not
+  loosen guest collision to hide visual errors. This border change does not fix it.
 
 These symptoms were covered only broadly before; the [source audit](references.md#camera-facing-and-border-follow-up-2026-09-12)
 now records their specific causes and reference behavior. Keep them beside the
@@ -462,10 +471,11 @@ automated/visual/live/headset results, evidence and unresolved defects separatel
   so orbit/first-person views do not expose unintended voids or hide the player.
   **Reported after PR #28, 2026-09-12:** capture and render the repeating 2x2
   border-metatile pattern used by `MapGridGetMetatileIdAt` for undefined backup
-  cells. Both the source adapter and live capture currently leave these cells
-  undefined, and the mesher skips them. Preserve raw grid/connection provenance
-  and blocked ownership; verify all four quarters, corners, neighbour precedence
-  and an actual Littleroot forest comparison. Do not hide this gap with fog or
+  cells. **In review in PR #29 — [native border restoration](live-borders.md):**
+  all four quarters, corners and neighbour precedence pass; a native Route 101
+  comparison is inspected. The editor source adapter remains unchanged and a
+  specific Littleroot human check remains open. Preserve connection provenance
+  and blocked ownership. Do not hide broader border/void gaps with fog or
   invent a forest biome. Full neighbouring-map streaming is a separate remaining
   M2/M5 consumer.
   Maintainer feedback (2026-09-10): the visible outer cutoff/void needs a deliberate
@@ -638,7 +648,7 @@ guest-memory reads from the VR thread.
   GL checks pass; the PR records five checked human steps. The sequence covers five active
   events and shallow authored terrain, not complete gameplay/actor coverage.
 - [ ] Render player/NPC idle, walk, run and turn animation with correct pivots/facing.
-  **In review — PR #30:** normal Brendan/May directional art at the captured
+  **Merged into parent PR #29 via PR #30:** normal Brendan/May directional art at the captured
   displayed phase; synthetic/GL checks and a native Brendan sequence pass.
   Human visual retest, native May and broader actor/profile coverage remain open.
 - [ ] Cover bikes, surf/dive, jumps/ledges, scripted movement and followers or
@@ -731,14 +741,14 @@ indoors or broken environment transitions.
 
 - [x] Provide tested editor orbit/fly/orthographic/focus controls, independent
   of saved authoring data ([camera verification](verification.md)).
-- [ ] **In review — [native north-up and camera-relative grid walking](live-camera.md):**
+- [ ] **Merged into parent PR #29; main pending — [native north-up and camera-relative grid walking](live-camera.md):**
   north-up default/reset, four compass presets, focused 3D mapping, held-direction
   latching, focus/menu neutral transitions and unchanged stock menu directions.
   After the `6911329` report, J/L use 90-degree steps and defer turns until held
   arrows release; continuous yaw is reserved for a continuous-movement mode.
-  Component/sanitizer/GL and nine native scripted checks pass. Physical keyboard,
+  Component/sanitizer/GL and ten native scripted checks pass. Physical keyboard,
   focus, collision and checkpoint checks remain pending. This bounded input repair
-  does not complete actor-facing selection or the view modes below.
+  includes normal-player facing; broader actor profiles and the view modes below remain open.
 - [ ] Add monitor view modes: original 2D, fixed tilt presets (reference labels
   15/35/50/75), player-follow orbit/third-person and first-person. Start with a
   fixed north-up tilted follow view for the desktop proof. **Post-PR #28 input

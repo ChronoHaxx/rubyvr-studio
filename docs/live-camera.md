@@ -1,9 +1,10 @@
 # Camera-relative native gameplay
 
-**M5 desktop proof / bounded M9 controls — implementation in review.** This
-follow-up starts the live voxel viewer north-up and lets the player walk using
-its camera direction. It builds on the developer-tools PR #29; that PR's frozen
-build and checkpoint directory are preserved separately.
+**M5 desktop proof / bounded M9 controls — PR #30 merged into parent PR #29
+on 2026-09-12; main integration remains pending.** The viewer starts north-up
+and lets the player walk using its camera direction. The command below now
+opens the combined developer/camera build with [border restoration](live-borders.md).
+Existing camera-session checkpoints are preserved.
 
 ![Actual native walking from four camera directions](media/live-camera.gif)
 
@@ -16,7 +17,7 @@ acceptance. [Player-facing repair, source and evidence](live-facing.md).
 ## Try this camera build
 
 For the maintainer's prepared Windows workspace, this single command launches
-and reopens the camera follow-up:
+and reopens the current combined PR #29 build:
 
 ```powershell
 & E:\Coding\vr-modding-research\_worktrees\live-camera\tools\run-dev-game.ps1
@@ -59,7 +60,9 @@ or when the host settings menu owns input.
   special profiles, steep-view readability and broader animation defects remain
   open. Distant pop-in reported on `6911329` is not fixed. See the
   [player-facing scope](live-facing.md) and [Emerald implementation audit](emerald-camera-actor-audit.md).
-- **M2/M5:** the repeated decorative forest outside the map body is still absent.
+- **M2/M5:** source border forest is restored in the combined build. The new
+  post-merge ledge depth/collision report remains open; see [border scope](live-borders.md).
+- **M4/M10:** tree/grass art and the additional border geometry cost need further work.
 - **M5/M7:** Bag still clears the 3D view. Navigate it in the original window;
   preserving scenery behind menus remains open.
 - **M10:** speed targets remain hardware/rendering limited. This is not a
@@ -67,7 +70,7 @@ or when the host settings menu owns input.
 
 ## Human functional check — pending
 
-Use the source revision/executable hash in the PR. No earlier revision's checked
+Use the source revision in the PR and printed by the launcher. No earlier revision's checked
 boxes count as acceptance of this input change.
 
 1. [ ] Launch with the one command above. Expect the original game, a north-up

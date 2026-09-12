@@ -1,5 +1,10 @@
 # References, inspiration and tools evaluated
 
+The [live border audit](live-borders.md#source-first-implementation) traces
+Ruby's border lookup, the cached Emerald `Gen3.lua` pattern/blocked-cell split,
+and APK 2.4.2's seam-height warning. It underpins the bounded border restoration
+in parent PR #29; no external Lua was copied.
+
 Initial tool/workflow review: 2026-09-08. Native-engine comparison and camera/
 editor/debug source audit refreshed 2026-09-12. This record separates
 dependencies, adapted techniques, observed workflows and untested candidates.

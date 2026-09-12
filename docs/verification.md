@@ -1,6 +1,18 @@
 # Verification and its limits
 
-## Normal-player apparent facing — in review, 2026-09-12
+## Live border restoration — in review in PR #29, 2026-09-12
+
+[Evidence, sources and limits](live-borders.md): 75 component checks pass on
+Windows/MinGW and WSL/GCC, including WSL ASan/UBSan. A disabled-substitution
+negative control fails the phase assertion. A local 394-map simulated-grid
+audit preserves body/copied data and guest RAM while resolving 281,939 border
+cells. Ten actual native camera/menu/checkpoint/idle-turn checks pass; four
+native before/after views were inspected. This adds substantial tree geometry;
+it is not a performance or human-acceptance result. Earlier camera/facing
+verification below remains historical evidence for PR #30, now merged into
+the open parent PR #29.
+
+## Normal-player apparent facing — PR #30 evidence, 2026-09-12
 
 [The player-facing follow-up](live-facing.md) passes 2590 actor checks on Windows
 and WSL, including WSL ASan/UBSan. It covers both known player profiles, every
@@ -20,7 +32,7 @@ Native May, NPC/special profiles, broad animation/pop-in and physical user
 acceptance remain open. Codex performed this repair's review; the earlier Claude
 allowance failure below is retained, not a claimed review of this revision.
 
-## Native camera controls — in review, 2026-09-12
+## Native camera controls — PR #30 evidence, 2026-09-12
 
 `python tools/test-camera-input.py` passes 1079 assertions on Windows;
 WSL `python3 tools/test-camera-input.py --sanitize` passes all 1079 under ASan/UBSan. These

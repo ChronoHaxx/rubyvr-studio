@@ -2,6 +2,7 @@
 #pragma once
 
 #include "ruby_world.h"
+#include <array>
 #include <span>
 
 namespace vr::world::live {
@@ -32,6 +33,7 @@ struct Scene {
     int group = -1, number = -1;
     uint32_t layout = 0, grid = 0, primary_tileset = 0, secondary_tileset = 0;
     int width = 0, height = 0;
+    std::array<uint16_t, 4> border{}; // ROM's repeating 2x2 metatile pattern.
     std::vector<ConnectionSlice> connections;
 };
 
@@ -39,6 +41,12 @@ struct Scene {
 // On refusal no map identity or connection provenance is returned. Callback
 // values remain available for diagnostics. No game data is written or scanned.
 Scene inspect(const Memory& memory);
+// Copy the quiescent grid for presentation. Only undefined padding gets the
+// source border artwork; body cells and real neighbour copies stay byte-exact.
+// Border cells remain blocked with elevation 0, as Ruby's grid accessors report
+// for an undefined backup cell. Never writes guest memory or expands the grid.
+bool copy_presentation_grid(const Memory& memory, const Scene& scene,
+                            std::vector<uint16_t>& out);
 // Normal on-foot field control only. Start menu/dialogue locks, other callbacks,
 // bikes/surf and unknown ROMs keep their original directional input.
 bool field_controls_available(const Memory& memory);

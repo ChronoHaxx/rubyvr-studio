@@ -1,5 +1,11 @@
 # Native game integration: prototype source
 
+**Current M5 handoff:** PR #30 camera/facing merged into the open parent PR #29.
+The combined prepared build also includes [source border restoration](../docs/live-borders.md).
+Use that guide's single camera-session launcher; the old main-checkout prepared
+developer executable is historical. Ledge collision/depth, Bag retention and
+broader actor/terrain coverage remain open.
+
 The default standalone CMake targets do **not** build the game adapter. The
 optional local GL test builds the desktop viewer with synthetic data. These files preserve our
 existing capture, renderer, viewer and OpenXR work so contributors can understand

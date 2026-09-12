@@ -1,11 +1,26 @@
 # Watch the acceptance check
 
-**In review — [north-up and camera-relative walking](live-camera.md), bounded M9
+**Current combined PR #29 — [live border forest](live-borders.md), M2/M5.**
+The missing source border now appears in the real game view. A 394-map source
+audit, 75 component checks and ten native checks pass. Human border acceptance
+remains pending. PR #30 merged into this parent branch; PR #29 is still open
+against main. [One current launcher and visible limitations](live-borders.md).
+
+![Four native views before and after restoring the border](media/live-border.gif)
+
+Twelve seconds of stationary before/after captures, held three seconds per view.
+Ledge collision/depth (M2/M5), foliage polish (M4), other actor defects (M6), Bag
+world retention (M5/M7) and the additional geometry cost (M10) remain open.
+
+The camera and developer recordings below are historical evidence for the
+included changes. Current testing uses the combined launcher above.
+
+**PR #30, merged into parent PR #29 — [north-up and camera-relative walking](live-camera.md), bounded M9
 support for the M5 desktop proof.** Four compass presets, camera-relative grid
 movement in the focused 3D window, J/L quarter-turns, and a north-up reset. Windows/WSL component,
 sanitizer, shared GL and ten native scripted checks pass. The follow-up repairs
 [normal player camera-facing art and displayed animation phase](live-facing.md).
-Physical input is pending; NPC/special-pose facing (M6), border forest (M2/M5), and Bag world retention (M5/M7)
+That recording does not establish physical input; NPC/special-pose facing (M6) and Bag world retention (M5/M7)
 remain open beside the [single launch command and human checks](live-camera.md#try-this-camera-build).
 The maintainer reported animation and distant sprite pop-in on `6911329`;
 the normal-player facing/phase subset is now repaired in review. Pop-in and other

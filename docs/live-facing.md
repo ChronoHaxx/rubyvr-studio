@@ -1,6 +1,6 @@
 # Camera-facing player art
 
-**M6 / RV-010 supporting the active M5 desktop proof — in review in PR #30.**
+**M6 / RV-010 supporting M5 — PR #30 merged into parent PR #29 on 2026-09-12; main integration remains pending.**
 The maintainer reported that the character appeared to walk sideways or backwards
 after turning the camera, including after the 90-degree camera correction.
 The controls rotated correctly, but the billboard kept Ruby's original 2D frame.

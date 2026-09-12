@@ -34,6 +34,7 @@ const uint8_t* header(const Memory& m, int group, int number) {
 struct Layout {
     int width = 0, height = 0;
     uint32_t primary = 0, secondary = 0;
+    std::array<uint16_t, 4> border{};
 };
 bool layout(const Memory& m, uint32_t address, Layout& out) {
     const auto* p = m.read_rom(address, 24);
@@ -42,9 +43,13 @@ bool layout(const Memory& m, uint32_t address, Layout& out) {
     if (w < 1 || h < 1 || w > 1009 || h > 1010 || (w+15)*(h+14) > kMaxMapDataSize)
         return false;
     if (!m.read_rom(u32(p+12), size_t(w*h)*2, 2)) return false;
+    const auto* border = m.read_rom(u32(p+8), 8, 2);
+    if (!border) return false;
     const uint32_t primary = u32(p+16), secondary = u32(p+20);
     if (!m.read_rom(primary, 24) || (secondary && !m.read_rom(secondary, 24))) return false;
     out = {int(w), int(h), primary, secondary};
+    for (int i=0; i<4; ++i)
+        out.border[i] = uint16_t(border[2*i] | uint16_t(border[2*i+1])<<8);
     return true;
 }
 
@@ -157,9 +162,35 @@ Scene inspect(const Memory& m) {
     out.group=group; out.number=number; out.layout=u32(current); out.grid=grid;
     out.width=int(w); out.height=int(h);
     out.primary_tileset=own.primary; out.secondary_tileset=own.secondary;
+    out.border=own.border;
     if (!connections(m,source,own,out)) return refuse(Status::InvalidConnections);
     out.status=Status::Field;
     return out;
+}
+
+bool copy_presentation_grid(const Memory& m, const Scene& scene,
+                            std::vector<uint16_t>& out) {
+    out.clear();
+    if (!m.verified_ruby_rev1 || scene.status!=Status::Field ||
+        scene.width<16 || scene.height<15 ||
+        int64_t(scene.width)*scene.height>kMaxMapDataSize) return false;
+    const size_t cells=size_t(scene.width)*scene.height;
+    const auto* raw=m.read(scene.grid,cells*2);
+    if (!raw || (scene.grid>>24!=2 && scene.grid>>24!=3)) return false;
+    out.resize(cells);
+    for (int y=0; y<scene.height; ++y) for (int x=0; x<scene.width; ++x) {
+        const size_t i=size_t(y)*scene.width+x;
+        uint16_t cell=uint16_t(raw[2*i] | uint16_t(raw[2*i+1])<<8);
+        const bool padding=x<7 || y<7 || x>=scene.width-8 || y>=scene.height-7;
+        if (padding && cell==kGridUndefined) {
+            // GetBorderBlockAt uses backup coordinates, not distance from the
+            // nearest edge. Its odd phase keeps all four tree quarters aligned.
+            const auto id=scene.border[((y+1)&1)*2+((x+1)&1)] & kMetatileIdMask;
+            if (id!=kGridUndefined) cell=uint16_t(id | (1u<<kCollisionShift));
+        }
+        out[i]=cell;
+    }
+    return true;
 }
 
 const char* status_name(Status status) {

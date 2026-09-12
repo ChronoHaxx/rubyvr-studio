@@ -32,11 +32,18 @@ camera rotates and missing border forest. These remain M9/M6 and M2/M5 work
 inside this playable proof; see the [specific causes and follow-ups](../roadmap.md#current-focus).
 They must appear beside the next PR's human test instructions, not only here.
 
-**Camera-input follow-up in review:** [north-up and camera-relative walking](../live-camera.md)
-builds on the unmerged developer-tools PR #29. It adds four compass presets,
-held-direction handling and stock menu gates. Component, GL and nine native
-scripted checks pass; physical input and the complete sequence below remain
-pending. It does not repair actor facing or missing border scenery.
+**Camera/facing PR #30 merged into parent developer-tools PR #29:**
+[north-up and camera-relative walking](../live-camera.md), quarter-turn controls,
+stock menu gates and normal-player directional art are included. The parent
+remains open against main. [Source border restoration](../live-borders.md) is
+now in review there, using the same camera-session launcher. Ten native scripted
+checks pass; current human checks and the complete sequence below remain pending.
+
+**New post-merge report, 2026-09-12 — M2/M5:** ledge geometry appears walkable
+where Ruby blocks movement, and the jump activation area feels too deep. Exact
+map/build was not supplied. Compare the visible edge with the original
+destination-tile jump query and takeoff/landing; preserve guest collision.
+Border restoration does not repair this mismatch.
 
 Build the proof in small steps:
 

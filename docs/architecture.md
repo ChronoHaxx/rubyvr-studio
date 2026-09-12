@@ -46,6 +46,12 @@ portability. Bash is the supported launcher workflow. Native editor, connected
 exploration and streaming checks pass on WSLg with local source data; Linux
 OpenXR runtime integration remains unsupported. See [native verification](native-wsl.md).
 
+The native adapter resolves undefined padding through Ruby's verified 2x2
+border pattern before meshing. Its host presentation grid retains blocked,
+zero-elevation semantics; body and copied-neighbour words stay byte-exact.
+This does not write the guest grid or change the editor adapter/disk format.
+See [live borders](live-borders.md).
+
 ## Data and rendering contracts
 
 - **Native scale:** one source pixel starts at 1/16 map cell. Depth and unseen

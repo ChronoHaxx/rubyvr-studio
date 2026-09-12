@@ -197,16 +197,13 @@ bool capture(Snapshot& out, uint32_t previous_layout_ptr) {
     if (scene.status!=live::Status::Field) return false;
     const auto layout_ptr=scene.layout;
     const auto w=scene.width, h=scene.height;
-    const size_t cells=size_t(w)*h;
-    const auto* grid=memory.read(scene.grid,cells*2);
+    if (!live::copy_presentation_grid(memory,scene,out.grid)) return false;
     out.map_group=scene.group; out.map_number=scene.number;
     out.identity_source=Snapshot::IdentitySource::LiveCapture;
     out.connections=scene.connections;
     out.layout_ptr = layout_ptr;
     out.width      = w;
     out.height     = h;
-    out.grid.resize(cells);
-    std::memcpy(out.grid.data(), grid, cells * sizeof(uint16_t));
 
     // ── Sub-tile camera ──────────────────────────────────────────────────────
     if (const uint8_t* p = host_ptr(bus, kGCameraPixelOffsetX, 4))

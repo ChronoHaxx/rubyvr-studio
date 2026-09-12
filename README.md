@@ -31,15 +31,19 @@ controls/facing and surrounding border scenery remain known gaps in the
 checkpoints, pause/frame step, game speed/MAX and an on-foot noclip toggle to
 the prepared native Windows game. Human input checks are pending.
 
-**Camera follow-up in review:** [North-up and camera-relative walking](docs/live-camera.md)
+**Camera follow-up merged into parent PR #29:** [North-up and camera-relative walking](docs/live-camera.md)
 adds four compass-view presets and a reset, while preserving original menu
-directions. J/L now turn in 90-degree steps to match grid movement. Its separate
-prepared build includes the developer tools above.
+directions. J/L now turn in 90-degree steps to match grid movement. The current
+combined build includes the developer tools above; parent PR #29 is still open.
 The follow-up now selects [camera-facing player art](docs/live-facing.md) while
 preserving the game's displayed animation phase. The 16-second native comparison
 and automated checks pass; physical input checks remain pending. NPC/special-pose
-facing, other actor defects, distant pop-in, border scenery and the cleared Bag
-view remain open; [Emerald implementation comparison](docs/emerald-camera-actor-audit.md).
+facing, other actor defects, distant pop-in and the cleared Bag view remain open; [Emerald implementation comparison](docs/emerald-camera-actor-audit.md).
+
+**Border restoration in review in PR #29:** the live viewer now repeats Ruby's
+original forest border outside the map body. [Watch the 12-second comparison and
+use the single current launcher](docs/live-borders.md). The reported ledge
+collision/depth mismatch, foliage polish and performance remain open.
 
 **Watch the result:** [Short acceptance GIF and verdict](docs/acceptance.md).
 For details, the [roadmap and checklist](docs/roadmap.md) tracks M0–M11 work,

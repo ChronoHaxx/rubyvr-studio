@@ -4,10 +4,10 @@
 test controls to the private Windows Ruby runner. It is not the Studio map editor
 or an installable public game/mod package.
 
-The [camera follow-up](live-camera.md) includes these tools plus compass presets,
-camera-relative walking and north-up reset in a separate prepared session.
-The command below continues to identify the preserved developer-tools PR #29
-build; use the camera guide's single command when testing that follow-up.
+The current combined PR #29 build includes these tools, PR #30's merged
+[camera/facing fixes](live-camera.md), and [border forest restoration](live-borders.md).
+Use the single camera-session launcher below. Its checkpoints are preserved;
+the older developer build in the main checkout is historical.
 
 ![Developer menu and tree collision check in the native game](media/native-developer.gif)
 
@@ -18,10 +18,10 @@ physical mouse/keyboard acceptance. Windows Computer Use capture failed with
 
 ## Try the prepared build
 
-From the existing `E:\Coding\vr-modding-research\rubyvr-studio` checkout:
+For the maintainer's prepared Windows workspace:
 
 ```powershell
-.\tools\run-dev-game.ps1
+& E:\Coding\vr-modding-research\_worktrees\live-camera\tools\run-dev-game.ps1
 ```
 
 In the **original Ruby window**, press **Esc**:
@@ -57,10 +57,12 @@ the game. These are options to the same workflow, not additional required steps.
 
 ## Known visible limitations beside the test steps
 
-- **M9/M6:** controls and actor facing still do not rotate with the viewing
-  camera. This change does not fix that mismatch.
-- **M2/M5:** surrounding repeated border forest is still missing from the voxel
-  view. Noclip does not fill that scenery.
+- **M9/M6:** camera-relative cardinal controls and normal-player facing are
+  included. NPC/special-player facing, distant pop-in and free walking remain open.
+- **M2/M5:** the source border forest is included. The newly reported ledge
+  depth/geometry-versus-collision mismatch remains open; noclip does not fix it.
+- **M4/M10:** tree/grass polish and live geometry reuse/performance remain open.
+  Restoring the border increases the rendered tree count.
 - **M5/M7:** the voxel view still clears during Bag/unsupported scenes; use the
   original game window. Keeping the world behind menus is still pending.
 - **M5:** arbitrary map warp, event/party/flag editing, encounter switches and
@@ -72,7 +74,7 @@ the game. These are options to the same workflow, not additional required steps.
 
 ## Human functional check — pending
 
-Use the build revision and hashes linked from the PR. Close its original Ruby
+Use the build revision recorded in the PR and printed by the launcher. Close its original Ruby
 window when finished; the same launcher reopens the session.
 
 - [ ] Launch with the command above. Press Esc in original Ruby and open

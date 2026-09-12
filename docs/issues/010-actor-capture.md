@@ -1,6 +1,6 @@
 # Capture one animated actor sequence with correct source identity
 
-Work package **RV-010** · M6 Actors and effects · help wanted, area: runtime · first slice merged; camera-facing follow-up ready
+Work package **RV-010** · M6 Actors and effects · help wanted, area: runtime · player slice merged; NPC follow-up in review
 
 ## Problem
 
@@ -26,13 +26,24 @@ confirms that our draw visibility inherits both Ruby's original 2D off-screen
 flag and live object-slot lifetime. Animation timing needs its own paired trace;
 do not assume all animation symptoms are explained by facing.
 
-**Normal-player follow-up in review in PR #30:** [camera-facing original art](../live-facing.md)
+**Normal-player follow-up merged through PR #30 into PR #29 (`9d895c7`):** [camera-facing original art](../live-facing.md)
 for Brendan/May's normal on-foot profiles. Reads the verified directional tables
 and matches the actually displayed pose before selecting another view. The native
 trace matches 741/741 poses and recovers eight metadata/image transitions; the
-synthetic/GL and native Brendan checks pass. User retest and native May remain
-pending, alongside NPC/special profiles and distant pop-in. The broader acceptance
+synthetic/GL and native Brendan checks pass. The combined launch/border/camera
+human step is checked; native May, special profiles and distant pop-in remain
+open. The broader acceptance
 items below remain unchecked.
+
+**Dated follow-up, 2026-09-12, after PR #32 (`a6c8aa0`):** the maintainer reports
+NPCs showing the opposite view during camera turns. The previous player-only
+scope did not cover NPC profiles; its original acceptance remains recorded.
+The [NPC views and viewport repair](../live-npc-views.md) is now in review:
+ordinary directional profiles, exact displayed phase/palette/feet, queued-copy
+flip transitions and active-event visibility past the original screen. Eight
+native replay checks pass. User retest is pending, as are live-slot/neighbor
+presentation, unsupported profiles and full effects. No paid worker was used;
+exact Codex token/time attribution for the repair is not separately available.
 
 ## Acceptance
 

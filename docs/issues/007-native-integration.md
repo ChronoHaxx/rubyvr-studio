@@ -42,9 +42,11 @@ in PR #31 at `f8a9e8d`, using the same camera-session launcher: complete nearby
 maps, asynchronous shared meshing and native forward/reverse crossings. All four
 human steps are checked for `c5bc19f`. This advances step 2 below; broader actors,
 modes and the complete sequence remain pending. The [desktop play-session
-slice](../live-play-session.md) is now in review: retained field menus,
+slice](../live-play-session.md) merged in PR #32: retained field menus,
 transparent original field UI, real starter battle/lab/exit/Party/save and
-checkpoint tests. Broader/native human acceptance remains pending in the canonical
+checkpoint tests. All five human steps are checked for `31b95d2`; broader
+coverage remains pending. [Ordinary NPC views and viewport visibility](../live-npc-views.md)
+are the next in-review M6 batch supporting the canonical
 [demo delivery targets](../roadmap.md#route-to-a-shareable-playable-demo).
 
 **New post-merge report, 2026-09-12 — M2/M5:** ledge geometry appears walkable

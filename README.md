@@ -52,15 +52,23 @@ Route 101 → Oldale → Route 101 sequence passes agent checks and all four rec
 human steps; the short GIF and same launch command are in the guide. Up to three maps
 are selected; distant actors and unrestricted noclip remain open.
 
-**In review — [play through menus, battles and interiors](docs/live-play-session.md):**
+**Merged in PR #32 — [play through menus, battles and interiors](docs/live-play-session.md):**
 Bag/Party/Options keep the world, original dialogue/Start/save UI overlays it,
 and battles/interiors play in the same viewer using their original graphics.
 The same launcher and new local situation checkpoints are in the guide.
-Human acceptance, broader scene coverage and VR UI remain pending.
+All five human checks are recorded passed on `31b95d2`; broader scene coverage
+and VR UI remain pending.
 
 **Watch the result:** [Short acceptance GIF and verdict](docs/acceptance.md).
 For details, the [roadmap and checklist](docs/roadmap.md) tracks M0–M11 work,
 completed tasks, open PRs and remaining acceptance in one place.
+
+**In review — [NPC camera views and nearby visibility](docs/live-npc-views.md):**
+ordinary NPCs use their original directional art when the camera turns, retain
+walking phase through image-copy transitions, and stay visible past the original
+2D screen edge while still loaded. The same launcher gains an **NPC views**
+checkpoint. Distant despawning and M9's free third-person/first-person modes
+remain open; this revision has its own pending human checklist.
 
 ## What works
 

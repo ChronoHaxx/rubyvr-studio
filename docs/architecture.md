@@ -116,7 +116,7 @@ gate and no guest movement-memory writes. Broader actor coverage remains open. S
 [format and authoring contract](terrain-authoring.md).
 
 Capture validity does not define how long a scene should remain visible.
-The [desktop play-session implementation](live-play-session.md), in review,
+The [desktop play-session implementation](live-play-session.md), merged in PR #32,
 retains a complete host-owned field snapshot for recognized Bag/Party/Options.
 `live_presentation.*` classifies verified callbacks and reset epochs, refusing
 menu graphics as fresh map data. Valid, unfaded field data refreshes on return;
@@ -125,6 +125,14 @@ unknown modes, battles, interiors and loads discard the cached presentation.
 shared world renderer. Original-screen fallback also uses original directions.
 The OpenXR path still has its historical clear-on-refusal safeguard; VR menu
 composition is separate outstanding work.
+
+[NPC directional capture](live-npc-views.md), in review, binds copied Sprite
+records to active object events and uses audited ROM graphics/animation tables.
+It separates original viewport culling from intentional hiding, validates
+queued image-copy transitions and stores only bounded host-owned directional
+images. Rendering retains source phase, palette and foot placement without
+guest-memory reads, new movement simulation or scenery rebuilds. Full distant
+actor presentation and continuous-camera movement remain separate work.
 
 The [connected native scenery](live-connected-world.md) consumer reads complete
 static neighbours from the hash-verified cartridge in `live_scene.cpp` and

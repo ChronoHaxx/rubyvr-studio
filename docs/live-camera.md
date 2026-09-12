@@ -58,9 +58,10 @@ or when the host settings menu owns input.
   movement for the focused 3D window. It does not add free analogue/diagonal
   walking, a first-person camera, camera collision or a complete camera-mode menu.
 - **M6/RV-010:** this repairs apparent facing and displayed-phase matching for
-  normal on-foot Brendan/May profiles. NPCs, bikes/surfing/fishing and other
-  special profiles, steep-view readability and broader animation defects remain
-  open. Distant pop-in reported on `6911329` is not fixed. See the
+  normal on-foot Brendan/May profiles. [Ordinary NPC views](live-npc-views.md)
+  and loaded viewport visibility are now a separate candidate with pending human
+  checks. Special profiles, steep-view readability and broader animation remain
+  open. Distant live-slot pop-in reported on `6911329` is not fixed. See the
   [player-facing scope](live-facing.md) and [Emerald implementation audit](emerald-camera-actor-audit.md).
 - **M2/M5:** source border forest is restored in the combined build. The new
   post-merge ledge depth/collision report remains open; see [border scope](live-borders.md).

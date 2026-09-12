@@ -10,9 +10,12 @@ Use the single camera-session launcher below. Its checkpoints are preserved;
 the older developer build in the main checkout is historical.
 The [connected-scenery slice](live-connected-world.md) uses the same launcher
 and has all four human steps recorded passed in merged PR #31.
-The newer [desktop play-session slice](live-play-session.md) is in review,
+The newer [desktop play-session slice](live-play-session.md) merged in PR #32,
 using that launcher with additional local battle/lab/field checkpoints and a
-separate pending human checklist.
+separate five-step human checklist recorded passed for `31b95d2`.
+The [NPC views follow-up](live-npc-views.md) now adds **NPC views** beside the
+Littleroot walkers, through the same launcher. Its five human checks are pending;
+NPCs beyond Ruby's live slots and M9 free third-person/first-person remain open.
 
 ![Developer menu and tree collision check in the native game](media/native-developer.gif)
 
@@ -70,7 +73,8 @@ the game. These are options to the same workflow, not additional required steps.
 ## Known visible limitations beside the test steps
 
 - **M9/M6:** camera-relative cardinal controls and normal-player facing are
-  included. NPC/special-player facing, distant pop-in and free walking remain open.
+  included. [Ordinary NPC facing and viewport visibility](live-npc-views.md) are
+  in review; special-player facing, distant live-slot pop-in and free walking remain open.
 - **M2/M5:** the source border forest is included. The newly reported ledge
   depth/geometry-versus-collision mismatch remains open; noclip does not fix it.
 - **M4/M10:** tree/grass polish and live geometry reuse/performance remain open.

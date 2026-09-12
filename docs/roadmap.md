@@ -28,6 +28,10 @@ Experimental foliage art remains unapproved.
 in the merged PR for `c5bc19f`: launch/camera, Route 101 → Oldale, look-back/return,
 and Bag-return/checkpoint reopen. This accepts that connected outdoor sequence,
 not every map or the unreported detailed developer controls from PR #29.
+**PR #32 merged on 2026-09-12 at `a6c8aa0`.** Its five human steps are checked
+for `31b95d2`: field menus/input, Bag/Party/Options, battle/lab transition, lab
+exit/save and checkpoint/reopen. This accepts the bounded desktop play session.
+The subsequent NPC camera-facing report is tracked separately under M6 below.
 
 **Prefer the short version? [Watch the acceptance GIF and verdict](acceptance.md).**
 The contributor/agent performs routine desktop functional and visual checks;
@@ -77,11 +81,13 @@ The first two outcomes can progress on the local runner while the public
 integration boundary is resolved. A downloadable demo depends on all three;
 full-world completion, diegetic VR UI and headset acceptance remain later exits.
 
-**In review — the first target's [desktop play-session slice](live-play-session.md):**
+**Merged in PR #32 — the first target's [desktop play-session slice](live-play-session.md):**
 ordinary Bag/Party/Options retain the world; original Start/dialogue/save UI
 overlays it; battles and interiors use their original frame in the same viewer.
 Native starter battle, lab/exit, Party/save and checkpoint evidence advances
-this target together. Human acceptance and broader scene coverage remain open.
+this target together. All five human checks passed for the bounded sequence;
+broader scene coverage remains open. The active next batch is M6 NPC views and
+nearby viewport visibility, supporting the convincing small-area target.
 
 ## Current focus
 
@@ -110,8 +116,19 @@ nearby map. Load complete source neighbours, retain their world origins across
 crossings and prepare a bounded three-map area without clearing the previous
 view. Native Route 101 → Oldale → Route 101 and synthetic/GL checks pass;
 all four revision-specific human steps are checked. The [desktop play-session
-implementation](live-play-session.md) is now in review with retained field menus,
+implementation](live-play-session.md) merged in PR #32 with retained field menus,
 original UI composition and explicit battle/interior presentation.
+
+**Current batch — M6 / RV-010 [NPC views and nearby visibility](live-npc-views.md), in review.**
+After merging PR #32, the maintainer reported that NPCs still show the opposite
+movement view when the camera turns. The earlier repair explicitly covered
+normal players only; preserve that accepted result and track this missed NPC
+scope separately. Ordinary NPC profiles now use verified same-phase directional
+art, including confirmed queued-flip transitions, and loaded actors ignore the
+original viewport's culling. Eight native checks and synthetic/GL checks pass;
+the new five-step human retest remains pending. Distant live-slot despawning,
+special profiles and steep-view readability remain open. M5's next convincing
+area still needs ledge/contact alignment and the remaining actor-range work.
 This accepts the bounded connected part of the desktop proof, not all of M5.
 
 **New post-merge report, 2026-09-12:** noclip only travels a short distance
@@ -163,7 +180,7 @@ now records their specific causes and reference behavior. Keep them beside the
 test instructions in subsequent PRs. M5 remains the active milestone; fix these
 within its playable proof, without treating a renderer-only orbit as finished controls.
 Bag must retain the last valid world behind its UI; PR #27's clearing was a
-temporary safeguard. The desktop implementation is now in review above;
+temporary safeguard. The desktop implementation is merged in PR #32 above;
 headset retention and diegetic panels remain open under M5/M7.
 Native Windows is the current live-game validation target; WSL remains
 the worker/test environment and a supported Studio editor path.
@@ -536,7 +553,7 @@ automated/visual/live/headset results, evidence and unresolved defects separatel
   and blocked ownership. Do not hide broader border/void gaps with fog or
   invent a forest biome. Full neighbouring-map streaming is a separate remaining
   M2/M5 consumer; its bounded [three-map live implementation](live-connected-world.md)
-  is now in review. Wide-view outer voids remain open.
+  is merged in PR #32. Wide-view outer voids remain open.
   Maintainer feedback (2026-09-10): the visible outer cutoff/void needs a deliberate
   treatment. Render full nearby neighbours before relying on distant sky/fog;
   first-person mode alone does not close an exposed edge. Horizon blending is M8.
@@ -721,6 +738,17 @@ guest-memory reads from the VR thread.
   displayed phase; synthetic/GL checks and a native Brendan sequence pass.
   The combined PR's launch/border/camera step is checked; native May and broader
   actor/profile coverage remain open.
+- [ ] **In review — [ordinary NPC views and viewport visibility](live-npc-views.md):**
+  read verified Standard/QuintyPlump/normal-player tables, preserve palette,
+  displayed phase and pivots, distinguish queued flip/image transitions, and
+  bypass only the original screen cull for a bound active event. The 2026-09-12
+  post-PR #32 report is covered by this new retest; it does not negate or expand
+  earlier player acceptance. Native child/large-walker/boy evidence and the
+  new **NPC views** checkpoint accompany the five pending human checks.
+- [ ] Complete actor visibility outside the guest's live slots and across
+  neighbour maps using verified presentation records; preserve script/event
+  hiding, unknown state, identity and checkpoint/warp invalidation. The viewport
+  cull repair above does not complete this broader pop-in requirement.
 - [ ] Cover bikes, surf/dive, jumps/ledges, scripted movement and followers or
   special event actors where the supported game actually provides them.
 - [ ] Align feet/jump offsets to terrain layers; handle depth ordering,
@@ -741,12 +769,13 @@ evidence, with no doubled source sprites, missing frames or drifting feet.
 
 ## M7: UI, battles and game loop
 
-- [ ] **In review — [native desktop play-session routing](live-play-session.md):**
+- [x] **Merged in PR #32 — [native desktop play-session routing](live-play-session.md):**
   recognized Bag/Party/Options retention, original Start/dialogue/save UI over
   scenery, intentional original-frame battle/interior/unknown fallback, and
   epoch-safe checkpoint/field restoration. Native first battle, lab exit and
-  Party/save evidence is recorded; physical-input/full-game/VR acceptance remains
-  pending. This also implements the bounded desktop lifetime portion of M5.
+  Party/save evidence is recorded. All five human steps passed for `31b95d2`;
+  full-game/VR acceptance remains pending. This also implements the bounded
+  desktop lifetime portion of M5.
 
 - [ ] Route title/intro, new/load game, naming and options screens.
 - [ ] Route dialogue, choices, shops, bag, party, storage, Pokédex, trainer
@@ -815,6 +844,14 @@ stereo, without per-tick geometry rebuilds, clock mutation, sky seams, rain
 indoors or broken environment transitions.
 
 ## M9: controls and comfort
+
+**Reconfirmed by the maintainer after PR #32:** smooth 360-degree third-person
+orbit and first-person are required modes. The current quarter-turn grid mode
+is one supported mode, not the final camera design. Pair the free modes with a
+continuous-movement adapter, collision/cell-entry/ledge/warp/encounter/script
+checks and correct actor views; implement first-person player-card hiding and
+camera/eye height deliberately. The NPC batch in M6 supplies more of the actor
+view contract but does not implement those modes or change movement authority.
 
 - [x] Provide tested editor orbit/fly/orthographic/focus controls, independent
   of saved authoring data ([camera verification](verification.md)).

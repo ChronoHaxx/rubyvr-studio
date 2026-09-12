@@ -46,7 +46,7 @@ includes Gen3 handling and applies script/transition ownership before the wrappe
 input call. This establishes the Emerald path, rather than assuming the generic
 mod README alone establishes it. It does not prove every special action is compatible.
 
-**RubyVR correction in review:** live grid mode now restricts yaw to cardinal
+**RubyVR correction merged through PR #30 into PR #29:** live grid mode now restricts yaw to cardinal
 angles. J/L request one 90-degree turn per press; held arrows defer that turn
 until released. Holding J/L does not spin. Tilt/zoom remain available. Full free
 walking is a separate M9 movement adapter requiring verified Ruby collision,
@@ -81,7 +81,7 @@ The facing/readability gap is confirmed. Additional animation timing/copy-order
 defects reported by the maintainer still need a paired frame trace; this audit
 does not invent one root cause for all animation symptoms.
 
-**Follow-up in review:** [normal-player directional art](live-facing.md) now uses
+**Follow-up merged through PR #30 into PR #29:** [normal-player directional art](live-facing.md) now uses
 the pinned Ruby animation/image tables to capture four views at the displayed
 phase. It matches resident pixels/flips when animation metadata leads image
 copying, and selects apparent facing from the actual draw transform. The native
@@ -120,3 +120,13 @@ an NPC crossing both the 2D cull and live-slot boundaries while staying in 3D,
 intentional script hiding, a neighbour transition, and checkpoint/warp invalidation.
 Compare source frame identity and phase at matching guest frames; an orbit GIF
 or a count of visible actors alone cannot accept animation or pop-in repair.
+
+**Post-PR #32 NPC follow-up, in review:** [NPC views](live-npc-views.md) applies
+the pose/view separation to verified ordinary NPC graphics and bypasses only
+the 2D viewport cull for a bound active event. Ruby's `sprite.c` additionally
+exposed mirror updates before a queued image copy; an exact pending-request
+witness handles that boundary without guessing animation or carrying old
+actors. Native four-view/phase/viewport evidence is recorded; live-slot and
+neighbour presentation remain open. The full acceptance sequence above is not
+claimed complete by this bounded viewport repair. First/third-person continuous
+movement remains required under M9, as reconfirmed by the maintainer.

@@ -56,7 +56,13 @@ the actual view/model transform and selects art independently for each draw.
   `RUBYVR_ACTOR_TRACE=1` is an optional local capture diagnostic for comparing
   metadata with the verified displayed phase; the ordinary launcher clears it.
 
-**Still open:** NPC apparent-facing selection, bikes/surfing/fishing and other
+**Follow-up in review:** [ordinary NPC views and viewport visibility](live-npc-views.md)
+extend the same pose/view separation to three audited animation tables and
+short/tall/wide frames. A verified pending-copy path also handles a mirror change
+that precedes image copying; the resident frame remains exact. This NPC batch
+has its own recording, checkpoint and pending human checklist.
+
+**Still open beyond that follow-up:** bikes/surfing/fishing and other
 special player profiles, steep-view card readability, other animation/effect
 defects, and distant actor pop-in. The native recording demonstrates the tested
 Brendan sequence; May's table/profile handling has synthetic coverage but no

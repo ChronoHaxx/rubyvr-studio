@@ -174,6 +174,9 @@ bool capture(Snapshot& out, uint32_t previous_layout_ptr) {
     out.layout_ptr=0; out.width=out.height=0; out.grid.clear();
     out.player_index=-1;
     for (auto& object:out.objects) object={};
+    for (auto& source:out.actor_sources) source={};
+    out.obj_tiles.clear();out.obj_palette.clear();out.obj_mapping_1d=false;
+    out.actor_offset_x=out.actor_offset_y=0;
 
     gba::GbaBus* bus = gbarecomp::active_bus();
     if (!bus || !bus->rom_ptr()) return false;
@@ -258,6 +261,27 @@ bool capture(Snapshot& out, uint32_t previous_layout_ptr) {
         o.facing      = static_cast<uint8_t>(e[kObjDirection] & 0x0F);
         o.x           = rds16(e + kObjCurrentCoords + 0);
         o.y           = rds16(e + kObjCurrentCoords + 2);
+        // Pinned Ruby gSprites (0x02020004), 64 entries of 0x44 bytes.
+        // Sprite.data[0] must still identify this object event. Do not bind a
+        // recycled sprite slot or a UI sprite to an old actor.
+        if(o.sprite_id<64 && !o.invisible) {
+            if(const auto* sprite=host_ptr(bus,0x02020004+o.sprite_id*0x44,0x44);
+               sprite && rds16(sprite+0x2e)==i) {
+                auto& source=out.actor_sources[i];source.present=true;
+                std::memcpy(source.sprite.data(),sprite,source.sprite.size());
+                if(sprite[0x42]>>6) {
+                    const uint32_t tables=rd32(sprite+0x18);
+                    // These field profiles are immutable ROM data, eight-byte
+                    // table entries and six-byte records on the target ARM ABI.
+                    if((tables>>24)==8)if(const auto* table=host_ptr(bus,tables+(sprite[0x42]&63)*8,8)) {
+                        const auto count=table[0];const uint32_t parts=rd32(table+4);
+                        if(count>0 && count<=64 && (parts>>24)==8)
+                            if(const auto* raw=host_ptr(bus,parts,size_t(count)*6))
+                                source.subsprites.assign(raw,raw+size_t(count)*6);
+                    }
+                }
+            }
+        }
     }
 
     // gPlayerAvatar names the player's slot outright, which beats scanning for
@@ -270,6 +294,15 @@ bool capture(Snapshot& out, uint32_t previous_layout_ptr) {
             out.player_index = idx;
         }
     }
+
+    out.obj_tiles.resize(0x8000);
+    std::memcpy(out.obj_tiles.data(),bus->vram_ptr()+0x10000,0x8000);
+    out.obj_palette.resize(256);
+    std::memcpy(out.obj_palette.data(),bus->pal_ptr()+0x200,512);
+    // DISPCNT bit 6 selects OBJ 1D mapping. Read through the bus at capture.
+    out.obj_mapping_1d=(bus->read16(0x04000000)&0x40)!=0;
+    out.actor_offset_x=rds16(bus->iwram_ptr()+0x24d0);
+    out.actor_offset_y=rds16(bus->iwram_ptr()+0x27e0);
 
     // ── Metatile tables: ROM data, so only on a map change ───────────────────
     if (layout_ptr != previous_layout_ptr ||

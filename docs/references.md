@@ -109,6 +109,20 @@ is MIT because inherited files have different terms.
 
 ### Camera, editor and debug reference audit
 
+Inventory follow-up checked 2026-09-12: [Dramatic Shape VR's controls](https://github.com/prismaticShape/DramaticShapeVR#vr-1st-person-and-1st-person-mr)
+document party/bag racks, grabbing and throwing balls, and a physical Pokédex.
+These are interaction changes beyond voxel scenery. The guide does not establish
+that every inventory action permits concurrent walking, nor why the author chose
+that engine. Gen2Recomped's hand-written gameplay and documented hooks make more
+direct control of such behavior plausible; that is an architectural inference,
+not a measured comparison or statement of author intent.
+
+[GBARecomp's mod boundary](https://github.com/mstan/gbarecomp#mods) also permits
+game-owned compiled behavior through trusted plugins. It does not already
+provide RubyVR with an inventory action API. RubyVR's M7/M9 follow-up separates
+custom bag browsing over the active field from verified item use. No reference
+implementation was copied, and the native gameplay proof remains the priority.
+
 Checked 2026-09-12: engine `b017ee194d23e97029b598174d8f2893d42c9cc6`,
 companion mod `4a114b3e344db629ac7c7ac5108bd3d910fc4554`.
 These are documented/source-implemented features; no hands-on Emerald camera,

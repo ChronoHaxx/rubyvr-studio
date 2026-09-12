@@ -1,6 +1,6 @@
 # Verified live map identity and scene invalidation
 
-**In review — RV-008 / M5, 2026-09-12. Human functional acceptance pending.**
+**Merged — [PR #27](https://github.com/ChronoHaxx/rubyvr-studio/pull/27), RV-008 / M5, 2026-09-12. Five human functional checks passed.**
 The native Ruby adapter now identifies the current map and copied neighbour
 borders. Leaving the normal field callback clears the old scene; returning to
 the same map rebuilds it. This is the first part of the
@@ -43,6 +43,31 @@ This is a conservative field detector, **not a complete UI mode router**. The
 Start menu and dialogue retain the field callback; the Bag screen does not.
 Intentional in-view UI composition, dynamic same-map edits, actor animation,
 other ROM variants, comprehensive warps/battles and complete gameplay remain open.
+
+### Menu presentation follow-up
+
+Maintainer clarification, 2026-09-12: clearing the viewer during Bag is the
+bounded safeguard tested in PR #27, **not the intended menu experience**.
+Capture validity and presentation lifetime must be separate. A recognized
+field menu should retain a host-owned copy of the last valid world, including
+its textures and visible actors, while the original menu is presented over it.
+Stop refreshing that cached world from menu graphics; do not pause the guest
+game or freeze head tracking and camera rendering. On return, validate the
+current field identity and refresh or rebuild before resuming world updates.
+
+Implement this with observed menu-state signals under M5 and composition under
+M7. `non-field` alone also covers other states and must not mean "keep the old
+world behind any screen". Startup without a scene, warps, battles and unsupported
+states need explicit presentation choices. Original 2D menus are the first
+functional surface; in VR, place them in the world while preserving the scenery,
+with diegetic interactions developed separately. This behavior is not implemented
+by PR #27. Its passed checklist is not acceptance of the final menu design.
+
+The retained-scene approach above applies to the original blocking menus. The
+maintainer also wants to explore browsing a diegetic bag while walking (M7/M9).
+That would use a separate inventory interface while the original field remains
+active; original item use needs verified game-side integration. Keeping a frozen
+scene behind the original Bag does not deliver concurrent field movement.
 
 ## Agent verification
 
@@ -101,28 +126,34 @@ open; no runner binary or game data is published.
 
 ## Maintainer functional check
 
-The draft PR specifies the exact revision, prepared binary hash and **one**
+The merged PR specifies the exact revision, prepared binary hash and **one**
 primary local launch command. Its ignored directory contains isolated test
 states and a copy of the local scenery pack. The launcher verifies those inputs
 and never opens the personal save for writing. Isolated default keys: arrows
 move, Enter is Start, X is A, Z is B. Focus the original window for game input.
 
-- [ ] **1. Start:** run the PR's launcher. Expect original Ruby and a scenery
+- [x] **1. Start:** run the PR's launcher. Expect original Ruby and a scenery
   viewer titled `live map 0.16`, with two connections.
-- [ ] **2. Leave field:** focus original Ruby, press Enter then X to open Bag.
+- [x] **2. Leave field:** focus original Ruby, press Enter then X to open Bag.
   Expect Bag there and a cleared viewer titled `scene unavailable`.
-- [ ] **3. Return:** press Z to leave Bag, and Z again if the Start menu remains.
+- [x] **3. Return:** press Z to leave Bag, and Z again if the Start menu remains.
   Expect Route 101 scenery/title to return without a stale Bag palette or
   missing geometry.
-- [ ] **4. Ordinary inspection:** focus the viewer, briefly hold J or L, then
+- [x] **4. Ordinary inspection:** focus the viewer, briefly hold J or L, then
   release. Orbit must stop. Focus original Ruby and confirm Enter/Z still opens
   and closes its menu.
-- [ ] **5. Restart:** close original Ruby and run the same launcher again.
+- [x] **5. Restart:** close original Ruby and run the same launcher again.
   Expect the same prepared scene. This deliberately reloads a fixed review
   state; it is not a game-save persistence test.
 
-Human results, tested revision/time and merge authorization are **pending**.
-The PR and this checklist must change together when commands or behavior change.
+The maintainer checked all five items in PR #27 and reported testing and merging
+on 2026-09-12. Tested source: `825b1ae94221ba9179bf1194a45beff3538d72c2`;
+prepared executable SHA-256:
+`8c296a473517363179d6174e911310af0a95dd924972d85452627e2ca09bdedb`.
+The exact test time was not recorded. GitHub records merge commit
+`75bffda2b79b83d9d12dc9bd397616ad86f5a480` at 12:35:47 UTC on that date;
+this is the merge time, not the test time. Keep these original results when
+implementing the menu follow-up; changed behavior needs its own acceptance.
 
 ## Work and repair record
 

@@ -7,10 +7,19 @@ verification ran on 2026-09-08 on Windows with MSYS2 mingw64, an NVIDIA OpenGL
 
 ## Reproduce locally
 
+The [live actor slice](live-actors.md) adds `bash tools/test-actor-frame.sh`:
+29 checks each in optimized and sanitized builds without graphics/assets.
+The local GL lifecycle test also verifies rendered actor pixels, fractional
+motion, explicit height, unresolved refusal and clearing. Native walking,
+mode reloads, editor regression results and the pending human checklist are
+recorded separately in that guide.
+
 The [live map identity decoder](live-map-identity.md) runs 55 checks in each
 optimized/sanitized build with `bash tools/test-live-scene.sh`; no graphics or
 assets are required. Its optional GL lifecycle test and local native evidence
-are recorded separately, including remaining transition and human acceptance.
+are recorded separately. The maintainer passed all five PR #27 human checks on
+`825b1ae`; broader live transitions and the M5/M7 menu presentation follow-up
+remain open. The cleared Bag background tested there is temporary.
 
 The [connected-region query component](terrain-region-query.md) needs only Bash
 and GCC with ASan/UBSan, without graphics libraries, assets or a display:

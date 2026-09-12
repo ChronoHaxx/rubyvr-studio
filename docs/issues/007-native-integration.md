@@ -1,6 +1,6 @@
 # Define a supported public RubySapphireRecomp integration boundary
 
-Work package **RV-007** · M5 Live integration · help wanted, area: runtime · native desktop proof prioritized; implementation pending
+Work package **RV-007** · M5 Live integration · help wanted, area: runtime · identity foundation merged; playable proof and public integration pending
 
 ## Problem
 
@@ -17,12 +17,15 @@ route. Use the existing Studio renderer and terrain contracts in actual game
 execution on a monitor before adding further headset presentation. This is a
 bounded M5/M6/M7 demonstration; complete world coverage remains in the roadmap.
 
-The first implementation is [RV-008 live identity/invalidation](008-map-identity.md).
-The current public capture adapter resets identity to unknown and clears
-connections. The old local desktop viewer can orbit/follow a captured map, but
-does not prove the current authored terrain, actors or game-mode routing.
-Refreshing that local runner must preserve its unrelated working changes and
-use the current shared renderer, not another mesh implementation.
+The first implementation, [RV-008 live identity/invalidation](008-map-identity.md),
+merged in PR #27 with all five human checks passed. The private native Windows
+runner now compiles the current shared renderer and validates field identity
+and connections. Playable terrain placement, actors and complete game-mode
+routing form the next bounded steps. The [original actor/follow-camera slice](../live-actors.md)
+is now **In review**, with native Route 101 walking evidence; it does not complete
+the full sequence below. WSL remains the worker/test and Studio editor environment;
+the native game proof currently uses Windows. Preserve both supported paths and
+the private runner's unrelated working changes.
 
 Build the proof in small steps:
 
@@ -32,10 +35,16 @@ Build the proof in small steps:
 2. Connect one authored outdoor area and one adjacent map to the native desktop
    viewer. Show the original animated player and one NPC with explicit terrain
    layers. Start with a fixed tilted follow camera and original movement rules.
-3. Preserve the original frame for menus, battle and unsupported scenes; expose
-   fallback status. Enter/leave an interior, talk, open/close a menu, enter/exit
-   a battle and save/reload. Never present a retained outdoor scene as a live
-   battle/interior or label a fallback interior as completed voxel art.
+3. Keep the last valid world visible behind recognized field menus, initially
+   composing the original interface over it. Retain world textures/actors while
+   field capture is suspended; keep guest execution and head tracking active.
+   Validate and refresh the field before resuming on menu close. Use observed
+   menu signals: every `non-field` refusal is not necessarily a menu. This
+   replaces PR #27's temporary clear-on-Bag presentation (M5/M7).
+4. Preserve the original frame for battle and unsupported scenes with explicit
+   presentation choices. Enter/leave an interior, talk, open/close a menu,
+   enter/exit a battle and save/reload. Never present a retained outdoor scene
+   as a live battle/interior or label fallback interiors as completed voxel art.
 
 Use existing authored geography and locally available gameplay fixtures when
 selecting the route; do not claim a reachable sequence from editor map names.

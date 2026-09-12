@@ -9,7 +9,7 @@ There is no supported end-user installation command for this folder yet.
 **Current priority, 2026-09-12:** retain this native game route and complete the
 [monitor gameplay proof](../docs/issues/007-native-integration.md#native-desktop-proof).
 Verified live identity/invalidation is the first bounded change, now
-[in review with local native evidence](../docs/live-map-identity.md). The existing
+[merged with local native evidence and five human checks passed](../docs/live-map-identity.md). The existing
 desktop viewer is a prototype, not evidence that the current Studio terrain
 and complete gameplay already work together. See the [single roadmap](../docs/roadmap.md).
 
@@ -45,6 +45,12 @@ the public integration work package must define a reproducible boundary.
 `rubyvr-runtime.cmake` provides our current source list for the private Windows
 runner experiment; it still requires the caller's runtime headers, libraries
 and frame-sink integration. See the [checks and limits](../docs/live-map-identity.md).
+
+The [live actor slice](../docs/live-actors.md) is **In review**. It copies original
+OBJ frames and selected subsprite profiles into the transient snapshot, renders
+upright actors through the shared diorama path and follows their resolved feet.
+The native desktop recording covers one small walk/turn scene. Menu caching,
+other field effects, complete transitions and public game packaging remain open.
 
 ## Licence compatibility before distribution
 

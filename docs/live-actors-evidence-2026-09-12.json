@@ -1,0 +1,93 @@
+{
+  "date": "2026-09-12",
+  "scope": "M5/M6 native actor slice; agent evidence; human pending",
+  "baseline": "75bffda2b79b83d9d12dc9bd397616ad86f5a480",
+  "runner_base": "dad4c68251aa3adde77be47884b17870a151f429",
+  "framework_base": "13cab0418106e86708cfd10b817379fe2318b201",
+  "private_runner_has_local_changes": true,
+  "exe_sha256": "7c41aa224768ad408f40d2f307fe13435ae9ad2c02cdd477d936d1b2b7cea6f9",
+  "pack_sha256": "e76ed940e012a6b804e1a5e8e43e8f3a11219a13574e0e32995c5909617ea220",
+  "state_sha256": "af2ca95ff6aa898801a7c2c805a2cf061a121dc41264bd64c7abcfbbac824bc9",
+  "gif_sha256": "bb889241e0c3e674eeb5739ce65dbe4ef7cb4e52a5f4a304e4c762c4b5727251",
+  "gif_bytes": 5362494,
+  "game_frames": 720,
+  "sampled_frames": 180,
+  "playback_ms": 12000,
+  "recording_process_elapsed_s": 16.61,
+  "timing_is_benchmark": false,
+  "actors_per_capture": 5,
+  "unsupported_per_capture": 0,
+  "unresolved_per_capture": 0,
+  "player_x_range": [
+    16.5,
+    18.5
+  ],
+  "player_z_range": [
+    22.5,
+    24.5
+  ],
+  "player_ground_y_cells_range": [
+    0.0,
+    0.0625
+  ],
+  "scenery_builds": 1,
+  "geometry_hash": "0d2df1f93f6ac314",
+  "native_runtime": {
+    "distinct_misses": 47,
+    "interpreted_insns": 2716551,
+    "failed": 0,
+    "inflight": 0
+  },
+  "modes": [
+    {
+      "case": "field-ready",
+      "elapsed_s": 2.437,
+      "scene": "field",
+      "actors": 5,
+      "distinct_misses": 21,
+      "interpreted_insns": 8142
+    },
+    {
+      "case": "bag",
+      "elapsed_s": 1.391,
+      "scene": "non-field",
+      "actors": 0,
+      "distinct_misses": 11,
+      "interpreted_insns": 27015
+    },
+    {
+      "case": "bag-return",
+      "elapsed_s": 2.406,
+      "scene": "field",
+      "actors": 5,
+      "distinct_misses": 19,
+      "interpreted_insns": 5349
+    }
+  ],
+  "mutation_control": {
+    "mutation": "omit horizontal pixel flip in disposable decoder copy",
+    "exit_code": 1,
+    "result": "FAIL: horizontal flip covers full body",
+    "accepted": false
+  },
+  "human": "pending",
+  "headset": "not tested",
+  "component_checks": {
+    "actor_per_build": 29,
+    "live_identity_per_build": 55,
+    "terrain_region_per_build": 9299,
+    "terrain_persistence": 198,
+    "connected": 69,
+    "editor_suite": "PASS including 8 frozen geometry hashes"
+  },
+  "actor_source_sha256": {
+    "src/vr/actor_frame.cpp": "84849e0cc7765f6235cc835dc606e62dfe245cf1a01fd0b5c86a9b0bea3a0d9c",
+    "src/vr/actor_frame.h": "b78a63ef01e9d575ede0ab3e59c40fcd29e5d3f565fd1568e833bd9056a54b50",
+    "src/vr/actor_render.cpp": "75ed015a238764e6d2e5b34e974c98811c2acd47366e77e5794812efa0448f35",
+    "src/vr/actor_render.h": "19f42f564be9c322de9ec6257ec4a85ca694753f3db2c26cefc6eafe8ebf90a2",
+    "src/vr/diorama.cpp": "942871aa1e34714cf44279cad4a60c5bf4d01a316ed48e1b9980410cbafda8dd",
+    "src/vr/ruby_world.h": "d587c984cebb5b1b30ef446b67c2e669bd6debe1f84834f02912d9d2ab924e02",
+    "integration/runtime/ruby_world.cpp": "2776ee4488c8c8db8ce62f55c56cae4d7f763be9246919cc1f847c9f722a8b81",
+    "integration/runtime/viewer.cpp": "31ab48a52aacea4e58cc43d93aed03f17ecbce29308856f133ec6a106d77163a"
+  }
+}

@@ -29,6 +29,8 @@ jobs:
         run: bash tools/test-terrain-region-query.sh
       - name: Test live map identity without graphics or assets
         run: bash tools/test-live-scene.sh
+      - name: Test live actor frames without graphics or assets
+        run: bash tools/test-actor-frame.sh
       - name: Test original synthetic suites
         run: |
           python3 tools/test-coverage-ledger.py

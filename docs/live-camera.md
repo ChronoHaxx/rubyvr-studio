@@ -7,11 +7,11 @@ build and checkpoint directory are preserved separately.
 
 ![Actual native walking from four camera directions](media/live-camera.gif)
 
-Twelve seconds from the actual native game and shared renderer: four separate
-checkpoint-based excerpts, retimed for viewing. The left view retains the
-original map orientation; the right view changes direction. Input is scripted,
-with noclip enabled for the movement check. This is not physical-input or
-performance acceptance. The paired captures differ by less than 150 ms.
+Sixteen seconds from the actual native game and shared renderer: a close-up
+before/after walking comparison, followed by stationary camera turns. These are
+separate checkpoint-based runs and retimed excerpts. Input is scripted, with
+noclip enabled for the walking check. This is not physical-input or performance
+acceptance. [Player-facing repair, source and evidence](live-facing.md).
 
 ## Try this camera build
 
@@ -26,6 +26,8 @@ Click the **3D window** and use the arrows to walk. **J/L** turn by **90 degrees
 per press**; holding them does not spin. Held arrows defer the turn until arrow
 release. **I/K** change tilt, **U/O** zoom and **R** restores north-up and player
 following. Tilt/zoom use elapsed time so fast-forward does not multiply sensitivity.
+The normal on-foot player now shows the appropriate front, back or side image
+for that view, including when the camera turns while the player stands still.
 
 In the original Ruby window, **Esc > Camera** offers North/West/South/East-up
 presets, a camera-relative movement toggle and Reset north-up. Developer and
@@ -52,11 +54,11 @@ or when the host settings menu owns input.
 - **M9:** this fixes the initial diagonal view and adds camera-relative grid
   movement for the focused 3D window. It does not add free analogue/diagonal
   walking, a first-person camera, camera collision or a complete camera-mode menu.
-- **M6/RV-010:** sprite art still uses the original game's selected view/frame.
-  Side/back-facing appearance and steep overhead readability are not fixed here.
-  The maintainer also reported animation defects and distant sprite pop-in on
-  `6911329`; those remain open. The [Emerald implementation audit](emerald-camera-actor-audit.md)
-  identifies the frame-selection gap and Ruby's 2D culling/live-slot boundaries.
+- **M6/RV-010:** this repairs apparent facing and displayed-phase matching for
+  normal on-foot Brendan/May profiles. NPCs, bikes/surfing/fishing and other
+  special profiles, steep-view readability and broader animation defects remain
+  open. Distant pop-in reported on `6911329` is not fixed. See the
+  [player-facing scope](live-facing.md) and [Emerald implementation audit](emerald-camera-actor-audit.md).
 - **M2/M5:** the repeated decorative forest outside the map body is still absent.
 - **M5/M7:** Bag still clears the 3D view. Navigate it in the original window;
   preserving scenery behind menus remains open.
@@ -71,13 +73,17 @@ boxes count as acceptance of this input change.
 1. [ ] Launch with the one command above. Expect the original game, a north-up
    tilted voxel view, and Camera/Developer/Checkpoints tabs under Esc.
 2. [ ] Focus 3D and use all four arrows in nearby clear space. Expect movement
-   in the corresponding screen direction and normal collision with trees.
+   and character facing in the corresponding screen direction: Up shows the
+   back, Down the front, Left/Right the matching profile. Keep normal tree collision.
 3. [ ] In Esc > Camera choose West up, return to 3D, then press Up after releasing
    the keys. Expect movement toward the screen top (west on the original map).
-   Try the other presets; R restores north-up.
+   Repeat all four arrows at the other presets; the character should face the
+   direction of screen movement at each one. R restores north-up.
 4. [ ] Press J/L: expect one 90-degree turn per press, with no spinning while
    held. Hold an arrow and tap J/L: expect the camera to wait until arrow release,
-   then turn once. The next arrow press follows the new view. Switch windows;
+   then turn once. Standing still, turn through all four views: only the visible
+   side should change, without moving or turning the original-game character.
+   The next arrow press follows the new view. Switch windows;
    expect original compass controls and no stuck movement or queued turn.
 5. [ ] At a rotated view open Start and navigate its options; load Bag open and
    navigate there. Expect original menu directions, no unintended walking, and
@@ -110,10 +116,14 @@ The 55 existing live-scene checks pass in optimized and sanitized builds.
 The actual shared GL viewer regression passes, including default/reset north-up,
 orbit without a scenery rebuild and ordinary actor/scenery invalidation.
 
-Nine final native scripted checks pass: screen Up moves north/west/south/east at
+Ten final native scripted checks pass: screen Up moves north/west/south/east at
 the four corresponding views; stock Start-menu Down remains Down without moving
 the player; Bag Down remains Down; loading resets noclip; north-up reset restores
-the default view. The first attempt could not acquire OS keyboard focus, so its
+the default view; four idle camera views preserve player position. The facing
+trace matched all 741 displayed poses, recovering eight metadata/image transitions.
+Windows/WSL actor checks (2590 per build) and actual GL directional-pixel checks
+also pass. The native May sequence and physical facing checks remain pending.
+The first attempt could not acquire OS keyboard focus, so its
 walking checks were blocked.
 Controlled native checks use an explicit viewer input source through the same
 mapping/gating adapter; they do not establish physical focus/keyboard acceptance.

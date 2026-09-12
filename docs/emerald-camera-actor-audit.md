@@ -75,11 +75,19 @@ about their feet to stay readable at the chosen tilt. The
 is shared by rendering passes so asking for shadows/reflections does not advance
 the same actor pose repeatedly.
 
-RubyVR currently decodes the single selected OBJ/VRAM frame and rotates its
+At the reported revision, RubyVR decoded the single selected OBJ/VRAM frame and rotated its
 card. It cannot select a different side/back drawing from that one frame.
 The facing/readability gap is confirmed. Additional animation timing/copy-order
 defects reported by the maintainer still need a paired frame trace; this audit
 does not invent one root cause for all animation symptoms.
+
+**Follow-up in review:** [normal-player directional art](live-facing.md) now uses
+the pinned Ruby animation/image tables to capture four views at the displayed
+phase. It matches resident pixels/flips when animation metadata leads image
+copying, and selects apparent facing from the actual draw transform. The native
+Brendan trace matches 741/741 poses, with eight transition recoveries. This applies
+the reference's pose/view separation to our native adapter; broader actors,
+effects and distant visibility still require their own work.
 
 ## Pop-in has two concrete native causes
 

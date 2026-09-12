@@ -1,5 +1,25 @@
 # Verification and its limits
 
+## Normal-player apparent facing — in review, 2026-09-12
+
+[The player-facing follow-up](live-facing.md) passes 2590 actor checks on Windows
+and WSL, including WSL ASan/UBSan. It covers both known player profiles, every
+world/view quadrant, phase/flips and exact resident-frame recovery at transitions.
+The actual GL test verifies the corresponding colored directional pixels,
+stationary feet, no scenery rebuild and invalidation. A disposable implementation
+that keeps the original view fails the directional check.
+
+The final native run passes ten movement/menu/checkpoint/idle-turn checks and
+matches all **741 captured player poses**, recovering **eight** instances where
+the displayed image differed from current animation metadata. An earlier strict
+metadata-only pass missed four of 755 poses; its trace prompted the resident-pose
+repair and remains local. The 16-second GIF was inspected, including matching
+front/back/side views while stationary. A tree occludes part of the eastward
+walking excerpt; the idle east view and GL checks provide the visible side test.
+Native May, NPC/special profiles, broad animation/pop-in and physical user
+acceptance remain open. Codex performed this repair's review; the earlier Claude
+allowance failure below is retained, not a claimed review of this revision.
+
 ## Native camera controls — in review, 2026-09-12
 
 `python tools/test-camera-input.py` passes 1079 assertions on Windows;
@@ -18,7 +38,8 @@ single 90-degree turns, deferred while arrow keys remain held. New component
 checks cover repeat/queue/opposing/focus behavior and the GL test rejects
 non-cardinal view requests. The native build and nine scripted movement/menu
 checks were rerun successfully. Physical controls need the updated human check.
-The report's animation and distant sprite pop-in remain **unfixed**, with the
+The report's broader animation and distant sprite pop-in remain **unfixed**;
+the normal-player facing/phase subset is repaired in review above, with the
 [actual Emerald implementation comparison](emerald-camera-actor-audit.md) recorded.
 
 The native Windows build passes nine scripted checks of actual cardinal
@@ -52,7 +73,8 @@ verification ran on 2026-09-08 on Windows with MSYS2 mingw64, an NVIDIA OpenGL
 ## Reproduce locally
 
 The [live actor slice](live-actors.md) adds `bash tools/test-actor-frame.sh`:
-29 checks each in optimized and sanitized builds without graphics/assets.
+original 29 checks, expanded to 2590 by the normal-player facing repair, in
+optimized and sanitized builds without graphics/assets.
 The local GL lifecycle test also verifies rendered actor pixels, fractional
 motion, explicit height, unresolved refusal and clearing. Native walking,
 mode reloads, editor regression results and the five checked PR #28 human steps

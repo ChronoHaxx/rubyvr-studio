@@ -109,7 +109,9 @@ Unsupported affine, blended/object-window, mosaic and 8bpp actors are refused.
 The whole-object path does not reconstruct each subsprite's original BG
 priority: opaque 3D scenery supplies depth occlusion. Grass covering the feet,
 reflections, shadows, independent field-effect sprites, cycling/surf/dive,
-scripted special actors and all camera-relative facing modes remain M6 work.
+scripted special actors and broader camera-facing modes remain M6 work. The
+[normal-player facing/phase follow-up](live-facing.md) is now in review in PR #30;
+the original merged scope and its human acceptance are preserved here.
 The native OBJ buffer supports at most the existing 16 active object events.
 The captured scene contains the player and four other events; it does not
 establish coverage of every NPC or effect.

@@ -26,6 +26,14 @@ confirms that our draw visibility inherits both Ruby's original 2D off-screen
 flag and live object-slot lifetime. Animation timing needs its own paired trace;
 do not assume all animation symptoms are explained by facing.
 
+**Normal-player follow-up in review in PR #30:** [camera-facing original art](../live-facing.md)
+for Brendan/May's normal on-foot profiles. Reads the verified directional tables
+and matches the actually displayed pose before selecting another view. The native
+trace matches 741/741 poses and recovers eight metadata/image transitions; the
+synthetic/GL and native Brendan checks pass. User retest and native May remain
+pending, alongside NPC/special profiles and distant pop-in. The broader acceptance
+items below remain unchecked.
+
 ## Acceptance
 
 - [x] Preserve captured source frame, palette/index, original facing, foot pivot and subpixel position in the bounded sequence.

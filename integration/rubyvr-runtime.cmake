@@ -20,7 +20,7 @@ function(rubyvr_attach_runtime target)
         "${root}/src/vr/diorama.cpp" "${root}/src/vr/world_io.cpp"
         "${root}/src/vr/json_scan.cpp" "${root}/src/vr/overrides.cpp"
         "${root}/src/vr/cutout.cpp" "${root}/src/vr/part_geometry.cpp"
-        "${root}/src/vr/terrain.cpp")
+        "${root}/src/vr/terrain.cpp" "${root}/src/vr/actor_frame.cpp" "${root}/src/vr/actor_render.cpp")
     target_include_directories(${target} BEFORE PRIVATE
         "${root}/integration/runtime" "${root}/src/vr" "${root}/src")
     target_compile_features(${target} PRIVATE cxx_std_20)

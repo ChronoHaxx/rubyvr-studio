@@ -406,6 +406,13 @@ int terrain_selftest(const char* output) {
     auto write_bytes=[](const std::string& p,const std::vector<char>& b) {std::ofstream f(p,std::ios::binary);f.write(b.data(),std::streamsize(b.size()));};
     const std::string snap=std::string(output)+".snap";world::Snapshot restored;
     if(!check(world_io::write(s,snap.c_str()) && world_io::read(restored,snap.c_str()) && restored.has_map_identity() && restored.map_number==1 && restored.grid==s.grid,"snapshot v2 preserves source identity and grid")) return 1;
+    const auto before_actor_bytes=read_bytes(snap);
+    auto live=s;live.actor_sources[0].present=true;live.obj_tiles={0xa5};live.obj_palette={31};
+    live.actor_offset_x=12;live.obj_mapping_1d=true;restored=live;
+    if(!check(world_io::write(live,snap.c_str()) && read_bytes(snap)==before_actor_bytes &&
+        world_io::read(restored,snap.c_str()) && !restored.actor_sources[0].present && restored.obj_tiles.empty() &&
+        restored.obj_palette.empty() && restored.actor_offset_x==0 && !restored.obj_mapping_1d,
+        "transient actor art never changes disk format or survives disk reload")) return 1;
     const auto bytes=read_bytes(snap);auto legacy=bytes;legacy[8]=1;legacy.resize(legacy.size()-6);write_bytes(snap,legacy);
     if(!check(world_io::read(restored,snap.c_str()) && !restored.has_map_identity() && restored.map_number==-1 && restored.grid==s.grid,"legacy snapshot reads with explicit unknown identity")) return 1;
     for(int mode=0;mode<5;++mode) {

@@ -34,7 +34,7 @@ set(STUDIO_CORE
     src/vr/diorama.cpp src/vr/gl_loader.cpp src/vr/json_scan.cpp
     src/vr/overrides.cpp src/vr/cutout.cpp src/vr/part_geometry.cpp
     src/vr/tileset.cpp src/vr/world_io.cpp)
-list(APPEND STUDIO_CORE src/vr/terrain.cpp)
+list(APPEND STUDIO_CORE src/vr/terrain.cpp src/vr/actor_frame.cpp src/vr/actor_render.cpp)
 
 set(RUBYVR_TARGETS rubyvr_studio)
 if(RUBYVR_BUILD_RUNTIME_TESTS)

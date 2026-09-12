@@ -21,8 +21,10 @@ The [work-package index](docs/issues/README.md) explains scope and dependencies.
 **Next milestone:** [native gameplay on a monitor](docs/issues/007-native-integration.md#native-desktop-proof)
 using our authored world: walking, connected maps, an interior and the original
 game UI. We retain the RubySapphireRecomp route. The first
-[live map identity/invalidation foundation](docs/live-map-identity.md) is in review;
-the complete playable voxel game remains pending.
+[live map identity/invalidation foundation](docs/live-map-identity.md) is merged in PR #27;
+the [original player/NPC rendering and follow camera](docs/live-actors.md) are
+now **In review**, with an actual native walking recording. The complete
+playable voxel game remains pending.
 
 **Watch the result:** [Short acceptance GIF and verdict](docs/acceptance.md).
 For details, the [roadmap and checklist](docs/roadmap.md) tracks M0–M11 work,

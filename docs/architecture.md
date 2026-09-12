@@ -31,6 +31,7 @@ flowchart LR
 | `src/vr/diorama.*`, `part_geometry.*`, `voxel_parts.inl` | The renderer used by editor, batch tool and integration | Segmentation, accepted instances, exposed voxel faces |
 | `src/vr/tileset.*` | Indexed source material sampling and texture data | Tile definitions, palette/texel identity |
 | `src/vr/ruby_world.h`, `world_io.*` | Shared snapshot structure and disk persistence | `Snapshot` |
+| `src/vr/actor_frame.*`, `actor_render.*` | Transient original OBJ decoding, bounded subsprite composition, authored foot placement and upright actor drawing | [Live actor contract](live-actors.md); disk snapshots omit transient actor art |
 | `src/vr/terrain.*`, `terrain_mesh.inl`, `src/studio/gui_terrain.inl` | Guarded authored surfaces, layer query, border ownership and terrain editing | `terrain::resolve`, `Resolved::query`, `query_region` ([component contract](terrain-region-query.md)), Terrain toolbar |
 | `src/studio/foundation.*` | Explicit atomic ground-pad edit from the production model base; preserves shapes, art and outside terrain | `foundation::level`, Level foundation; [scope](terrain-foundations.md) |
 | `src/studio/connected_scene.*`, `gui_connected.inl`, `src/vr/region_mesh.inl`, `placed_mesh.inl` | Bounded neighbour graph, source ownership, shared model meshes and per-map textures | `connected::build`, `build_region`, Explore area; [scope](connected-scene.md) |
@@ -99,9 +100,16 @@ hops within authored terrain, one without, and at most nine maps. See
 V1 snapshots retain unknown
 identity. The pinned Ruby live adapter now validates explicit identity and
 connection provenance and publishes invalidation on field refusal; this is
-[in review](live-map-identity.md). Complete transition coverage, feet/camera
-placement and regional terrain remain pending. See the
+[merged in PR #27](live-map-identity.md). Original actor frames and single-map
+authored feet/follow-camera placement are [In review](live-actors.md). Complete
+transition coverage and regional terrain integration remain pending. See the
 [format and authoring contract](terrain-authoring.md).
+
+Capture validity does not define how long a scene should remain visible. The
+M5/M7 menu follow-up must retain a complete host-owned world for recognized
+field menus and compose UI over it, while refusing menu graphics as fresh map
+data. Revalidate on return; unknown modes and warps need explicit handling.
+PR #27 currently clears on all refusals, including Bag, as a temporary safeguard.
 
 ## Editor environment preview
 

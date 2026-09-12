@@ -1,5 +1,6 @@
 #include "cutout.h"
 #include "terrain.h"
+#include "actor_render.h"
 // diorama.cpp — see diorama.h for the pop-up-book rule and why the GPU indexes.
 
 #include "diorama.h"
@@ -226,6 +227,7 @@ std::vector<uint8_t> g_tile_scratch;   // 4bpp expanded to one index per byte
 // the object model deliberately is not. Empty by default, so a build that is
 // never handed a file behaves exactly as it did before overrides existed.
 overrides::OverrideSet g_overrides;
+terrain::Resolved g_actor_terrain;
 BuildMode g_build_mode=BuildMode::Inferred;
 DioramaStats g_diorama_stats;
 int g_terrain_group=-2,g_terrain_number=-2;
@@ -3439,6 +3441,7 @@ bool init() {
 
 void update(const world::Snapshot& s) {
     if (!s.valid) {
+        actor_render::clear();
         g_vertex_count=0;
         g_meshed_layout=0; // Returning to the same layout must rebuild it.
         g_map_w=g_map_h=0;
@@ -3458,6 +3461,7 @@ void update(const world::Snapshot& s) {
         g_terrain_grid!=s.grid || g_terrain_metatiles!=s.metatiles || g_terrain_attributes!=s.attributes || g_terrain_connections!=s.connections);
     if (s.layout_ptr != g_meshed_layout || identity_changed || terrain_changed) {
         build_mesh(s);
+        g_actor_terrain=terrain::resolve(s,g_overrides.terrain);
         g_meshed_layout = s.layout_ptr;
         g_terrain_group=s.map_group;g_terrain_number=s.map_number;g_terrain_identity=s.has_map_identity();
         if(terrain_active) {
@@ -3467,13 +3471,16 @@ void update(const world::Snapshot& s) {
         }
     }
 
-    // Where the player is, in fractional cells, so first person walks smoothly.
-    // Y comes from the cell under them, so stepping onto a ledge raises the
-    // whole world rather than leaving you hovering.
+    // The authored view follows live sprite ground contact and its explicit
+    // surface layer. Keep the older inferred preview's camera contract separate.
     g_player_x = s.camera_cell_x();
     g_player_z = s.camera_cell_y();
-    g_player_y = height_for(s.elevation(static_cast<int>(g_player_x),
-                                        static_cast<int>(g_player_z)));
+    g_player_y = g_build_mode==BuildMode::Diorama?0:
+        height_for(s.elevation(static_cast<int>(g_player_x),static_cast<int>(g_player_z)));
+    if(g_build_mode==BuildMode::Diorama && g_vertex_count)actor_render::update(s,g_actor_terrain);
+    else actor_render::clear();
+    const auto& actors=actor_render::stats();
+    if(actors.player){g_player_x=actors.player_x;g_player_y=actors.player_y;g_player_z=actors.player_z;}
 
     // Tiles and palette every frame is what makes water and flowers animate for
     // free — but only re-expand and re-upload when the bytes actually CHANGED.
@@ -3528,11 +3535,13 @@ void draw(const math::Mat4& view_proj) {
     }
 
     submit(view_proj, model, 0);
+    actor_render::draw(view_proj,model);
 }
 
 void draw_raw(const math::Mat4& view_proj, const math::Mat4& model, int debug, Tint tint) {
     if (!g_ready || g_vertex_count == 0) return;
     submit(view_proj, model, debug, tint);
+    actor_render::draw(view_proj,model);
 }
 
 struct PreparedRegion {
@@ -3910,6 +3919,7 @@ void place(float x, float y, float z, float yaw) {
 }
 
 void shutdown() {
+    actor_render::shutdown();
     clear_region();
     if (gl::loaded()) {
         if (g_vbo) gl::glDeleteBuffers(1, &g_vbo);

@@ -9,6 +9,10 @@ repository's GPL PR #19, camera-driven loading PR #20, ground-base PR #21 and
 native Linux/WSL PR #22, mouse repair PR #24 and bridge PR #25 are merged.
 The shared region-query component merged in PR #26; all three human CLI checks
 are recorded passed on `d2755ce`. Consumers remain pending.
+The bounded live identity/invalidation foundation merged in PR #27; all five
+human checks passed on `825b1ae`. Playable scenery and menu composition remain open.
+The first original actor/terrain-follow slice is **In review** under RV-010;
+its native walking recording is available, with human acceptance pending.
 Experimental foliage art remains unapproved.
 
 **Prefer the short version? [Watch the acceptance GIF and verdict](acceptance.md).**
@@ -36,10 +40,17 @@ temporary fallback frames remain defects.
 Maintainer decision, 2026-09-12: retain RubySapphireRecomp/gbarecomp and prove
 the authored world during actual gameplay on an ordinary monitor before
 expanding VR presentation. The first [live identity/invalidation implementation](live-map-identity.md)
-is **in review**: native Route 101 and Bag/return checks pass; human acceptance
-and broader transition coverage remain pending. The private runner now compiles
-the current shared renderer. Next connect explicit terrain placement, actors
-and intentional UI routing to a small playable scene.
+is **merged in PR #27**: native Route 101 and Bag/return checks and all five
+human checks pass; broader transition coverage remains pending. The private runner now compiles
+the current shared renderer. The [original actors and terrain-follow slice](live-actors.md)
+is **In review**: real Route 101 walking/turning and five field actors, with
+component, GL and native evidence. Human acceptance remains pending. Complete
+connected gameplay and intentional UI routing are the next steps.
+Bag must retain the last valid world behind its UI; PR #27's clearing is a
+temporary safeguard, not the final menu design. Separate capture validity from
+presentation, keep head tracking active and refresh the field safely on return
+(M5/M7). Native Windows is the current live-game validation target; WSL remains
+the worker/test environment and a supported Studio editor path.
 The [desktop proof in RV-007](issues/007-native-integration.md#native-desktop-proof)
 defines the walk/connection/interior/dialogue/battle/save acceptance sequence.
 This priority change does not complete M2 or require all scenery to be finished.
@@ -228,8 +239,8 @@ Catalog and placement audits do not certify a complete game or headset experienc
 | [M2 Terrain and placement](#m2-terrain-and-placement) | Terrain/explorer/loading/base/bridge/query component merged; consumers and complete geography pending | M1 inventory + stable map identity |
 | [M3 Manual authoring](#m3-manual-authoring) | Core workflow and part selection merged; convenience tools and timed user trial pending | Current editor + M2 contract for terrain |
 | [M4 All static scenery](#m4-all-static-scenery) | Common starters and bounded tree fixes merged; foliage art deferred here; full coverage/review pending | M1–M3 |
-| [M5 Live scene data](#m5-live-scene-data) | Bounded live identity/invalidation in review; desktop gameplay proof and complete routing pending | Local prototype + M1; public integration separately required |
-| [M6 Actors and field effects](#m6-actors-and-field-effects) | Pending | M2, M5 |
+| [M5 Live scene data](#m5-live-scene-data) | Bounded live identity/invalidation merged; desktop gameplay proof and complete routing pending | Local prototype + M1; public integration separately required |
+| [M6 Actors and field effects](#m6-actors-and-field-effects) | First native actor/follow slice In review; broad coverage pending | M2, M5 |
 | [M7 UI, battles and game loop](#m7-ui-battles-and-game-loop) | Original frame available; complete routing/acceptance pending | M5 |
 | [M8 Sky, lighting, time and weather](#m8-sky-lighting-time-and-weather) | Editor preview merged; runtime cycle/weather/water pending | M2, M5 for runtime |
 | [M9 Controls and comfort](#m9-controls-and-comfort) | Editor cameras implemented; monitor presets/follow/first-person and VR acceptance pending | M5–M8 |
@@ -519,11 +530,12 @@ flat materials are intentional.
 - [ ] **Next playable target:** complete the [native desktop proof](issues/007-native-integration.md#native-desktop-proof)
   using the current shared scenery and terrain query. Retain original game
   movement, a visible original-frame fallback and explicit unsupported states.
-  The first bounded implementation, RV-008 live identity/invalidation, is in review; it
+  The first bounded implementation, RV-008 live identity/invalidation, merged in PR #27; it
   alone does not complete this gameplay target.
-- [ ] **In review:** pinned Ruby field identity, copied-border provenance,
+- [x] **Merged — [PR #27](https://github.com/ChronoHaxx/rubyvr-studio/pull/27):** pinned Ruby field identity, copied-border provenance,
   invalid-snapshot publication and stale-mesh clearing, with asset-free checks
-  and local native Bag/return evidence. See [scope and remaining captures](live-map-identity.md).
+  and local native Bag/return evidence. All five human checks passed on `825b1ae`.
+  See [scope and remaining captures](live-map-identity.md).
 - [ ] Add an opt-in developer panel showing map identity, scene/generation,
   player position/layer, resolved surface, active pack and frame timings.
   Include a free inspection camera with return-to-player, reproducible local
@@ -536,6 +548,11 @@ flat materials are intentional.
 - [ ] Capture immutable scene identity/generation and valid/invalid transitions
   at the guest boundary. Distinguish field, transition, menu, battle and other
   modes using observed game signals.
+- [ ] Separate field-capture validity from displayed-scene lifetime. Recognized
+  field menus retain the last valid world, textures and actors without reading
+  menu graphics as field data. Revalidate on return; handle unknown state,
+  startup, warps and battles explicitly rather than treating every refusal as a
+  menu. Do not pause guest execution or head tracking to preserve scenery.
 - [ ] Capture actual sprite frame/pose, OBJ graphics/palettes, flips, affine/
   subsprite state, priorities, transparency, visibility and subpixel positions.
   The existing 16-event table is insufficient for all effects.
@@ -553,6 +570,10 @@ guest-memory reads from the VR thread.
 
 ## M6: actors and field effects
 
+- [ ] **In review — RV-010:** [original field actor frames and a following camera](live-actors.md)
+  in the native authored view. A bounded walk/turn recording, component and
+  GL checks pass; human acceptance is pending. The sequence covers five active
+  events and shallow authored terrain, not complete gameplay/actor coverage.
 - [ ] Render player/NPC idle, walk, run and turn animation with correct pivots/facing.
 - [ ] Cover bikes, surf/dive, jumps/ledges, scripted movement and followers or
   special event actors where the supported game actually provides them.
@@ -571,6 +592,19 @@ evidence, with no doubled source sprites, missing frames or drifting feet.
 - [ ] Route title/intro, new/load game, naming and options screens.
 - [ ] Route dialogue, choices, shops, bag, party, storage, Pokédex, trainer
   information, navigation/map screens, saves and every remaining menu category.
+- [ ] Keep the world visible behind recognized field menus. First compose the
+  original interface over the retained scenery on desktop and on a world-placed
+  panel in VR; develop diegetic interactions without losing original controls,
+  text or selections. Bag opening must not blank the world. Verify menu input
+  ownership, camera/head tracking and safe field refresh on closing.
+- [ ] Explore a diegetic inventory that can be browsed while the player walks.
+  This must be a custom interface over captured inventory while the original
+  field continues, not simultaneous execution of Ruby's original Bag and field
+  callbacks. Separate viewing/selecting items from verified game-side item use;
+  define interruption and input rules for dialogue, encounters and warps, and
+  preserve item counts and saves. Scope this after the initial playable proof
+  under M7/M9; recompilation does not make it impossible, but rendering alone
+  cannot implement it.
 - [ ] Preserve battle commands, backgrounds, sprites, animations, HP/status,
   capture, fainting, switching, escape, results and field transitions.
 - [ ] Preserve evolution, level-up/learning, contests, special facilities,

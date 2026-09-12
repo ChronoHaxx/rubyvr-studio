@@ -2,11 +2,15 @@
 
 #include "viewer.h"
 #include "diorama.h"
+#include "actor_render.h"
 #include "gl_loader.h"
 #include "vr_math.h"
 
 #include <cmath>
 #include <cstdio>
+#include <cstdlib>
+#include <vector>
+#include <algorithm>
 
 namespace vr {
 namespace viewer {
@@ -20,7 +24,7 @@ bool        g_active = false;
 // inspecting a model.
 float g_yaw    = 0.6f;      // radians
 float g_pitch  = 0.55f;     // radians above the horizon
-float g_dist   = 22.0f;     // cells
+float g_dist   = 12.0f;     // cells; read the player at native sprite proportions
 float g_ty     = 1.0f;      // target height above the ground plane
 
 bool  g_follow = true;      // track the player, or hold over the map centre
@@ -35,6 +39,28 @@ bool pressed(const Uint8* k, SDL_Scancode sc, bool* held) {
     const bool edge = down && !*held;
     *held = down;
     return edge;
+}
+
+// Opt-in bounded capture of the actual native viewer back buffer for review.
+// The caller owns the output prefix/directory; no game data is published.
+void capture_review(int width,int height) {
+    const char* prefix=std::getenv("RUBYVR_VIEWER_CAPTURE");
+    if(!prefix || !*prefix)return;
+    static unsigned frame=0;
+    const unsigned n=frame++;
+    if(n>=720 || n%4 || width<=0 || height<=0 || width>4096 || height>4096)return;
+    std::vector<uint8_t> pixels(size_t(width)*height*4);
+    glReadBuffer(GL_BACK);glReadPixels(0,0,width,height,GL_RGBA,GL_UNSIGNED_BYTE,pixels.data());
+    for(int y=0;y<height/2;++y)
+        std::swap_ranges(pixels.begin()+size_t(y)*width*4,pixels.begin()+size_t(y+1)*width*4,
+                         pixels.begin()+size_t(height-1-y)*width*4);
+    auto* surface=SDL_CreateRGBSurfaceWithFormatFrom(pixels.data(),width,height,32,width*4,SDL_PIXELFORMAT_RGBA32);
+    char path[2048];const int count=std::snprintf(path,sizeof(path),"%s-%04u.bmp",prefix,n);
+    if(surface && count>0 && count<int(sizeof(path)))SDL_SaveBMP(surface,path);
+    if(surface)SDL_FreeSurface(surface);
+    const auto& a=actor_render::stats();
+    std::fprintf(stderr,"[actors] frame=%u visible=%d unsupported=%d unresolved=%d player=%d foot=%.4f,%.4f,%.4f\n",
+        n,a.visible,a.unsupported,a.unresolved,a.player,a.player_x,a.player_y,a.player_z);
 }
 
 }  // namespace
@@ -66,7 +92,7 @@ void frame(const world::Snapshot& s, bool present) {
     if (!diorama::ready() && !diorama::init()) return;
 
     // Controls first, so a re-mesh request lands before update() runs.
-    if (const Uint8* k = SDL_GetKeyboardState(nullptr)) {
+    if (const Uint8* k = SDL_GetKeyboardState(nullptr);SDL_GetKeyboardFocus()==g_win && k) {
         if (k[SDL_SCANCODE_J]) g_yaw   -= 0.02f;
         if (k[SDL_SCANCODE_L]) g_yaw   += 0.02f;
         if (k[SDL_SCANCODE_I]) g_pitch += 0.015f;
@@ -103,7 +129,7 @@ void frame(const world::Snapshot& s, bool present) {
             diorama::set_min_unit(++g_min_unit);
             std::fprintf(stderr, "[viewer] min unit %d\n", g_min_unit);
         }
-    }
+    } else g_b_held=g_h_held=g_n_held=g_m_held=false;
 
     diorama::update(s);
     if (!diorama::has_geometry()) {
@@ -115,8 +141,9 @@ void frame(const world::Snapshot& s, bool present) {
         return;
     }
     char title[160];
-    std::snprintf(title,sizeof(title),"RubyRecomp - live map %d.%d | %zu connections | diorama prototype",
-        s.map_group,s.map_number,s.connections.size());
+    const auto& actors=actor_render::stats();
+    std::snprintf(title,sizeof(title),"RubyRecomp - live map %d.%d | %zu connections | %d actors | %d unsupported | %d unresolved",
+        s.map_group,s.map_number,s.connections.size(),actors.visible,actors.unsupported,actors.unresolved);
     SDL_SetWindowTitle(g_win,title);
 
     float mw = 0, mh = 0, px = 0, py = 0, pz = 0;
@@ -156,6 +183,8 @@ void frame(const world::Snapshot& s, bool present) {
         math::look_at(ex, ey, ez, tx, ty, tz));
 
     diorama::draw_raw(vp, math::identity(), g_debug);
+
+    if(present)capture_review(w,h);
 
     if (present) SDL_GL_SwapWindow(g_win);
 }

@@ -1,6 +1,6 @@
 # Capture one animated actor sequence with correct source identity
 
-Work package **RV-010** · M6 Actors and effects · help wanted, area: runtime, status: blocked
+Work package **RV-010** · M6 Actors and effects · help wanted, area: runtime, status: In review
 
 ## Problem
 
@@ -9,6 +9,13 @@ Static object-event references do not carry all rendered OBJ animation, flips, p
 ## Bounded contribution
 
 Extend the immutable capture contract for one player idle/walk/turn sequence, then render it through the shared presentation path. Inventory unsupported fields rather than hiding them behind a static sprite.
+
+The [first native slice](../live-actors.md) is implemented and **In review**:
+4bpp animated field frames, bounded subsprite composition, original flips and
+palette, fractional placement, explicit terrain height and a following camera.
+Synthetic/sanitized, local GL and native walking evidence pass. Human checks
+remain pending, so the acceptance below stays unchecked. Affine/effects and
+full actor/mode coverage remain M6 work.
 
 ## Acceptance
 

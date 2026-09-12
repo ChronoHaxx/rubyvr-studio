@@ -38,6 +38,7 @@
 
 #include <cstdint>
 #include <vector>
+#include "actor_frame.h"
 
 namespace vr {
 namespace world {
@@ -244,6 +245,14 @@ struct Snapshot {
 
     int            player_index = -1;      // index into objects, or -1
     ObjectSnapshot objects[kObjectEventCount];
+
+    // Transient live actor art; source-built/disk snapshots leave it empty.
+    // Single 32 KB OBJ allocation and 512 B palette, copied at the safe boundary.
+    actor::Source actor_sources[kObjectEventCount];
+    std::vector<uint8_t> obj_tiles;
+    std::vector<uint16_t> obj_palette;
+    bool obj_mapping_1d=false;
+    int16_t actor_offset_x=0,actor_offset_y=0;
 
     // Metatile definitions, read from ROM via gMapHeader.mapLayout. Only
     // refreshed when layout_ptr changes — these are ROM tables and cannot move

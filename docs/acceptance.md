@@ -1,10 +1,24 @@
 # Watch the acceptance check
 
-**In review — [verified live map identity](live-map-identity.md), RV-008 / M5.**
+**In review — [native player and field actors](live-actors.md), RV-010 / M5–M6.**
+The original player walks and turns through authored scenery with a following
+camera. Five field actors appear in the verified native sequence. Component,
+GL, native replay and editor regressions pass; human acceptance is pending.
+Menu composition, full actor/effect coverage and headset performance remain open.
+
+![Actual native Ruby walking and turning with a follow camera](media/live-actors.gif)
+
+12 seconds at nominal game-frame timing; captured from actual native execution,
+not editor flight. [One launch command and human checks](live-actors.md#try-the-prepared-local-build).
+
+**Merged — [verified live map identity](live-map-identity.md), PR #27 / RV-008 / M5.**
 The native adapter recognizes Route 101, clears its scene during Bag and
 restores it on return. Asset-free, local GL and native frame-sink checks pass;
-the five human checks are pending. This is a foundation for the monitor
-gameplay proof, not completed playable voxel rendering.
+the maintainer passed all five human checks on `825b1ae` and merged on 2026-09-12.
+This is a foundation for the monitor gameplay proof, not completed playable
+voxel rendering. Clearing during Bag is an interim safeguard: M5/M7 must retain
+the world behind recognized menus. The passed checks do not approve that interim
+presentation as the final menu experience.
 
 **Merged — [connected-region query component](terrain-region-query-review.md), PR #26 / RV-003 / M2.**
 This backend change has no visible gameplay yet. Its review records actual

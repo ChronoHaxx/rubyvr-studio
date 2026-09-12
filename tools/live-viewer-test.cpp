@@ -3,6 +3,7 @@
 #include "viewer.h"
 #include "diorama.h"
 #include "gl_loader.h"
+#include "actor_render.h"
 #include <cstdlib>
 #include <cstring>
 #include <iostream>
@@ -36,9 +37,43 @@ int main(int,char**) {
     expect(std::strstr(SDL_GetWindowTitle(window),"live map 0.16")!=nullptr,"valid scene title");
     const auto first=vr::diorama::diorama_stats().geometry_hash;
     expect(first!=0,"geometry digest");
+    auto& object=field.objects[0];object.active=object.is_player=true;object.elevation=3;object.x=object.y=12;
+    field.player_index=0;field.obj_mapping_1d=true;
+    auto& sprite=field.actor_sources[0];sprite.present=true;sprite.sprite[0x3e]=3;
+    auto put=[&](int p,int v){sprite.sprite[p]=uint8_t(v);sprite.sprite[p+1]=uint8_t(unsigned(v)>>8);};
+    put(0,2<<14);put(2,2<<14);put(0x20,200);put(0x22,192);
+    sprite.sprite[0x28]=248;sprite.sprite[0x29]=240;
+    field.obj_tiles.assign(32768,0x11);field.obj_palette.assign(256,0);field.obj_palette[1]=31;
+    vr::viewer::frame(field,false);
+    expect(vr::actor_render::stats().visible==1 && vr::actor_render::stats().player,"live player rendered");
+    float px=0,py=0,pz=0;vr::diorama::player_cell(&px,&py,&pz);
+    expect(px==12.5f && pz==12.5f && py==0,"camera follows exact foot on legacy flat terrain");
+    std::vector<uint8_t> actor_pixels(1280*800*4);glReadBuffer(GL_BACK);
+    glReadPixels(0,0,1280,800,GL_RGBA,GL_UNSIGNED_BYTE,actor_pixels.data());
+    int red=0;for(size_t i=0;i<actor_pixels.size();i+=4)red+=actor_pixels[i]>240 && actor_pixels[i+1]<10;
+    expect(red>100,"actual player pixels in GL frame");
+    put(0x20,196);vr::viewer::frame(field,false);vr::diorama::player_cell(&px,&py,&pz);
+    expect(px==12.25f && vr::diorama::diorama_stats().geometry_hash==first,"subtile actor move does not rebuild scenery");
+    // Explicit terrain layer chooses the surface; visual jump leaves it alone.
+    vr::overrides::OverrideSet authored;authored.version=vr::overrides::kTerrainVersion;vr::overrides::TerrainMap tm;
+    tm.group=0;tm.number=16;tm.width=25;tm.height=24;
+    vr::overrides::TerrainCell tc;tc.x=tc.y=12;tc.expected=0;
+    vr::overrides::TerrainSurface top;top.layer=3;top.height=top.thickness=16;tc.surfaces.push_back(top);tm.cells.push_back(tc);
+    expect(vr::terrain::guard_tile(field,0,&tm),"guard original synthetic terrain art");
+    authored.terrain.push_back(tm);expect(vr::terrain::valid(authored.terrain),"valid authored terrain fixture");
+    vr::diorama::set_overrides(authored);
+    put(0x26,-8);vr::viewer::frame(field,false);vr::diorama::player_cell(&px,&py,&pz);
+    expect(py==1.f && vr::diorama::has_geometry(),"camera uses authored height independently of jump");
+    field.objects[0].elevation=4;vr::viewer::frame(field,false);
+    expect(vr::actor_render::stats().visible==0 && vr::actor_render::stats().unresolved==1,"wrong layer is unresolved rather than guessed");
+    authored.version=vr::overrides::kVersion;vr::diorama::set_overrides(authored);
+    field.objects[0].elevation=3;vr::viewer::frame(field,false);
+    expect(!vr::diorama::has_geometry() && vr::actor_render::stats().visible==0,"rejected scenery also hides actors");
+    vr::diorama::set_overrides({});field.objects[0].elevation=3;put(0x26,0);
     vr::world::Snapshot unavailable;
     vr::viewer::frame(unavailable,false);
     expect(!vr::diorama::has_geometry(),"invalid scene clears geometry");
+    expect(vr::actor_render::stats().visible==0,"invalid scene clears actors");
     expect(vr::diorama::diorama_stats().geometry_hash==0,"invalid scene clears diagnostics");
     expect(std::strstr(SDL_GetWindowTitle(window),"scene unavailable")!=nullptr,"explicit unavailable title");
     // Hidden-window front buffers are not reliable on WSLg. Inspect the actual

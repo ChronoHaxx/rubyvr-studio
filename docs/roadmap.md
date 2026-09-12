@@ -572,6 +572,12 @@ flat materials are intentional.
   state/capture and pause/step through the runner's clock. Add map warp,
   encounter/party/flag controls or noclip only as separate verified game-side
   actions, clearly active in a test session; camera flight alone is not noclip.
+  **In review — [native developer tools](developer-mode.md):** visible game
+  speed/uncapped, pause/one-frame step, named isolated checkpoints and verified
+  on-foot obstacle bypass. Windows and WSL component checks and eight native
+  functional checks pass; the final speed benchmark misses its 2x target (M10).
+  Human input acceptance is pending. Warp, encounter/party/flag
+  editing, invincibility, resolved-surface inspection and full timing remain open.
 - [ ] Establish a supported public runner integration boundary and version map
   identity in source-built/live snapshots ([RV-007](issues/007-native-integration.md),
   [RV-008](issues/008-map-identity.md)).

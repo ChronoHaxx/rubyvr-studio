@@ -1,5 +1,19 @@
 # Watch the acceptance check
 
+**In review — [native developer tools](developer-mode.md), M5.** Named isolated
+checkpoints, pause/one-frame step, whole-game speed including uncapped, and
+walking through trees while ordinary collisions remain intact when disabled.
+Component checks pass on Windows/WSL; eight native functional checks pass. The
+final capture misses the exploratory 2x throughput target (1.63x at 4x requested,
+1.76x at MAX); this remains M10 work. Human physical
+input checks are pending. Camera-relative controls, border forest and Bag world
+retention are still open and listed beside the [launch/checklist](developer-mode.md#try-the-prepared-build).
+
+![Actual native developer controls and tree collision test](media/native-developer.gif)
+
+This local harness recording shows the native game and shared voxel viewer.
+It does not establish physical mouse/keyboard or headset acceptance.
+
 **Merged in PR #28 — [native player and field actors](live-actors.md), bounded RV-010 / M5–M6.**
 The original player walks and turns through authored scenery with a following
 camera. Five field actors appear in the verified native sequence. Component,

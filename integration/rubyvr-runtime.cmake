@@ -16,6 +16,8 @@ function(rubyvr_attach_runtime target)
         "${root}/integration/runtime/map_view.cpp"
         "${root}/integration/runtime/renderer.cpp"
         "${root}/integration/runtime/viewer.cpp"
+        "${root}/integration/runtime/dev_runtime.cpp"
+        "${root}/src/dev/session.cpp"
         "${root}/src/vr/tileset.cpp" "${root}/src/vr/gl_loader.cpp"
         "${root}/src/vr/diorama.cpp" "${root}/src/vr/world_io.cpp"
         "${root}/src/vr/json_scan.cpp" "${root}/src/vr/overrides.cpp"
@@ -25,5 +27,10 @@ function(rubyvr_attach_runtime target)
         "${root}/integration/runtime" "${root}/src/vr" "${root}/src")
     target_compile_features(${target} PRIVATE cxx_std_20)
     target_compile_definitions(${target} PRIVATE XR_USE_PLATFORM_WIN32 XR_USE_GRAPHICS_API_OPENGL)
+    # The private runner supplies the documented dispatch-boundary adapter.
+    target_compile_definitions(${target} PRIVATE RUBYVR_DEV_RUNTIME=1)
+    target_include_directories(${target} PRIVATE "${RECOMP_UI_ROOT}/src")
+    target_compile_definitions(gbarecomp_runtime PRIVATE RUBYVR_DEV_RUNTIME=1)
+    target_include_directories(gbarecomp_runtime PRIVATE "${root}/integration/runtime" "${root}/src")
     target_link_libraries(${target} PRIVATE SDL2::SDL2 OpenXR::openxr_loader OpenGL::GL)
 endfunction()

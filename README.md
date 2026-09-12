@@ -27,6 +27,10 @@ merged in **PR #28**, with an actual native walking recording. Camera-relative
 controls/facing and surrounding border scenery remain known gaps in the
 [native gameplay proof](docs/roadmap.md#current-focus).
 
+**In review:** [Developer mode](docs/developer-mode.md) adds named test
+checkpoints, pause/frame step, game speed/MAX and an on-foot noclip toggle to
+the prepared native Windows game. Human input checks are pending.
+
 **Watch the result:** [Short acceptance GIF and verdict](docs/acceptance.md).
 For details, the [roadmap and checklist](docs/roadmap.md) tracks M0–M11 work,
 completed tasks, open PRs and remaining acceptance in one place.

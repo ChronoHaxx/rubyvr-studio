@@ -1,5 +1,17 @@
 # Verification and its limits
 
+## Native developer controls — in review, 2026-09-12
+
+`python tools/test-dev-session.py` passes 40 checkpoint/transport checks on
+Windows and WSL without graphics or assets. The native adapter additionally
+passes scripted pause, exact one-frame step, named checkpoint capture/reload,
+tree collision off/on, reset of speed/noclip on load, and accelerated/uncapped
+execution. Eight native functional checks pass; the final recording misses
+the exploratory 2x throughput target, reaching 1.63x at 4x requested and 1.76x
+at MAX. Keep that M10 limitation visible. The same portable checks run in CI. The [developer-mode recording,
+scope and pending human checks](developer-mode.md) distinguish this from
+physical input and headset acceptance.
+
 Checks use the production renderer and real document/input paths. They do not
 replace human visual review or prove complete gameplay. Initial standalone
 verification ran on 2026-09-08 on Windows with MSYS2 mingw64, an NVIDIA OpenGL

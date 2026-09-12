@@ -6,6 +6,12 @@ existing capture, renderer, viewer and OpenXR work so contributors can understan
 the intended connection without importing the upstream game runner's history.
 There is no supported end-user installation command for this folder yet.
 
+[Developer mode](../docs/developer-mode.md) documents the private runtime-menu
+and dispatch-boundary adapter, named checkpoint isolation, pause/step and speed,
+and the reviewed Ruby collision-entry hook. Its portable session controller is
+tested without the external runner; the native build still needs the local
+runner changes described there.
+
 **Current priority, 2026-09-12:** retain this native game route and complete the
 [monitor gameplay proof](../docs/issues/007-native-integration.md#native-desktop-proof).
 Verified live identity/invalidation is the first bounded change, now

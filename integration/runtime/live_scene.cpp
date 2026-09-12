@@ -35,6 +35,7 @@ struct Layout {
     int width = 0, height = 0;
     uint32_t primary = 0, secondary = 0;
     std::array<uint16_t, 4> border{};
+    uint32_t body = 0;
 };
 bool layout(const Memory& m, uint32_t address, Layout& out) {
     const auto* p = m.read_rom(address, 24);
@@ -48,6 +49,7 @@ bool layout(const Memory& m, uint32_t address, Layout& out) {
     const uint32_t primary = u32(p+16), secondary = u32(p+20);
     if (!m.read_rom(primary, 24) || (secondary && !m.read_rom(secondary, 24))) return false;
     out = {int(w), int(h), primary, secondary};
+    out.body=u32(p+12);
     for (int i=0; i<4; ++i)
         out.border[i] = uint16_t(border[2*i] | uint16_t(border[2*i+1])<<8);
     return true;
@@ -191,6 +193,96 @@ bool copy_presentation_grid(const Memory& m, const Scene& scene,
         out[i]=cell;
     }
     return true;
+}
+
+bool decode_tiles(std::span<const uint8_t> packed, size_t limit,
+                  std::vector<uint8_t>& out) {
+    out.clear();
+    if(packed.size()<4 || packed[0]!=0x10) return false;
+    const size_t size=size_t(packed[1]) | size_t(packed[2])<<8 | size_t(packed[3])<<16;
+    if(!size || size>limit) return false;
+    std::vector<uint8_t> bytes; bytes.reserve(size);
+    size_t cursor=4;
+    while(bytes.size()<size) {
+        if(cursor==packed.size()) return false;
+        const auto flags=packed[cursor++];
+        for(unsigned mask=128;mask && bytes.size()<size;mask>>=1) {
+            if(!(flags & mask)) {
+                if(cursor==packed.size()) return false;
+                bytes.push_back(packed[cursor++]);
+            } else {
+                if(packed.size()-cursor<2) return false;
+                const auto a=packed[cursor++], b=packed[cursor++];
+                const size_t length=(a>>4)+3, distance=((a&15)<<8)+b+1;
+                // Ruby includes streams whose final token crosses the declared
+                // size. The BIOS finishes that token; permit it only within the
+                // destination half's explicit capacity (never past the buffer).
+                if(distance>bytes.size() || length>limit-bytes.size()) return false;
+                // GBA copies overlapping back-references one byte at a time.
+                for(size_t i=0;i<length;++i) bytes.push_back(bytes[bytes.size()-distance]);
+            }
+        }
+    }
+    out=std::move(bytes); return true;
+}
+
+bool source_snapshot(const Memory& m,int group,int number,Snapshot& out) {
+    out={};
+    if(!m.verified_ruby_rev1 || m.rom.size()!=0x1000000) return false;
+    const auto* hdr=header(m,group,number);
+    Layout own;
+    if(!hdr || !layout(m,u32(hdr),own)) return false;
+    Scene scene;scene.width=own.width+15;scene.height=own.height+14;
+    if(!connections(m,hdr,own,scene)) return false;
+    Snapshot s;s.width=scene.width;s.height=scene.height;
+    s.map_group=group;s.map_number=number;s.layout_ptr=u32(hdr);
+    s.identity_source=Snapshot::IdentitySource::SourceTable;
+    s.connections=scene.connections;
+    s.grid.assign(size_t(s.width)*s.height,kGridUndefined);
+    const auto read16=[](const uint8_t* p){return uint16_t(p[0] | uint16_t(p[1])<<8);};
+    const auto* body=m.read_rom(own.body,size_t(own.width)*own.height*2,2);
+    for(int y=0;y<own.height;++y) for(int x=0;x<own.width;++x)
+        s.grid[size_t(y+7)*s.width+x+7]=read16(body+2*(size_t(y)*own.width+x));
+    for(const auto& c:s.connections) {
+        Layout neighbour;
+        const auto* h=header(m,c.group,c.number);
+        if(!h || !layout(m,u32(h),neighbour)) return false;
+        const auto* data=m.read_rom(neighbour.body,size_t(neighbour.width)*neighbour.height*2,2);
+        for(int y=0;y<c.h;++y) for(int x=0;x<c.w;++x)
+            s.grid[size_t(c.y+y)*s.width+c.x+x]=read16(data+2*(size_t(c.source_y+y-7)*neighbour.width+c.source_x+x-7));
+    }
+    for(int y=0;y<s.height;++y) for(int x=0;x<s.width;++x) {
+        auto& cell=s.grid[size_t(y)*s.width+x];
+        const bool padding=x<7 || y<7 || x>=s.width-8 || y>=s.height-7;
+        const auto id=own.border[((y+1)&1)*2+((x+1)&1)] & kMetatileIdMask;
+        if(padding && cell==kGridUndefined && id!=kGridUndefined) cell=uint16_t(id|0x400);
+    }
+    s.vram_tiles.assign(kTileSheetSize,0);s.bg_palette.assign(kPaletteEntries,0);
+    s.metatiles.assign(kMetatilesTotal*kTilesPerMetatile,0);s.attributes.assign(kMetatilesTotal,0);
+    for(int half=0;half<2;++half) {
+        const uint32_t address=half?own.secondary:own.primary;
+        if(!address) continue;
+        const auto* ts=m.read_rom(address,24);
+        // Source fieldmap.c: six palettes per half. Special compressed-palette
+        // tilesets are not guessed; unsupported material data refuses the map.
+        if(!ts || ts[0]>1 || ts[1]!=half) return false;
+        const auto* pixels=m.read_rom(u32(ts+4),ts[0]?4:16384);
+        const auto* palette=m.read_rom(u32(ts+8)+unsigned(half)*192,192,2);
+        const auto* metatiles=m.read_rom(u32(ts+12),8192,2);
+        const auto* attributes=m.read_rom(u32(ts+16),1024,2);
+        if(!pixels || !palette || !metatiles || !attributes) return false;
+        if(ts[0]) {
+            std::vector<uint8_t> decoded;
+            const size_t offset=size_t(pixels-m.rom.data());
+            if(!decode_tiles(m.rom.subspan(offset),16384,decoded)) return false;
+            std::copy(decoded.begin(),decoded.end(),s.vram_tiles.begin()+half*16384);
+        } else std::copy_n(pixels,16384,s.vram_tiles.begin()+half*16384);
+        for(int i=0;i<96;++i) s.bg_palette[half*96+i]=read16(palette+i*2);
+        for(int i=0;i<4096;++i) s.metatiles[half*4096+i]=read16(metatiles+i*2);
+        for(int i=0;i<512;++i) s.attributes[half*512+i]=read16(attributes+i*2);
+    }
+    s.bg_palette[0]=0; // LoadTilesetPalette reserves backdrop black.
+    s.valid=true;out=std::move(s);return true;
 }
 
 const char* status_name(Status status) {

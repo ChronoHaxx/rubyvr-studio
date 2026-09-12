@@ -23,27 +23,34 @@ using our authored world: walking, connected maps, an interior and the original
 game UI. We retain the RubySapphireRecomp route. The first
 [live map identity/invalidation foundation](docs/live-map-identity.md) is merged in PR #27;
 the [original player/NPC rendering and follow camera](docs/live-actors.md) are
-merged in **PR #28**, with an actual native walking recording. Camera-relative
-controls/facing and surrounding border scenery remain known gaps in the
+merged in **PR #28**, with an actual native walking recording. The following
+merged repairs and current connected-world work advance the
 [native gameplay proof](docs/roadmap.md#current-focus).
 
-**In review:** [Developer mode](docs/developer-mode.md) adds named test
+**Merged in PR #29:** [Developer mode](docs/developer-mode.md) adds named test
 checkpoints, pause/frame step, game speed/MAX and an on-foot noclip toggle to
 the prepared native Windows game. Human input checks are pending.
 
-**Camera follow-up merged into parent PR #29:** [North-up and camera-relative walking](docs/live-camera.md)
+**Camera follow-up merged into main with PR #29:** [North-up and camera-relative walking](docs/live-camera.md)
 adds four compass-view presets and a reset, while preserving original menu
 directions. J/L now turn in 90-degree steps to match grid movement. The current
-combined build includes the developer tools above; parent PR #29 is still open.
+combined build includes the developer tools above; PR #29 merged at `9d895c7`.
 The follow-up now selects [camera-facing player art](docs/live-facing.md) while
 preserving the game's displayed animation phase. The 16-second native comparison
-and automated checks pass; physical input checks remain pending. NPC/special-pose
+and automated checks pass; the combined launch/border/camera human step is checked.
+The other four developer-mode steps remain unreported. NPC/special-pose
 facing, other actor defects, distant pop-in and the cleared Bag view remain open; [Emerald implementation comparison](docs/emerald-camera-actor-audit.md).
 
-**Border restoration in review in PR #29:** the live viewer now repeats Ruby's
+**Border restoration merged in PR #29:** the live viewer now repeats Ruby's
 original forest border outside the map body. [Watch the 12-second comparison and
 use the single current launcher](docs/live-borders.md). The reported ledge
 collision/depth mismatch, foliage polish and performance remain open.
+
+**In review — [connected native scenery](docs/live-connected-world.md):** complete
+nearby maps load before entry and remain when looking back. The native
+Route 101 → Oldale → Route 101 sequence passes agent checks; the short GIF,
+same launch command and pending human steps are in the guide. Up to three maps
+are selected; distant actors, unrestricted noclip and menu composition remain open.
 
 **Watch the result:** [Short acceptance GIF and verdict](docs/acceptance.md).
 For details, the [roadmap and checklist](docs/roadmap.md) tracks M0–M11 work,

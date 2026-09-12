@@ -17,10 +17,12 @@ check completion time was not recorded. The subsequent camera/control and
 missing-border report remains open; that merge does not accept full live-view fidelity.
 PR #30's [camera/input](live-camera.md) and [normal-player facing](live-facing.md)
 fixes merged on 2026-09-12 into the developer-tools branch, at `0fc67e2`.
-**Parent PR #29 remains open against main**; this is not yet a main-branch merge.
+**Parent PR #29 merged into main on 2026-09-12 at `9d895c7`.**
+Its launch/border/camera human step is checked for `2e07576`; the other four
+developer/checkpoint/collision/menu steps remain unreported, not inferred passed.
 The maintainer then reported a ledge geometry/collision mismatch. Detailed new
 physical-input checklist results were not supplied. NPC/special-pose facing
-remains open. [Live border scenery](live-borders.md) is now in review in PR #29.
+remains open. [Live border scenery](live-borders.md) is merged in PR #29.
 Experimental foliage art remains unapproved.
 
 **Prefer the short version? [Watch the acceptance GIF and verdict](acceptance.md).**
@@ -55,12 +57,26 @@ is **merged in PR #28**: real Route 101 walking/turning and five field actors,
 with component, GL and native evidence and five checked human steps. Complete
 connected gameplay and intentional UI routing remain open.
 
-**In review in the combined PR #29: [live border scenery](live-borders.md).**
+**Merged in combined PR #29: [live border scenery](live-borders.md).**
 The existing camera-session launcher now includes the developer tools, merged
 PR #30 camera/facing fixes and source-pattern border forest. It preserves that
 session's checkpoints. One launch workflow is documented across the PR and guides.
 The 12-second border comparison, 75 component checks and ten native scripted
-checks pass; current human acceptance and the parent merge remain pending.
+checks pass; the launch/border/camera human step is checked. The other four
+combined developer-mode steps remain unreported.
+
+**Active implementation — [connected native scenery](live-connected-world.md), M5/M2, in review.**
+Prioritized after the maintainer's 2026-09-12 report that looking back loses a
+nearby map. Load complete source neighbours, retain their world origins across
+crossings and prepare a bounded three-map area without clearing the previous
+view. Native Route 101 → Oldale → Route 101 and synthetic/GL checks pass;
+human acceptance remains pending. This advances the connected part of the
+desktop proof before retained-world Bag composition. It does not complete M5.
+
+**New post-merge report, 2026-09-12:** noclip only travels a short distance
+(M5/M9), and a nearby previous map disappears when looking back (M2/M5).
+The scenery part is addressed by the active change. Noclip intentionally retains
+map-boundary and story-event rules; unrestricted debug travel/warp remains open.
 
 **PR #30 report, 2026-09-12 (`6911329`), not accepted:** animation/facing defects,
 distant sprite pop-in and awkward free yaw with grid movement. The
@@ -70,7 +86,8 @@ request 90-degree turns, deferred until held arrows release. Arbitrary yaw must
 ship with a verified continuous-movement mode. **M6 player follow-up merged into parent PR #29:**
 [normal-player apparent facing and displayed-phase matching](live-facing.md),
 following the maintainer's further report after the `6133cb7` handoff (their exact
-running build was not supplied). Native/GL checks pass; human retest is pending.
+running build was not supplied). Native/GL checks pass; the later combined
+launch/border/camera human step is checked for `2e07576`.
 **M6/RV-010 remains open:** other actor poses/animation and presentation visibility beyond Ruby's
 2D viewport/live-slot range, preserving script hiding. This is part of the active
 M5 playable proof, not deferred art polish or a new engine migration.
@@ -93,7 +110,7 @@ M5 playable proof, not deferred art polish or a new engine migration.
   Capture/present Ruby's real border pattern where the backup grid is undefined;
   preserve real neighbour copies and blocked/non-playable ownership. This is
   missing world data/presentation, distinct from M4's unfinished tree artwork.
-  **Border restoration is in review in PR #29:** [source lookup and native evidence](live-borders.md).
+  **Border restoration merged in PR #29:** [source lookup and native evidence](live-borders.md).
 - **M2/M5 ledge report, 2026-09-12 after PR #30 merge:** apparently walkable
   space is blocked and the ledge active area feels too deep. Exact map/build was
   not supplied. Audit rendered edge placement against Ruby's destination-tile
@@ -471,13 +488,14 @@ automated/visual/live/headset results, evidence and unresolved defects separatel
   so orbit/first-person views do not expose unintended voids or hide the player.
   **Reported after PR #28, 2026-09-12:** capture and render the repeating 2x2
   border-metatile pattern used by `MapGridGetMetatileIdAt` for undefined backup
-  cells. **In review in PR #29 — [native border restoration](live-borders.md):**
+  cells. **Merged in PR #29 — [native border restoration](live-borders.md):**
   all four quarters, corners and neighbour precedence pass; a native Route 101
   comparison is inspected. The editor source adapter remains unchanged and a
   specific Littleroot human check remains open. Preserve connection provenance
   and blocked ownership. Do not hide broader border/void gaps with fog or
   invent a forest biome. Full neighbouring-map streaming is a separate remaining
-  M2/M5 consumer.
+  M2/M5 consumer; its bounded [three-map live implementation](live-connected-world.md)
+  is now in review. Wide-view outer voids remain open.
   Maintainer feedback (2026-09-10): the visible outer cutoff/void needs a deliberate
   treatment. Render full nearby neighbours before relying on distant sky/fog;
   first-person mode alone does not close an exposed edge. Horizon blending is M8.
@@ -609,12 +627,21 @@ flat materials are intentional.
   state/capture and pause/step through the runner's clock. Add map warp,
   encounter/party/flag controls or noclip only as separate verified game-side
   actions, clearly active in a test session; camera flight alone is not noclip.
-  **In review — [native developer tools](developer-mode.md):** visible game
+  **Merged in PR #29 — [native developer tools](developer-mode.md):** visible game
   speed/uncapped, pause/one-frame step, named isolated checkpoints and verified
   on-foot obstacle bypass. Windows and WSL component checks and eight native
   functional checks pass; the final speed benchmark misses its 2x target (M10).
   Human input acceptance is pending. Warp, encounter/party/flag
   editing, invincibility, resolved-surface inspection and full timing remain open.
+- [x] **Merged — PR #29, bounded developer controls:** pause/step, requested
+  speed/MAX, isolated named checkpoints and verified on-foot obstacle bypass.
+  Automated/native evidence is recorded in [developer mode](developer-mode.md);
+  its four detailed human control/reopen checks remain unreported.
+- [ ] **In review — [complete nearby maps in native gameplay](live-connected-world.md):**
+  ROM-backed scenery, three-map cache, stable connected coordinates, background
+  mesh preparation and current-map actor/material updates. Native crossing,
+  reverse view and return pass. Broader transitions, human input and distant
+  actors remain pending; no whole-world/VR streaming completion is claimed.
 - [ ] Establish a supported public runner integration boundary and version map
   identity in source-built/live snapshots ([RV-007](issues/007-native-integration.md),
   [RV-008](issues/008-map-identity.md)).
@@ -648,9 +675,10 @@ guest-memory reads from the VR thread.
   GL checks pass; the PR records five checked human steps. The sequence covers five active
   events and shallow authored terrain, not complete gameplay/actor coverage.
 - [ ] Render player/NPC idle, walk, run and turn animation with correct pivots/facing.
-  **Merged into parent PR #29 via PR #30:** normal Brendan/May directional art at the captured
+  **Merged into main in PR #29 via PR #30:** normal Brendan/May directional art at the captured
   displayed phase; synthetic/GL checks and a native Brendan sequence pass.
-  Human visual retest, native May and broader actor/profile coverage remain open.
+  The combined PR's launch/border/camera step is checked; native May and broader
+  actor/profile coverage remain open.
 - [ ] Cover bikes, surf/dive, jumps/ledges, scripted movement and followers or
   special event actors where the supported game actually provides them.
 - [ ] Align feet/jump offsets to terrain layers; handle depth ordering,
@@ -741,13 +769,14 @@ indoors or broken environment transitions.
 
 - [x] Provide tested editor orbit/fly/orthographic/focus controls, independent
   of saved authoring data ([camera verification](verification.md)).
-- [ ] **Merged into parent PR #29; main pending — [native north-up and camera-relative grid walking](live-camera.md):**
+- [x] **Merged into main in PR #29 — [native north-up and camera-relative grid walking](live-camera.md):**
   north-up default/reset, four compass presets, focused 3D mapping, held-direction
   latching, focus/menu neutral transitions and unchanged stock menu directions.
   After the `6911329` report, J/L use 90-degree steps and defer turns until held
   arrows release; continuous yaw is reserved for a continuous-movement mode.
-  Component/sanitizer/GL and ten native scripted checks pass. Physical keyboard,
-  focus, collision and checkpoint checks remain pending. This bounded input repair
+  Component/sanitizer/GL and ten native scripted checks pass. The combined PR's
+  launch/border/camera human step is checked; detailed focus, collision and
+  checkpoint checks remain unreported. This bounded input repair
   includes normal-player facing; broader actor profiles and the view modes below remain open.
 - [ ] Add monitor view modes: original 2D, fixed tilt presets (reference labels
   15/35/50/75), player-follow orbit/third-person and first-person. Start with a

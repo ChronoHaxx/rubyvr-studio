@@ -1,7 +1,9 @@
 # Camera-relative native gameplay
 
-**M5 desktop proof / bounded M9 controls — PR #30 merged into parent PR #29
-on 2026-09-12; main integration remains pending.** The viewer starts north-up
+**M5 desktop proof / bounded M9 controls — merged into main with PR #29
+on 2026-09-12 (`9d895c7`).** The combined launch/border/camera human step is checked
+for `2e07576`; the other four combined developer checks remain unreported.
+The viewer starts north-up
 and lets the player walk using its camera direction. The command below now
 opens the combined developer/camera build with [border restoration](live-borders.md).
 Existing camera-session checkpoints are preserved.

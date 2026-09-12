@@ -12,6 +12,8 @@
 #include <cstdlib>
 #include <vector>
 #include <algorithm>
+#include <future>
+#include <chrono>
 
 namespace vr {
 namespace viewer {
@@ -35,6 +37,53 @@ bool  g_b_held = false, g_h_held = false, g_n_held = false, g_m_held = false, g_
 bool g_camera_relative = true;
 uint64_t g_control_time = 0;
 camera_input::TurnLatch g_turn;
+
+world::live::SourceLoader g_source_loader=nullptr;
+world::live::Neighbourhood g_neighbourhood;
+struct RegionResult {
+    std::shared_ptr<diorama::PreparedRegion> prepared;
+    std::vector<world::live::RegionEntry> maps;
+    std::string error;
+    uint64_t space=0,revision=0;
+};
+std::atomic<bool> g_cancel=false;
+std::future<RegionResult> g_pending;
+std::vector<world::live::RegionEntry> g_visible_maps;
+uint64_t g_requested=0,g_visible_space=0;
+
+bool update_connected(const world::Snapshot& s) {
+    if(!g_source_loader || !s.valid || diorama::build_mode()!=diorama::BuildMode::Diorama) return false;
+    g_neighbourhood.refresh(s,g_source_loader);
+    if(g_pending.valid() && g_pending.wait_for(std::chrono::seconds(0))==std::future_status::ready) {
+        auto result=g_pending.get();
+        if(result.space==g_neighbourhood.space() && result.revision==g_neighbourhood.revision()) {
+            if(result.prepared && diorama::publish_region(result.prepared,&result.error)) {
+                g_visible_space=result.space;g_visible_maps=std::move(result.maps);
+                const auto& stats=diorama::region_stats();
+                std::fprintf(stderr,"[live-region] ready maps=%zu stored=%zu expanded=%zu gpu_bytes=%zu omitted=%zu\n",
+                    stats.maps,stats.stored_vertices,stats.vertices,stats.gpu_bytes,g_neighbourhood.omitted());
+            } else std::fprintf(stderr,"[live-region] %s\n",result.error.c_str());
+        }
+    }
+    if(!g_pending.valid() && g_requested!=g_neighbourhood.revision()) {
+        g_requested=g_neighbourhood.revision();g_cancel=false;
+        RegionResult request;request.maps=g_neighbourhood.maps();
+        request.space=g_neighbourhood.space();request.revision=g_requested;
+        // The native frame only copies bounded snapshots. CPU meshing owns its
+        // inputs; GL publication stays on this thread. Keep the old view drawn.
+        g_pending=std::async(std::launch::async,[request=std::move(request),set=diorama::current_overrides()]() mutable {
+            const auto start=std::chrono::steady_clock::now();
+            std::vector<diorama::RegionMap> inputs;
+            for(const auto& m:request.maps) inputs.push_back({&m.source,m.x,m.z});
+            request.prepared=diorama::prepare_region(inputs,set,&request.error,&g_cancel);
+            std::fprintf(stderr,"[live-region] prepare_ms=%lld maps=%zu\n",
+                static_cast<long long>(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now()-start).count()),inputs.size());
+            return request;
+        });
+    }
+    if(g_visible_space!=g_neighbourhood.space()) return false;
+    return map_origin(s.map_group,s.map_number,nullptr,nullptr);
+}
 
 // Edge trigger: true only on the frame a key goes down.
 bool pressed(const Uint8* k, SDL_Scancode sc, bool* held) {
@@ -80,8 +129,23 @@ bool camera_relative() { return g_camera_relative; }
 void set_camera_relative(bool enabled) { g_camera_relative=enabled; }
 void reset_camera() { g_yaw=0;g_pitch=0.9f;g_dist=12;g_ty=1;g_follow=true;g_turn.reset(); }
 
-bool init(SDL_Window* win, bool visible) {
+void shutdown() {
+    g_cancel=true;
+    if(g_pending.valid()) g_pending.wait();
+    g_pending={};g_neighbourhood={};g_visible_maps.clear();
+    g_requested=g_visible_space=0;g_source_loader=nullptr;g_active=false;
+}
+size_t connected_maps() {return g_visible_maps.size();}
+bool map_origin(int group,int number,int* x,int* z) {
+    for(const auto& m:g_visible_maps) if(m.source.map_group==group && m.source.map_number==number) {
+        if(x)*x=m.x;if(z)*z=m.z;return true;
+    }
+    return false;
+}
+
+bool init(SDL_Window* win, bool visible, world::live::SourceLoader loader) {
     if (!win) return false;
+    shutdown();g_source_loader=loader;
     g_win = win;
     reset_camera();g_control_time=SDL_GetTicks64();
 
@@ -157,8 +221,10 @@ void frame(const world::Snapshot& s, bool present) {
         g_turn.reset();
     }
 
-    diorama::update(s);
-    if (!diorama::has_geometry()) {
+    const bool connected=update_connected(s);
+    if(connected) diorama::update_region_live(s);
+    else diorama::update(s);
+    if (!connected && !diorama::has_geometry()) {
         SDL_SetWindowTitle(g_win,"RubyRecomp - scene unavailable; use the original game window");
         gl::glBindFramebuffer(GL_FRAMEBUFFER,0);
         glClearColor(0.07f,0.08f,0.11f,1.0f);
@@ -169,17 +235,25 @@ void frame(const world::Snapshot& s, bool present) {
     char title[256];
     const auto& actors=actor_render::stats();
     const char* compass[]={"N","W","S","E"};
-    std::snprintf(title,sizeof(title),"RubyRecomp - live map %d.%d | %d actors | Up=%s (field) | Arrows: walk | J/L: turn 90 | R: north-up | %s",
-        s.map_group,s.map_number,actors.visible,compass[g_camera_relative?camera_input::quadrant(g_yaw):0],
+    std::snprintf(title,sizeof(title),"RubyRecomp - live map %d.%d | %zu maps | %d actors | Up=%s (field) | Arrows: walk | J/L: turn 90 | R: north-up | %s",
+        s.map_group,s.map_number,connected?connected_maps():size_t(1),actors.visible,compass[g_camera_relative?camera_input::quadrant(g_yaw):0],
         focused()?"3D controls":"Focus here to play");
     SDL_SetWindowTitle(g_win,title);
 
     float mw = 0, mh = 0, px = 0, py = 0, pz = 0;
     diorama::map_size(&mw, &mh);
     diorama::player_cell(&px, &py, &pz);
+    int origin_x=0,origin_z=0;
+    if(connected) {
+        map_origin(s.map_group,s.map_number,&origin_x,&origin_z);
+        mw=float(s.width);mh=float(s.height);
+        px=actors.player?actors.player_x:s.camera_cell_x();
+        py=actors.player?actors.player_y:0;
+        pz=actors.player?actors.player_z:s.camera_cell_y();
+    }
 
-    const float tx = g_follow ? px : mw * 0.5f;
-    const float tz = g_follow ? pz : mh * 0.5f;
+    const float tx = origin_x+(g_follow ? px : mw * 0.5f);
+    const float tz = origin_z+(g_follow ? pz : mh * 0.5f);
     const float ty = (g_follow ? py : 0.0f) + g_ty;
 
     const float cp = std::cos(g_pitch);
@@ -210,7 +284,10 @@ void frame(const world::Snapshot& s, bool present) {
         math::projection(fov, 0.05f, 500.0f),
         math::look_at(ex, ey, ez, tx, ty, tz));
 
-    diorama::draw_raw(vp, math::identity(), g_debug);
+    if(connected) {
+        diorama::draw_region_raw(vp,g_debug);
+        actor_render::draw(vp,math::translation(float(origin_x),0,float(origin_z)));
+    } else diorama::draw_raw(vp, math::identity(), g_debug);
 
     if(present)capture_review(w,h);
 

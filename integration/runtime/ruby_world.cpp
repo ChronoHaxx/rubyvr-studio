@@ -167,6 +167,14 @@ void reset_capture() {
     g_verified_rom=nullptr; g_verified_size=0; g_supported_rom=false; g_last_status=-1;
 }
 
+bool source_map(int group,int number,Snapshot& out) {
+    auto* bus=gbarecomp::active_bus();
+    if(!bus || !g_supported_rom || bus->rom_ptr()!=g_verified_rom || bus->rom_size()!=g_verified_size) {
+        out={};return false;
+    }
+    return live::source_snapshot({{g_verified_rom,g_verified_size},{},{},true},group,number,out);
+}
+
 bool capture(Snapshot& out, uint32_t previous_layout_ptr) {
     out.valid = false;
     out.map_group=out.map_number=-1;

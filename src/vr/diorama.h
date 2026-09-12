@@ -302,6 +302,9 @@ bool inspect_region_mesh(const std::vector<RegionMap>&, const overrides::Overrid
                          std::vector<RegionMesh>*, RegionStats*, std::string* error);
 bool build_region(const std::vector<RegionMap>&, const overrides::OverrideSet&, std::string* error);
 void clear_region();
+// Live regional consumer: update current-map materials and actors without
+// building a duplicate single-map mesh. Actor coordinates remain map-local.
+void update_region_live(const world::Snapshot&);
 const RegionStats& region_stats();
 bool region_bounds(part_geometry::Vec* lo,part_geometry::Vec* hi);
 void draw_region_raw(const math::Mat4& view_proj, int debug=0, Tint tint={});

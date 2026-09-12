@@ -1,13 +1,15 @@
 # Native developer mode
 
-**M5: implementation in review; human input checks pending.** This adds visible
+**M5: implementation merged in PR #29; detailed developer human checks remain unreported.** This adds visible
 test controls to the private Windows Ruby runner. It is not the Studio map editor
 or an installable public game/mod package.
 
-The current combined PR #29 build includes these tools, PR #30's merged
+The current build includes PR #29's merged tools, PR #30's merged
 [camera/facing fixes](live-camera.md), and [border forest restoration](live-borders.md).
 Use the single camera-session launcher below. Its checkpoints are preserved;
 the older developer build in the main checkout is historical.
+The newer [connected-scenery slice](live-connected-world.md) uses the same
+launcher and has a separate pending human checklist.
 
 ![Developer menu and tree collision check in the native game](media/native-developer.gif)
 
@@ -49,6 +51,11 @@ edit map data, or replace border transitions. Bikes, surfing, underwater movemen
 menus and unsupported ROMs retain normal behavior. Load a checkpoint to recover
 if an event or position stops further movement. Loading switches noclip off and
 returns speed to 1x.
+
+**Reported after merge, 2026-09-12 (M5/M9):** the maintainer could only travel a
+short distance with noclip. The boundary/event restrictions above still apply;
+complete neighbouring scenery does not grant unrestricted travel. Debug warp
+and broader movement remain open roadmap work.
 
 To reopen another named capture, supply `-Checkpoint 'Your name'` to the same
 launcher. `-Fresh` boots normally at the title screen using the isolated test

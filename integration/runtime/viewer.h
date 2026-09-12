@@ -31,12 +31,17 @@
 #include <SDL2/SDL.h>
 
 #include "ruby_world.h"
+#include "live_region.h"
 
 namespace vr {
 namespace viewer {
 
 // Take over `win`: resize it, show it, and switch to viewer rendering.
-bool init(SDL_Window* win, bool visible = true);
+bool init(SDL_Window* win, bool visible = true, world::live::SourceLoader loader = nullptr);
+void shutdown();
+// Published scenery only, for native/GL regression checks and diagnostics.
+size_t connected_maps();
+bool map_origin(int group,int number,int* x,int* z);
 
 // True when the viewer owns the window and the frame sink should drive it.
 bool active();

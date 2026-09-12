@@ -1,6 +1,6 @@
 # Live map border scenery
 
-**M2/M5 — in review in PR #29.** The native voxel view now draws Ruby's
+**M2/M5 — merged in PR #29 at `9d895c7`.** The native voxel view now draws Ruby's
 repeating border forest. Previously, it omitted the undefined padding cells
 even though the original game draws a border pattern there.
 
@@ -22,9 +22,13 @@ camera/facing fixes and border change. It preserves that session's checkpoints:
 Focus the 3D window, walk with the arrows and turn with J/L. In the original
 Ruby window, Esc opens Camera, Developer and Checkpoints. The old developer
 build in the main checkout is historical; it is not another required test step.
-The current prepared revision is printed by the launcher and recorded in PR #29.
+The current prepared revision is printed by the launcher. This page records
+the merged border change; [connected native scenery](live-connected-world.md)
+describes the newer prepared build and its own pending human checklist.
+PR #29 records its launch/border/camera step passed on `2e07576`; the remaining
+four combined developer checks were not reported.
 
-- [ ] Launch Route 101. Expect the forest to continue outside the left and
+- [x] Launch Route 101. Expect the forest to continue outside the left and
   right map edges shown in the comparison. Turn through all four views with J/L.
 - [ ] With Walk through obstacles off, approach the trees. Ordinary blocked
   movement remains blocked; the added scenery grants no extra walkable area.
@@ -45,7 +49,7 @@ The current prepared revision is printed by the launcher and recorded in PR #29.
 - **M6 actors:** NPC/special-player facing, animation coverage and distant
   sprite pop-in remain open. The merged normal-player facing fix is included.
 - **M5/M7 menus:** Bag still clears the 3D view. Retaining the world behind
-  recognized menus is the next presentation step.
+  recognized menus follows the active connected-scenery slice.
 - **M2/M10 extent/performance:** the border fills only the existing backup
   buffer (seven cells north/south/west, eight east). It does not load whole
   neighbouring maps, close the outer void or establish a frame-rate budget.
@@ -98,8 +102,9 @@ source adapter are unchanged. Invalid scenes clear the output.
 - Actual native Route 101 run: **10** camera movement/menu/checkpoint/idle-turn
   checks pass. All four recorded border views were inspected. Checkpoint copies
   and recordings are isolated from the maintainer's saves.
-- Source-publication and whitespace checks pass. Human checks above remain
-  pending for this border revision. CI is reported separately in PR #29.
+- Source-publication and whitespace checks pass. PR #29 is merged; the
+  launch/border/camera human step is checked and the other four combined
+  developer steps remain unreported. CI is reported separately in PR #29.
 
 Private audit helpers, captures and build provenance remain under the local
 `build/dev-session` directories; no ROM, saved state or runtime dependency is

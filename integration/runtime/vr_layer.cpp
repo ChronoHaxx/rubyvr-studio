@@ -861,7 +861,7 @@ bool start() {
     // running, instead of silently doing nothing.
     if (const char* vw = std::getenv("RUBYVR_VIEWER")) {
         if (vw[0] == '1' && have_gl) {
-            viewer::init(g_win);
+            viewer::init(g_win,true,world::source_map);
             return false;   // no XR session; the frame sink drives the window
         }
     }
@@ -976,7 +976,7 @@ bool start() {
 }
 
 void stop() {
-    if (!g_running.exchange(false)) return;
+    if (!g_running.exchange(false) && !viewer::active()) return;
     if (g_thread.joinable()) g_thread.join();
 
     // The VR thread released the context on its way out, so nothing is current
@@ -984,6 +984,7 @@ void stop() {
     // objects, and GL calls with no current context are silently ignored, which
     // would leak every buffer and renderbuffer without a word.
     SDL_GL_MakeCurrent(g_win, g_ctx);
+    viewer::shutdown();
     renderer::shutdown();
 
     if (g_swapchain)  xrDestroySwapchain(g_swapchain);

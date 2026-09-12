@@ -1,10 +1,11 @@
 # Watch the acceptance check
 
-**Current review — [connected native scenery](live-connected-world.md), M5/M2.**
+**Latest accepted slice — [connected native scenery](live-connected-world.md), M5/M2, merged PR #31.**
 Route 101 → Oldale → look back → Route 101, driven through native game movement.
 Complete nearby scenery stays in place. Component/sanitizer, actual GL and native
-checks pass; physical-input acceptance is pending. Use the guide's existing
-camera-session launch command and short human checklist.
+checks pass. All four maintainer human steps are checked for `c5bc19f`;
+merge `f8a9e8d` was verified on 2026-09-12. Use the guide's existing
+camera-session launch command and recorded human checklist.
 
 ![Native crossing, look-back and return](media/live-connected-world.gif)
 

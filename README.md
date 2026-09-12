@@ -46,10 +46,10 @@ original forest border outside the map body. [Watch the 12-second comparison and
 use the single current launcher](docs/live-borders.md). The reported ledge
 collision/depth mismatch, foliage polish and performance remain open.
 
-**In review — [connected native scenery](docs/live-connected-world.md):** complete
+**Merged in PR #31 — [connected native scenery](docs/live-connected-world.md):** complete
 nearby maps load before entry and remain when looking back. The native
-Route 101 → Oldale → Route 101 sequence passes agent checks; the short GIF,
-same launch command and pending human steps are in the guide. Up to three maps
+Route 101 → Oldale → Route 101 sequence passes agent checks and all four recorded
+human steps; the short GIF and same launch command are in the guide. Up to three maps
 are selected; distant actors, unrestricted noclip and menu composition remain open.
 
 **Watch the result:** [Short acceptance GIF and verdict](docs/acceptance.md).

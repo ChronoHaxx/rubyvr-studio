@@ -1,6 +1,6 @@
 # Connected scenery in the native game
 
-**M5 / bounded M2 consumer — in review.** The live viewer loads complete
+**M5 / bounded M2 consumer — merged in [PR #31](https://github.com/ChronoHaxx/rubyvr-studio/pull/31).** The live viewer loads complete
 nearby maps from the verified Ruby cartridge, using each map's own tiles and
 palettes. Route 101 can show Oldale before entry and keep Route 101 visible
 after crossing and turning around. Original guest movement remains authoritative.
@@ -50,19 +50,23 @@ is a separate application.
   still clears the viewer and uses the original window. Retained-world menu
   composition follows this connected-world slice.
 
-## Human functional check — pending
+## Human functional check — passed
 
-1. [ ] Launch using the command above. Wait for three maps in the title on
+All four steps below are checked in the maintainer's merged PR #31, verified
+on 2026-09-12. Tested source: `c5bc19f`; merge: `f8a9e8d`. These results cover
+this sequence, not the full game or PR #29's unreported detailed control checks.
+
+1. [x] Launch using the command above. Wait for three maps in the title on
    Route 101. Expect the forest and complete neighbouring scenery; turn with
    J/L and verify movement still follows the view.
-2. [ ] From Route 101, walk north along the open path into Oldale. If the
+2. [x] From Route 101, walk north along the open path into Oldale. If the
    checkpoint's obstacles intervene, use Esc > Developer > Walk through
    obstacles, then focus the 3D view again. Expect Oldale's buildings before
    entry, continuous ground at the connection and no camera recentering jump.
-3. [ ] Release arrows, turn twice with J/L, and look back at Route 101. Walk
+3. [x] Release arrows, turn twice with J/L, and look back at Route 101. Walk
    back across the connection; expect both maps to remain in place. R restores
    north-up. The foliage/NPC limitations above are still known issues.
-4. [ ] Load Bag open, then Back from bag from Esc > Checkpoints. Expect the
+4. [x] Load Bag open, then Back from bag from Esc > Checkpoints. Expect the
    current temporary Bag behavior, then a restored connected world. Save a new
    named checkpoint, close/reopen with the same command, and load it.
 

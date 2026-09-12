@@ -37,10 +37,13 @@ They must appear beside the next PR's human test instructions, not only here.
 stock menu gates and normal-player directional art are included. Parent PR #29
 merged into main at `9d895c7`, including [source border restoration](../live-borders.md).
 Its launch/border/camera human step is checked; the other four developer steps
-remain unreported. [Connected native scenery](../live-connected-world.md) is now
-in review, using the same camera-session launcher: complete nearby maps,
-asynchronous shared meshing and native forward/reverse crossings. This advances
-step 2 below; broader actors, modes and the complete sequence remain pending.
+remain unreported. [Connected native scenery](../live-connected-world.md) merged
+in PR #31 at `f8a9e8d`, using the same camera-session launcher: complete nearby
+maps, asynchronous shared meshing and native forward/reverse crossings. All four
+human steps are checked for `c5bc19f`. This advances step 2 below; broader actors,
+modes and the complete sequence remain pending. Retained-world menu composition
+is next, followed by the complete short session in the canonical
+[demo delivery targets](../roadmap.md#route-to-a-shareable-playable-demo).
 
 **New post-merge report, 2026-09-12 — M2/M5:** ledge geometry appears walkable
 where Ruby blocks movement, and the jump activation area feels too deep. Exact

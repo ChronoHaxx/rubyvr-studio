@@ -24,6 +24,10 @@ The maintainer then reported a ledge geometry/collision mismatch. Detailed new
 physical-input checklist results were not supplied. NPC/special-pose facing
 remains open. [Live border scenery](live-borders.md) is merged in PR #29.
 Experimental foliage art remains unapproved.
+**PR #31 merged on 2026-09-12 at `f8a9e8d`.** All four human steps are checked
+in the merged PR for `c5bc19f`: launch/camera, Route 101 → Oldale, look-back/return,
+and Bag-return/checkpoint reopen. This accepts that connected outdoor sequence,
+not every map or the unreported detailed developer controls from PR #29.
 
 **Prefer the short version? [Watch the acceptance GIF and verdict](acceptance.md).**
 The contributor/agent performs routine desktop functional and visual checks;
@@ -43,6 +47,35 @@ There is no whole-game completion percentage: definitions, source families,
 placements and gameplay states are different units. A floor or menu can
 intentionally remain flat/2D; accidental flat buildings, missing effects and
 temporary fallback frames remain defects.
+
+## Route to a shareable playable demo
+
+**Current stage: an early native outdoor playable prototype.** The editor,
+reusable scenery, original player and nearby NPCs, cardinal camera controls,
+developer checkpoints and connected Route 101/Oldale walking are implemented.
+The current recording can be shared as work in progress. The prepared local
+runner is not yet a reproducible installation for another player.
+
+Prioritize these three outcomes within the existing milestones. They are
+delivery targets, not a promise of three PRs or a calendar estimate:
+
+1. **A complete short play session (M5/M7).** Keep scenery behind recognized
+   field menus, compose the original UI, and verify walking → interior →
+   dialogue → Bag → battle → field → save/reopen. Use an intentional original
+   2D presentation where 3D coverage is missing. This is the next substantial
+   demo target; full interior modeling and a 3D battle remake are not prerequisites.
+2. **A convincing small area (M2/M4/M6/M9).** Fix the reported ledge/contact
+   mismatch and actor visibility defects in the chosen route, review scenery
+   cohesion, and retain useful checkpoints/debug controls. Broader world art,
+   unrestricted travel and extra camera modes remain separate work.
+3. **A handoff another player can run (M5/M10/M11).** Resolve the supported
+   public runner/API and distribution boundary, provide reproducible setup
+   with user-supplied game inputs, measure desktop performance, and test a
+   fresh installation. Deliver one launcher and a short actual-play recording.
+
+The first two outcomes can progress on the local runner while the public
+integration boundary is resolved. A downloadable demo depends on all three;
+full-world completion, diegetic VR UI and headset acceptance remain later exits.
 
 ## Current focus
 
@@ -65,17 +98,18 @@ The 12-second border comparison, 75 component checks and ten native scripted
 checks pass; the launch/border/camera human step is checked. The other four
 combined developer-mode steps remain unreported.
 
-**Active implementation — [connected native scenery](live-connected-world.md), M5/M2, in review.**
+**Merged in PR #31 — [connected native scenery](live-connected-world.md), M5/M2.**
 Prioritized after the maintainer's 2026-09-12 report that looking back loses a
 nearby map. Load complete source neighbours, retain their world origins across
 crossings and prepare a bounded three-map area without clearing the previous
 view. Native Route 101 → Oldale → Route 101 and synthetic/GL checks pass;
-human acceptance remains pending. This advances the connected part of the
-desktop proof before retained-world Bag composition. It does not complete M5.
+all four revision-specific human steps are checked. The next implementation is
+retained-world menu composition and the complete short play session above.
+This accepts the bounded connected part of the desktop proof, not all of M5.
 
 **New post-merge report, 2026-09-12:** noclip only travels a short distance
 (M5/M9), and a nearby previous map disappears when looking back (M2/M5).
-The scenery part is addressed by the active change. Noclip intentionally retains
+The tested scenery disappearance is addressed by merged PR #31. Noclip intentionally retains
 map-boundary and story-event rules; unrestricted debug travel/warp remains open.
 
 **PR #30 report, 2026-09-12 (`6911329`), not accepted:** animation/facing defects,
@@ -100,7 +134,7 @@ M5 playable proof, not deferred art polish or a new engine migration.
   directional input for rotatable play, preserving original menu navigation and
   the guest's grid/collision rules. Full continuous free walking is later work.
   The bounded [camera-input repair](live-camera.md) merged into parent PR #29;
-  quarter-turn movement/menu checks pass. Main integration remains pending.
+  quarter-turn movement/menu checks pass. Parent PR #29 is merged into main.
 - **M6/RV-010 facing:** the card turns towards the camera but keeps the original
   2D view's selected sprite frame. Side/back views and steep top-down readability
   need mode-aware frame selection and foot-pivot/card orientation.
@@ -314,11 +348,11 @@ Catalog and placement audits do not certify a complete game or headset experienc
 | [M2 Terrain and placement](#m2-terrain-and-placement) | Terrain/explorer/loading/base/bridge/query component merged; consumers and complete geography pending | M1 inventory + stable map identity |
 | [M3 Manual authoring](#m3-manual-authoring) | Core workflow and part selection merged; convenience tools and timed user trial pending | Current editor + M2 contract for terrain |
 | [M4 All static scenery](#m4-all-static-scenery) | Common starters and bounded tree fixes merged; foliage art deferred here; full coverage/review pending | M1–M3 |
-| [M5 Live scene data](#m5-live-scene-data) | Bounded live identity/invalidation merged; desktop gameplay proof and complete routing pending | Local prototype + M1; public integration separately required |
-| [M6 Actors and field effects](#m6-actors-and-field-effects) | First native actor/follow slice merged; camera-facing and broad coverage pending | M2, M5 |
+| [M5 Live scene data](#m5-live-scene-data) | Identity, developer controls and connected outdoor walking merged; PR #31 human sequence passed; complete play loop/public integration pending | Local prototype + M1; public integration separately required |
+| [M6 Actors and field effects](#m6-actors-and-field-effects) | Native actors/follow and normal-player camera-facing art merged; distant NPCs, special poses and broad coverage pending | M2, M5 |
 | [M7 UI, battles and game loop](#m7-ui-battles-and-game-loop) | Original frame available; complete routing/acceptance pending | M5 |
 | [M8 Sky, lighting, time and weather](#m8-sky-lighting-time-and-weather) | Editor preview merged; runtime cycle/weather/water pending | M2, M5 for runtime |
-| [M9 Controls and comfort](#m9-controls-and-comfort) | Editor cameras implemented; monitor presets/follow/first-person and VR acceptance pending | M5–M8 |
+| [M9 Controls and comfort](#m9-controls-and-comfort) | Editor cameras and native cardinal follow/camera-relative grid walking merged; continuous movement, first-person and VR acceptance pending | M5–M8 |
 | [M10 Performance and reliability](#m10-performance-and-reliability) | Native WSL editor/batch and Linux CI merged; full-world/headset budgets pending | Representative M2–M9 scenes |
 | [M11 Completion and release](#m11-completion-and-release) | Public contributor foundation exists; game release pending | M1–M10 |
 
@@ -637,11 +671,12 @@ flat materials are intentional.
   speed/MAX, isolated named checkpoints and verified on-foot obstacle bypass.
   Automated/native evidence is recorded in [developer mode](developer-mode.md);
   its four detailed human control/reopen checks remain unreported.
-- [ ] **In review — [complete nearby maps in native gameplay](live-connected-world.md):**
+- [x] **Merged in PR #31 — [complete nearby maps in native gameplay](live-connected-world.md):**
   ROM-backed scenery, three-map cache, stable connected coordinates, background
   mesh preparation and current-map actor/material updates. Native crossing,
-  reverse view and return pass. Broader transitions, human input and distant
-  actors remain pending; no whole-world/VR streaming completion is claimed.
+  reverse view and return pass, and all four human steps are checked for
+  `c5bc19f`. Broader transitions and distant actors remain pending; no
+  whole-world/VR streaming completion is claimed.
 - [ ] Establish a supported public runner integration boundary and version map
   identity in source-built/live snapshots ([RV-007](issues/007-native-integration.md),
   [RV-008](issues/008-map-identity.md)).

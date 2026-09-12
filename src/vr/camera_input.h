@@ -9,6 +9,16 @@ inline constexpr uint16_t directions = 0x00f0;
 int quadrant(float yaw);
 uint16_t rotate(uint16_t active_low_keys, int quadrant);
 
+// One quarter-turn per press. Finish held arrow input before applying a turn.
+class TurnLatch {
+public:
+    int update(bool left, bool right, bool walking);
+    void reset();
+private:
+    bool left_ = false, right_ = false, armed_ = true;
+    int pending_ = 0;
+};
+
 class Mapper {
 public:
     uint16_t update(uint16_t active_low_keys, float yaw, Context context);

@@ -58,6 +58,16 @@ presets and maps focused 3D input into Ruby's original four grid directions.
 Nine native scripted checks and a 12-second recording pass; physical-input
 checks remain pending. The older PR #29 test build is preserved independently.
 
+**PR #30 report, 2026-09-12 (`6911329`), not accepted:** animation/facing defects,
+distant sprite pop-in and awkward free yaw with grid movement. The
+[Emerald implementation audit](emerald-camera-actor-audit.md) traces their actual
+movement/actor paths and our culling gap. **M9 correction in review:** J/L now
+request 90-degree turns, deferred until held arrows release. Arbitrary yaw must
+ship with a verified continuous-movement mode. **M6/RV-010 remains open:** correct
+animation/available directional frames and presentation visibility beyond Ruby's
+2D viewport/live-slot range, preserving script hiding. This is part of the active
+M5 playable proof, not deferred art polish or a new engine migration.
+
 **Known visible issues reported after PR #28, 2026-09-12:**
 
 - **M9 controls:** the viewer starts diagonally and permits orbit, but game
@@ -715,6 +725,8 @@ indoors or broken environment transitions.
 - [ ] **In review — [native north-up and camera-relative grid walking](live-camera.md):**
   north-up default/reset, four compass presets, focused 3D mapping, held-direction
   latching, focus/menu neutral transitions and unchanged stock menu directions.
+  After the `6911329` report, J/L use 90-degree steps and defer turns until held
+  arrows release; continuous yaw is reserved for a continuous-movement mode.
   Component/sanitizer/GL and nine native scripted checks pass. Physical keyboard,
   focus, collision and checkpoint checks remain pending. This bounded input repair
   does not complete actor-facing selection or the view modes below.

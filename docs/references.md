@@ -186,6 +186,12 @@ remain open. Editor footage cannot close those gaps.
 
 ### Camera, facing and border follow-up (2026-09-12)
 
+The later [Emerald implementation audit](emerald-camera-actor-audit.md) traces
+the actual shared Emerald movement path, phase/facing selection, neighbour
+actors and Ruby's two sprite pop-in boundaries. It records the maintainer's
+PR #30 report and the resulting cardinal-camera correction; the earlier
+inspection below is retained as history.
+
 The maintainer reported rotated controls/facing and missing forest after merging
 PR #28. Inspection of RubyVR's `integration/runtime/viewer.cpp` confirms a
 default yaw of 0.6 radians and free inspection orbit, with game input still owned

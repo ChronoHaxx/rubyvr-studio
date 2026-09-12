@@ -2,16 +2,19 @@
 
 **In review — [north-up and camera-relative walking](live-camera.md), bounded M9
 support for the M5 desktop proof.** Four compass presets, camera-relative grid
-movement in the focused 3D window, and a north-up reset. Windows/WSL component,
+movement in the focused 3D window, J/L quarter-turns, and a north-up reset. Windows/WSL component,
 sanitizer, shared GL and nine native scripted checks pass. Physical input is
 pending; actor facing (M6), border forest (M2/M5), and Bag world retention (M5/M7)
 remain open beside the [single launch command and human checks](live-camera.md#try-this-camera-build).
+The maintainer reported animation and distant sprite pop-in on `6911329`;
+those M6 defects remain open after the cardinal-camera correction. The updated
+recording demonstrates four view directions, not actor-fidelity acceptance.
 
 ![Actual native walking from four camera directions](media/live-camera.gif)
 
 Twelve seconds: four checkpoint-based excerpts, retimed for viewing. Noclip is
 enabled for this scripted movement test. Original and 3D captures are paired
-within 117 ms; this is not a performance or physical-keyboard demonstration.
+within 150 ms; this is not a performance or physical-keyboard demonstration.
 
 **In review — [native developer tools](developer-mode.md), M5.** Named isolated
 checkpoints, pause/one-frame step, whole-game speed including uncapped, and

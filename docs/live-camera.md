@@ -11,7 +11,7 @@ Twelve seconds from the actual native game and shared renderer: four separate
 checkpoint-based excerpts, retimed for viewing. The left view retains the
 original map orientation; the right view changes direction. Input is scripted,
 with noclip enabled for the movement check. This is not physical-input or
-performance acceptance. The paired captures differ by at most 117 ms.
+performance acceptance. The paired captures differ by less than 150 ms.
 
 ## Try this camera build
 
@@ -22,9 +22,10 @@ and reopens the camera follow-up:
 & E:\Coding\vr-modding-research\_worktrees\live-camera\tools\run-dev-game.ps1
 ```
 
-Click the **3D window** and use the arrows to walk. **J/L** orbit, **I/K** change
-tilt, **U/O** zoom and **R** restores north-up and player following. Camera speed
-uses elapsed time, so fast-forward does not multiply orbit sensitivity.
+Click the **3D window** and use the arrows to walk. **J/L** turn by **90 degrees
+per press**; holding them does not spin. Held arrows defer the turn until arrow
+release. **I/K** change tilt, **U/O** zoom and **R** restores north-up and player
+following. Tilt/zoom use elapsed time so fast-forward does not multiply sensitivity.
 
 In the original Ruby window, **Esc > Camera** offers North/West/South/East-up
 presets, a camera-relative movement toggle and Reset north-up. Developer and
@@ -32,9 +33,9 @@ Checkpoints retain pause/frame-step, speed, noclip and named situations. Initial
 checkpoints are copied into this separate test session; subsequent captures in
 either test session do not overwrite the other session's files.
 
-Screen Up chooses the nearest of the game's four map directions. The game still
-owns grid movement, collisions and scripts. If you orbit while holding a
-direction, that walk keeps its direction until you release the arrows. Release
+The live grid view stays at cardinal yaw angles; screen Up maps to the
+corresponding map direction. The game still owns movement, collisions and scripts.
+Free yaw with continuous walking remains a separate mode to implement. Release
 held arrows after switching windows, changing menu context or loading a
 checkpoint before starting the next walk. Buttons such as A/B/Start are not rotated.
 
@@ -53,6 +54,9 @@ or when the host settings menu owns input.
   walking, a first-person camera, camera collision or a complete camera-mode menu.
 - **M6/RV-010:** sprite art still uses the original game's selected view/frame.
   Side/back-facing appearance and steep overhead readability are not fixed here.
+  The maintainer also reported animation defects and distant sprite pop-in on
+  `6911329`; those remain open. The [Emerald implementation audit](emerald-camera-actor-audit.md)
+  identifies the frame-selection gap and Ruby's 2D culling/live-slot boundaries.
 - **M2/M5:** the repeated decorative forest outside the map body is still absent.
 - **M5/M7:** Bag still clears the 3D view. Navigate it in the original window;
   preserving scenery behind menus remains open.
@@ -71,9 +75,10 @@ boxes count as acceptance of this input change.
 3. [ ] In Esc > Camera choose West up, return to 3D, then press Up after releasing
    the keys. Expect movement toward the screen top (west on the original map).
    Try the other presets; R restores north-up.
-4. [ ] Hold a direction while orbiting with J/L. Expect the current walk to keep
-   its direction until arrow release; the next press uses the new view. Switch
-   to the original game window and check normal compass directions and release.
+4. [ ] Press J/L: expect one 90-degree turn per press, with no spinning while
+   held. Hold an arrow and tap J/L: expect the camera to wait until arrow release,
+   then turn once. The next arrow press follows the new view. Switch windows;
+   expect original compass controls and no stuck movement or queued turn.
 5. [ ] At a rotated view open Start and navigate its options; load Bag open and
    navigate there. Expect original menu directions, no unintended walking, and
    the existing unavailable 3D view during Bag. Load Back from bag to return.
@@ -96,9 +101,11 @@ loads `0x030006a4`; the literal was confirmed in the hash-gated local ROM.
 Start-menu and dialogue scripts use this lock. This is a separate input gate
 from scenery validity; a visible field alone is not permission to remap menus.
 
-`python tools/test-camera-input.py` runs 1069 synthetic assertions on Windows
+`python tools/test-camera-input.py` runs 1079 synthetic assertions on Windows
 and WSL, including all four viewpoints, action bits, combinations, held orbit,
 context/focus changes, reset and refusal cases. WSL ASan/UBSan also passes.
+The added cases cover held-turn suppression, deferred turns, opposing camera
+keys, focus cancellation and release/re-arm. The GL test refuses non-cardinal yaw.
 The 55 existing live-scene checks pass in optimized and sanitized builds.
 The actual shared GL viewer regression passes, including default/reset north-up,
 orbit without a scenery rebuild and ordinary actor/scenery invalidation.

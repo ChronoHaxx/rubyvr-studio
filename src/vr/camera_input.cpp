@@ -19,6 +19,23 @@ uint16_t rotate(uint16_t keys, int q) {
         if (held & compass[i]) result &= uint16_t(~compass[(i - q + 4) % 4]);
     return result;
 }
+int TurnLatch::update(bool left, bool right, bool walking) {
+    const int turn = (right && !right_ ? 1 : 0) - (left && !left_ ? 1 : 0);
+    left_ = left; right_ = right;
+    if (!armed_) {
+        if (!left && !right) armed_ = true;
+        return 0;
+    }
+    if (left && right) pending_ = 0;
+    else pending_ = (pending_ + turn + 4) % 4;
+    if (walking) return 0;
+    const int ready = pending_;
+    pending_ = 0;
+    return ready;
+}
+void TurnLatch::reset() {
+    left_ = right_ = false; armed_ = false; pending_ = 0;
+}
 void Mapper::reset() {
     initialized_ = false;
     neutral_required_ = true;

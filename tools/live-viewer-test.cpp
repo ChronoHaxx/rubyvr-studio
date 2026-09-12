@@ -58,6 +58,11 @@ int main(int,char**) {
     expect(vr::actor_render::stats().visible==1,"quarter-turn keeps the original actor visible");
     vr::viewer::reset_camera();
     expect(vr::viewer::yaw_radians()==0,"north-up reset is exact");
+    vr::viewer::set_yaw_radians(0.4f);
+    expect(vr::viewer::yaw_radians()==0,"grid view cannot settle between cardinal angles");
+    vr::viewer::set_yaw_radians(1.1f);
+    expect(vr::viewer::yaw_radians()==1.570796327f,"off-angle view request selects nearest cardinal angle");
+    vr::viewer::reset_camera();
     put(0x20,196);vr::viewer::frame(field,false);vr::diorama::player_cell(&px,&py,&pz);
     expect(px==12.25f && vr::diorama::diorama_stats().geometry_hash==first,"subtile actor move does not rebuild scenery");
     // Explicit terrain layer chooses the surface; visual jump leaves it alone.

@@ -24,7 +24,7 @@ $checkpoints = Join-Path $devRoot 'checkpoints'
 $state = Join-Path $checkpoints ($Checkpoint + '.state')
 if (-not $Fresh -and -not (Test-Path -LiteralPath $state -PathType Leaf)) { throw "Checkpoint missing: $Checkpoint" }
 Write-Host "RubyVR Developer build: $($manifest.source_commit)"
-Write-Host 'Camera follow-up: focus 3D to walk relative to the view; J/L orbit, R resets north-up. Esc > Camera in the original window offers presets.'
+Write-Host 'Camera follow-up: focus 3D to walk relative to the view; J/L turn 90 degrees, R resets north-up. Release arrows to apply a queued turn. Esc > Camera offers presets.'
 Write-Host 'In the original Ruby window: Esc > Developer for pause/step, speed and noclip; Checkpoints for named save/load.'
 if ($Check) { Write-Host 'PASS: prepared developer inputs verified'; return }
 try {

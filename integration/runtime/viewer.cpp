@@ -20,9 +20,8 @@ namespace {
 SDL_Window* g_win = nullptr;
 bool        g_active = false;
 
-// Orbit camera, in map-cell units. Spherical around a target so dragging feels
-// like turning an object over rather than flying, which is what you want when
-// inspecting a model.
+// Follow camera in map-cell units. Grid gameplay uses cardinal yaw only;
+// continuous yaw belongs with the later continuous-movement integration.
 float g_yaw    = 0.0f;      // north-up gameplay view
 float g_pitch  = 0.9f;      // radians above the horizon
 float g_dist   = 12.0f;     // cells; read the player at native sprite proportions
@@ -35,6 +34,7 @@ int   g_min_unit = 2;
 bool  g_b_held = false, g_h_held = false, g_n_held = false, g_m_held = false, g_r_held = false;
 bool g_camera_relative = true;
 uint64_t g_control_time = 0;
+camera_input::TurnLatch g_turn;
 
 // Edge trigger: true only on the frame a key goes down.
 bool pressed(const Uint8* k, SDL_Scancode sc, bool* held) {
@@ -73,10 +73,12 @@ void capture_review(int width,int height) {
 bool active() { return g_active; }
 bool focused() { return g_active && SDL_GetKeyboardFocus()==g_win; }
 float yaw_radians() { return g_yaw; }
-void set_yaw_radians(float yaw) { if(std::isfinite(yaw)) g_yaw=std::remainder(yaw,6.283185307f); }
+void set_yaw_radians(float yaw) {
+    if(std::isfinite(yaw)) g_yaw=camera_input::quadrant(yaw)*1.570796327f;
+}
 bool camera_relative() { return g_camera_relative; }
 void set_camera_relative(bool enabled) { g_camera_relative=enabled; }
-void reset_camera() { g_yaw=0;g_pitch=0.9f;g_dist=12;g_ty=1;g_follow=true; }
+void reset_camera() { g_yaw=0;g_pitch=0.9f;g_dist=12;g_ty=1;g_follow=true;g_turn.reset(); }
 
 bool init(SDL_Window* win, bool visible) {
     if (!win) return false;
@@ -94,7 +96,7 @@ bool init(SDL_Window* win, bool visible) {
 
     g_active = true;
     std::fprintf(stderr,
-                 "[viewer] window open. J/L I/K orbit, U/O zoom, T/G target,\n"
+                 "[viewer] window open. J/L turn 90 degrees, I/K tilt, U/O zoom, T/G target,\n"
                  "[viewer] N/M min-unit, B debug colours, H follow-player, R north-up\n"
                  "[viewer] Focus this window to walk relative to its camera; menus keep original directions.\n");
     return true;
@@ -110,8 +112,10 @@ void frame(const world::Snapshot& s, bool present) {
     g_control_time=now;
     if (const Uint8* k = SDL_GetKeyboardState(nullptr);focused() && k) {
         if (pressed(k,SDL_SCANCODE_R,&g_r_held)) reset_camera();
-        if (k[SDL_SCANCODE_J]) g_yaw   -= 1.2f*dt;
-        if (k[SDL_SCANCODE_L]) g_yaw   += 1.2f*dt;
+        const bool walking=k[SDL_SCANCODE_UP] || k[SDL_SCANCODE_DOWN] ||
+            k[SDL_SCANCODE_LEFT] || k[SDL_SCANCODE_RIGHT];
+        const int turn=g_turn.update(k[SDL_SCANCODE_J],k[SDL_SCANCODE_L],walking);
+        if(turn) set_yaw_radians(g_yaw+turn*1.570796327f);
         if (k[SDL_SCANCODE_I]) g_pitch += 0.9f*dt;
         if (k[SDL_SCANCODE_K]) g_pitch -= 0.9f*dt;
         const float zoom=std::pow(1.02f,60*dt);
@@ -148,7 +152,10 @@ void frame(const world::Snapshot& s, bool present) {
             diorama::set_min_unit(++g_min_unit);
             std::fprintf(stderr, "[viewer] min unit %d\n", g_min_unit);
         }
-    } else g_b_held=g_h_held=g_n_held=g_m_held=g_r_held=false;
+    } else {
+        g_b_held=g_h_held=g_n_held=g_m_held=g_r_held=false;
+        g_turn.reset();
+    }
 
     diorama::update(s);
     if (!diorama::has_geometry()) {
@@ -162,7 +169,7 @@ void frame(const world::Snapshot& s, bool present) {
     char title[256];
     const auto& actors=actor_render::stats();
     const char* compass[]={"N","W","S","E"};
-    std::snprintf(title,sizeof(title),"RubyRecomp - live map %d.%d | %d actors | Up=%s (field) | Arrows: walk | J/L: orbit | R: north-up | %s",
+    std::snprintf(title,sizeof(title),"RubyRecomp - live map %d.%d | %d actors | Up=%s (field) | Arrows: walk | J/L: turn 90 | R: north-up | %s",
         s.map_group,s.map_number,actors.visible,compass[g_camera_relative?camera_input::quadrant(g_yaw):0],
         focused()?"3D controls":"Focus here to play");
     SDL_SetWindowTitle(g_win,title);

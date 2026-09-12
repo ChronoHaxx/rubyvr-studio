@@ -20,6 +20,12 @@ The current card turns toward the camera but retains the original view's frame.
 View-correct facing and high-angle readability remain open, along with affine/
 effects and full actor/mode coverage. See [M6/M9](../roadmap.md#current-focus).
 
+The maintainer's PR #30 report on `6911329` adds animation defects and distant
+sprite pop-in. The [Emerald implementation audit](../emerald-camera-actor-audit.md)
+confirms that our draw visibility inherits both Ruby's original 2D off-screen
+flag and live object-slot lifetime. Animation timing needs its own paired trace;
+do not assume all animation symptoms are explained by facing.
+
 ## Acceptance
 
 - [x] Preserve captured source frame, palette/index, original facing, foot pivot and subpixel position in the bounded sequence.
@@ -30,6 +36,13 @@ effects and full actor/mode coverage. See [M6/M9](../roadmap.md#current-focus).
   preserving the guest's real facing and animation phase. Verify four viewing
   quadrants and low/steep pitch with stable feet; do not infer missing views
   from a single captured frame. Pair this with M9's explicit camera/input modes.
+- [ ] Keep visible 3D actors stable across the original 2D culling and live-slot
+  boundaries using verified presentation records; preserve script/event hiding,
+  neighbour ownership and warp/checkpoint invalidation. Do not force gameplay
+  actors to spawn just to fill a wider camera view.
+- [ ] Compare idle/walk/turn phase at matching guest frames and four camera views;
+  identify and repair any capture/animation timing mismatch instead of accepting
+  an unrelated movement or orbit recording as proof.
 
 ## Where to start
 

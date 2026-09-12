@@ -1,4 +1,4 @@
-// viewer.h — a live, orbitable desktop window showing the diorama mesh.
+// viewer.h — live desktop gameplay with cardinal camera views.
 //
 // WHY THIS EXISTS:
 //
@@ -16,8 +16,9 @@
 //   session, because the two would fight over the GL context.
 //
 // CONTROLS (all keys the GBA does not have, so nothing collides with play):
-//   J / L      orbit left / right          U / O   zoom out / in
-//   I / K      orbit up / down             T / G   raise / lower the target
+//   J / L      turn 90 degrees per press   U / O   zoom out / in
+//              (deferred until held arrow keys are released)
+//   I / K      tilt up / down              T / G   raise / lower the target
 //   N / M      min unit height  - / +      (re-meshes live)
 //   B          cycle: textured -> classification colours
 //   H          follow the player  <->  hold still over the map centre
@@ -41,6 +42,7 @@ bool init(SDL_Window* win, bool visible = true);
 bool active();
 bool focused();
 float yaw_radians();
+// Grid gameplay accepts only the nearest cardinal view.
 void set_yaw_radians(float yaw);
 void reset_camera();
 bool camera_relative();

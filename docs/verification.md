@@ -2,8 +2,8 @@
 
 ## Native camera controls — in review, 2026-09-12
 
-`python tools/test-camera-input.py` passes 1069 assertions on Windows and WSL;
-WSL `python3 tools/test-camera-input.py --sanitize` passes ASan/UBSan. These
+`python tools/test-camera-input.py` passes 1079 assertions on Windows;
+WSL `python3 tools/test-camera-input.py --sanitize` passes all 1079 under ASan/UBSan. These
 checks need no SDL/OpenGL, assets or display. They cover four viewpoints,
 direction combinations, unchanged action bits, held orbit, context/focus/reset
 transitions and verified field-gate refusal. Disabling direction rotation in a
@@ -12,6 +12,14 @@ production files are unchanged by that negative control. The 55 existing live-sc
 pass in optimized and sanitized builds. The shared GL test passes north-up
 initialization/reset and an orbit with no scenery rebuild, alongside existing
 actor/invalidation checks.
+
+After the maintainer rejected free yaw with grid movement, J/L were changed to
+single 90-degree turns, deferred while arrow keys remain held. New component
+checks cover repeat/queue/opposing/focus behavior and the GL test rejects
+non-cardinal view requests. The native build and nine scripted movement/menu
+checks were rerun successfully. Physical controls need the updated human check.
+The report's animation and distant sprite pop-in remain **unfixed**, with the
+[actual Emerald implementation comparison](emerald-camera-actor-audit.md) recorded.
 
 The native Windows build passes nine scripted checks of actual cardinal
 movement, raw Start-menu/Bag navigation, no movement during Start-menu navigation,

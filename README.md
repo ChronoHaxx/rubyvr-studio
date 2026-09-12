@@ -33,9 +33,11 @@ the prepared native Windows game. Human input checks are pending.
 
 **Camera follow-up in review:** [North-up and camera-relative walking](docs/live-camera.md)
 adds four compass-view presets and a reset, while preserving original menu
-directions. Its separate prepared build includes the developer tools above.
+directions. J/L now turn in 90-degree steps to match grid movement. Its separate
+prepared build includes the developer tools above.
 The 12-second native GIF and automated checks pass; physical input checks remain
-pending. Actor facing, border scenery and the cleared Bag view remain open.
+pending. Actor animation/facing, distant sprite pop-in, border scenery and the
+cleared Bag view remain open; [Emerald implementation comparison](docs/emerald-camera-actor-audit.md).
 
 **Watch the result:** [Short acceptance GIF and verdict](docs/acceptance.md).
 For details, the [roadmap and checklist](docs/roadmap.md) tracks M0–M11 work,

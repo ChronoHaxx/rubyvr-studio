@@ -1,8 +1,15 @@
 # Watch the acceptance check
 
-**In review — [connected-region query component](terrain-region-query-review.md), PR #26 / RV-003 / M2.**
+**In review — [verified live map identity](live-map-identity.md), RV-008 / M5.**
+The native adapter recognizes Route 101, clears its scene during Bag and
+restores it on return. Asset-free, local GL and native frame-sink checks pass;
+the five human checks are pending. This is a foundation for the monitor
+gameplay proof, not completed playable voxel rendering.
+
+**Merged — [connected-region query component](terrain-region-query-review.md), PR #26 / RV-003 / M2.**
 This backend change has no visible gameplay yet. Its review records actual
-headless/component and full-project checks; the human CLI check is pending.
+headless/component and full-project checks; all three human CLI checks are
+recorded passed on `d2755ce` (merge `b894df7`).
 The footage below belongs to previously merged visual changes.
 
 ## Merged Route 104 bridge over water — PR #25

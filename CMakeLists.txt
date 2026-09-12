@@ -11,6 +11,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # headless with DISPLAY unset. The GUI is a separate, optional target so a
 # machine without a display can still build and test the batch boundary.
 option(RUBYVR_BUILD_GUI "Build the SDL/ImGui studio editor (rubyvr_gui)" ON)
+option(RUBYVR_BUILD_RUNTIME_TESTS "Build local GL live-viewer regression (requires a display to run)" OFF)
 
 find_package(SDL2 CONFIG REQUIRED)
 find_package(ZLIB REQUIRED)
@@ -36,6 +37,12 @@ set(STUDIO_CORE
 list(APPEND STUDIO_CORE src/vr/terrain.cpp)
 
 set(RUBYVR_TARGETS rubyvr_studio)
+if(RUBYVR_BUILD_RUNTIME_TESTS)
+    add_executable(rubyvr_live_viewer_test tools/live-viewer-test.cpp
+        integration/runtime/viewer.cpp ${STUDIO_CORE})
+    target_include_directories(rubyvr_live_viewer_test PRIVATE integration/runtime)
+    list(APPEND RUBYVR_TARGETS rubyvr_live_viewer_test)
+endif()
 add_executable(rubyvr_studio src/studio/compare.cpp src/studio/asset_catalog.cpp
     src/studio/terrain_test.cpp
     src/studio/bridge_test.cpp

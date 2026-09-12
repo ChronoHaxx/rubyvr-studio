@@ -41,14 +41,14 @@ bool pressed(const Uint8* k, SDL_Scancode sc, bool* held) {
 
 bool active() { return g_active; }
 
-bool init(SDL_Window* win) {
+bool init(SDL_Window* win, bool visible) {
     if (!win) return false;
     g_win = win;
 
     SDL_SetWindowSize(win, 1280, 800);
     SDL_SetWindowTitle(win, "RubyRecomp - diorama viewer");
     SDL_SetWindowPosition(win, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
-    SDL_ShowWindow(win);
+    if (visible) SDL_ShowWindow(win);
 
     // Vsync off: this shares a thread with the emulator, and blocking here for
     // the monitor's refresh would pace the GAME to the monitor.
@@ -61,7 +61,7 @@ bool init(SDL_Window* win) {
     return true;
 }
 
-void frame(const world::Snapshot& s) {
+void frame(const world::Snapshot& s, bool present) {
     if (!g_active || !g_win) return;
     if (!diorama::ready() && !diorama::init()) return;
 
@@ -106,7 +106,18 @@ void frame(const world::Snapshot& s) {
     }
 
     diorama::update(s);
-    if (!diorama::has_geometry()) return;
+    if (!diorama::has_geometry()) {
+        SDL_SetWindowTitle(g_win,"RubyRecomp - scene unavailable; use the original game window");
+        gl::glBindFramebuffer(GL_FRAMEBUFFER,0);
+        glClearColor(0.07f,0.08f,0.11f,1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        if (present) SDL_GL_SwapWindow(g_win);
+        return;
+    }
+    char title[160];
+    std::snprintf(title,sizeof(title),"RubyRecomp - live map %d.%d | %zu connections | diorama prototype",
+        s.map_group,s.map_number,s.connections.size());
+    SDL_SetWindowTitle(g_win,title);
 
     float mw = 0, mh = 0, px = 0, py = 0, pz = 0;
     diorama::map_size(&mw, &mh);
@@ -146,7 +157,7 @@ void frame(const world::Snapshot& s) {
 
     diorama::draw_raw(vp, math::identity(), g_debug);
 
-    SDL_GL_SwapWindow(g_win);
+    if (present) SDL_GL_SwapWindow(g_win);
 }
 
 }  // namespace viewer

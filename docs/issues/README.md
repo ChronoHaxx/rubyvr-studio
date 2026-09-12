@@ -23,12 +23,12 @@ reviewable PRs and keep evidence up to date.
 |---|---|---|---|
 | RV-001 | [Review one starter building or prop from all sides](001-scenery-review.md) | M0 | ready |
 | RV-002 | [Track source families and placement review without losing prior evidence](002-coverage-ledger.md) | M1 | inventories, browser, native paths and treatment/ownership rules merged; remaining source/runtime audits pending |
-| RV-003 | [Add the first versioned authored terrain surface and shared height query](003-terrain-contract.md) | M2 | terrain/explorer/loading/base/bridge merged; region-query component in review; consumers/geography pending |
+| RV-003 | [Add the first versioned authored terrain surface and shared height query](003-terrain-contract.md) | M2 | terrain/explorer/loading/base/bridge/query component merged; consumers/geography pending |
 | RV-004 | [Time a held-out house and tree authoring workflow against the demo checklist](004-manual-workflow.md) | M3 | ready |
 | RV-005 | [Add part hide, solo and lock for crowded models](005-part-visibility.md) | M3 | design |
 | RV-006 | [Add centered depth and geometry mirroring with intentional face art](006-symmetry-depth.md) | M3 | design |
-| RV-007 | [Define a supported public RubySapphireRecomp integration boundary](007-native-integration.md) | M5 | design |
-| RV-008 | [Version map identity in source-built and live snapshots](008-map-identity.md) | M5 | source identity/snapshot v2 merged in PR #26; live identity pending |
+| RV-007 | [Define a supported public RubySapphireRecomp integration boundary](007-native-integration.md) | M5 | identity/invalidation foundation in review; playable proof/public integration pending |
+| RV-008 | [Version map identity in source-built and live snapshots](008-map-identity.md) | M5 | source identity/snapshot v2 merged; bounded live identity/invalidation in review; wider captures pending |
 | RV-009 | [Preview starter-pack updates while preserving personal edits](009-pack-updates.md) | M3 | design |
 | RV-010 | [Capture one animated actor sequence with correct source identity](010-actor-capture.md) | M6 | blocked |
 | RV-011 | [Route field, dialogue, menu and battle transitions without stale scenery](011-scene-routing.md) | M7 | blocked |

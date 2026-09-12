@@ -32,7 +32,7 @@ namespace vr {
 namespace viewer {
 
 // Take over `win`: resize it, show it, and switch to viewer rendering.
-bool init(SDL_Window* win);
+bool init(SDL_Window* win, bool visible = true);
 
 // True when the viewer owns the window and the frame sink should drive it.
 bool active();
@@ -40,7 +40,8 @@ bool active();
 // Update the mesh from `s`, draw one frame, and present. Must be called on the
 // thread that owns the GL context — which, in viewer mode, is the emulation
 // thread, because no VR thread was ever started.
-void frame(const world::Snapshot& s);
+// present=false leaves the rendered back buffer available to local GL probes.
+void frame(const world::Snapshot& s, bool present = true);
 
 }  // namespace viewer
 }  // namespace vr

@@ -7,6 +7,11 @@ verification ran on 2026-09-08 on Windows with MSYS2 mingw64, an NVIDIA OpenGL
 
 ## Reproduce locally
 
+The [live map identity decoder](live-map-identity.md) runs 55 checks in each
+optimized/sanitized build with `bash tools/test-live-scene.sh`; no graphics or
+assets are required. Its optional GL lifecycle test and local native evidence
+are recorded separately, including remaining transition and human acceptance.
+
 The [connected-region query component](terrain-region-query.md) needs only Bash
 and GCC with ASan/UBSan, without graphics libraries, assets or a display:
 
@@ -16,7 +21,8 @@ bash tools/test-terrain-region-query.sh
 
 It runs optimized and sanitized builds: 16 named cases / 9,299 checks each,
 including 8,000 repeatability probes. The [coordinator review](terrain-region-query-review.md)
-separates new local results, original worker evidence and pending human acceptance.
+separates coordinator results, original worker evidence and the three human CLI
+passes recorded for PR #26 on `d2755ce` (merged as `b894df7`).
 
 Use the native Ubuntu/WSL setup in [building](building.md). The supported
 entrypoints are Bash and native Linux executables:

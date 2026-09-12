@@ -1,9 +1,17 @@
 # Native game integration: prototype source
 
-The standalone CMake targets do **not** build these files. They preserve our
+The default standalone CMake targets do **not** build the game adapter. The
+optional local GL test builds the desktop viewer with synthetic data. These files preserve our
 existing capture, renderer, viewer and OpenXR work so contributors can understand
 the intended connection without importing the upstream game runner's history.
 There is no supported end-user installation command for this folder yet.
+
+**Current priority, 2026-09-12:** retain this native game route and complete the
+[monitor gameplay proof](../docs/issues/007-native-integration.md#native-desktop-proof).
+Verified live identity/invalidation is the first bounded change, now
+[in review with local native evidence](../docs/live-map-identity.md). The existing
+desktop viewer is a prototype, not evidence that the current Studio terrain
+and complete gameplay already work together. See the [single roadmap](../docs/roadmap.md).
 
 ## Development base
 
@@ -33,6 +41,10 @@ directory into an upstream checkout builds RubyVR.
 `runtime/renderer.*`, `vr_layer.*`, `viewer.*` and `map_view.*` handle presentation.
 Their include/build environment currently belongs to the development runner;
 the public integration work package must define a reproducible boundary.
+
+`rubyvr-runtime.cmake` provides our current source list for the private Windows
+runner experiment; it still requires the caller's runtime headers, libraries
+and frame-sink integration. See the [checks and limits](../docs/live-map-identity.md).
 
 ## Licence compatibility before distribution
 

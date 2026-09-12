@@ -25,6 +25,8 @@ jobs:
           python3 -m pip install -r requirements.txt
       - name: Check source and contributor metadata
         run: python3 tools/check-repo.py --publication
+      - name: Test shared terrain query without graphics or assets
+        run: bash tools/test-terrain-region-query.sh
       - name: Test original synthetic suites
         run: |
           python3 tools/test-coverage-ledger.py

@@ -4,9 +4,10 @@
 game integration.** It replaces the local research workspace's
 `_docs/full-vr-roadmap-v1.md`; its detailed M0–M11 scope is retained here.
 Work-package documents explain individual contributions; they are not another
-roadmap. Last reconciled **2026-09-11**: archived PRs #19–#31 and the new
+roadmap. Last reconciled **2026-09-12**: archived PRs #19–#31 and the new
 repository's GPL PR #19, camera-driven loading PR #20, ground-base PR #21 and
-native Linux/WSL PR #22 and mouse repair PR #24 are merged.
+native Linux/WSL PR #22, mouse repair PR #24 and bridge PR #25 are merged.
+The shared region-query component is in review in PR #26; consumers remain pending.
 Experimental foliage art remains unapproved.
 
 **Prefer the short version? [Watch the acceptance GIF and verdict](acceptance.md).**
@@ -37,14 +38,24 @@ editor controls and copied-neighbour heights are **merged in
 The revised fixture has two 8 px ledges, continuous walk-around grades and a
 shared 16 px northern surface. It remains a local authored geography example.
 
-**In review — [Route 104 bridge](terrain-bridge.md):** 38 source boardwalk cells
+**Merged — [PR #25](https://github.com/ChronoHaxx/rubyvr-studio/pull/25), [Route 104 bridge](terrain-bridge.md):** 38 source boardwalk cells
 over continuous water, level bank approaches, and the canonical Petalburg join.
 The six previous maps remain unchanged. Source/native/SDL checks and the actual
-12-second comparison pass; four human checks and merge remain pending.
+12-second comparison pass. The PR records all four human checks passed on
+`cf4817f`; the exact reporting time was not recorded. Merge: `7b105c5`.
 The review launch handoff was corrected after main's old executable reproduced
 the mouse issue: explicit PR checkout/rebuild, matching resume paths and GUI
-identity/newer-source warnings. Launcher and real SDL retests pass; human
-start/resume retest remains pending with the bridge checks.
+identity/newer-source warnings. Launcher and real SDL retests pass, followed by
+the recorded human start/resume and bridge checks. The original handoff failure
+remains documented.
+
+**In review — [PR #26](https://github.com/ChronoHaxx/rubyvr-studio/pull/26), [shared connected-region query](terrain-region-query.md):** select one primary
+map and an explicit terrain layer at fractional world coordinates. The bounded
+component preserves ownership, source guards and borrowed surfaces; its new
+[coordinator review](terrain-region-query-review.md) separates component tests,
+full-project regressions and pending human CLI acceptance. Scenery, feet,
+effects and camera-follow consumers are a separate next step. No new visible
+gameplay or completed M2 is claimed.
 
 **Merged — [PR #27](https://github.com/ChronoHaxx/rubyvr-studio-archive-20260910/pull/27):** the [connected-region example](terrain-regions.md) extends terrain
 or connection context to six maps, including Oldale's north/west neighbours and
@@ -87,12 +98,12 @@ fixtures and the existing editor, connected-area and streaming checks pass with
 local assets. Bash replaces the PowerShell workflow; Linux OpenXR runtime
 support remains outside this change. Hosted source checks and native Linux
 batch/GUI builds pass on the merged implementation.
-M2 bridge terrain remains the next scenery task. [Evidence and limits](native-wsl.md).
+The subsequent M2 bridge fixture merged in PR #25. [Evidence and limits](native-wsl.md).
 
 **Merged — [PR #24](https://github.com/ChronoHaxx/rubyvr-studio/pull/24), M10 WSL mouse movement:** bounded drag fixes the excessive turns
 reported after PR #22. All four [human functional checks](wsl-mouse-look.md)
 were reported passed on 2026-09-11, separately from automated regression tests.
-The original missed physical-pointer defect remains recorded. M2 bridges resume.
+The original missed physical-pointer defect remains recorded. M2 continues above.
 
 - [x] **Merged — [PR #19](https://github.com/ChronoHaxx/rubyvr-studio/pull/19), standard GPL licence:**
   replace the custom no-sales terms with [GPLv3-or-later](licensing.md), retaining
@@ -109,7 +120,7 @@ a measured 50.8 ms peak; this is not headset performance acceptance.
 **Merged — [PR #21](https://github.com/ChronoHaxx/rubyvr-studio/pull/21):** the
 [connected ground base](connected-ground-base.md) closes ground undersides and
 exposed edges, with a 12-second actual comparison. The broader border/cutaway
-checklist stays open. The bridge/bank fixture is in review above; the next
+checklist stays open. The bridge/bank fixture is merged above; remaining
 geography work is complete shoreline/cliff transitions and unauthored frontiers.
 Complete coastal geography,
 waterfalls and underwater depth remain open. Route 104
@@ -195,7 +206,7 @@ Catalog and placement audits do not certify a complete game or headset experienc
 |---|---|---|
 | [M0 Common scenery fixes](#m0-common-scenery-fixes) | Initial fixes merged; complete recorded visual acceptance pending | Existing editor/pack |
 | [M1 Coverage ledger](#m1-coverage-ledger) | Inventories, browser, native paths and treatment/ownership rules merged; remaining source/runtime audits pending | Source adapter |
-| [M2 Terrain and placement](#m2-terrain-and-placement) | Terrain/explorer/loading/base merged; Route 104 bridge fixture in review; complete geography pending | M1 inventory + stable map identity |
+| [M2 Terrain and placement](#m2-terrain-and-placement) | Terrain/explorer/loading/base/bridge merged; region query component in review; consumers and complete geography pending | M1 inventory + stable map identity |
 | [M3 Manual authoring](#m3-manual-authoring) | Core workflow and part selection merged; convenience tools and timed user trial pending | Current editor + M2 contract for terrain |
 | [M4 All static scenery](#m4-all-static-scenery) | Common starters and bounded tree fixes merged; foliage art deferred here; full coverage/review pending | M1–M3 |
 | [M5 Live scene data](#m5-live-scene-data) | Prototype foundation; complete capture/routing pending | Public integration + M1 |
@@ -339,16 +350,20 @@ automated/visual/live/headset results, evidence and unresolved defects separatel
   art scale, including dark outlines.
 - [ ] Support multiple surfaces at one horizontal position for bridges over
   water/paths, decks, platforms and overhangs, selected by gameplay layer.
-  - [ ] **In review — [Route 104 example](terrain-bridge.md):** guarded Water +
+  - [x] **Merged — PR #25, [Route 104 example](terrain-bridge.md):** guarded Water +
     Deck recipe, both banks, correct source atlas, native layer/material/mesh
-    checks, connected Petalburg contact and exact save/reopen. Human checks
-    and merge pending; runtime feet/collision and all bridge families remain open.
+    checks, connected Petalburg contact and exact save/reopen. Four human checks
+    recorded passed on `cf4817f`; runtime feet/collision and all bridge families remain open.
 - [ ] Add explicit underlays beneath removed object pixels and source shadows:
   grass, paths, sand, pavement, indoor floors and water. Allow author selection
   when neighboring evidence is insufficient.
 - [ ] Use one shared surface-height/placement query for scenery, character
   feet, effects and camera follow; align anchors/foundations to it. Keep guest
   collision and movement authoritative.
+  - [ ] **In review — PR #26, [region-query component](terrain-region-query.md):**
+    validated primary-body ownership, explicit layers, fractional heights and
+    owned refusals over stable pre-resolved maps. Component/CI checks do not
+    complete the consumer integration above; human CLI acceptance remains pending.
 - [ ] Solve connected-map origins and boundary-height continuity. Treat door,
   cave and interior warps explicitly; interiors need not physically fit inside
   their exterior sprites.

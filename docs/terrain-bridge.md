@@ -1,6 +1,6 @@
 # Route 104 bridge over water
 
-**In review — RV-003 / M2.** The original bent boardwalk now has a solid deck
+**Merged — [PR #25](https://github.com/ChronoHaxx/rubyvr-studio/pull/25), RV-003 / M2.** The original bent boardwalk now has a solid deck
 above the pond. Both entrances stay level with their banks. This is a local
 authored example, separate from the unchanged six-map preset.
 
@@ -46,8 +46,8 @@ your personal bridge. The local review build and assets are already prepared.
 <details>
 <summary>Developer setup on another machine — skip for the prepared maintainer test</summary>
 
-PR #25 must be checked out before using this developer workflow. Main at `3252d05`
-does not contain the bridge generator. Updating source also requires rebuilding
+Main includes the bridge from merge `7b105c5`. The commands below pin the
+reviewed PR #25 source for reproduction. Updating source also requires rebuilding
 the ignored executable; an old GUI can still have the pre-#24 mouse bug.
 
 In Ubuntu/WSL, start in your RubyVR Studio repository with a clean working tree
@@ -111,23 +111,26 @@ Full local logs/captures are in `build/terrain-bridge/`. The [compact evidence](
 identifies the native binaries. No renderer, format, camera or runtime behavior
 changed; the new native entry point is an acceptance test.
 
-## Human functional check — pending
+## Human functional check — recorded result
 
-Use the exact PR head or supplied prebuilt GUI and generated pack listed in the
-PR handoff. Record the tested revision; these boxes require the maintainer's
-results, separately from the agent's checks above.
+Reconciled on 12 September 2026 from the maintainer's four checked steps and
+checked final human-pass box in PR #25. Prepared test revision:
+`cf4817fde0f95f9e2dad0ffbd4aaa78a0fd03c3b`; merge:
+`7b105c55165f7e28e0d85a65a7464c5b9cb4747e`. The exact time the boxes were
+checked is unknown; this is not inferred from the merge or CI result.
 
-1. [ ] Run the prepared shortcut from the PR handoff. Expect Route 104 and a
+1. [x] Run the prepared shortcut from the PR handoff. Expect Route 104 and a
    connected view initially listing Route 104, Petalburg and Route 102.
-2. [ ] Fly to the northern pond and look along the side of its bent boardwalk.
+2. [x] Fly to the northern pond and look along the side of its bent boardwalk.
    Expect visible space between water and the deck underside, matching the GIF.
-3. [ ] Inspect both entrances from above and near bank height. Expect level
+3. [x] Inspect both entrances from above and near bank height. Expect level
    bank-to-deck contact without a step; release right mouse and confirm flight stops.
-4. [ ] Click **Return to editing**, select an ordinary tree/model, then press
+4. [x] Click **Return to editing**, select an ordinary tree/model, then press
    Ctrl+S. Close Studio and run that exact same shortcut again. Expect the same bridge,
    terrain and models, with ordinary selection and no unsaved state on reopen.
 
-**Human verdict: pending.** Do not merge until these results are reported.
+**Human verdict: four steps recorded passed; PR #25 merged.** This approves
+the prepared desktop fixture/workflow, not complete geography or live/headset play.
 
 Launch follow-up, 11 September: the maintainer reported normal flying through
 the supplied bridge-worktree shortcut, but excessive mouse motion and a missing
@@ -137,4 +140,5 @@ handoff omitted checkout/rebuild steps. Those instructions and resume paths are
 corrected, and the normal local GUI was refreshed with a backup retained.
 All 26 launcher checks, 12 mouse checks on that refreshed GUI, and three real
 hidden SDL launch/resume paths pass. Personal saves were preserved. These agent
-checks do not establish the remaining physical start/resume or bridge verdict.
+checks did not establish the then-pending physical start/resume or bridge verdict.
+The later maintainer results are recorded above; the original failure is retained.

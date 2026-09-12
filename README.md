@@ -31,7 +31,7 @@ completed tasks, open PRs and remaining acceptance in one place.
   merged in PR #30. [Model reuse and a six-map view](docs/region-model-reuse.md)
   merged in PR #31: Littleroot to Petalburg, with less mesh memory.
   Complete world terrain and live map transitions remain open.
-  An optional [Route 104 bridge example](docs/terrain-bridge.md) is in review:
+  The optional [Route 104 bridge example](docs/terrain-bridge.md) merged in PR #25:
   water below a solid boardwalk, with level bank contact and a Petalburg join.
 
 - SEGMENT → MASK → MODEL → DIORAMA authoring, source-role brushes and flood fill.

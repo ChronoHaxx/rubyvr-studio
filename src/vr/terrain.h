@@ -33,6 +33,27 @@ struct Resolved {
     const TerrainCell* cell(int x, int y) const;
     Height query(int x, int y, int gameplay_layer, float u=.5f, float v=.5f) const;
 };
+// Borrow coherent snapshots/resolutions constructed once from validated terrain.
+// Keep both objects and the original terrain document alive and unchanged,
+// including while using Height::surface. Offsets translate backup cells to world.
+struct RegionMapView {
+    const world::Snapshot* source = nullptr;
+    const Resolved* resolved = nullptr;
+    int x = 0, z = 0;
+};
+struct RegionHeight {
+    Height height{Status::Unresolved};
+    int map_group = -1, map_number = -1;
+    int cell_x = -1, cell_y = -1;
+    float u = 0, v = 0;
+};
+// Query primary bodies only: backup [7,width-8) x [7,height-7).
+// Invalid regions/outside points have no owner; owned unresolved cells retain it.
+// The caller supplies the gameplay layer, never an inferred physical height.
+RegionHeight query_region(const std::vector<RegionMapView>& maps,
+                          double world_x, double world_z,
+                          int gameplay_layer);
+
 float surface_height(const TerrainSurface&, float u, float v);
 int maximum_height(const TerrainSurface&);
 Resolved resolve(const world::Snapshot&, const std::vector<TerrainMap>&);

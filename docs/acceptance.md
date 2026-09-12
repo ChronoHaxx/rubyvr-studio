@@ -1,9 +1,17 @@
 # Watch the acceptance check
 
-**In review — [Route 104 bridge over water](terrain-bridge.md), RV-003 / M2.**
+**In review — [connected-region query component](terrain-region-query-review.md), PR #26 / RV-003 / M2.**
+This backend change has no visible gameplay yet. Its review records actual
+headless/component and full-project checks; the human CLI check is pending.
+The footage below belongs to previously merged visual changes.
+
+## Merged Route 104 bridge over water — PR #25
+
+**Merged — [Route 104 bridge over water](terrain-bridge.md), RV-003 / M2.**
 The original boardwalk now has a solid deck above continuous water, with level
 bank contact at both entrances. Source/native/SDL and save/reopen checks pass;
-the four human checks remain pending. Other Route 104 geography is unfinished.
+the PR records all four human checks passed on `cf4817f` (exact reporting time
+unknown). Other Route 104 geography is unfinished.
 
 ![Actual bridge comparison, flat source floor left and authored layers right](media/terrain-bridge.gif)
 

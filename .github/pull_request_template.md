@@ -10,6 +10,10 @@ baseline footage. CI passing does not mean the maintainer has tried the change.
 
 Related issue / RV work package:
 
+For a demo batch, name the playable outcome and its included work packages.
+Summarize the combined result; do not require a separate PR or human checklist
+for each small internal fix. Keep the final human playtest to 3-7 short steps.
+
 Describe the concrete trigger and resulting behavior. Include actual before/after
 views for a visual change; distinguish geometry from texture changes.
 

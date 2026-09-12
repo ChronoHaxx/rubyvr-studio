@@ -18,6 +18,11 @@ are welcome. Start with [Contributing](CONTRIBUTING.md) and the
 [open contribution issues](https://github.com/ChronoHaxx/rubyvr-studio/issues).
 The [work-package index](docs/issues/README.md) explains scope and dependencies.
 
+**Delivery priority:** [one-week desktop demo target](docs/roadmap.md#one-week-desktop-demo-target),
+with substantial batches and one combined review/playtest per batch. The target
+is a small playable area another player can install, with public runner setup
+and continuous camera modes still to resolve.
+
 **Next milestone:** [native gameplay on a monitor](docs/issues/007-native-integration.md#native-desktop-proof)
 using our authored world: walking, connected maps, an interior and the original
 game UI. We retain the RubySapphireRecomp route. The first
@@ -63,12 +68,12 @@ and VR UI remain pending.
 For details, the [roadmap and checklist](docs/roadmap.md) tracks M0–M11 work,
 completed tasks, open PRs and remaining acceptance in one place.
 
-**In review — [NPC camera views and nearby visibility](docs/live-npc-views.md):**
+**Merged in PR #33 — [NPC camera views and nearby visibility](docs/live-npc-views.md):**
 ordinary NPCs use their original directional art when the camera turns, retain
 walking phase through image-copy transitions, and stay visible past the original
 2D screen edge while still loaded. The same launcher gains an **NPC views**
 checkpoint. Distant despawning and M9's free third-person/first-person modes
-remain open; this revision has its own pending human checklist.
+remain open. All five human checks passed for `09d28c0`.
 
 ## What works
 

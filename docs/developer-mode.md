@@ -14,7 +14,7 @@ The newer [desktop play-session slice](live-play-session.md) merged in PR #32,
 using that launcher with additional local battle/lab/field checkpoints and a
 separate five-step human checklist recorded passed for `31b95d2`.
 The [NPC views follow-up](live-npc-views.md) now adds **NPC views** beside the
-Littleroot walkers, through the same launcher. Its five human checks are pending;
+Littleroot walkers, through the same launcher. Its five human checks passed in PR #33;
 NPCs beyond Ruby's live slots and M9 free third-person/first-person remain open.
 
 ![Developer menu and tree collision check in the native game](media/native-developer.gif)

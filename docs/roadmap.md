@@ -33,6 +33,11 @@ for `31b95d2`: field menus/input, Bag/Party/Options, battle/lab transition, lab
 exit/save and checkpoint/reopen. This accepts the bounded desktop play session.
 The subsequent NPC camera-facing report is tracked separately under M6 below.
 
+**PR #33 merged on 2026-09-12 at `b4f6423`.** All five human steps are checked
+for `09d28c0`: ordinary NPC views, nearby viewport visibility, menu/focus and
+checkpoint reload. This accepts that bounded NPC repair. Distant actors,
+special profiles and the continuous camera modes remain open.
+
 **Prefer the short version? [Watch the acceptance GIF and verdict](acceptance.md).**
 The contributor/agent performs routine desktop functional and visual checks;
 the maintainer performs a short, revision-specific human functional check before
@@ -60,34 +65,75 @@ developer checkpoints and connected Route 101/Oldale walking are implemented.
 The current recording can be shared as work in progress. The prepared local
 runner is not yet a reproducible installation for another player.
 
-Prioritize these three outcomes within the existing milestones. They are
-delivery targets, not a promise of three PRs or a calendar estimate:
-
-1. **A complete short play session (M5/M7).** Keep scenery behind recognized
-   field menus, compose the original UI, and verify walking → interior →
-   dialogue → Bag → battle → field → save/reopen. Use an intentional original
-   2D presentation where 3D coverage is missing. This is the next substantial
-   demo target; full interior modeling and a 3D battle remake are not prerequisites.
-2. **A convincing small area (M2/M4/M6/M9).** Fix the reported ledge/contact
-   mismatch and actor visibility defects in the chosen route, review scenery
-   cohesion, and retain useful checkpoints/debug controls. Broader world art,
-   unrestricted travel and extra camera modes remain separate work.
-3. **A handoff another player can run (M5/M10/M11).** Resolve the supported
-   public runner/API and distribution boundary, provide reproducible setup
-   with user-supplied game inputs, measure desktop performance, and test a
-   fresh installation. Deliver one launcher and a short actual-play recording.
-
-The first two outcomes can progress on the local runner while the public
-integration boundary is resolved. A downloadable demo depends on all three;
-full-world completion, diegetic VR UI and headset acceptance remain later exits.
-
-**Merged in PR #32 — the first target's [desktop play-session slice](live-play-session.md):**
+**Merged in PR #32 — the accepted [desktop play-session slice](live-play-session.md):**
 ordinary Bag/Party/Options retain the world; original Start/dialogue/save UI
 overlays it; battles and interiors use their original frame in the same viewer.
 Native starter battle, lab/exit, Party/save and checkpoint evidence advances
 this target together. All five human checks passed for the bounded sequence;
-broader scene coverage remains open. The active next batch is M6 NPC views and
-nearby viewport visibility, supporting the convincing small-area target.
+broader scene coverage remains open. PR #33's ordinary NPC view/viewport repair
+is also merged with all five human checks passed. The next work is grouped into
+the larger batches below, instead of another PR for each small defect.
+
+## One-week desktop demo target
+
+**Maintainer priority, 2026-09-12: target a shareable, playable desktop demo by
+2026-09-19.** This is a delivery target, not a guarantee or completion of M0-M11.
+Use the existing Ruby native route and original game loop. The initial demo area
+is Littleroot → Route 101 → Oldale, including the lab, an NPC interaction, a
+source ledge, ordinary menus, the starter battle and save/reopen. Connected
+areas outside that demonstrated route are additional coverage, not implied
+accepted by this demo.
+
+| Batch | Target window | Combined outcome and acceptance |
+|---|---|---|
+| 1. Demo controls and route (M2/M5/M6/M7) | Days 1-2 | A clear entry into the existing play session, discoverable checkpoints/speed/pause/reset controls, and the demonstrated route's actor-range and ledge/contact defects addressed together. Reproduce collision against Ruby; do not loosen it to hide geometry. Start the public runner/setup feasibility check immediately. |
+| 2. Camera and movement (M6/M9) | Days 3-5 | Smooth third-person orbit and first-person, view-correct actors and coherent movement as one batch. Verify collision, cell entry, ledges, dialogue, encounters, warps, focus and return to grid mode together. A freely rotating camera over unchanged awkward grid controls is not completion of this batch. |
+| 3. Runnable demo candidate (M5/M10/M11) | Days 6-7 | Supported setup using the player's own inputs, one launcher, dependency/error handling, save preservation, a fresh-directory install and a continuous play/performance check. End with one actual gameplay clip and a short combined human playtest. Public release is a separate explicit action. |
+
+**Release risk to resolve at the start:** the current runner requires private
+working changes and has no established distribution arrangement for the combined
+runtime. [RV-007](issues/007-native-integration.md) and
+[the existing integration record](../integration/README.md#development-base)
+track this. Verify a reproducible public revision/API and the permitted delivery
+route before promising a download. A local executable, a GIF or editor install
+does not satisfy the other-player installation requirement. Do not change
+licences, contact upstream developers or publish a release without the required
+specific authorization. Continue independent demo work while this is resolved.
+
+**Midweek decision:** surface a concrete blocker as soon as it threatens the
+target, with the smallest useful fallback and remaining work. Do not spend the
+whole week silently extending scope, quietly drop a camera mode, or label a
+recording as a publicly playable release. Camera integration and public runner
+setup are the highest uncertainties in this estimate.
+
+For this demo, defer all-Hoenn model/terrain perfection, replacement foliage,
+new primitive/editor features, full weather/day-night systems, 3D battle and
+interior reconstruction, and headset/diegetic-UI completion. Record new reports
+under their existing milestone and bring them into this week only when they
+block startup, controls, progression, saves or the demonstrated route.
+
+**Batch cadence:** use focused component checks while implementing; one broad
+integration review, one short actual recording and one 3-7-step human playtest
+at each completed batch. Keep small local commits, but avoid publishing a PR
+for each repair or routine bookkeeping. Reuse unchanged evidence and cached
+source audits. Retest affected failures; do not repeat unrelated validation or
+retry an unavailable reviewer. Update the relevant docs and the actual PR body
+together at the handoff. This changes cadence, not the human acceptance gate.
+
+Demo readiness is tracked by these outcomes, not an invented whole-game percent:
+
+- [x] The bounded original walking/menu/battle/interior/save loop is accepted
+  in PR #32, and ordinary NPC view/viewport behavior in PR #33.
+- [ ] The selected route's remaining blocking actor/contact defects and demo
+  controls are accepted as batch 1.
+- [ ] Third-person and first-person movement/camera behavior is accepted as
+  batch 2; no free-movement completion is claimed from the current grid mode.
+- [ ] Another player can set up and launch the supported demo without this
+  maintainer's private worktree paths or bundled game data.
+- [ ] A continuous desktop play session, save/reopen, frame-time/memory record
+  and the final combined human playtest pass on the release candidate.
+
+The full M0-M11 checklist below remains the longer-term completion tracker.
 
 ## Current focus
 
@@ -119,17 +165,18 @@ all four revision-specific human steps are checked. The [desktop play-session
 implementation](live-play-session.md) merged in PR #32 with retained field menus,
 original UI composition and explicit battle/interior presentation.
 
-**Current batch — M6 / RV-010 [NPC views and nearby visibility](live-npc-views.md), in review.**
+**Merged in PR #33 — M6 / RV-010 [NPC views and nearby visibility](live-npc-views.md).**
 After merging PR #32, the maintainer reported that NPCs still show the opposite
 movement view when the camera turns. The earlier repair explicitly covered
 normal players only; preserve that accepted result and track this missed NPC
 scope separately. Ordinary NPC profiles now use verified same-phase directional
 art, including confirmed queued-flip transitions, and loaded actors ignore the
 original viewport's culling. Eight native checks and synthetic/GL checks pass;
-the new five-step human retest remains pending. Distant live-slot despawning,
+all five human retest steps are checked for `09d28c0`. Distant live-slot despawning,
 special profiles and steep-view readability remain open. M5's next convincing
 area still needs ledge/contact alignment and the remaining actor-range work.
-This accepts the bounded connected part of the desktop proof, not all of M5.
+This accepts the bounded actor repair, not all of M5/M6. The active next outcome
+is **batch 1, demo controls and route**, in the one-week target above.
 
 **New post-merge report, 2026-09-12:** noclip only travels a short distance
 (M5/M9), and a nearby previous map disappears when looking back (M2/M5).
@@ -372,9 +419,9 @@ Catalog and placement audits do not certify a complete game or headset experienc
 | [M2 Terrain and placement](#m2-terrain-and-placement) | Terrain/explorer/loading/base/bridge/query component merged; consumers and complete geography pending | M1 inventory + stable map identity |
 | [M3 Manual authoring](#m3-manual-authoring) | Core workflow and part selection merged; convenience tools and timed user trial pending | Current editor + M2 contract for terrain |
 | [M4 All static scenery](#m4-all-static-scenery) | Common starters and bounded tree fixes merged; foliage art deferred here; full coverage/review pending | M1–M3 |
-| [M5 Live scene data](#m5-live-scene-data) | Identity, developer controls and connected outdoor walking merged; PR #31 human sequence passed; complete play loop/public integration pending | Local prototype + M1; public integration separately required |
-| [M6 Actors and field effects](#m6-actors-and-field-effects) | Native actors/follow and normal-player camera-facing art merged; distant NPCs, special poses and broad coverage pending | M2, M5 |
-| [M7 UI, battles and game loop](#m7-ui-battles-and-game-loop) | Original frame available; complete routing/acceptance pending | M5 |
+| [M5 Live scene data](#m5-live-scene-data) | Identity, developer controls, connected walking and bounded play-session/NPC proofs merged; demo route and public integration pending | Local prototype + M1; public integration separately required |
+| [M6 Actors and field effects](#m6-actors-and-field-effects) | Player and ordinary NPC views/viewport visibility merged; distant NPCs, special poses and broad coverage pending | M2, M5 |
+| [M7 UI, battles and game loop](#m7-ui-battles-and-game-loop) | Bounded desktop menus/battle/interior/save sequence accepted in PR #32; full-game/VR routing pending | M5 |
 | [M8 Sky, lighting, time and weather](#m8-sky-lighting-time-and-weather) | Editor preview merged; runtime cycle/weather/water pending | M2, M5 for runtime |
 | [M9 Controls and comfort](#m9-controls-and-comfort) | Editor cameras and native cardinal follow/camera-relative grid walking merged; continuous movement, first-person and VR acceptance pending | M5–M8 |
 | [M10 Performance and reliability](#m10-performance-and-reliability) | Native WSL editor/batch and Linux CI merged; full-world/headset budgets pending | Representative M2–M9 scenes |
@@ -738,13 +785,13 @@ guest-memory reads from the VR thread.
   displayed phase; synthetic/GL checks and a native Brendan sequence pass.
   The combined PR's launch/border/camera step is checked; native May and broader
   actor/profile coverage remain open.
-- [ ] **In review — [ordinary NPC views and viewport visibility](live-npc-views.md):**
+- [x] **Merged in PR #33 — [ordinary NPC views and viewport visibility](live-npc-views.md):**
   read verified Standard/QuintyPlump/normal-player tables, preserve palette,
   displayed phase and pivots, distinguish queued flip/image transitions, and
   bypass only the original screen cull for a bound active event. The 2026-09-12
   post-PR #32 report is covered by this new retest; it does not negate or expand
   earlier player acceptance. Native child/large-walker/boy evidence and the
-  new **NPC views** checkpoint accompany the five pending human checks.
+  new **NPC views** checkpoint accompany five checked human steps for `09d28c0`.
 - [ ] Complete actor visibility outside the guest's live slots and across
   neighbour maps using verified presentation records; preserve script/event
   hiding, unknown state, identity and checkpoint/warp invalidation. The viewport

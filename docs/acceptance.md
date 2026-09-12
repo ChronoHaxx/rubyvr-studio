@@ -1,11 +1,11 @@
 # Watch the acceptance check
 
-**In review — [NPC camera views and nearby visibility](live-npc-views.md), M6 supporting M5.**
+**Merged PR #33 — [NPC camera views and nearby visibility](live-npc-views.md), M6 supporting M5.**
 The 18-second native recording shows ordinary NPCs from four camera views and
 walking away/back. Directional source art and queued-flip transitions are
 verified; loaded actors ignore the original 2D viewport cull. The guide uses
-the existing launcher and new **NPC views** checkpoint, with five pending human
-steps. Distant despawning, ledge/contact alignment, foliage and M9's continuous
+the existing launcher and new **NPC views** checkpoint. All five human steps
+are checked for `09d28c0`; merge `b4f6423` was verified on 2026-09-12. Distant despawning, ledge/contact alignment, foliage and M9's continuous
 third-person/first-person modes remain open.
 
 ![Native NPC camera and nearby visibility](media/live-npc-views.gif)

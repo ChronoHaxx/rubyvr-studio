@@ -19,7 +19,7 @@ The same-frame RGB/UI data and immutable field snapshot stay on the emulation
 thread. This updates desktop presentation only; OpenXR routing remains pending.
 All five desktop human steps are checked for `31b95d2`.
 
-**In review — [NPC views and viewport visibility](../docs/live-npc-views.md):**
+**Merged in PR #33 — [NPC views and viewport visibility](../docs/live-npc-views.md):**
 the existing capture boundary validates active-event ownership, ordinary ROM
 animation profiles and bounded sprite-copy queue entries. Four owned images
 preserve the displayed phase for camera selection. Explicit script hiding and

@@ -26,6 +26,8 @@ def working_files():
         dirs[:] = [d for d in dirs if d not in SKIP_DIRS and not d.startswith('build-')
                    and not (relative == Path('third_party') and d == 'pokeruby')]
         for name in names:
+            if relative == Path('.') and name == '.git':
+                continue  # Git worktree pointer, equivalent to the skipped .git directory.
             yield (Path(base) / name).relative_to(ROOT).as_posix()
 
 

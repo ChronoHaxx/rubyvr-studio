@@ -1,13 +1,32 @@
 # Watch the acceptance check
 
+**In review — [north-up and camera-relative walking](live-camera.md), bounded M9
+support for the M5 desktop proof.** Four compass presets, camera-relative grid
+movement in the focused 3D window, J/L quarter-turns, and a north-up reset. Windows/WSL component,
+sanitizer, shared GL and ten native scripted checks pass. The follow-up repairs
+[normal player camera-facing art and displayed animation phase](live-facing.md).
+Physical input is pending; NPC/special-pose facing (M6), border forest (M2/M5), and Bag world retention (M5/M7)
+remain open beside the [single launch command and human checks](live-camera.md#try-this-camera-build).
+The maintainer reported animation and distant sprite pop-in on `6911329`;
+the normal-player facing/phase subset is now repaired in review. Pop-in and other
+actor coverage remain open. The recording does not accept complete actor fidelity.
+
+![Actual native walking from four camera directions](media/live-camera.gif)
+
+Sixteen seconds: close-up before/after walking from separate checkpoint-based
+runs, then stationary camera turns from the corrected run. Retimed for viewing;
+noclip is enabled for scripted walking. The idle original/3D pairs differ by at
+most 101 ms. This is not a performance or physical-keyboard demonstration.
+
 **In review — [native developer tools](developer-mode.md), M5.** Named isolated
 checkpoints, pause/one-frame step, whole-game speed including uncapped, and
 walking through trees while ordinary collisions remain intact when disabled.
 Component checks pass on Windows/WSL; eight native functional checks pass. The
 final capture misses the exploratory 2x throughput target (1.63x at 4x requested,
 1.76x at MAX); this remains M10 work. Human physical
-input checks are pending. Camera-relative controls, border forest and Bag world
-retention are still open and listed beside the [launch/checklist](developer-mode.md#try-the-prepared-build).
+input checks are pending. Its preserved PR #29 build retains the earlier camera
+behavior; the separate follow-up above addresses camera input. Border forest
+and Bag world retention remain open beside the [launch/checklist](developer-mode.md#try-the-prepared-build).
 
 ![Actual native developer controls and tree collision test](media/native-developer.gif)
 

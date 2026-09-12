@@ -32,6 +32,12 @@ camera rotates and missing border forest. These remain M9/M6 and M2/M5 work
 inside this playable proof; see the [specific causes and follow-ups](../roadmap.md#current-focus).
 They must appear beside the next PR's human test instructions, not only here.
 
+**Camera-input follow-up in review:** [north-up and camera-relative walking](../live-camera.md)
+builds on the unmerged developer-tools PR #29. It adds four compass presets,
+held-direction handling and stock menu gates. Component, GL and nine native
+scripted checks pass; physical input and the complete sequence below remain
+pending. It does not repair actor facing or missing border scenery.
+
 Build the proof in small steps:
 
 1. Capture verified map identity, connections and valid/invalid generations for

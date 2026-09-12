@@ -7,6 +7,9 @@
 #include "sha1.h"
 #include "live_scene.h"
 #include "mod_function_hooks.h"
+#include "viewer.h"
+#include "game_input.h"
+#include "camera_input.h"
 #include <array>
 #include <chrono>
 #include <cstdio>
@@ -68,7 +71,11 @@ const bool registered = gba_mod_register_function_entry_plugin(hook_id, collisio
 
 const char* const speeds[] = {"1x (normal)", "2x", "4x", "8x", "16x", "32x", "64x", "MAX (uncapped)"};
 constexpr int speed_values[] = {1, 2, 4, 8, 16, 32, 64, 0};
+const char* const views[]={"North up","West up","South up","East up"};
 RecompRuntimeUiItem items[] = {
+    {"camera.view", "Camera", "View direction", "Choose which compass direction appears toward the top of the 3D view.", RECOMP_RUNTIME_UI_CHOICE, 0, 3, 1, views, 4},
+    {"camera.relative", "Camera", "Movement follows 3D camera", "Applies while the 3D window is focused. Original game and menu directions stay unchanged.", RECOMP_RUNTIME_UI_BOOL, 0, 1, 1},
+    {"camera.reset", "Camera", "Reset north-up", "Restore the north-up tilted view, normal zoom and player following.", RECOMP_RUNTIME_UI_ACTION},
     {"dev.speed", "Developer", "Game speed", "Whole-game speed. MAX is hardware-limited. Accelerated audio is muted.", RECOMP_RUNTIME_UI_CHOICE, 0, 7, 1, speeds, 8},
     {"dev.pause", "Developer", "Pause game", "Freeze guest simulation while the menu remains responsive.", RECOMP_RUNTIME_UI_BOOL, 0, 1, 1},
     {"dev.step", "Developer", "Advance one frame", "Run to the next VBlank and pause again.", RECOMP_RUNTIME_UI_ACTION},
@@ -83,7 +90,9 @@ RecompRuntimeUiItem items[] = {
     {"dev.status", "Checkpoints", "Last action", "", RECOMP_RUNTIME_UI_TEXT},
 };
 int get(const char* key, int* value) {
-    if (!std::strcmp(key, "dev.pause")) *value = transport.paused();
+    if (!std::strcmp(key,"camera.view")) *value=camera_input::quadrant(viewer::yaw_radians());
+    else if (!std::strcmp(key,"camera.relative")) *value=viewer::camera_relative();
+    else if (!std::strcmp(key, "dev.pause")) *value = transport.paused();
     else if (!std::strcmp(key, "dev.noclip")) *value = noclip;
     else if (!std::strcmp(key, "dev.speed")) {
         *value = 0;
@@ -92,7 +101,9 @@ int get(const char* key, int* value) {
     return 1;
 }
 int set(const char* key, int value) {
-    if (!std::strcmp(key, "dev.pause")) pause(value != 0);
+    if (!std::strcmp(key,"camera.view") && value>=0 && value<4) viewer::set_yaw_radians(value*1.570796327f);
+    else if (!std::strcmp(key,"camera.relative")) viewer::set_camera_relative(value!=0);
+    else if (!std::strcmp(key, "dev.pause")) pause(value != 0);
     else if (!std::strcmp(key, "dev.noclip")) {
         noclip = value && verified && registered;
         const bool found = gba_mod_set_function_hook_enabled(hook_id, noclip);
@@ -106,7 +117,8 @@ int action(const char* key) {
     if (!session) return 0;
     try {
         error.clear();
-        if (!std::strcmp(key, "dev.previous")) session->select(session->selected() - 1);
+        if (!std::strcmp(key,"camera.reset")) viewer::reset_camera();
+        else if (!std::strcmp(key, "dev.previous")) session->select(session->selected() - 1);
         else if (!std::strcmp(key, "dev.next")) session->select(session->selected() + 1);
         else if (!std::strcmp(key, "dev.save")) session->save_new(name);
         else if (!std::strcmp(key, "dev.load")) session->load_selected();
@@ -162,6 +174,7 @@ bool enabled() { return bool(session); }
 bool pending() { return session && session->pending(); }
 std::optional<rubyvr::dev::Request> take_request() { return session ? session->take_request() : std::nullopt; }
 void reset_after_load() {
+    game_input::reset();
     noclip = false;
     gba_mod_set_function_hook_enabled(hook_id, 0);
     transport.set_speed(1);

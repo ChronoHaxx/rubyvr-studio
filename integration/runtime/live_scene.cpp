@@ -115,6 +115,17 @@ const uint8_t* Memory::read_rom(uint32_t address, size_t bytes, unsigned alignme
     return read(address,bytes);
 }
 
+bool field_controls_available(const Memory& m) {
+    if (!m.verified_ruby_rev1 || m.ewram.size()!=0x40000 ||
+        m.iwram.size()!=0x8000 || m.rom.size()!=0x1000000) return false;
+    const auto* main=m.read(kMain,0x440);
+    const auto* lock=m.read(kFieldControlsLock,1);
+    const auto* avatar=m.read(kGPlayerAvatar,6);
+    return main && lock && avatar && !*lock &&
+        u32(main)==kOverworldInputCallback && u32(main+4)==kOverworldCallback &&
+        !(main[0x43d]&2) && (avatar[0]&1) && !(avatar[0]&0x1e);
+}
+
 Scene inspect(const Memory& m) {
     Scene out;
     auto refuse = [&](Status status) {

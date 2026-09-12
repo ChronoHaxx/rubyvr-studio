@@ -15,6 +15,10 @@ The first original actor/terrain-follow slice merged in PR #28 (`0ea20c0`).
 The PR records five checked human steps for implementation `ae4a3ef`; exact
 check completion time was not recorded. The subsequent camera/control and
 missing-border report remains open; that merge does not accept full live-view fidelity.
+The [north-up/camera-relative input repair](live-camera.md) is **in review** on
+top of developer-tools PR #29, with automated native evidence; physical input
+and both merges remain pending. The normal-player facing repair is also in review;
+NPC/special-pose facing and missing border scenery remain open.
 Experimental foliage art remains unapproved.
 
 **Prefer the short version? [Watch the acceptance GIF and verdict](acceptance.md).**
@@ -49,6 +53,25 @@ is **merged in PR #28**: real Route 101 walking/turning and five field actors,
 with component, GL and native evidence and five checked human steps. Complete
 connected gameplay and intentional UI routing remain open.
 
+**In review: [camera-relative walking and north-up reset](live-camera.md).**
+The prepared follow-up includes the unmerged developer tools, adds four compass
+presets and maps focused 3D input into Ruby's original four grid directions.
+Ten native scripted checks and a 16-second recording pass; physical-input
+checks remain pending. The older PR #29 test build is preserved independently.
+
+**PR #30 report, 2026-09-12 (`6911329`), not accepted:** animation/facing defects,
+distant sprite pop-in and awkward free yaw with grid movement. The
+[Emerald implementation audit](emerald-camera-actor-audit.md) traces their actual
+movement/actor paths and our culling gap. **M9 correction in review:** J/L now
+request 90-degree turns, deferred until held arrows release. Arbitrary yaw must
+ship with a verified continuous-movement mode. **M6 player follow-up in review:**
+[normal-player apparent facing and displayed-phase matching](live-facing.md),
+following the maintainer's further report after the `6133cb7` handoff (their exact
+running build was not supplied). Native/GL checks pass; human retest is pending.
+**M6/RV-010 remains open:** other actor poses/animation and presentation visibility beyond Ruby's
+2D viewport/live-slot range, preserving script hiding. This is part of the active
+M5 playable proof, not deferred art polish or a new engine migration.
+
 **Known visible issues reported after PR #28, 2026-09-12:**
 
 - **M9 controls:** the viewer starts diagonally and permits orbit, but game
@@ -56,9 +79,13 @@ connected gameplay and intentional UI routing remain open.
   wrong. Provide a north-up tilted gameplay preset and explicit camera-relative
   directional input for rotatable play, preserving original menu navigation and
   the guest's grid/collision rules. Full continuous free walking is later work.
+  The bounded [camera-input repair](live-camera.md) is now **in review**;
+  quarter-turn movement/menu checks pass, with human focus/keyboard checks pending.
 - **M6/RV-010 facing:** the card turns towards the camera but keeps the original
   2D view's selected sprite frame. Side/back views and steep top-down readability
   need mode-aware frame selection and foot-pivot/card orientation.
+  The [normal-player directional-art repair](live-facing.md) is now in review;
+  NPC/special-player profiles and steep-view readability remain open.
 - **M2/M5 border scenery:** the repeated forest outside the map body is missing.
   Capture/present Ruby's real border pattern where the backup grid is undefined;
   preserve real neighbour copies and blocked/non-playable ownership. This is
@@ -611,6 +638,9 @@ guest-memory reads from the VR thread.
   GL checks pass; the PR records five checked human steps. The sequence covers five active
   events and shallow authored terrain, not complete gameplay/actor coverage.
 - [ ] Render player/NPC idle, walk, run and turn animation with correct pivots/facing.
+  **In review — PR #30:** normal Brendan/May directional art at the captured
+  displayed phase; synthetic/GL checks and a native Brendan sequence pass.
+  Human visual retest, native May and broader actor/profile coverage remain open.
 - [ ] Cover bikes, surf/dive, jumps/ledges, scripted movement and followers or
   special event actors where the supported game actually provides them.
 - [ ] Align feet/jump offsets to terrain layers; handle depth ordering,
@@ -701,6 +731,14 @@ indoors or broken environment transitions.
 
 - [x] Provide tested editor orbit/fly/orthographic/focus controls, independent
   of saved authoring data ([camera verification](verification.md)).
+- [ ] **In review — [native north-up and camera-relative grid walking](live-camera.md):**
+  north-up default/reset, four compass presets, focused 3D mapping, held-direction
+  latching, focus/menu neutral transitions and unchanged stock menu directions.
+  After the `6911329` report, J/L use 90-degree steps and defer turns until held
+  arrows release; continuous yaw is reserved for a continuous-movement mode.
+  Component/sanitizer/GL and nine native scripted checks pass. Physical keyboard,
+  focus, collision and checkpoint checks remain pending. This bounded input repair
+  does not complete actor-facing selection or the view modes below.
 - [ ] Add monitor view modes: original 2D, fixed tilt presets (reference labels
   15/35/50/75), player-follow orbit/third-person and first-person. Start with a
   fixed north-up tilted follow view for the desktop proof. **Post-PR #28 input

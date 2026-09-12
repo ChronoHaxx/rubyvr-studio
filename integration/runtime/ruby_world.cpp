@@ -22,6 +22,7 @@
 #include "sha1.h"
 
 #include <cstdio>
+#include <cstdlib>
 #include <cstring>
 
 namespace vr {
@@ -301,6 +302,16 @@ bool capture(Snapshot& out, uint32_t previous_layout_ptr) {
     std::memcpy(out.obj_palette.data(),bus->pal_ptr()+0x200,512);
     // DISPCNT bit 6 selects OBJ 1D mapping. Read through the bus at capture.
     out.obj_mapping_1d=(bus->read16(0x04000000)&0x40)!=0;
+    if(out.player_index>=0) {
+        auto& source=out.actor_sources[out.player_index];
+        actor::capture_player_directions(source,
+            {bus->rom_ptr(),bus->rom_size()},out.obj_tiles,out.obj_mapping_1d);
+        if(std::getenv("RUBYVR_ACTOR_TRACE"))
+            std::fprintf(stderr,"PLAYER_VIEW_CAPTURE anim=%u phase=%u source_facing=%u matched=%u displayed_anim=%u displayed_phase=%u\n",
+                unsigned(source.sprite[0x2a]),unsigned(source.sprite[0x2b]),
+                unsigned(out.objects[out.player_index].facing),unsigned(source.world_facing),
+                unsigned(source.displayed_anim),unsigned(source.displayed_phase));
+    }
     out.actor_offset_x=rds16(bus->iwram_ptr()+0x24d0);
     out.actor_offset_y=rds16(bus->iwram_ptr()+0x27e0);
 

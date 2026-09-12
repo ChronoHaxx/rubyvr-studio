@@ -103,7 +103,10 @@ connection provenance and publishes invalidation on field refusal; this is
 [merged in PR #27](live-map-identity.md). Original actor frames and single-map
 authored feet/follow-camera placement [merged in PR #28](live-actors.md). Camera
 controls/facing, repeated border scenery, complete transition coverage and
-regional terrain integration remain pending. See the
+regional terrain integration remain pending. The bounded
+[camera-input follow-up](live-camera.md) is in review: it maps focused 3D
+directions at the runtime input boundary, with a separate verified field/menu
+gate and no guest movement-memory writes. Facing and the other gaps remain open. See the
 [format and authoring contract](terrain-authoring.md).
 
 Capture validity does not define how long a scene should remain visible. The

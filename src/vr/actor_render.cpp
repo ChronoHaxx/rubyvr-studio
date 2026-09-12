@@ -6,7 +6,12 @@
 
 namespace vr::actor_render {
 namespace {
-struct Item { GLuint texture=0; actor::Frame frame; float x=0,y=0,z=0; bool visible=false; };
+struct Item {
+    GLuint texture=0; actor::Frame frame,uploaded;
+    std::array<actor::Frame,4> directions;
+    uint8_t world_facing=0;
+    float x=0,y=0,z=0; bool visible=false;
+};
 Item items[world::kObjectEventCount];
 Stats result;
 GLuint program=0,vao=0,vbo=0;
@@ -63,9 +68,9 @@ void update(const world::Snapshot& s,const terrain::Resolved& terrain) {
             glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_CLAMP_TO_EDGE);
             glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_CLAMP_TO_EDGE);
         }
-        if(frame.width!=item.frame.width || frame.height!=item.frame.height || frame.rgba!=item.frame.rgba) {
-            glBindTexture(GL_TEXTURE_2D,item.texture);
-            glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA8,frame.width,frame.height,0,GL_RGBA,GL_UNSIGNED_BYTE,frame.rgba.data());
+        const auto& source=s.actor_sources[i];item.world_facing=source.world_facing;
+        if(item.world_facing)for(uint8_t d=1;d<=4;++d) {
+            item.directions[d-1]=actor::decode_direction(source,s.obj_tiles,s.obj_palette,s.obj_mapping_1d,d);
         }
         item.frame=std::move(frame);item.visible=true;++result.visible;
         if(i==s.player_index && object.is_player) {
@@ -85,8 +90,14 @@ void draw(const math::Mat4& view,const math::Mat4& model) {
     glDisable(GL_CULL_FACE);glDisable(GL_BLEND);
     gl::glUseProgram(program);gl::glUniformMatrix4fv(matrix,1,GL_FALSE,mvp.m);
     gl::glUniform1i(sampler,0);gl::glActiveTexture(GL_TEXTURE0);gl::glBindVertexArray(vao);
-    for(const auto& item:items)if(item.visible) {
-        const auto& f=item.frame;
+    for(auto& item:items)if(item.visible) {
+        const auto facing=actor::apparent_facing(item.world_facing,rx,rz);
+        const auto& f=facing>=1 && facing<=4?item.directions[facing-1]:item.frame;
+        glBindTexture(GL_TEXTURE_2D,item.texture);
+        if(f.width!=item.uploaded.width || f.height!=item.uploaded.height || f.rgba!=item.uploaded.rgba) {
+            glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA8,f.width,f.height,0,GL_RGBA,GL_UNSIGNED_BYTE,f.rgba.data());
+            item.uploaded=f;
+        }
         const float left=f.corner_x/16.f,right=left+f.width/16.f;
         const float top=f.height/16.f,bottom=0;
         float vertices[30];const float corners[6][4]={{left,top,0,0},{right,top,1,0},{right,bottom,1,1},

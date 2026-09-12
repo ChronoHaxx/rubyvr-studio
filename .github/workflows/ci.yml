@@ -29,6 +29,10 @@ jobs:
         run: bash tools/test-terrain-region-query.sh
       - name: Test live map identity and neighbourhoods without graphics or assets
         run: bash tools/test-live-scene.sh
+      - name: Test presentation lifetime and UI ownership without graphics or assets
+        run: |
+          python3 tools/test-live-presentation.py
+          python3 tools/test-live-presentation.py --sanitize
       - name: Test live actor frames without graphics or assets
         run: bash tools/test-actor-frame.sh
       - name: Test developer checkpoints and transport without graphics or assets

@@ -1,6 +1,6 @@
 # Route field, dialogue, menu and battle transitions without stale scenery
 
-Work package **RV-011** · M7 Game presentation · help wanted, area: runtime, status: blocked
+Work package **RV-011** · M7 Game presentation · help wanted, area: runtime, status: desktop slice in review; full-game/VR coverage pending
 
 ## Problem
 
@@ -9,6 +9,12 @@ A captured world and original framebuffer do not yet constitute complete game pr
 ## Bounded contribution
 
 Define a small scene-mode state machine from observed guest signals and implement field → dialogue/menu → battle → field for a supported runner. Keep temporary full-frame fallback explicit.
+
+The [native desktop play session](../live-play-session.md) is in review:
+recognized field-menu retention, original field UI ownership and same-viewer
+battle/interior fallback. Native starter battle, lab/exit, Party, save and
+checkpoint evidence are included. This is the prepared private runner, not a
+supported public installation or a completed headset route.
 
 ## Acceptance
 

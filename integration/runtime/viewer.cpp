@@ -6,6 +6,7 @@
 #include "gl_loader.h"
 #include "vr_math.h"
 #include "camera_input.h"
+#include "screen_overlay.h"
 
 #include <cmath>
 #include <cstdio>
@@ -50,6 +51,10 @@ std::atomic<bool> g_cancel=false;
 std::future<RegionResult> g_pending;
 std::vector<world::live::RegionEntry> g_visible_maps;
 uint64_t g_requested=0,g_visible_space=0;
+presentation::Lifetime g_lifetime;
+presentation::Decision g_presentation;
+world::Snapshot g_retained;
+bool g_world_controls=true,g_world_drawn=false;
 
 bool update_connected(const world::Snapshot& s) {
     if(!g_source_loader || !s.valid || diorama::build_mode()!=diorama::BuildMode::Diorama) return false;
@@ -126,6 +131,8 @@ void set_yaw_radians(float yaw) {
     if(std::isfinite(yaw)) g_yaw=camera_input::quadrant(yaw)*1.570796327f;
 }
 bool camera_relative() { return g_camera_relative; }
+bool uses_world_controls() {return g_world_controls;}
+presentation::Decision presentation_state() {return g_presentation;}
 void set_camera_relative(bool enabled) { g_camera_relative=enabled; }
 void reset_camera() { g_yaw=0;g_pitch=0.9f;g_dist=12;g_ty=1;g_follow=true;g_turn.reset(); }
 
@@ -134,6 +141,8 @@ void shutdown() {
     if(g_pending.valid()) g_pending.wait();
     g_pending={};g_neighbourhood={};g_visible_maps.clear();
     g_requested=g_visible_space=0;g_source_loader=nullptr;g_active=false;
+    g_lifetime.reset();g_retained={};g_presentation={};g_world_controls=true;g_world_drawn=false;
+    screen_overlay::shutdown();
 }
 size_t connected_maps() {return g_visible_maps.size();}
 bool map_origin(int group,int number,int* x,int* z) {
@@ -167,6 +176,7 @@ bool init(SDL_Window* win, bool visible, world::live::SourceLoader loader) {
 }
 
 void frame(const world::Snapshot& s, bool present) {
+    g_world_drawn=false;
     if (!g_active || !g_win) return;
     if (!diorama::ready() && !diorama::init()) return;
 
@@ -288,10 +298,47 @@ void frame(const world::Snapshot& s, bool present) {
         diorama::draw_region_raw(vp,g_debug);
         actor_render::draw(vp,math::translation(float(origin_x),0,float(origin_z)));
     } else diorama::draw_raw(vp, math::identity(), g_debug);
+    g_world_drawn=true;
 
     if(present)capture_review(w,h);
 
     if (present) SDL_GL_SwapWindow(g_win);
+}
+
+void game_frame(const world::Snapshot& snapshot,const presentation::Input& input,
+                std::span<const uint8_t> rgb,int sw,int sh,
+                std::span<const uint8_t> field_ui,bool present) {
+    if(!g_active || !g_win)return;
+    auto decision=g_lifetime.next(input,snapshot.valid);
+    if(decision.update)g_retained=snapshot;
+    if(!decision.world)g_retained={};
+    // frame() owns the existing camera, shared mesher, live materials and actor
+    // renderer. Retained frames read only the host copy, never menu VRAM/OBJ.
+    frame(decision.world?g_retained:world::Snapshot{},false);
+    if(!g_world_drawn) {decision.world=decision.retained=false;decision.overlay=presentation::Overlay::Original;}
+    g_world_controls=decision.world && input.mode==presentation::Mode::Field;
+    int w=0,h=0;SDL_GL_GetDrawableSize(g_win,&w,&h);
+    if(w<=0||h<=0)return;
+    gl::glBindFramebuffer(GL_FRAMEBUFFER,0);glViewport(0,0,w,h);
+    if(!decision.world) {
+        glClearColor(0.07f,0.08f,0.11f,1);glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+    }
+    if(decision.overlay==presentation::Overlay::FieldUi && field_ui.size()==240*160*4)
+        screen_overlay::draw(field_ui,240,160,w,h,true);
+    else if(decision.overlay!=presentation::Overlay::None && sw>0 && sh>0 && sw<=4096 && sh<=4096 &&
+            rgb.size()==size_t(sw)*sh*3) {
+        std::vector<uint8_t> rgba(size_t(sw)*sh*4,255);
+        for(size_t i=0;i<size_t(sw)*sh;++i)std::copy_n(rgb.data()+3*i,3,rgba.data()+4*i);
+        screen_overlay::draw(rgba,sw,sh,w,h,decision.world);
+    }
+    g_presentation=decision;
+    if(input.mode!=presentation::Mode::Field || !decision.world) {
+        char title[256];std::snprintf(title,sizeof(title),
+            "RubyRecomp - %s | %s | X: confirm / Z: back / Enter: Start | Arrows: original controls | J/L: view",
+            presentation::name(input.mode),decision.retained?"world retained":"original game view");
+        SDL_SetWindowTitle(g_win,title);
+    }
+    if(present){capture_review(w,h);SDL_GL_SwapWindow(g_win);}
 }
 
 }  // namespace viewer

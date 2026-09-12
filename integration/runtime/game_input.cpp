@@ -34,7 +34,7 @@ uint16_t filter_from_source(uint16_t keys, Source source) {
             }
             const world::live::Memory m{{bus->rom_ptr(),bus->rom_size()},
                 {bus->ewram_ptr(),0x40000},{bus->iwram_ptr(),0x8000},verified};
-            if (viewer::camera_relative() && world::live::field_controls_available(m))
+            if (viewer::uses_world_controls() && viewer::camera_relative() && world::live::field_controls_available(m))
                 context=camera_input::Context::Camera;
         }
     }

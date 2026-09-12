@@ -1,5 +1,9 @@
 # Connected scenery in the native game
 
+This guide preserves PR #31's accepted behavior. The same launcher now has a
+new [desktop play-session candidate](live-play-session.md) in review, replacing
+the historical cleared-Bag behavior below. Use its checklist for that candidate.
+
 **M5 / bounded M2 consumer — merged in [PR #31](https://github.com/ChronoHaxx/rubyvr-studio/pull/31).** The live viewer loads complete
 nearby maps from the verified Ruby cartridge, using each map's own tiles and
 palettes. Route 101 can show Oldale before entry and keep Route 101 visible

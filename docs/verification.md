@@ -1,5 +1,19 @@
 # Verification and its limits
 
+## Native desktop play session — in review, 2026-09-12
+
+[Recording, source audit and pending human checks](live-play-session.md):
+`python tools/test-live-presentation.py` checks pinned modes, menu entry/fade,
+identity/epoch/return lifetimes and original BG0 UI ownership without SDL,
+OpenGL, game assets or physical input. Its 53 checks pass on Windows and with
+Linux `--sanitize` (ASan/UBSan). CI runs both Linux modes. The local GL viewer
+test verifies actual overlay orientation/alpha/bounds, retained actors and no
+mesh uploads during menu use, original-view controls and checkpoint invalidation.
+Native checks use a copied checkpoint and original game input through the
+starter battle, lab dialogue/exit, Party and save UI; no story/party/collision
+memory edits. Existing ten camera/menu/checkpoint checks remain regression
+evidence. Headset and physical-input acceptance remain pending.
+
 ## Live border restoration — in review in PR #29, 2026-09-12
 
 [Evidence, sources and limits](live-borders.md): 75 component checks pass on

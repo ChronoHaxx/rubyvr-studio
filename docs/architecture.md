@@ -115,11 +115,16 @@ directions at the runtime input boundary, with a separate verified field/menu
 gate and no guest movement-memory writes. Broader actor coverage remains open. See the
 [format and authoring contract](terrain-authoring.md).
 
-Capture validity does not define how long a scene should remain visible. The
-M5/M7 menu follow-up must retain a complete host-owned world for recognized
-field menus and compose UI over it, while refusing menu graphics as fresh map
-data. Revalidate on return; unknown modes and warps need explicit handling.
-PR #27 currently clears on all refusals, including Bag, as a temporary safeguard.
+Capture validity does not define how long a scene should remain visible.
+The [desktop play-session implementation](live-play-session.md), in review,
+retains a complete host-owned field snapshot for recognized Bag/Party/Options.
+`live_presentation.*` classifies verified callbacks and reset epochs, refusing
+menu graphics as fresh map data. Valid, unfaded field data refreshes on return;
+unknown modes, battles, interiors and loads discard the cached presentation.
+`screen_overlay.*` composes original RGB or transparent field BG0 UI after the
+shared world renderer. Original-screen fallback also uses original directions.
+The OpenXR path still has its historical clear-on-refusal safeguard; VR menu
+composition is separate outstanding work.
 
 The [connected native scenery](live-connected-world.md) consumer reads complete
 static neighbours from the hash-verified cartridge in `live_scene.cpp` and

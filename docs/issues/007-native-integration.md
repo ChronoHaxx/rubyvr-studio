@@ -41,8 +41,10 @@ remain unreported. [Connected native scenery](../live-connected-world.md) merged
 in PR #31 at `f8a9e8d`, using the same camera-session launcher: complete nearby
 maps, asynchronous shared meshing and native forward/reverse crossings. All four
 human steps are checked for `c5bc19f`. This advances step 2 below; broader actors,
-modes and the complete sequence remain pending. Retained-world menu composition
-is next, followed by the complete short session in the canonical
+modes and the complete sequence remain pending. The [desktop play-session
+slice](../live-play-session.md) is now in review: retained field menus,
+transparent original field UI, real starter battle/lab/exit/Party/save and
+checkpoint tests. Broader/native human acceptance remains pending in the canonical
 [demo delivery targets](../roadmap.md#route-to-a-shareable-playable-demo).
 
 **New post-merge report, 2026-09-12 — M2/M5:** ledge geometry appears walkable
@@ -51,7 +53,7 @@ map/build was not supplied. Compare the visible edge with the original
 destination-tile jump query and takeoff/landing; preserve guest collision.
 Border restoration does not repair this mismatch.
 
-Build the proof in small steps:
+The proof has these acceptance boundaries:
 
 1. Capture verified map identity, connections and valid/invalid generations for
    a pinned Ruby revision. Test malformed/inactive snapshots headlessly, then

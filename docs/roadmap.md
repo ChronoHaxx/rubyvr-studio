@@ -77,6 +77,12 @@ The first two outcomes can progress on the local runner while the public
 integration boundary is resolved. A downloadable demo depends on all three;
 full-world completion, diegetic VR UI and headset acceptance remain later exits.
 
+**In review — the first target's [desktop play-session slice](live-play-session.md):**
+ordinary Bag/Party/Options retain the world; original Start/dialogue/save UI
+overlays it; battles and interiors use their original frame in the same viewer.
+Native starter battle, lab/exit, Party/save and checkpoint evidence advances
+this target together. Human acceptance and broader scene coverage remain open.
+
 ## Current focus
 
 **Next: native desktop gameplay proof (M5, with bounded M2/M6/M7/M9 support).**
@@ -103,8 +109,9 @@ Prioritized after the maintainer's 2026-09-12 report that looking back loses a
 nearby map. Load complete source neighbours, retain their world origins across
 crossings and prepare a bounded three-map area without clearing the previous
 view. Native Route 101 → Oldale → Route 101 and synthetic/GL checks pass;
-all four revision-specific human steps are checked. The next implementation is
-retained-world menu composition and the complete short play session above.
+all four revision-specific human steps are checked. The [desktop play-session
+implementation](live-play-session.md) is now in review with retained field menus,
+original UI composition and explicit battle/interior presentation.
 This accepts the bounded connected part of the desktop proof, not all of M5.
 
 **New post-merge report, 2026-09-12:** noclip only travels a short distance
@@ -155,10 +162,10 @@ These symptoms were covered only broadly before; the [source audit](references.m
 now records their specific causes and reference behavior. Keep them beside the
 test instructions in subsequent PRs. M5 remains the active milestone; fix these
 within its playable proof, without treating a renderer-only orbit as finished controls.
-Bag must retain the last valid world behind its UI; PR #27's clearing is a
-temporary safeguard, not the final menu design. Separate capture validity from
-presentation, keep head tracking active and refresh the field safely on return
-(M5/M7). Native Windows is the current live-game validation target; WSL remains
+Bag must retain the last valid world behind its UI; PR #27's clearing was a
+temporary safeguard. The desktop implementation is now in review above;
+headset retention and diegetic panels remain open under M5/M7.
+Native Windows is the current live-game validation target; WSL remains
 the worker/test environment and a supported Studio editor path.
 The [desktop proof in RV-007](issues/007-native-integration.md#native-desktop-proof)
 defines the walk/connection/interior/dialogue/battle/save acceptance sequence.
@@ -733,6 +740,13 @@ guest-memory reads from the VR thread.
 evidence, with no doubled source sprites, missing frames or drifting feet.
 
 ## M7: UI, battles and game loop
+
+- [ ] **In review — [native desktop play-session routing](live-play-session.md):**
+  recognized Bag/Party/Options retention, original Start/dialogue/save UI over
+  scenery, intentional original-frame battle/interior/unknown fallback, and
+  epoch-safe checkpoint/field restoration. Native first battle, lab exit and
+  Party/save evidence is recorded; physical-input/full-game/VR acceptance remains
+  pending. This also implements the bounded desktop lifetime portion of M5.
 
 - [ ] Route title/intro, new/load game, naming and options screens.
 - [ ] Route dialogue, choices, shops, bag, party, storage, Pokédex, trainer

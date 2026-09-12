@@ -1,5 +1,17 @@
 # Watch the acceptance check
 
+**In review — [a native play session in one viewer](live-play-session.md), M5/M7.**
+Bag/Party/Options retain scenery; original Start/dialogue/save UI overlays it.
+The real starter battle, lab dialogue and exit use the original game where 3D
+coverage is missing, then return to the outdoor world. The guide includes one
+launcher, situation checkpoints, evidence and pending human checks. Actor pop-in,
+ledge contact, foliage, unrestricted noclip and full VR remain open.
+
+![Actual native menus, battle, dialogue, lab and save](media/live-play-session.gif)
+
+Earlier accepted slices below retain their original scope and limitations;
+their historical cleared-Bag behavior is superseded by this desktop candidate.
+
 **Latest accepted slice — [connected native scenery](live-connected-world.md), M5/M2, merged PR #31.**
 Route 101 → Oldale → look back → Route 101, driven through native game movement.
 Complete nearby scenery stays in place. Component/sanitizer, actual GL and native

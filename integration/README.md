@@ -3,12 +3,20 @@
 **Current M5 handoff:** PR #29, including PR #30 camera/facing, is merged into main.
 The combined prepared build also includes [source border restoration](../docs/live-borders.md).
 Use that guide's single camera-session launcher; the old main-checkout prepared
-developer executable is historical. Ledge collision/depth, Bag retention and
+developer executable is historical. Ledge collision/depth and
 broader actor/terrain coverage remain open.
 The [connected native scenery](../docs/live-connected-world.md) slice, merged in PR #31,
 uses a verified-ROM source reader and the shared region renderer to keep up to
 three nearby complete maps. It uses the same launcher; all four human steps are
 checked for `c5bc19f`. Distant NPC simulation and unrestricted travel remain open.
+
+**In review — [desktop play-session routing](../docs/live-play-session.md):**
+retained Bag/Party/Options, transparent original field UI and intentional
+original-frame battles/interiors in the viewer. The adapter additionally reads
+the runner's monotonic `g_runtime_state_epoch` (incremented on file, rewind and
+debugger state loads), and named host loads call `world::reset_capture()`.
+The same-frame RGB/UI data and immutable field snapshot stay on the emulation
+thread. This updates desktop presentation only; OpenXR routing remains pending.
 
 The default standalone CMake targets do **not** build the game adapter. The
 optional local GL test builds the desktop viewer with synthetic data. These files preserve our
@@ -74,8 +82,9 @@ and frame-sink integration. See the [checks and limits](../docs/live-map-identit
 The [live actor slice](../docs/live-actors.md) **merged in PR #28**. It copies original
 OBJ frames and selected subsprite profiles into the transient snapshot, renders
 upright actors through the shared diorama path and follows their resolved feet.
-The native desktop recording covers one small walk/turn scene. Menu caching,
-other field effects, complete transitions and public game packaging remain open.
+That original desktop recording covers one small walk/turn scene. Desktop menu
+caching is now in review above; other field effects, complete transitions and
+public game packaging remain open.
 
 ## Licence compatibility before distribution
 

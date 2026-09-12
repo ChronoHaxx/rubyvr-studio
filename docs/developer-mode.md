@@ -8,8 +8,11 @@ The current build includes PR #29's merged tools, PR #30's merged
 [camera/facing fixes](live-camera.md), and [border forest restoration](live-borders.md).
 Use the single camera-session launcher below. Its checkpoints are preserved;
 the older developer build in the main checkout is historical.
-The newer [connected-scenery slice](live-connected-world.md) uses the same
-launcher and has a separate pending human checklist.
+The [connected-scenery slice](live-connected-world.md) uses the same launcher
+and has all four human steps recorded passed in merged PR #31.
+The newer [desktop play-session slice](live-play-session.md) is in review,
+using that launcher with additional local battle/lab/field checkpoints and a
+separate pending human checklist.
 
 ![Developer menu and tree collision check in the native game](media/native-developer.gif)
 
@@ -33,7 +36,9 @@ In the **original Ruby window**, press **Esc**:
   save the current situation. Names are never overwritten. Previous/Next select
   the checkpoint; Load actually restores it.
 
-The prepared session includes **Route 101**, **Bag open**, and **Back from bag**.
+The prepared session preserves **Route 101**, **Bag open**, and **Back from bag**.
+The play-session handoff also adds **Demo Bag**, **Demo battle**, **Demo lab ready**
+and **Demo field ready**; see that guide for their intended use.
 Create captures before a trainer, interaction, map transition or battle to return
 to that exact situation. Up to 64 named captures appear in the session.
 Checkpoint files and the test battery save live in `build/dev-session`, separately

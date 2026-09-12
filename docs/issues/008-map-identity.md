@@ -1,6 +1,6 @@
 # Version map identity in source-built and live snapshots
 
-Work package **RV-008** · M5 Live integration · help wanted, area: runtime, area: terrain · source half merged; live half remains design
+Work package **RV-008** · M5 Live integration · help wanted, area: runtime, area: terrain · source half merged; bounded live identity/invalidation in review
 
 ## Problem
 
@@ -11,10 +11,21 @@ A disk-built layout identifier and a live ROM layout pointer are not a stable co
 **Source half merged in [PR #26](https://github.com/ChronoHaxx/rubyvr-studio-archive-20260910/pull/26), with [RV-003](003-terrain-contract.md):** validated
 group ordering for all 394 source maps, snapshot v2 identity and copied-border
 provenance, legacy-unknown reads and same-layout cache invalidation.
-The live prototype explicitly clears source identity/provenance; verified
-live map keys and connections have not been implemented or captured.
+The [bounded live implementation](../live-map-identity.md) now validates pinned
+Ruby map keys/connections and publishes invalidation. Synthetic and local native
+checks pass; human acceptance and broader live transition captures remain open.
 
 Add explicit map group/number and validity/provenance to source and live snapshot adapters, with a versioned disk encoding. Verify the pinned source schema before reading guest offsets. Keep legacy snapshots explicitly unknown rather than guessing identity.
+
+**In review, 2026-09-12:** populate verified live identity and copied
+connection provenance at the existing safe capture boundary for one pinned Ruby
+revision. Publish invalidation when leaving a valid field scene; plausible
+retained map data during battle/menu is not a field-state signal. Separate the
+pure validation/decision logic from guest memory access so synthetic checks
+need no SDL, OpenGL, game assets or physical input. Retain real capture evidence
+separately for same-layout map changes, a connected edge and an interior warp.
+This enables the [native desktop proof](007-native-integration.md#native-desktop-proof);
+it does not itself render actors, complete M5 or prove the full game playable.
 
 ## Acceptance
 
@@ -30,7 +41,10 @@ Add explicit map group/number and validity/provenance to source and live snapsho
 
 ## Validation and evidence
 
-Synthetic round-trip/invalid/legacy fixtures, local source identity checks and a separately reported live capture once the public runtime exists.
+Synthetic round-trip/invalid/legacy fixtures, local source identity checks and
+separately reported captures from the private native prototype. A public runner
+release is not required to collect local evidence; distribution rights and a
+reproducible public integration remain separate RV-007 requirements.
 
 Dependencies: none beyond the documented local build/source setup.
 

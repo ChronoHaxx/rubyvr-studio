@@ -1,13 +1,17 @@
 # Connected-region query: coordinator review
 
-**12 September 2026 — PR #26 remains in review; human CLI acceptance pending.**
+**12 September 2026 — PR #26 merged; all three human CLI checks recorded passed.**
+Tested head: `d2755ce8e96c6ad175a7082fe97519eee1f33357`.
+Merge: `b894df7e30455ef314ffddc098800429dc2898e8`, at 11:18:02 UTC.
+The checked PR body was read back on 12 September; the exact time the human
+results were reported is unknown and is not inferred from the merge timestamp.
 Astra reviewed the published worker component at
 `762e40841add1fe1bc6dd74cef53bdc824167402`, based on
 `7b105c55165f7e28e0d85a65a7464c5b9cb4747e`.
 No demonstrated component defect or production-code repair was found. The
 header, implementation and original C++ test remain byte-for-byte unchanged.
 Coordinator additions are a shared test command, CI execution and documentation
-reconciliation. The exact current review head is recorded in
+reconciliation. The reviewed head and human results are recorded in
 [PR #26](https://github.com/ChronoHaxx/rubyvr-studio/pull/26).
 
 ## Review findings
@@ -68,7 +72,7 @@ The coordinator retrieved the published Git commit directly; those artifacts
 were not needed or rewritten. Publication, local results, CI and human results
 are distinct stages.
 
-## Human CLI check — pending
+## Human CLI check — recorded passed
 
 Use the exact head and prepared worktree listed in PR #26. In Ubuntu/WSL,
 from that checkout, the primary command is:
@@ -81,15 +85,15 @@ Prerequisites: Bash, GCC with C++20 and ASan/UBSan runtimes; no SDL/OpenGL,
 game assets, physical input or running Studio. Allow about a minute for two
 runs on the prepared machine. The command exits automatically.
 
-- [ ] **1. Run:** expect optimized and ASan/UBSan sections, each ending
+- [x] **1. Run:** expect optimized and ASan/UBSan sections, each ending
   `SUMMARY 16 passed, 0 failed; 9299 checks`, with no sanitizer diagnostics.
-- [ ] **2. Check the visible cases:** bridge explicit layers, undefined owner,
+- [x] **2. Check the visible cases:** bridge explicit layers, undefined owner,
   legacy zero and negative east/west join each print `PASS` in both sections.
-- [ ] **3. Repeat the same command:** expect both summaries again. It only
+- [x] **3. Repeat the same command:** expect both summaries again. It only
   replaces test executables under `build/`; no Studio window or save workflow.
 
-Report the tested revision and `1–3 pass`, or the failed step/output. These
-boxes remain unchecked until the maintainer reports results. UI interaction,
+These results come from the checked human steps in PR #26 at the revision
+above, separately from automated/agent evidence. UI interaction,
 save/reopen, visual gameplay and physical-input tests are inapplicable to this
 read-only component; no new claim about them is made. Consumer integration for
 scenery, feet, effects and camera follow, full M2 and issue #3 remain open.

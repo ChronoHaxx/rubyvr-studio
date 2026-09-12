@@ -97,9 +97,11 @@ fixed, including remembered identities of unloaded maps. The window keeps two
 hops within authored terrain, one without, and at most nine maps. See
 [streaming limits and evidence](camera-map-streaming.md) and [model reuse](region-model-reuse.md).
 V1 snapshots retain unknown
-identity. The live prototype explicitly clears source identity and connections;
-verified runtime identity, feet/camera placement and complete regional terrain
-remain pending. See the [format and authoring contract](terrain-authoring.md).
+identity. The pinned Ruby live adapter now validates explicit identity and
+connection provenance and publishes invalidation on field refusal; this is
+[in review](live-map-identity.md). Complete transition coverage, feet/camera
+placement and regional terrain remain pending. See the
+[format and authoring contract](terrain-authoring.md).
 
 ## Editor environment preview
 

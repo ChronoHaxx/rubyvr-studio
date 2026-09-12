@@ -7,7 +7,8 @@ Work-package documents explain individual contributions; they are not another
 roadmap. Last reconciled **2026-09-12**: archived PRs #19–#31 and the new
 repository's GPL PR #19, camera-driven loading PR #20, ground-base PR #21 and
 native Linux/WSL PR #22, mouse repair PR #24 and bridge PR #25 are merged.
-The shared region-query component is in review in PR #26; consumers remain pending.
+The shared region-query component merged in PR #26; all three human CLI checks
+are recorded passed on `d2755ce`. Consumers remain pending.
 Experimental foliage art remains unapproved.
 
 **Prefer the short version? [Watch the acceptance GIF and verdict](acceptance.md).**
@@ -31,7 +32,25 @@ temporary fallback frames remain defects.
 
 ## Current focus
 
-**M2: authored terrain and connected regions.** The first terrain contract,
+**Next: native desktop gameplay proof (M5, with bounded M2/M6/M7 support).**
+Maintainer decision, 2026-09-12: retain RubySapphireRecomp/gbarecomp and prove
+the authored world during actual gameplay on an ordinary monitor before
+expanding VR presentation. The first [live identity/invalidation implementation](live-map-identity.md)
+is **in review**: native Route 101 and Bag/return checks pass; human acceptance
+and broader transition coverage remain pending. The private runner now compiles
+the current shared renderer. Next connect explicit terrain placement, actors
+and intentional UI routing to a small playable scene.
+The [desktop proof in RV-007](issues/007-native-integration.md#native-desktop-proof)
+defines the walk/connection/interior/dialogue/battle/save acceptance sequence.
+This priority change does not complete M2 or require all scenery to be finished.
+
+Borrow the documented camera/editor/testing ideas in the
+[reference audit](references.md#camera-editor-and-debug-reference-audit), keeping
+camera work in M9 and authoring convenience in M3. Developer inspection belongs
+to M5; gameplay-changing test controls require verified game-side support.
+The current editor flight is not this playable milestone.
+
+**M2 delivered foundation.** The first terrain contract,
 editor controls and copied-neighbour heights are **merged in
 [PR #26](https://github.com/ChronoHaxx/rubyvr-studio-archive-20260910/pull/26)**. The
 [acceptance GIF](acceptance.md) shows the local Oldale–Route 101 example.
@@ -49,12 +68,12 @@ identity/newer-source warnings. Launcher and real SDL retests pass, followed by
 the recorded human start/resume and bridge checks. The original handoff failure
 remains documented.
 
-**In review — [PR #26](https://github.com/ChronoHaxx/rubyvr-studio/pull/26), [shared connected-region query](terrain-region-query.md):** select one primary
+**Merged — [PR #26](https://github.com/ChronoHaxx/rubyvr-studio/pull/26), [shared connected-region query](terrain-region-query.md):** select one primary
 map and an explicit terrain layer at fractional world coordinates. The bounded
 component preserves ownership, source guards and borrowed surfaces; its new
 [coordinator review](terrain-region-query-review.md) separates component tests,
-full-project regressions and pending human CLI acceptance. Scenery, feet,
-effects and camera-follow consumers are a separate next step. No new visible
+full-project regressions and the three recorded human CLI passes on `d2755ce`.
+Merge: `b894df7`. Scenery, feet, effects and camera-follow consumers remain open. No new visible
 gameplay or completed M2 is claimed.
 
 **Merged — [PR #27](https://github.com/ChronoHaxx/rubyvr-studio-archive-20260910/pull/27):** the [connected-region example](terrain-regions.md) extends terrain
@@ -103,7 +122,7 @@ The subsequent M2 bridge fixture merged in PR #25. [Evidence and limits](native-
 **Merged — [PR #24](https://github.com/ChronoHaxx/rubyvr-studio/pull/24), M10 WSL mouse movement:** bounded drag fixes the excessive turns
 reported after PR #22. All four [human functional checks](wsl-mouse-look.md)
 were reported passed on 2026-09-11, separately from automated regression tests.
-The original missed physical-pointer defect remains recorded. M2 continues above.
+The original missed physical-pointer defect remains recorded. The current priority is above.
 
 - [x] **Merged — [PR #19](https://github.com/ChronoHaxx/rubyvr-studio/pull/19), standard GPL licence:**
   replace the custom no-sales terms with [GPLv3-or-later](licensing.md), retaining
@@ -130,8 +149,8 @@ to a raised region; raising individual cliff tiles is insufficient. The full
 M2 exit criteria below remain open.
 
 **Art iteration is deferred to M4.** The maintainer still finds the grass
-stick-like. Keep grass, tree and shrub appearance work parked while completing
-M2; retain those defects and the unapproved trials for the later art pass.
+stick-like. Keep grass, tree and shrub appearance work parked during the native
+desktop proof; retain those defects and the unapproved trials for the M4 art pass.
 
 **M1 delivered scope:** the static ledger is merged through
 [PR #21](https://github.com/ChronoHaxx/rubyvr-studio-archive-20260910/pull/21) and
@@ -206,14 +225,14 @@ Catalog and placement audits do not certify a complete game or headset experienc
 |---|---|---|
 | [M0 Common scenery fixes](#m0-common-scenery-fixes) | Initial fixes merged; complete recorded visual acceptance pending | Existing editor/pack |
 | [M1 Coverage ledger](#m1-coverage-ledger) | Inventories, browser, native paths and treatment/ownership rules merged; remaining source/runtime audits pending | Source adapter |
-| [M2 Terrain and placement](#m2-terrain-and-placement) | Terrain/explorer/loading/base/bridge merged; region query component in review; consumers and complete geography pending | M1 inventory + stable map identity |
+| [M2 Terrain and placement](#m2-terrain-and-placement) | Terrain/explorer/loading/base/bridge/query component merged; consumers and complete geography pending | M1 inventory + stable map identity |
 | [M3 Manual authoring](#m3-manual-authoring) | Core workflow and part selection merged; convenience tools and timed user trial pending | Current editor + M2 contract for terrain |
 | [M4 All static scenery](#m4-all-static-scenery) | Common starters and bounded tree fixes merged; foliage art deferred here; full coverage/review pending | M1–M3 |
-| [M5 Live scene data](#m5-live-scene-data) | Prototype foundation; complete capture/routing pending | Public integration + M1 |
+| [M5 Live scene data](#m5-live-scene-data) | Bounded live identity/invalidation in review; desktop gameplay proof and complete routing pending | Local prototype + M1; public integration separately required |
 | [M6 Actors and field effects](#m6-actors-and-field-effects) | Pending | M2, M5 |
 | [M7 UI, battles and game loop](#m7-ui-battles-and-game-loop) | Original frame available; complete routing/acceptance pending | M5 |
 | [M8 Sky, lighting, time and weather](#m8-sky-lighting-time-and-weather) | Editor preview merged; runtime cycle/weather/water pending | M2, M5 for runtime |
-| [M9 Controls and comfort](#m9-controls-and-comfort) | Editor cameras implemented; VR controls/comfort acceptance pending | M5–M8 |
+| [M9 Controls and comfort](#m9-controls-and-comfort) | Editor cameras implemented; monitor presets/follow/first-person and VR acceptance pending | M5–M8 |
 | [M10 Performance and reliability](#m10-performance-and-reliability) | Native WSL editor/batch and Linux CI merged; full-world/headset budgets pending | Representative M2–M9 scenes |
 | [M11 Completion and release](#m11-completion-and-release) | Public contributor foundation exists; game release pending | M1–M10 |
 
@@ -360,10 +379,11 @@ automated/visual/live/headset results, evidence and unresolved defects separatel
 - [ ] Use one shared surface-height/placement query for scenery, character
   feet, effects and camera follow; align anchors/foundations to it. Keep guest
   collision and movement authoritative.
-  - [ ] **In review — PR #26, [region-query component](terrain-region-query.md):**
+  - [x] **Merged — PR #26, [region-query component](terrain-region-query.md):**
     validated primary-body ownership, explicit layers, fractional heights and
     owned refusals over stable pre-resolved maps. Component/CI checks do not
-    complete the consumer integration above; human CLI acceptance remains pending.
+    complete the consumer integration above. All three human CLI checks are
+    recorded passed on `d2755ce`; merge `b894df7`.
 - [ ] Solve connected-map origins and boundary-height continuity. Treat door,
   cave and interior warps explicitly; interiors need not physically fit inside
   their exterior sprites.
@@ -408,6 +428,11 @@ open floors/water have different mesh acceptance rules.
   cells and exact undo/save/reopen.
 - [ ] Extend terrain editing with region fills, traced boundaries, edge
   snapping and constraint feedback across connected regions.
+- [ ] Add a map inspector with connected-map/warp navigation, source collision
+  and layer overlays, and a test-selected-map handoff to the native runner.
+  Keep the existing shared 2D/3D selection and undo/save flow. Runtime test launch
+  depends on M5; broader NPC/script/encounter editing is a separately scoped
+  authoring extension, not a prerequisite for the desktop proof.
 - [ ] Add part groups, hide/solo/lock, symmetry, multi-selection, cross-definition
   copy/paste and reusable named building/prop templates. Keep front-only art deliberate.
 - [ ] Add extra shapes justified by outstanding families: rounded canopy/
@@ -444,7 +469,7 @@ trial and error, and a person can save/reopen/reuse their work unaided.
   encounter grass and shrubs remains open. Grass recipes are opt-in experiments;
   the Blender trial is not a visually accepted replacement. The working guide
   and trials are merged in PR #26; the maintainer defers further art iteration
-  until M4 while M2 remains active.
+  until M4; the next active target is the native desktop proof described above.
   The grass height trial now uses 6..12 px upright blades, accounting for the
   elevated source drawing; [paired scene views](art-direction.md) keep its
   footprint/texel scale fixed. Follow-up feedback rejected its dark carpet:
@@ -491,6 +516,20 @@ flat materials are intentional.
 
 ## M5: live scene data
 
+- [ ] **Next playable target:** complete the [native desktop proof](issues/007-native-integration.md#native-desktop-proof)
+  using the current shared scenery and terrain query. Retain original game
+  movement, a visible original-frame fallback and explicit unsupported states.
+  The first bounded implementation, RV-008 live identity/invalidation, is in review; it
+  alone does not complete this gameplay target.
+- [ ] **In review:** pinned Ruby field identity, copied-border provenance,
+  invalid-snapshot publication and stale-mesh clearing, with asset-free checks
+  and local native Bag/return evidence. See [scope and remaining captures](live-map-identity.md).
+- [ ] Add an opt-in developer panel showing map identity, scene/generation,
+  player position/layer, resolved surface, active pack and frame timings.
+  Include a free inspection camera with return-to-player, reproducible local
+  state/capture and pause/step through the runner's clock. Add map warp,
+  encounter/party/flag controls or noclip only as separate verified game-side
+  actions, clearly active in a test session; camera flight alone is not noclip.
 - [ ] Establish a supported public runner integration boundary and version map
   identity in source-built/live snapshots ([RV-007](issues/007-native-integration.md),
   [RV-008](issues/008-map-identity.md)).
@@ -586,6 +625,15 @@ indoors or broken environment transitions.
 
 - [x] Provide tested editor orbit/fly/orthographic/focus controls, independent
   of saved authoring data ([camera verification](verification.md)).
+- [ ] Add monitor view modes: original 2D, fixed tilt presets (reference labels
+  15/35/50/75), player-follow orbit/third-person and first-person. Start with a
+  fixed tilted follow view for the desktop proof. Keep gameplay movement
+  unchanged when switching cameras; continuous camera-relative movement is a
+  separate gameplay integration, not an automatic consequence of first-person.
+- [ ] Evaluate an optional curved-horizon diorama after the normal desktop
+  views work. Keep it off by default and apply it consistently to scene
+  presentation; authored heights, collision and the shared terrain query
+  remain in unbent world coordinates. See the [reference audit](references.md#camera-editor-and-debug-reference-audit).
 - [ ] Complete OpenXR actions, controller profiles, gameplay/menu bindings and
   held/released input behavior. Retain working desktop controls.
 - [ ] Complete tabletop placement/scale, orbit/follow and first-person modes,

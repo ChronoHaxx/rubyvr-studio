@@ -188,10 +188,8 @@ struct Snapshot {
                map_group < 256 && map_number >= 0 && map_number < 256;
     }
 
-    // The map-changed signal. gMapHeader.mapLayout points into ROM and is
-    // stable for as long as you are on one map, so comparing it against the
-    // previous snapshot is how the renderer knows to rebuild its mesh and
-    // re-read the metatile tables.
+    // A layout/material cache key, not a unique map identity: different maps
+    // can share it. Scene consumers also compare the explicit group/number.
     uint32_t layout_ptr = 0;
 
     int32_t               width = 0, height = 0;   // backup-map dimensions
@@ -327,10 +325,15 @@ struct Snapshot {
 //
 // `previous_layout_ptr` lets capture() skip re-reading the ROM metatile tables
 // when the map has not changed; pass the layout_ptr of the last good snapshot,
-// or 0 to force a full read. Returns false (and leaves out.valid false) when
-// the bus is not bound yet or the field map is not initialised — the normal
-// case during the BIOS intro, the launcher and menus.
+// or 0 to force a full read. On refusal the native adapter clears identity,
+// connections, grid and actor validity; retained material storage is not a
+// valid scene. Full-screen modes are refused; in-field menus/dialogue can
+// retain the normal field callback, so this is not a complete UI mode router.
 bool capture(Snapshot& out, uint32_t previous_layout_ptr = 0);
+
+// Call before every guest/ROM lifetime, with capture stopped. The runtime
+// adapter hashes an immutable ROM once; pointer reuse must not reuse that gate.
+void reset_capture();
 
 // One-line human-readable summary, rate-limited, for the Phase 4.1 check.
 void debug_dump(const Snapshot& s);

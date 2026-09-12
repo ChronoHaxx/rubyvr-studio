@@ -3438,20 +3438,29 @@ bool init() {
 }
 
 void update(const world::Snapshot& s) {
-    if (!g_ready || !s.valid) return;
+    if (!s.valid) {
+        g_vertex_count=0;
+        g_meshed_layout=0; // Returning to the same layout must rebuild it.
+        g_map_w=g_map_h=0;
+        g_player_x=g_player_y=g_player_z=0;
+        g_diorama_stats={};
+        return;
+    }
+    if (!g_ready) return;
 
-    // Mesh only on a map change. The grid is 1200-odd cells and the vertex
-    // buffer runs to megabytes; rebuilding it every frame would be pure waste,
-    // and the layout pointer is an exact "this is a different map" signal.
+    // Different map identities may share a layout pointer. Rebuild for either
+    // signal; terrain edits additionally track their grid/material provenance.
+    const bool identity_changed=g_terrain_group!=s.map_group || g_terrain_number!=s.map_number ||
+        g_terrain_identity!=s.has_map_identity();
     const bool terrain_active=g_build_mode==BuildMode::Diorama && !g_overrides.terrain.empty();
     const bool terrain_changed=terrain_active && (g_terrain_group!=s.map_group || g_terrain_number!=s.map_number ||
         g_terrain_identity!=s.has_map_identity() || g_terrain_width!=s.width || g_terrain_height!=s.height ||
         g_terrain_grid!=s.grid || g_terrain_metatiles!=s.metatiles || g_terrain_attributes!=s.attributes || g_terrain_connections!=s.connections);
-    if (s.layout_ptr != g_meshed_layout || terrain_changed) {
+    if (s.layout_ptr != g_meshed_layout || identity_changed || terrain_changed) {
         build_mesh(s);
         g_meshed_layout = s.layout_ptr;
+        g_terrain_group=s.map_group;g_terrain_number=s.map_number;g_terrain_identity=s.has_map_identity();
         if(terrain_active) {
-            g_terrain_group=s.map_group;g_terrain_number=s.map_number;g_terrain_identity=s.has_map_identity();
             g_terrain_width=s.width;g_terrain_height=s.height;
             g_terrain_grid=s.grid;g_terrain_metatiles=s.metatiles;g_terrain_attributes=s.attributes;
             g_terrain_connections=s.connections;

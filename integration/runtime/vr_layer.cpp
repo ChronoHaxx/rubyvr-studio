@@ -71,6 +71,9 @@ std::thread       g_thread;
 std::mutex      g_world_mx;
 world::Snapshot g_world_pending;
 bool            g_world_fresh = false;
+// Sticky until the consumer acknowledges it. A quick invalid -> valid sequence
+// must not disappear when the latest snapshot replaces an unread invalid one.
+bool            g_world_invalidated = false;
 
 // Which image goes on the quad. Toggled with backslash — a key the GBA does not
 // have, same rule as the comfort keys below.
@@ -652,18 +655,24 @@ void vr_thread() {
 
             // Claim the newest world snapshot. Separate lock from g_mx and held
             // for one swap of vector pointers — see the handoff note above.
+            bool world_invalidated=false;
             {
                 std::lock_guard<std::mutex> lk(g_world_mx);
                 if (g_world_fresh) {
                     std::swap(g_world_read, g_world_pending);
                     g_world_fresh = false;
                 }
+                world_invalidated=g_world_invalidated;
+                g_world_invalidated=false;
             }
 
             // The diorama reads the same snapshot the map view does. Done
             // here, on the VR thread, because it uploads textures and rebuilds
             // vertex buffers — GL work, which belongs where the context is.
-            if (renderer::ready()) diorama::update(g_world_read);
+            if (renderer::ready()) {
+                if(world_invalidated) diorama::update(world::Snapshot{});
+                diorama::update(g_world_read);
+            }
 
             if (draw_map) {
                 g_map_scratch.resize(static_cast<size_t>(w) * h);
@@ -766,14 +775,13 @@ void frame_sink(const uint8_t* rgb888, int w, int h, void*) {
             dump_ab_once(snap, rgb888, w, h);   // ditto: our map beside theirs
             dump_diorama_once(snap);            // RUBYVR_DUMP_SCENE=1, once
 
-            // Live viewer: renders on THIS thread, which owns the GL context
-            // because viewer mode never starts a VR thread.
-            if (viewer::active()) viewer::frame(snap);
-
-            std::lock_guard<std::mutex> lk(g_world_mx);
-            std::swap(snap, g_world_pending);   // O(1): swaps vector pointers
-            g_world_fresh = true;
         }
+        // Invalid captures are events too: both consumers must drop the old map.
+        if (viewer::active()) viewer::frame(snap);
+        std::lock_guard<std::mutex> lk(g_world_mx);
+        if(!snap.valid) g_world_invalidated=true;
+        std::swap(snap, g_world_pending);   // O(1): swaps vector pointers
+        g_world_fresh = true;
     }
 
     const size_t bytes = static_cast<size_t>(w) * h * 3;
@@ -786,6 +794,7 @@ void frame_sink(const uint8_t* rgb888, int w, int h, void*) {
 }
 
 bool start() {
+    world::reset_capture();
     // start() runs from main() BEFORE gbarecomp::run_game(), which is where the
     // engine calls SDL_Init. SDL_CreateWindow before video init just fails and
     // would silently disable VR with no clue why, so bring the subsystem up

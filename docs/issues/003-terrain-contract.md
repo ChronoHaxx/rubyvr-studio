@@ -1,6 +1,6 @@
 # Add the first versioned authored terrain surface and shared height query
 
-Work package **RV-003** · M2 Terrain · help wanted, area: terrain · terrain/explorer/loading/base/bridge merged; region-query component in review; consumers pending
+Work package **RV-003** · M2 Terrain · help wanted, area: terrain · terrain/explorer/loading/base/bridge/region-query component merged; consumers pending
 
 ## Problem
 
@@ -50,10 +50,10 @@ to M8. First-person alone is not an edge fix.
   six original maps retained. Native/SDL/save checks and actual GIF pass;
   all four maintainer checks recorded passed on `cf4817f`; merge `7b105c5`.
   Complete geography remains open.
-- [ ] **In review — [PR #26](https://github.com/ChronoHaxx/rubyvr-studio/pull/26), [connected-region query](../terrain-region-query.md):**
+- [x] **Merged — [PR #26](https://github.com/ChronoHaxx/rubyvr-studio/pull/26), [connected-region query](../terrain-region-query.md):**
   one primary owner, explicit gameplay layer and fractional height over stable,
   pre-resolved maps. Preserve owned refusals and original borrowed surfaces.
-  [Coordinator checks and human handoff](../terrain-region-query-review.md) are
+  [Coordinator checks and three human CLI passes](../terrain-region-query-review.md) on `d2755ce` are
   separate from the worker's original evidence. Consumer integration for scenery,
   feet, effects and camera follow remains pending; this component does not close RV-003.
 - [x] Use stable source map identity and guards, not a ROM pointer as a public map key.

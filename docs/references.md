@@ -1,7 +1,9 @@
 # References, inspiration and tools evaluated
 
-Checked 2026-09-08. This record separates dependencies, adapted techniques,
-observed workflows and untested candidates. It is not a benchmark leaderboard.
+Initial tool/workflow review: 2026-09-08. Native-engine comparison and camera/
+editor/debug source audit refreshed 2026-09-12. This record separates
+dependencies, adapted techniques, observed workflows and untested candidates.
+It is not a benchmark leaderboard; dated tool trials keep their original scope.
 
 ## What RubyVR builds on
 
@@ -65,14 +67,15 @@ and versions when reporting comparisons.
 | [Goxel](https://github.com/guillaumechereau/goxel) | Considered as an external voxel editor; not run | Potential manual modeling/import candidate. Its GPLv3 licensing and any integration boundary need to be respected. No workflow-speed or fidelity result recorded. |
 | RubyVR Studio | Built and exercised with real source maps, hidden SDL input, save/reopen and renderer audits | Current evidence in [verification](verification.md). Manual efficiency on a held-out asset still needs a timed human trial. |
 
-The follow-up inspection on 2026-09-08 also covered
+The source-only inspection on 2026-09-08 also covered
 [Blockbench](https://www.blockbench.net/), whose documented cuboid modeling,
 pixel texture painting and custom-format plugins make it the preferred candidate
 for a shape-authoring experiment, and
 [Blender's glTF exporter](https://docs.blender.org/manual/en/4.0/addons/import_export/scene_gltf2.html),
-which can retain custom properties as extras. Neither has been run on a RubyVR
-round trip. See the [external-authoring proposal](external-authoring.md) for the
-metadata that ordinary mesh export would lose and the bounded acceptance trial.
+which can retain custom properties as extras. That initial inspection did not
+run a RubyVR round trip. See [external authoring](external-authoring.md) for
+subsequent trial status and the metadata that ordinary mesh export would lose,
+and [art direction](art-direction.md) for the later unapproved foliage trials.
 
 **No external sprite converter was installed or benchmarked in this evaluation.**
 These inspections do not prove that RubyVR is the fastest tool, that no better
@@ -82,22 +85,56 @@ native source pixels, review all sides and test an editable round trip.
 
 ## RubyVR and Gen2Recomped
 
-The comparison below follows the projects' own documentation, not their names.
+The comparison follows pinned public documentation/source, not project names.
+Maintainer decision on 2026-09-12: retain the native route and prioritize
+[actual monitor gameplay](issues/007-native-integration.md#native-desktop-proof).
+The languages alone do not establish correctness, performance or bug counts.
 
 | Aspect | RubyVR Studio / intended native integration | Gen2Recomped |
 |---|---|---|
 | Game execution | Integration based on RubySapphireRecomp/gbarecomp translating GBA ROM instructions into native code, with documented fallback paths | Its README describes a LÖVE2D recreation: hand-written Lua engine, script VM and map behavior, with ROM-imported data; not assembly transpilation |
-| Generation/data | Ruby is the current verified authoring source; Sapphire needs separate runtime validation | Gold/Silver recreation in the Gen1Recomp lineage |
+| Generation/data | Ruby is the current verified authoring source; Sapphire needs separate runtime validation | Gen1/2 lineage; companion voxel source also contains an Emerald-specific adapter. This inspection does not establish complete Emerald gameplay/tool compatibility |
 | Mod support | Editor recipes and local JSON overrides work; supported public runner integration and installable package are pending | Documented registries, events/hooks, per-mod saves/options and in-game mod manager |
-| Licence boundary | Original editor work uses GPLv3-or-later (earlier grants remain); external gbarecomp is PolyForm Noncommercial and the pinned game base has no licence file, so the complete runtime stack is not claimed as FOSS | Current licence file calls covered code Source-Available 1.1 and explicitly distinguishes it from open source; README also describes inherited MIT portions |
+| Licence boundary | Original editor work uses GPLv3-or-later (earlier grants remain); external gbarecomp is PolyForm Noncommercial and the pinned game base has no licence file, so the complete runtime stack is not claimed as FOSS | Inspected engine licence is Source-Available 1.2, including Emerald-specific work; the companion DramaticShapes mod has its own MIT licence. Check the actual file and notices before reuse |
 | Intended contribution | Source-faithful voxel authoring, shared native renderer and PC VR integration | Contributions must follow its own engine, tooling and licence terms |
 
-Sources: [Gen2Recomped README](https://github.com/UNDERdecoded/Gen2Recomped),
-[Gen2Recomped licence](https://github.com/UNDERdecoded/Gen2Recomped/blob/main/LICENSE),
+Sources: [Gen2Recomped README at b017ee1](https://github.com/UNDERdecoded/Gen2Recomped/blob/b017ee194d23e97029b598174d8f2893d42c9cc6/README.md),
+[engine licence](https://github.com/UNDERdecoded/Gen2Recomped/blob/b017ee194d23e97029b598174d8f2893d42c9cc6/LICENSE),
+[Emerald voxel adapter](https://github.com/UNDERdecoded/Gen2Recomped-DramaticShapes/blob/4a114b3e344db629ac7c7ac5108bd3d910fc4554/lib/Gen3.lua),
+[companion mod licence](https://github.com/UNDERdecoded/Gen2Recomped-DramaticShapes/blob/4a114b3e344db629ac7c7ac5108bd3d910fc4554/LICENSE),
 [RubySapphireRecomp](https://github.com/mstan/RubySapphireRecomp),
 [gbarecomp](https://github.com/mstan/gbarecomp).
 Do not copy restricted Gen2 code into this repository or assume its entire tree
 is MIT because inherited files have different terms.
+
+### Camera, editor and debug reference audit
+
+Checked 2026-09-12: engine `b017ee194d23e97029b598174d8f2893d42c9cc6`,
+companion mod `4a114b3e344db629ac7c7ac5108bd3d910fc4554`.
+These are documented/source-implemented features; no hands-on Emerald camera,
+editor or gameplay acceptance was performed here. This audit copied no engine
+or mod implementation into RubyVR.
+
+| Reference feature | Verified source behavior | RubyVR follow-up |
+|---|---|---|
+| Voxel views | OFF, four tilt labels 15/35/50/75, experimental 1ST and 3RD | M9; one tilted follow view first |
+| 1ST / 3RD | Mouse look; third-person boom distance/collision; these modes also change movement | Keep camera and gameplay-control changes separately scoped |
+| V-CURVE | Separate off/three-strength horizon bend | Optional M9 presentation; preserve unbent gameplay coordinates |
+| Map editor | Shared 2D/3D selection, neighbour/warp browsing, voxel heights, tiles, collision, NPCs and events | M3 map inspection/test launch first; broader game editing later |
+| Developer console | Warp, give, flags, party, mod reload and event/hook tracing | M5 inspection/capture first, verified test actions later |
+
+Sources: [mod controls](https://github.com/UNDERdecoded/Gen2Recomped-DramaticShapes/blob/4a114b3e344db629ac7c7ac5108bd3d910fc4554/README.md),
+[WorldCurve](https://github.com/UNDERdecoded/Gen2Recomped-DramaticShapes/blob/4a114b3e344db629ac7c7ac5108bd3d910fc4554/lib/WorldCurve.lua),
+[map editor guide](https://github.com/UNDERdecoded/Gen2Recomped/blob/b017ee194d23e97029b598174d8f2893d42c9cc6/docs/MAP_EDITOR.md),
+[developer console](https://github.com/UNDERdecoded/Gen2Recomped/blob/b017ee194d23e97029b598174d8f2893d42c9cc6/src/dev/Console.lua).
+
+The curved horizon is a visual bend, not a spherical planet simulation.
+No dedicated god/invincibility or noclip command was found in the inspected
+console's built-in verbs; that does not establish absence elsewhere. Requested
+RubyVR test controls are proposals, not claims of reference feature parity.
+Our old native viewer has orbit/follow controls, but the public live adapter
+still clears map identity/connections and the current Studio terrain needs live
+integration. Editor footage cannot close that gap.
 
 Upstream gbarecomp documents versioned `.gbamod` packages and trusted native
 plugins compiled into the runner. This is existing upstream capability. RubyVR

@@ -15,9 +15,11 @@
 //   for the odd one-off scalar; it is bulk reads that must not use it.
 
 #include "ruby_world.h"
+#include "live_scene.h"
 
 #include "runtime_bus_bridge.h"   // gbarecomp::active_bus()
 #include "gba_bus.h"              // gba::GbaBus region pointers
+#include "sha1.h"
 
 #include <cstdio>
 #include <cstring>
@@ -25,6 +27,10 @@
 namespace vr {
 namespace world {
 namespace {
+const uint8_t* g_verified_rom = nullptr;
+size_t g_verified_size = 0;
+bool g_supported_rom = false;
+int g_last_status = -1;
 
 // ── Guest → host address resolution ──────────────────────────────────────────
 //
@@ -80,20 +86,6 @@ int16_t  rds16(const uint8_t* p) { int16_t v; std::memcpy(&v, p, 2); return v; }
 // Every one of these is a commented offset in that header. They are named here
 // so the reads below say what they mean instead of scattering magic numbers.
 
-// struct BackupMapLayout { s32 width; s32 height; u16 *map; }
-constexpr uint32_t kBmlWidth  = 0x00;
-constexpr uint32_t kBmlHeight = 0x04;
-constexpr uint32_t kBmlMap    = 0x08;
-constexpr uint32_t kBmlSize   = 0x0C;
-
-// struct MapHeader — we only need the first field.
-constexpr uint32_t kMapHeaderLayout = 0x00;
-
-// struct MapLayout { s32 width; s32 height; border; map; primary; secondary; }
-constexpr uint32_t kLayoutPrimaryTileset   = 0x10;
-constexpr uint32_t kLayoutSecondaryTileset = 0x14;
-constexpr uint32_t kLayoutSize             = 0x18;
-
 // struct Tileset { isCompressed; isSecondary; tiles; palettes; metatiles;
 //                  metatileAttributes; callback; }
 constexpr uint32_t kTilesetMetatiles  = 0x0C;
@@ -132,10 +124,6 @@ constexpr uint32_t kFieldCamSize   = 0x08;
 constexpr uint32_t kSHorizontalCameraPan = 0x03000598;   // iwram, 0x02
 constexpr uint32_t kSVerticalCameraPan   = 0x0300059A;   // iwram, 0x02
 
-// A backup map cannot exceed MAX_MAP_DATA_SIZE cells (fieldmap.h:11). Anything
-// bigger means we are reading uninitialised memory, not a map.
-constexpr int32_t kMaxMapDataSize = 0x2800;   // 10240 cells
-
 // Copy one tileset's metatile table out of ROM.
 //
 // A tileset does not record how many metatiles it has; the engine simply
@@ -172,75 +160,44 @@ const char* dir_name(uint8_t d) {
     }
 }
 
-// Say WHY a capture failed, once per distinct reason.
-//
-// Without this, "the field map is not up" and "the sink was never installed"
-// both look like an empty log, and those need completely different fixes. Once
-// per reason rather than per frame, because every one of these is true for
-// thousands of consecutive frames (the whole title screen, every battle, every
-// menu) and a per-frame print would bury the transition that matters.
-enum class Gate {
-    kNoBus, kNoBackupLayout, kBadDimensions, kGridUnresolved,
-    kNoMapHeader, kLayoutNotInRom, kOk, kCount
-};
-
-bool gate(Gate g, const char* why) {
-    static bool announced[static_cast<int>(Gate::kCount)] = {};
-    const int   i = static_cast<int>(g);
-    if (!announced[i]) {
-        announced[i] = true;
-        std::fprintf(stderr, "[world] %s\n", why);
-    }
-    return g == Gate::kOk;
-}
-
 }  // namespace
+
+void reset_capture() {
+    g_verified_rom=nullptr; g_verified_size=0; g_supported_rom=false; g_last_status=-1;
+}
 
 bool capture(Snapshot& out, uint32_t previous_layout_ptr) {
     out.valid = false;
-    // This prototype has no verified live map-key/connection adapter yet.
-    // Reusing a source-built snapshot must never retain its terrain identity.
     out.map_group=out.map_number=-1;
     out.identity_source=Snapshot::IdentitySource::Unknown;
     out.connections.clear();
+    out.layout_ptr=0; out.width=out.height=0; out.grid.clear();
+    out.player_index=-1;
+    for (auto& object:out.objects) object={};
 
     gba::GbaBus* bus = gbarecomp::active_bus();
-    if (!bus)
-        return gate(Gate::kNoBus, "sink alive, but no bus bound yet");
-
-    // ── The live map grid ────────────────────────────────────────────────────
-    const uint8_t* bml = host_ptr(bus, kGBackupMapLayout, kBmlSize);
-    if (!bml)
-        return gate(Gate::kNoBackupLayout, "gBackupMapLayout did not resolve");
-
-    const int32_t  w       = rds32(bml + kBmlWidth);
-    const int32_t  h       = rds32(bml + kBmlHeight);
-    const uint32_t map_ptr = rd32(bml + kBmlMap);
-
-    // Gate hard. Before InitMap() has ever run — the launcher, the BIOS intro,
-    // the title screen — these are zero or leftover garbage, and a plausible-
-    // looking but wrong width would have us memcpy megabytes.
-    if (w <= 0 || h <= 0 || w > 1024 || h > 1024 ||
-        static_cast<int64_t>(w) * h > kMaxMapDataSize)
-        return gate(Gate::kBadDimensions,
-                    "field map not initialised (implausible grid dimensions)");
-
-    const size_t   cells = static_cast<size_t>(w) * h;
-    const uint8_t* grid  = host_ptr(bus, map_ptr, cells * sizeof(uint16_t));
-    if (!grid)
-        return gate(Gate::kGridUnresolved, "gBackupMapLayout.map did not resolve");
-
-    // ── The map layout, which is also the map-changed signal ─────────────────
-    const uint8_t* hdr = host_ptr(bus, kGMapHeader, 4);
-    if (!hdr) return gate(Gate::kNoMapHeader, "gMapHeader did not resolve");
-    const uint32_t layout_ptr = rd32(hdr + kMapHeaderLayout);
-
-    const uint8_t* layout = host_ptr(bus, layout_ptr, kLayoutSize);
-    if (!layout)   // not in ROM yet == field map not up
-        return gate(Gate::kLayoutNotInRom, "gMapHeader.mapLayout is not a ROM pointer");
-
-    gate(Gate::kOk, "field map is up — reading it");
-
+    if (!bus || !bus->rom_ptr()) return false;
+    if (g_verified_rom!=bus->rom_ptr() || g_verified_size!=bus->rom_size()) {
+        g_verified_rom=bus->rom_ptr(); g_verified_size=bus->rom_size();
+        g_supported_rom=g_verified_size==0x1000000 &&
+            gba::sha1(g_verified_rom,g_verified_size).hex()==live::kRubySha1;
+    }
+    const live::Memory memory{{bus->rom_ptr(),bus->rom_size()},
+        {bus->ewram_ptr(),0x40000},{bus->iwram_ptr(),0x8000},g_supported_rom};
+    const auto scene=live::inspect(memory);
+    if (int(scene.status)!=g_last_status) {
+        g_last_status=int(scene.status);
+        std::fprintf(stderr,"[world] scene %s callback2=%08X map=%d.%d connections=%zu\n",
+            live::status_name(scene.status),scene.callback2,scene.group,scene.number,scene.connections.size());
+    }
+    if (scene.status!=live::Status::Field) return false;
+    const auto layout_ptr=scene.layout;
+    const auto w=scene.width, h=scene.height;
+    const size_t cells=size_t(w)*h;
+    const auto* grid=memory.read(scene.grid,cells*2);
+    out.map_group=scene.group; out.map_number=scene.number;
+    out.identity_source=Snapshot::IdentitySource::LiveCapture;
+    out.connections=scene.connections;
     out.layout_ptr = layout_ptr;
     out.width      = w;
     out.height     = h;
@@ -320,8 +277,8 @@ bool capture(Snapshot& out, uint32_t previous_layout_ptr) {
         out.metatiles.resize(kMetatilesTotal * kTilesPerMetatile);
         out.attributes.resize(kMetatilesTotal);
 
-        const uint32_t primary   = rd32(layout + kLayoutPrimaryTileset);
-        const uint32_t secondary = rd32(layout + kLayoutSecondaryTileset);
+        const uint32_t primary   = scene.primary_tileset;
+        const uint32_t secondary = scene.secondary_tileset;
 
         constexpr size_t kHalfEntries = static_cast<size_t>(kMetatilesInPrimary) * kTilesPerMetatile;
         read_tileset_table(bus, primary, kTilesetMetatiles,

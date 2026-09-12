@@ -101,8 +101,9 @@ V1 snapshots retain unknown
 identity. The pinned Ruby live adapter now validates explicit identity and
 connection provenance and publishes invalidation on field refusal; this is
 [merged in PR #27](live-map-identity.md). Original actor frames and single-map
-authored feet/follow-camera placement are [In review](live-actors.md). Complete
-transition coverage and regional terrain integration remain pending. See the
+authored feet/follow-camera placement [merged in PR #28](live-actors.md). Camera
+controls/facing, repeated border scenery, complete transition coverage and
+regional terrain integration remain pending. See the
 [format and authoring contract](terrain-authoring.md).
 
 Capture validity does not define how long a scene should remain visible. The

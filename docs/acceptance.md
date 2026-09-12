@@ -1,9 +1,12 @@
 # Watch the acceptance check
 
-**In review — [native player and field actors](live-actors.md), RV-010 / M5–M6.**
+**Merged in PR #28 — [native player and field actors](live-actors.md), bounded RV-010 / M5–M6.**
 The original player walks and turns through authored scenery with a following
 camera. Five field actors appear in the verified native sequence. Component,
-GL, native replay and editor regressions pass; human acceptance is pending.
+GL, native replay and editor regressions pass; the merged PR records five checked
+human steps. The subsequent report of camera/control/facing mismatch and missing
+surrounding forest remains open. This recording does not accept those behaviors.
+See the [known limitations](live-actors.md#known-visible-limitations-after-merge).
 Menu composition, full actor/effect coverage and headset performance remain open.
 
 ![Actual native Ruby walking and turning with a follow camera](media/live-actors.gif)

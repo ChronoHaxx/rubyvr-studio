@@ -11,8 +11,10 @@ The shared region-query component merged in PR #26; all three human CLI checks
 are recorded passed on `d2755ce`. Consumers remain pending.
 The bounded live identity/invalidation foundation merged in PR #27; all five
 human checks passed on `825b1ae`. Playable scenery and menu composition remain open.
-The first original actor/terrain-follow slice is **In review** under RV-010;
-its native walking recording is available, with human acceptance pending.
+The first original actor/terrain-follow slice merged in PR #28 (`0ea20c0`).
+The PR records five checked human steps for implementation `ae4a3ef`; exact
+check completion time was not recorded. The subsequent camera/control and
+missing-border report remains open; that merge does not accept full live-view fidelity.
 Experimental foliage art remains unapproved.
 
 **Prefer the short version? [Watch the acceptance GIF and verdict](acceptance.md).**
@@ -36,16 +38,36 @@ temporary fallback frames remain defects.
 
 ## Current focus
 
-**Next: native desktop gameplay proof (M5, with bounded M2/M6/M7 support).**
+**Next: native desktop gameplay proof (M5, with bounded M2/M6/M7/M9 support).**
 Maintainer decision, 2026-09-12: retain RubySapphireRecomp/gbarecomp and prove
 the authored world during actual gameplay on an ordinary monitor before
 expanding VR presentation. The first [live identity/invalidation implementation](live-map-identity.md)
 is **merged in PR #27**: native Route 101 and Bag/return checks and all five
 human checks pass; broader transition coverage remains pending. The private runner now compiles
 the current shared renderer. The [original actors and terrain-follow slice](live-actors.md)
-is **In review**: real Route 101 walking/turning and five field actors, with
-component, GL and native evidence. Human acceptance remains pending. Complete
-connected gameplay and intentional UI routing are the next steps.
+is **merged in PR #28**: real Route 101 walking/turning and five field actors,
+with component, GL and native evidence and five checked human steps. Complete
+connected gameplay and intentional UI routing remain open.
+
+**Known visible issues reported after PR #28, 2026-09-12:**
+
+- **M9 controls:** the viewer starts diagonally and permits orbit, but game
+  directions remain map-relative. A rotated view therefore makes movement feel
+  wrong. Provide a north-up tilted gameplay preset and explicit camera-relative
+  directional input for rotatable play, preserving original menu navigation and
+  the guest's grid/collision rules. Full continuous free walking is later work.
+- **M6/RV-010 facing:** the card turns towards the camera but keeps the original
+  2D view's selected sprite frame. Side/back views and steep top-down readability
+  need mode-aware frame selection and foot-pivot/card orientation.
+- **M2/M5 border scenery:** the repeated forest outside the map body is missing.
+  Capture/present Ruby's real border pattern where the backup grid is undefined;
+  preserve real neighbour copies and blocked/non-playable ownership. This is
+  missing world data/presentation, distinct from M4's unfinished tree artwork.
+
+These symptoms were covered only broadly before; the [source audit](references.md#camera-facing-and-border-follow-up-2026-09-12)
+now records their specific causes and reference behavior. Keep them beside the
+test instructions in subsequent PRs. M5 remains the active milestone; fix these
+within its playable proof, without treating a renderer-only orbit as finished controls.
 Bag must retain the last valid world behind its UI; PR #27's clearing is a
 temporary safeguard, not the final menu design. Separate capture validity from
 presentation, keep head tracking active and refresh the field safely on return
@@ -240,7 +262,7 @@ Catalog and placement audits do not certify a complete game or headset experienc
 | [M3 Manual authoring](#m3-manual-authoring) | Core workflow and part selection merged; convenience tools and timed user trial pending | Current editor + M2 contract for terrain |
 | [M4 All static scenery](#m4-all-static-scenery) | Common starters and bounded tree fixes merged; foliage art deferred here; full coverage/review pending | M1–M3 |
 | [M5 Live scene data](#m5-live-scene-data) | Bounded live identity/invalidation merged; desktop gameplay proof and complete routing pending | Local prototype + M1; public integration separately required |
-| [M6 Actors and field effects](#m6-actors-and-field-effects) | First native actor/follow slice In review; broad coverage pending | M2, M5 |
+| [M6 Actors and field effects](#m6-actors-and-field-effects) | First native actor/follow slice merged; camera-facing and broad coverage pending | M2, M5 |
 | [M7 UI, battles and game loop](#m7-ui-battles-and-game-loop) | Original frame available; complete routing/acceptance pending | M5 |
 | [M8 Sky, lighting, time and weather](#m8-sky-lighting-time-and-weather) | Editor preview merged; runtime cycle/weather/water pending | M2, M5 for runtime |
 | [M9 Controls and comfort](#m9-controls-and-comfort) | Editor cameras implemented; monitor presets/follow/first-person and VR acceptance pending | M5–M8 |
@@ -411,6 +433,14 @@ automated/visual/live/headset results, evidence and unresolved defects separatel
   inspected GIF and desktop checks cover this bounded preview base only.
 - [ ] Define map undersides, outer borders, cutaway walls/ceilings and occlusion
   so orbit/first-person views do not expose unintended voids or hide the player.
+  **Reported after PR #28, 2026-09-12:** capture and render the repeating 2x2
+  border-metatile pattern used by `MapGridGetMetatileIdAt` for undefined backup
+  cells. Both the source adapter and live capture currently leave these cells
+  undefined, and the mesher skips them. Preserve raw grid/connection provenance
+  and blocked ownership; verify all four quarters, corners, neighbour precedence
+  and an actual Littleroot forest comparison. Do not hide this gap with fog or
+  invent a forest biome. Full neighbouring-map streaming is a separate remaining
+  M2/M5 consumer.
   Maintainer feedback (2026-09-10): the visible outer cutoff/void needs a deliberate
   treatment. Render full nearby neighbours before relying on distant sky/fog;
   first-person mode alone does not close an exposed edge. Horizon blending is M8.
@@ -570,9 +600,9 @@ guest-memory reads from the VR thread.
 
 ## M6: actors and field effects
 
-- [ ] **In review — RV-010:** [original field actor frames and a following camera](live-actors.md)
+- [x] **Merged — PR #28 / bounded RV-010:** [original field actor frames and a following camera](live-actors.md)
   in the native authored view. A bounded walk/turn recording, component and
-  GL checks pass; human acceptance is pending. The sequence covers five active
+  GL checks pass; the PR records five checked human steps. The sequence covers five active
   events and shallow authored terrain, not complete gameplay/actor coverage.
 - [ ] Render player/NPC idle, walk, run and turn animation with correct pivots/facing.
 - [ ] Cover bikes, surf/dive, jumps/ledges, scripted movement and followers or
@@ -583,6 +613,12 @@ guest-memory reads from the VR thread.
   ripples, dust, bubbles, cut/rock actions and other IDs present in data.
 - [ ] Define stable billboard orientation/readable scale in tabletop, follow
   and first-person views, preserving source animation and palette identity.
+  **Reported after PR #28:** changing camera yaw retains the original view's
+  sprite frame; steep pitch foreshortens the always-upright card. Test all four
+  viewing quadrants and low/steep tilt with stable feet and animation phase.
+  Select available original directional art for the apparent facing without
+  changing the guest's actual facing. Separate unavailable poses from ordinary
+  walkers; one captured OBJ frame alone cannot supply unseen side/back art.
 
 **Exit:** every discovered actor/effect state has an intended renderer and live
 evidence, with no doubled source sprites, missing frames or drifting feet.
@@ -661,9 +697,14 @@ indoors or broken environment transitions.
   of saved authoring data ([camera verification](verification.md)).
 - [ ] Add monitor view modes: original 2D, fixed tilt presets (reference labels
   15/35/50/75), player-follow orbit/third-person and first-person. Start with a
-  fixed tilted follow view for the desktop proof. Keep gameplay movement
-  unchanged when switching cameras; continuous camera-relative movement is a
-  separate gameplay integration, not an automatic consequence of first-person.
+  fixed north-up tilted follow view for the desktop proof. **Post-PR #28 input
+  defect:** a rotatable gameplay view needs explicit camera-relative directional
+  input and view-correct actor facing; the inspection camera alone supplies
+  neither. Retain original compass controls in original/north-up mode and
+  original menu navigation in every mode. Validate quarter-turn views, held-key
+  transitions, release/focus loss, obstacles, dialogue and a return-to-default
+  action. Mapping input into the original four grid directions can preserve
+  guest movement; continuous free walking is a separate gameplay integration.
 - [ ] Evaluate an optional curved-horizon diorama after the normal desktop
   views work. Keep it off by default and apply it consistently to scene
   presentation; authored heights, collision and the shared terrain query

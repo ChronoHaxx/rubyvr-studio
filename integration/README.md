@@ -46,7 +46,7 @@ the public integration work package must define a reproducible boundary.
 runner experiment; it still requires the caller's runtime headers, libraries
 and frame-sink integration. See the [checks and limits](../docs/live-map-identity.md).
 
-The [live actor slice](../docs/live-actors.md) is **In review**. It copies original
+The [live actor slice](../docs/live-actors.md) **merged in PR #28**. It copies original
 OBJ frames and selected subsprite profiles into the transient snapshot, renders
 upright actors through the shared diorama path and follows their resolved feet.
 The native desktop recording covers one small walk/turn scene. Menu caching,

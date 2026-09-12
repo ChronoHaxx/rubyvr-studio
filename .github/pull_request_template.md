@@ -22,6 +22,11 @@ headset evidence separately. Include build/source/recipe identity where relevant
 
 Tested commit/build: **not yet tested**
 
+**Known visible limitations in this build:** list each relevant symptom, its
+roadmap milestone/work package, and whether this PR fixes it or leaves it open.
+Put this beside the launch/test instructions, even when the roadmap already
+contains the issue. Use concrete behavior, not just "prototype" or "polish".
+
 Provide exact setup and launch commands, then a short numbered sequence for this
 revision. Each unchecked box must contain the action and its expected result.
 Cover the changed behavior, one adjacent ordinary workflow, and relevant failure

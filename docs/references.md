@@ -179,9 +179,49 @@ The curved horizon is a visual bend, not a spherical planet simulation.
 No dedicated god/invincibility or noclip command was found in the inspected
 console's built-in verbs; that does not establish absence elsewhere. Requested
 RubyVR test controls are proposals, not claims of reference feature parity.
-Our old native viewer has orbit/follow controls, but the public live adapter
-still clears map identity/connections and the current Studio terrain needs live
-integration. Editor footage cannot close that gap.
+The native viewer has orbit/follow controls; PR #27 added live identity and
+copied-connection provenance, and PR #28 added original actors and authored
+feet/following. Camera-relative controls/facing and complete connected gameplay
+remain open. Editor footage cannot close those gaps.
+
+### Camera, facing and border follow-up (2026-09-12)
+
+The maintainer reported rotated controls/facing and missing forest after merging
+PR #28. Inspection of RubyVR's `integration/runtime/viewer.cpp` confirms a
+default yaw of 0.6 radians and free inspection orbit, with game input still owned
+by the original window. `src/vr/actor_render.cpp` rotates an upright card but
+uses the one captured OBJ frame; it does not choose side/back animation art for
+the new view. Near-top-down views therefore also foreshorten the card.
+
+At the same pinned companion-mod revision above, the reference separates two
+behaviors. Its normal tilted orbit remains on the south side and leans actor
+cards about their feet for readable tilt views. The free first/third-person rig
+rotates input by camera yaw, selects the actor's apparent facing and turns
+upright cards toward the eye. See [card orientation and frame selection](https://github.com/UNDERdecoded/Gen2Recomped-DramaticShapes/blob/4a114b3e344db629ac7c7ac5108bd3d910fc4554/lib/VoxelScene.lua#L549-L642),
+[movement transform](https://github.com/UNDERdecoded/Gen2Recomped-DramaticShapes/blob/4a114b3e344db629ac7c7ac5108bd3d910fc4554/lib/FirstPerson.lua#L448-L455)
+and [gameplay movement integration](https://github.com/UNDERdecoded/Gen2Recomped-DramaticShapes/blob/4a114b3e344db629ac7c7ac5108bd3d910fc4554/lib/FreeMove.lua).
+The latter calls engine collision/arrival/special-action handling; changing a
+render matrix alone does not provide that behavior. These are inspected source
+paths, not a hands-on claim that every Emerald movement case works.
+
+The missing forest is a separate, concrete source gap. Ruby's
+[`MapGridGetMetatileIdAt` and `GetBorderBlockAt`](https://github.com/pret/pokeruby/blob/63a8cbf0016b351a4e68f7036fa0b77e23d2f2c1/src/fieldmap.c)
+substitute a repeating 2x2 border pattern for undefined backup cells, with
+parity based on backup coordinates. RubyVR's live capture copies the raw grid,
+the source adapter also leaves border cells undefined, and the mesher skips
+them. The reference's [Gen3 border lookup](https://github.com/UNDERdecoded/Gen2Recomped-DramaticShapes/blob/4a114b3e344db629ac7c7ac5108bd3d910fc4554/lib/Gen3.lua#L653-L690)
+explicitly repeats all four quarters instead of clamping one tile. Restore
+source-derived decorative border presentation while preserving real neighbour
+ownership and non-playable boundaries. Distant underlay/fog and M4 art polish
+do not replace that missing geometry.
+
+Dramatic Shape VR separately documents tabletop and first-person controls in
+its [current guide](https://github.com/prismaticShape/DramaticShapeVR#controls-quick-reference).
+That guide establishes available modes, not the exact implementation or parity
+of its latest restricted release. This follow-up copied no implementation and
+does not start an engine migration. The [canonical roadmap](roadmap.md#current-focus)
+tracks camera/input under M9, actor facing under M6 and border completeness
+under M2/M5, within the continuing native gameplay proof.
 
 Upstream gbarecomp documents versioned `.gbamod` packages and trusted native
 plugins compiled into the runner. This is existing upstream capability. RubyVR

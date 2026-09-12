@@ -11,8 +11,9 @@ The [live actor slice](live-actors.md) adds `bash tools/test-actor-frame.sh`:
 29 checks each in optimized and sanitized builds without graphics/assets.
 The local GL lifecycle test also verifies rendered actor pixels, fractional
 motion, explicit height, unresolved refusal and clearing. Native walking,
-mode reloads, editor regression results and the pending human checklist are
-recorded separately in that guide.
+mode reloads, editor regression results and the five checked PR #28 human steps
+are recorded separately in that guide. The subsequent camera/control/facing and
+missing-border report remains open; those behaviors need repair and retesting.
 
 The [live map identity decoder](live-map-identity.md) runs 55 checks in each
 optimized/sanitized build with `bash tools/test-live-scene.sh`; no graphics or

@@ -23,8 +23,9 @@ using our authored world: walking, connected maps, an interior and the original
 game UI. We retain the RubySapphireRecomp route. The first
 [live map identity/invalidation foundation](docs/live-map-identity.md) is merged in PR #27;
 the [original player/NPC rendering and follow camera](docs/live-actors.md) are
-now **In review**, with an actual native walking recording. The complete
-playable voxel game remains pending.
+merged in **PR #28**, with an actual native walking recording. Camera-relative
+controls/facing and surrounding border scenery remain known gaps in the
+[native gameplay proof](docs/roadmap.md#current-focus).
 
 **Watch the result:** [Short acceptance GIF and verdict](docs/acceptance.md).
 For details, the [roadmap and checklist](docs/roadmap.md) tracks M0–M11 work,

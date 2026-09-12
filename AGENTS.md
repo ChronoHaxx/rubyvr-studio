@@ -11,6 +11,11 @@ checks. The human contributor owns the PR and its claims.
   developer setup in a clearly labelled collapsed section. Read back the
   published PR description before saying it is updated. A new commit alone
   does not complete the handoff.
+- Beside the primary human test instructions, list known visible limitations
+  in plain language, with their roadmap milestone and whether this PR fixes
+  them. Do not bury camera/control mismatches, missing scenery or temporary
+  menu behavior behind a general "prototype" label or a link. Preserve dated
+  post-merge defect reports separately from the original acceptance result.
 - The maintainer prefers short visual acceptance evidence and delegates routine
   automated and desktop visual review to the contributor or agent. Run the checks,
   inspect the actual captures, and lead with a 10–30 second GIF/video, a concise

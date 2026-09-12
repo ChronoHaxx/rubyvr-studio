@@ -282,6 +282,7 @@ bool capture(Snapshot& out, uint32_t previous_layout_ptr) {
                sprite && rds16(sprite+0x2e)==i) {
                 auto& source=out.actor_sources[i];source.present=true;
                 std::memcpy(source.sprite.data(),sprite,source.sprite.size());
+                if(!actor::bind_event(source,{e,kObjSize},unsigned(i)))continue;
                 if(sprite[0x42]>>6) {
                     const uint32_t tables=rd32(sprite+0x18);
                     // These field profiles are immutable ROM data, eight-byte
@@ -314,15 +315,23 @@ bool capture(Snapshot& out, uint32_t previous_layout_ptr) {
     std::memcpy(out.obj_palette.data(),bus->pal_ptr()+0x200,512);
     // DISPCNT bit 6 selects OBJ 1D mapping. Read through the bus at capture.
     out.obj_mapping_1d=(bus->read16(0x04000000)&0x40)!=0;
-    if(out.player_index>=0) {
-        auto& source=out.actor_sources[out.player_index];
-        actor::capture_player_directions(source,
-            {bus->rom_ptr(),bus->rom_size()},out.obj_tiles,out.obj_mapping_1d);
-        if(std::getenv("RUBYVR_ACTOR_TRACE"))
-            std::fprintf(stderr,"PLAYER_VIEW_CAPTURE anim=%u phase=%u source_facing=%u matched=%u displayed_anim=%u displayed_phase=%u\n",
+    // Pinned sprite.c queue: consume at this capture boundary, never retain
+    // guest pointers in the snapshot. A flag alone cannot authorize a frame.
+    const auto* iwram=bus->iwram_ptr();
+    const unsigned copies=iwram[0x24dc];
+    const std::span<const uint8_t> pending_copies=iwram[0x28f0] && copies>0 && copies<=64
+        ? std::span<const uint8_t>(iwram+0x24e0,copies*12) : std::span<const uint8_t>{};
+    for(int i=0;i<kObjectEventCount;++i)if(out.actor_sources[i].present) {
+        auto& source=out.actor_sources[i];
+        actor::capture_object_directions(source,
+            {bus->rom_ptr(),bus->rom_size()},out.obj_tiles,out.obj_mapping_1d,out.objects[i].graphics_id,pending_copies);
+        if(std::getenv("RUBYVR_ACTOR_TRACE")) {
+            std::fprintf(stderr,"ACTOR_VIEW_CAPTURE slot=%d player=%d graphics=%u culled=%d anim=%u phase=%u source_facing=%u matched=%u displayed_anim=%u displayed_phase=%u pending_flip=%d\n",
+                i,i==out.player_index,unsigned(out.objects[i].graphics_id),source.viewport_culled,
                 unsigned(source.sprite[0x2a]),unsigned(source.sprite[0x2b]),
-                unsigned(out.objects[out.player_index].facing),unsigned(source.world_facing),
-                unsigned(source.displayed_anim),unsigned(source.displayed_phase));
+                unsigned(out.objects[i].facing),unsigned(source.world_facing),
+                unsigned(source.displayed_anim),unsigned(source.displayed_phase),source.pending_flip_transition);
+        }
     }
     out.actor_offset_x=rds16(bus->iwram_ptr()+0x24d0);
     out.actor_offset_y=rds16(bus->iwram_ptr()+0x27e0);

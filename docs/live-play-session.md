@@ -1,6 +1,7 @@
 # Play through menus, battles and interiors in the viewer
 
-**M5/M7 — in review; human acceptance pending.** The native desktop viewer now
+**M5/M7 — merged in PR #32 (`a6c8aa0`), 2026-09-12.** All five human steps
+are checked for `31b95d2`; this accepts the bounded desktop sequence below. The native desktop viewer now
 keeps scenery behind ordinary Bag, Party and Options, and places the original
 Start menu, dialogue and save windows over the world. Battles, interiors and
 unrecognized screens show the original game in this same window. Closing a
@@ -61,26 +62,28 @@ existing ones. These local fixtures are not distributed in the repository.
   editor is separate. Public runner setup/distribution, whole-game and headset
   performance remain pending.
 
-## Human functional check — pending
+## Human functional check — recorded passed on PR #32
 
-Use the exact revision printed by the prepared launcher and recorded in the PR.
-These checks are not ticked by automated results or the recording.
+The merged PR records all five checks for `31b95d2`; verified on 2026-09-12.
+The maintainer reported the merge, and the checked PR steps supply the acceptance
+record. This does not retroactively accept unreported checks from other PRs.
+Future source revisions need their own affected-behavior retest.
 
-1. [ ] Launch, focus the viewer, turn with J/L and walk. Press Enter: the Start
+1. [x] Launch, focus the viewer, turn with J/L and walk. Press Enter: the Start
    menu should appear over the world. Move its selection, press Z and resume
    walking. Releasing arrows and changing window focus must not leave movement held.
-2. [ ] In the original window, load **Demo field ready** from Esc > Checkpoints.
+2. [x] In the original window, load **Demo field ready** from Esc > Checkpoints.
    Back in the viewer, open Bag, then Party, then Option from Start using X.
    Expect readable menus and scenery around them. J/L can turn the retained
    world; arrows navigate the menu. Z returns to the correct field each time.
-3. [ ] Load **Demo battle**. In the viewer use X to choose FIGHT and SCRATCH;
+3. [x] Load **Demo battle**. In the viewer use X to choose FIGHT and SCRATCH;
    finish the battle and advance Birch's dialogue with X. Expect the original
    battle here, then outdoor dialogue over the restored scenery, then the
    original lab. No stale outdoor scene should appear behind the lab.
-4. [ ] Load **Demo lab ready**. Walk down through the lab's exit; expect original
+4. [x] Load **Demo lab ready**. Walk down through the lab's exit; expect original
    screen directions indoors and live outdoor scenery after the warp. Open
    Start > SAVE and complete the original prompts with X in the viewer.
-5. [ ] Save a new named host checkpoint, close the game and reopen with the same
+5. [x] Save a new named host checkpoint, close the game and reopen with the same
    command. Load it and verify the situation. Load **Demo Bag**: original-only
    Bag is expected; closing it must restore the correct world. Load **Demo field
    ready** again and confirm normal movement/menu controls.
@@ -138,7 +141,7 @@ pause guest execution; the guest itself controls normal menu/battle timing.
   It retains existing connected-map/material/camera tests.
 - **16 native journey checks pass**, using the real first battle and lab warp,
   original input and isolated checkpoints. The exact executable hash is
-  recorded in the PR; human checks above remain pending.
+  recorded in the PR; the five human checks above are now recorded passed.
 - All **four new checkpoint situations reopen in fresh native processes**:
   Bag, battle, lab ready and field ready. Each reaches its expected presentation
   mode and exits normally after a bounded 120-frame run.

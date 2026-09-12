@@ -7,7 +7,8 @@
 
 namespace vr::actor {
 struct DirectionImage {
-    std::array<uint8_t,256> tiles{}; // one original 16x32 4bpp image
+    std::array<uint8_t,512> tiles{}; // bounded original 4bpp image, up to 32x32
+    uint16_t byte_count=256;
     uint16_t image=0;
     bool hflip=false,vflip=false;
 };
@@ -15,18 +16,32 @@ struct DirectionImage {
 struct Source {
     std::array<uint8_t,68> sprite{};
     bool present=false;
+    // Capture verified the owning live event is off-screen, not script-hidden.
+    // This only bypasses Ruby's 2D draw cull; the original Sprite stays intact.
+    bool viewport_culled=false;
+    bool fixed_pose=false; // event/script explicitly disabled directional animation
     // Raw six-byte Subsprite records from the selected, validated ROM table.
     std::vector<uint8_t> subsprites;
-    // Optional same-phase art for the verified Brendan/May on-foot profile.
+    // Optional same-phase art for a verified directional field profile.
     // Indexed S/N/W/E, not a second animation clock. Zero facing means absent.
     uint8_t world_facing=0;
     uint8_t displayed_anim=0,displayed_phase=0;
+    bool pending_flip_transition=false;
     std::array<DirectionImage,4> directions{};
 };
 // Capture-side only, after the caller's Ruby rev1 ROM-identity gate. Refuses
 // unknown profiles and a phase whose source bytes/flips do not match live OBJ.
 bool capture_player_directions(Source&,std::span<const uint8_t> rom,
                                std::span<const uint8_t> obj_vram,bool mapping_1d);
+// pending_copies: at most 64 pinned 12-byte SpriteCopyRequest records, captured
+// only while Ruby's queue is pending. Consumed here; no pointers reach rendering.
+bool capture_object_directions(Source&,std::span<const uint8_t> rom,
+                               std::span<const uint8_t> obj_vram,bool mapping_1d,
+                               uint8_t graphics_id,
+                               std::span<const uint8_t> pending_copies={});
+// Capture-side owner/visibility gate, using the pinned 0x24-byte ObjectEvent.
+// An inactive, hidden or recycled slot cannot revive a copied Sprite.
+bool bind_event(Source&,std::span<const uint8_t> object_event,unsigned slot);
 enum class Status { Missing, Hidden, Visible, Unsupported, Truncated };
 struct Frame {
     Status status=Status::Missing;

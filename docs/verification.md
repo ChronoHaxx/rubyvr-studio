@@ -1,8 +1,20 @@
 # Verification and its limits
 
-## Native desktop play session — in review, 2026-09-12
+## NPC views and viewport visibility — in review, 2026-09-12
 
-[Recording, source audit and pending human checks](live-play-session.md):
+[Native GIF, exact scope and pending human steps](live-npc-views.md).
+`bash tools/test-actor-frame.sh` passes 2,590 player and 16,363 NPC checks,
+including ASan/UBSan; Windows passes both. The local GL test verifies directional
+pixels, short bodies, viewport visibility, script hide/despawn and previous
+menu/connected-world behavior. Three disposable negative controls fail their
+intended assertions. Eight native checks pass; all 3,888 final-run actor poses
+match, including 2,882 NPC poses and seven confirmed queued-flip transitions.
+All 58 sampled viewport-culled NPC poses remain drawable. This does not accept
+distant live-slot actors, all profiles, physical input, free movement or VR.
+
+## Native desktop play session — merged PR #32, 2026-09-12
+
+[Recording, source audit and five passed human checks](live-play-session.md):
 `python tools/test-live-presentation.py` checks pinned modes, menu entry/fade,
 identity/epoch/return lifetimes and original BG0 UI ownership without SDL,
 OpenGL, game assets or physical input. Its 53 checks pass on Windows and with
@@ -12,7 +24,8 @@ mesh uploads during menu use, original-view controls and checkpoint invalidation
 Native checks use a copied checkpoint and original game input through the
 starter battle, lab dialogue/exit, Party and save UI; no story/party/collision
 memory edits. Existing ten camera/menu/checkpoint checks remain regression
-evidence. Headset and physical-input acceptance remain pending.
+evidence. PR #32 records five checked human steps for `31b95d2`. Headset and
+full-game acceptance remain pending.
 
 ## Live border restoration — in review in PR #29, 2026-09-12
 

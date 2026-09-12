@@ -1,18 +1,28 @@
 # Watch the acceptance check
 
-**In review — [a native play session in one viewer](live-play-session.md), M5/M7.**
+**In review — [NPC camera views and nearby visibility](live-npc-views.md), M6 supporting M5.**
+The 18-second native recording shows ordinary NPCs from four camera views and
+walking away/back. Directional source art and queued-flip transitions are
+verified; loaded actors ignore the original 2D viewport cull. The guide uses
+the existing launcher and new **NPC views** checkpoint, with five pending human
+steps. Distant despawning, ledge/contact alignment, foliage and M9's continuous
+third-person/first-person modes remain open.
+
+![Native NPC camera and nearby visibility](media/live-npc-views.gif)
+
+**Merged PR #32 — [a native play session in one viewer](live-play-session.md), M5/M7.**
 Bag/Party/Options retain scenery; original Start/dialogue/save UI overlays it.
 The real starter battle, lab dialogue and exit use the original game where 3D
 coverage is missing, then return to the outdoor world. The guide includes one
-launcher, situation checkpoints, evidence and pending human checks. Actor pop-in,
+launcher, situation checkpoints and five passed human checks for `31b95d2`. Actor pop-in,
 ledge contact, foliage, unrestricted noclip and full VR remain open.
 
 ![Actual native menus, battle, dialogue, lab and save](media/live-play-session.gif)
 
 Earlier accepted slices below retain their original scope and limitations;
-their historical cleared-Bag behavior is superseded by this desktop candidate.
+their historical cleared-Bag behavior is superseded by this merged desktop route.
 
-**Latest accepted slice — [connected native scenery](live-connected-world.md), M5/M2, merged PR #31.**
+**Earlier accepted slice — [connected native scenery](live-connected-world.md), M5/M2, merged PR #31.**
 Route 101 → Oldale → look back → Route 101, driven through native game movement.
 Complete nearby scenery stays in place. Component/sanitizer, actual GL and native
 checks pass. All four maintainer human steps are checked for `c5bc19f`;

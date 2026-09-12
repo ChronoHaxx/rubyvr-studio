@@ -46,7 +46,8 @@ four combined developer checks were not reported.
   disagreements. Ruby's original movement rules remain authoritative.
 - **M4 foliage:** existing tree shapes, repetitive placement, leftover ground
   artwork and unapproved grass art remain. This restores missing placements.
-- **M6 actors:** NPC/special-player facing, animation coverage and distant
+- **M6 actors:** [ordinary NPC views](live-npc-views.md) and loaded viewport
+  visibility are in review. Special-player facing, animation coverage and distant
   sprite pop-in remain open. The merged normal-player facing fix is included.
 - **M5/M7 menus:** Bag still clears the 3D view. Retaining the world behind
   recognized menus follows the active connected-scenery slice.

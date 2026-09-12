@@ -79,6 +79,32 @@ int main(int,char**) {
         expect(vr::diorama::diorama_stats().geometry_hash==first,"directional art does not rebuild scenery");
     }
     sprite.world_facing=0;
+    // A short NPC owns its own directional profile independently of the player.
+    // Its source invisible bit is still present: only verified viewport culling
+    // may bypass it, while explicit script hiding/despawn must still win.
+    auto& npc=field.objects[1];npc=object;npc.is_player=false;npc.x=14;
+    auto& npc_source=field.actor_sources[1];npc_source=sprite;
+    npc_source.world_facing=2;npc_source.sprite[0]=npc_source.sprite[1]=0;
+    npc_source.sprite[2]=0;npc_source.sprite[3]=0x40;
+    npc_source.sprite[0x28]=npc_source.sprite[0x29]=248;
+    npc_source.sprite[0x20]=232;npc_source.sprite[0x22]=200;
+    npc_source.sprite[0x3e]|=4;npc_source.viewport_culled=true;
+    for(auto& d:npc_source.directions)d.byte_count=128;
+    for(int q=0;q<4;++q) {
+        vr::viewer::set_yaw_radians(q*1.570796327f);vr::viewer::frame(field,false);
+        expect(vr::actor_render::stats().visible==2,"player and viewport-culled NPC coexist");
+        glReadPixels(0,0,1280,800,GL_RGBA,GL_UNSIGNED_BYTE,actor_pixels.data());
+        int count=0;for(size_t i=0;i<actor_pixels.size();i+=4)
+            count+=actor_pixels[i]==colors[q][0] && actor_pixels[i+1]==colors[q][1] && actor_pixels[i+2]==colors[q][2];
+        expect(count>50,"short NPC shows camera-relative directional pixels");
+    }
+    npc.invisible=true;vr::viewer::frame(field,false);
+    expect(vr::actor_render::stats().visible==1,"script-hidden NPC cannot bypass visibility with cull flag");
+    npc.invisible=false;npc_source.viewport_culled=false;vr::viewer::frame(field,false);
+    expect(vr::actor_render::stats().visible==1,"unexplained source hiding stays hidden");
+    npc_source.viewport_culled=true;npc.active=false;vr::viewer::frame(field,false);
+    expect(vr::actor_render::stats().visible==1,"inactive NPC does not reuse previous GPU pose");
+    field.actor_sources[1]={};field.objects[1]={};
     vr::viewer::reset_camera();
     expect(vr::viewer::yaw_radians()==0,"north-up reset is exact");
     vr::viewer::set_yaw_radians(0.4f);

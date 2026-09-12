@@ -5,6 +5,7 @@
 #include "actor_render.h"
 #include "gl_loader.h"
 #include "vr_math.h"
+#include "camera_input.h"
 
 #include <cmath>
 #include <cstdio>
@@ -22,8 +23,8 @@ bool        g_active = false;
 // Orbit camera, in map-cell units. Spherical around a target so dragging feels
 // like turning an object over rather than flying, which is what you want when
 // inspecting a model.
-float g_yaw    = 0.6f;      // radians
-float g_pitch  = 0.55f;     // radians above the horizon
+float g_yaw    = 0.0f;      // north-up gameplay view
+float g_pitch  = 0.9f;      // radians above the horizon
 float g_dist   = 12.0f;     // cells; read the player at native sprite proportions
 float g_ty     = 1.0f;      // target height above the ground plane
 
@@ -31,7 +32,9 @@ bool  g_follow = true;      // track the player, or hold over the map centre
 int   g_debug  = 0;         // 0 textured, 1 classification colours
 int   g_min_unit = 2;
 
-bool  g_b_held = false, g_h_held = false, g_n_held = false, g_m_held = false;
+bool  g_b_held = false, g_h_held = false, g_n_held = false, g_m_held = false, g_r_held = false;
+bool g_camera_relative = true;
+uint64_t g_control_time = 0;
 
 // Edge trigger: true only on the frame a key goes down.
 bool pressed(const Uint8* k, SDL_Scancode sc, bool* held) {
@@ -48,7 +51,9 @@ void capture_review(int width,int height) {
     if(!prefix || !*prefix)return;
     static unsigned frame=0;
     const unsigned n=frame++;
-    if(n>=720 || n%4 || width<=0 || height<=0 || width>4096 || height>4096)return;
+    const char* cadence=std::getenv("RUBYVR_VIEWER_CAPTURE_STEP");
+    const unsigned step=cadence?unsigned(std::clamp(std::atoi(cadence),4,60)):4;
+    if(n>=180*step || n%step || width<=0 || height<=0 || width>4096 || height>4096)return;
     std::vector<uint8_t> pixels(size_t(width)*height*4);
     glReadBuffer(GL_BACK);glReadPixels(0,0,width,height,GL_RGBA,GL_UNSIGNED_BYTE,pixels.data());
     for(int y=0;y<height/2;++y)
@@ -66,10 +71,17 @@ void capture_review(int width,int height) {
 }  // namespace
 
 bool active() { return g_active; }
+bool focused() { return g_active && SDL_GetKeyboardFocus()==g_win; }
+float yaw_radians() { return g_yaw; }
+void set_yaw_radians(float yaw) { if(std::isfinite(yaw)) g_yaw=std::remainder(yaw,6.283185307f); }
+bool camera_relative() { return g_camera_relative; }
+void set_camera_relative(bool enabled) { g_camera_relative=enabled; }
+void reset_camera() { g_yaw=0;g_pitch=0.9f;g_dist=12;g_ty=1;g_follow=true; }
 
 bool init(SDL_Window* win, bool visible) {
     if (!win) return false;
     g_win = win;
+    reset_camera();g_control_time=SDL_GetTicks64();
 
     SDL_SetWindowSize(win, 1280, 800);
     SDL_SetWindowTitle(win, "RubyRecomp - diorama viewer");
@@ -83,7 +95,8 @@ bool init(SDL_Window* win, bool visible) {
     g_active = true;
     std::fprintf(stderr,
                  "[viewer] window open. J/L I/K orbit, U/O zoom, T/G target,\n"
-                 "[viewer] N/M min-unit, B debug colours, H follow-player\n");
+                 "[viewer] N/M min-unit, B debug colours, H follow-player, R north-up\n"
+                 "[viewer] Focus this window to walk relative to its camera; menus keep original directions.\n");
     return true;
 }
 
@@ -92,20 +105,26 @@ void frame(const world::Snapshot& s, bool present) {
     if (!diorama::ready() && !diorama::init()) return;
 
     // Controls first, so a re-mesh request lands before update() runs.
-    if (const Uint8* k = SDL_GetKeyboardState(nullptr);SDL_GetKeyboardFocus()==g_win && k) {
-        if (k[SDL_SCANCODE_J]) g_yaw   -= 0.02f;
-        if (k[SDL_SCANCODE_L]) g_yaw   += 0.02f;
-        if (k[SDL_SCANCODE_I]) g_pitch += 0.015f;
-        if (k[SDL_SCANCODE_K]) g_pitch -= 0.015f;
-        if (k[SDL_SCANCODE_U]) g_dist  *= 1.02f;
-        if (k[SDL_SCANCODE_O]) g_dist  /= 1.02f;
-        if (k[SDL_SCANCODE_T]) g_ty    += 0.08f;
-        if (k[SDL_SCANCODE_G]) g_ty    -= 0.08f;
+    const auto now=SDL_GetTicks64();
+    const float dt=std::min(float(now-g_control_time)/1000.f,0.05f);
+    g_control_time=now;
+    if (const Uint8* k = SDL_GetKeyboardState(nullptr);focused() && k) {
+        if (pressed(k,SDL_SCANCODE_R,&g_r_held)) reset_camera();
+        if (k[SDL_SCANCODE_J]) g_yaw   -= 1.2f*dt;
+        if (k[SDL_SCANCODE_L]) g_yaw   += 1.2f*dt;
+        if (k[SDL_SCANCODE_I]) g_pitch += 0.9f*dt;
+        if (k[SDL_SCANCODE_K]) g_pitch -= 0.9f*dt;
+        const float zoom=std::pow(1.02f,60*dt);
+        if (k[SDL_SCANCODE_U]) g_dist  *= zoom;
+        if (k[SDL_SCANCODE_O]) g_dist  /= zoom;
+        if (k[SDL_SCANCODE_T]) g_ty    += 4.8f*dt;
+        if (k[SDL_SCANCODE_G]) g_ty    -= 4.8f*dt;
+        set_yaw_radians(g_yaw);
 
         // Clamp pitch just short of the poles: at exactly straight-down the
         // look-at basis degenerates and the view snaps to an arbitrary roll.
         if (g_pitch >  1.50f) g_pitch =  1.50f;
-        if (g_pitch < -0.20f) g_pitch = -0.20f;
+        if (g_pitch <  0.15f) g_pitch =  0.15f;
         if (g_dist  <  1.0f)  g_dist  =  1.0f;
         if (g_dist  > 200.0f) g_dist  = 200.0f;
 
@@ -129,7 +148,7 @@ void frame(const world::Snapshot& s, bool present) {
             diorama::set_min_unit(++g_min_unit);
             std::fprintf(stderr, "[viewer] min unit %d\n", g_min_unit);
         }
-    } else g_b_held=g_h_held=g_n_held=g_m_held=false;
+    } else g_b_held=g_h_held=g_n_held=g_m_held=g_r_held=false;
 
     diorama::update(s);
     if (!diorama::has_geometry()) {
@@ -140,10 +159,12 @@ void frame(const world::Snapshot& s, bool present) {
         if (present) SDL_GL_SwapWindow(g_win);
         return;
     }
-    char title[160];
+    char title[256];
     const auto& actors=actor_render::stats();
-    std::snprintf(title,sizeof(title),"RubyRecomp - live map %d.%d | %zu connections | %d actors | %d unsupported | %d unresolved",
-        s.map_group,s.map_number,s.connections.size(),actors.visible,actors.unsupported,actors.unresolved);
+    const char* compass[]={"N","W","S","E"};
+    std::snprintf(title,sizeof(title),"RubyRecomp - live map %d.%d | %d actors | Up=%s (field) | Arrows: walk | J/L: orbit | R: north-up | %s",
+        s.map_group,s.map_number,actors.visible,compass[g_camera_relative?camera_input::quadrant(g_yaw):0],
+        focused()?"3D controls":"Focus here to play");
     SDL_SetWindowTitle(g_win,title);
 
     float mw = 0, mh = 0, px = 0, py = 0, pz = 0;

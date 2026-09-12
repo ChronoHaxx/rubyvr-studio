@@ -21,6 +21,9 @@
 //   N / M      min unit height  - / +      (re-meshes live)
 //   B          cycle: textured -> classification colours
 //   H          follow the player  <->  hold still over the map centre
+//   R          reset north-up camera
+//   Arrows     play while focused: camera-relative in the normal field,
+//              original screen directions in menus (not free/diagonal walking).
 
 #pragma once
 
@@ -36,6 +39,12 @@ bool init(SDL_Window* win, bool visible = true);
 
 // True when the viewer owns the window and the frame sink should drive it.
 bool active();
+bool focused();
+float yaw_radians();
+void set_yaw_radians(float yaw);
+void reset_camera();
+bool camera_relative();
+void set_camera_relative(bool enabled);
 
 // Update the mesh from `s`, draw one frame, and present. Must be called on the
 // thread that owns the GL context — which, in viewer mode, is the emulation

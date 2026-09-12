@@ -4,6 +4,11 @@
 test controls to the private Windows Ruby runner. It is not the Studio map editor
 or an installable public game/mod package.
 
+The [camera follow-up](live-camera.md) includes these tools plus compass presets,
+camera-relative walking and north-up reset in a separate prepared session.
+The command below continues to identify the preserved developer-tools PR #29
+build; use the camera guide's single command when testing that follow-up.
+
 ![Developer menu and tree collision check in the native game](media/native-developer.gif)
 
 The recording comes from the actual native game and shared voxel renderer.

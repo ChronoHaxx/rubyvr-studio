@@ -15,6 +15,9 @@ The first original actor/terrain-follow slice merged in PR #28 (`0ea20c0`).
 The PR records five checked human steps for implementation `ae4a3ef`; exact
 check completion time was not recorded. The subsequent camera/control and
 missing-border report remains open; that merge does not accept full live-view fidelity.
+The [north-up/camera-relative input repair](live-camera.md) is **in review** on
+top of developer-tools PR #29, with automated native evidence; physical input
+and both merges remain pending. Actor facing and missing border scenery remain open.
 Experimental foliage art remains unapproved.
 
 **Prefer the short version? [Watch the acceptance GIF and verdict](acceptance.md).**
@@ -49,6 +52,12 @@ is **merged in PR #28**: real Route 101 walking/turning and five field actors,
 with component, GL and native evidence and five checked human steps. Complete
 connected gameplay and intentional UI routing remain open.
 
+**In review: [camera-relative walking and north-up reset](live-camera.md).**
+The prepared follow-up includes the unmerged developer tools, adds four compass
+presets and maps focused 3D input into Ruby's original four grid directions.
+Nine native scripted checks and a 12-second recording pass; physical-input
+checks remain pending. The older PR #29 test build is preserved independently.
+
 **Known visible issues reported after PR #28, 2026-09-12:**
 
 - **M9 controls:** the viewer starts diagonally and permits orbit, but game
@@ -56,6 +65,8 @@ connected gameplay and intentional UI routing remain open.
   wrong. Provide a north-up tilted gameplay preset and explicit camera-relative
   directional input for rotatable play, preserving original menu navigation and
   the guest's grid/collision rules. Full continuous free walking is later work.
+  The bounded [camera-input repair](live-camera.md) is now **in review**;
+  quarter-turn movement/menu checks pass, with human focus/keyboard checks pending.
 - **M6/RV-010 facing:** the card turns towards the camera but keeps the original
   2D view's selected sprite frame. Side/back views and steep top-down readability
   need mode-aware frame selection and foot-pivot/card orientation.
@@ -701,6 +712,12 @@ indoors or broken environment transitions.
 
 - [x] Provide tested editor orbit/fly/orthographic/focus controls, independent
   of saved authoring data ([camera verification](verification.md)).
+- [ ] **In review — [native north-up and camera-relative grid walking](live-camera.md):**
+  north-up default/reset, four compass presets, focused 3D mapping, held-direction
+  latching, focus/menu neutral transitions and unchanged stock menu directions.
+  Component/sanitizer/GL and nine native scripted checks pass. Physical keyboard,
+  focus, collision and checkpoint checks remain pending. This bounded input repair
+  does not complete actor-facing selection or the view modes below.
 - [ ] Add monitor view modes: original 2D, fixed tilt presets (reference labels
   15/35/50/75), player-follow orbit/third-person and first-person. Start with a
   fixed north-up tilted follow view for the desktop proof. **Post-PR #28 input

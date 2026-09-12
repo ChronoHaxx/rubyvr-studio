@@ -1,5 +1,29 @@
 # Verification and its limits
 
+## Native camera controls — in review, 2026-09-12
+
+`python tools/test-camera-input.py` passes 1069 assertions on Windows and WSL;
+WSL `python3 tools/test-camera-input.py --sanitize` passes ASan/UBSan. These
+checks need no SDL/OpenGL, assets or display. They cover four viewpoints,
+direction combinations, unchanged action bits, held orbit, context/focus/reset
+transitions and verified field-gate refusal. Disabling direction rotation in a
+disposable source copy fails the four-viewpoint assertion as expected; the
+production files are unchanged by that negative control. The 55 existing live-scene checks
+pass in optimized and sanitized builds. The shared GL test passes north-up
+initialization/reset and an orbit with no scenery rebuild, alongside existing
+actor/invalidation checks.
+
+The native Windows build passes nine scripted checks of actual cardinal
+movement, raw Start-menu/Bag navigation, no movement during Start-menu navigation,
+noclip reset and north-up reset. The first harness failed to acquire focus; the
+second skipped timed stages during a game stall. The final explicit-source
+harness advances one stage at a time and passes without weakening movement
+expectations. This validates the production mapping/gating adapter, not physical
+focus or keyboard input. [Recording, scope and pending human checks](live-camera.md).
+
+Claude's attempted read-only Opus review returned an allowance-limit error
+before reviewing code. Codex performed the review and checks; no paid fallback ran.
+
 ## Native developer controls — in review, 2026-09-12
 
 `python tools/test-dev-session.py` passes 40 checkpoint/transport checks on

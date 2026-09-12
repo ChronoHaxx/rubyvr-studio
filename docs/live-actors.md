@@ -27,6 +27,9 @@ or retest is claimed by this documentation update.
 - **Camera/control mismatch (M9):** the view starts diagonally and can orbit,
   but arrows still mean the original map's compass directions. The viewer has
   inspection controls, not camera-relative gameplay controls or a north-up reset.
+  The separate [camera-input follow-up](live-camera.md) now addresses those two
+  controls and is in review, with native scripted checks passed and human input
+  pending. It does not change this merged build or the actor-facing defect below.
 - **Actor facing/readability (M6/RV-010):** rotating the sprite card does not
   select the side/back frame appropriate to the new viewpoint. Always-upright
   cards also become foreshortened at steep overhead angles.

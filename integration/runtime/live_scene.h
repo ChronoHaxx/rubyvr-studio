@@ -19,6 +19,9 @@ inline constexpr char kRubySha1[] = "610b96a9c9a7d03d2bafb655e7560ccff1a6d894";
 inline constexpr uint32_t kMain = 0x03001770;
 inline constexpr uint32_t kOverworldCallback = 0x080543c5; // Thumb function pointer
 inline constexpr uint32_t kMapGroups = 0x083085a0;
+inline constexpr uint32_t kOverworldInputCallback = 0x08054371;
+// ArePlayerFieldControlsLocked at 0x08065568 loads this verified ROM literal.
+inline constexpr uint32_t kFieldControlsLock = 0x030006a4;
 
 enum class Status { UnsupportedRom, Unreadable, NonField, InvalidMap,
                     HeaderMismatch, InvalidLayout, InvalidConnections, Field };
@@ -36,6 +39,9 @@ struct Scene {
 // On refusal no map identity or connection provenance is returned. Callback
 // values remain available for diagnostics. No game data is written or scanned.
 Scene inspect(const Memory& memory);
+// Normal on-foot field control only. Start menu/dialogue locks, other callbacks,
+// bikes/surf and unknown ROMs keep their original directional input.
+bool field_controls_available(const Memory& memory);
 const char* status_name(Status status);
 
 } // namespace vr::world::live

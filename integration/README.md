@@ -12,6 +12,15 @@ and the reviewed Ruby collision-entry hook. Its portable session controller is
 tested without the external runner; the native build still needs the local
 runner changes described there.
 
+[Camera-relative gameplay](../docs/live-camera.md) adds the runtime-thread
+`game_input::filter(keys, host_menu_open)` boundary after host bindings/settings
+capture, before KEYINPUT and input recording. Replays bypass it because they
+already contain guest directions. Checkpoint loads call `game_input::reset()`.
+Physical input samples SDL focus; deterministic native drivers may provide an
+explicit `Source` through `filter_from_source`, exercising the same mapper and
+verified on-foot field gate. The local runtime call-site changes are still
+required; publishing the adapter does not publish that separately licensed runner.
+
 **Current priority, 2026-09-12:** retain this native game route and complete the
 [monitor gameplay proof](../docs/issues/007-native-integration.md#native-desktop-proof).
 Verified live identity/invalidation is the first bounded change, now

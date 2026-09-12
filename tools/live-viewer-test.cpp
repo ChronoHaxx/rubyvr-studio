@@ -24,6 +24,7 @@ int main(int,char**) {
     const auto context=SDL_GL_CreateContext(window);
     expect(context!=nullptr && vr::gl::load(),"GL context");
     expect(vr::viewer::init(window,false),"viewer init");
+    expect(vr::viewer::yaw_radians()==0,"gameplay starts north-up");
     vr::world::Snapshot field;
     field.valid=true; field.map_group=0;field.map_number=16;
     field.identity_source=vr::world::Snapshot::IdentitySource::LiveCapture;
@@ -52,6 +53,11 @@ int main(int,char**) {
     glReadPixels(0,0,1280,800,GL_RGBA,GL_UNSIGNED_BYTE,actor_pixels.data());
     int red=0;for(size_t i=0;i<actor_pixels.size();i+=4)red+=actor_pixels[i]>240 && actor_pixels[i+1]<10;
     expect(red>100,"actual player pixels in GL frame");
+    vr::viewer::set_yaw_radians(1.570796327f);vr::viewer::frame(field,false);
+    expect(vr::diorama::diorama_stats().geometry_hash==first,"orbit keeps the same scenery");
+    expect(vr::actor_render::stats().visible==1,"quarter-turn keeps the original actor visible");
+    vr::viewer::reset_camera();
+    expect(vr::viewer::yaw_radians()==0,"north-up reset is exact");
     put(0x20,196);vr::viewer::frame(field,false);vr::diorama::player_cell(&px,&py,&pz);
     expect(px==12.25f && vr::diorama::diorama_stats().geometry_hash==first,"subtile actor move does not rebuild scenery");
     // Explicit terrain layer chooses the surface; visual jump leaves it alone.

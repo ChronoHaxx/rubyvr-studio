@@ -31,7 +31,7 @@ flowchart LR
 | `src/vr/diorama.*`, `part_geometry.*`, `voxel_parts.inl` | The renderer used by editor, batch tool and integration | Segmentation, accepted instances, exposed voxel faces |
 | `src/vr/tileset.*` | Indexed source material sampling and texture data | Tile definitions, palette/texel identity |
 | `src/vr/ruby_world.h`, `world_io.*` | Shared snapshot structure and disk persistence | `Snapshot` |
-| `src/vr/terrain.*`, `terrain_mesh.inl`, `src/studio/gui_terrain.inl` | Guarded authored surfaces, layer query, border ownership and terrain editing | `terrain::resolve`, `Resolved::query`, Terrain toolbar |
+| `src/vr/terrain.*`, `terrain_mesh.inl`, `src/studio/gui_terrain.inl` | Guarded authored surfaces, layer query, border ownership and terrain editing | `terrain::resolve`, `Resolved::query`, `query_region` ([component contract](terrain-region-query.md)), Terrain toolbar |
 | `src/studio/foundation.*` | Explicit atomic ground-pad edit from the production model base; preserves shapes, art and outside terrain | `foundation::level`, Level foundation; [scope](terrain-foundations.md) |
 | `src/studio/connected_scene.*`, `gui_connected.inl`, `src/vr/region_mesh.inl`, `placed_mesh.inl` | Bounded neighbour graph, source ownership, shared model meshes and per-map textures | `connected::build`, `build_region`, Explore area; [scope](connected-scene.md) |
 | `src/studio/compare.cpp`, `asset_catalog.*`, `mesh_audit.*` | Source inventory, frozen scenes, structural/mesh checks | `rubyvr_studio` command-line executable |

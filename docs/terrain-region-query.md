@@ -163,7 +163,21 @@ This component leaves consumer integration and synchronization policy pending.
 
 ## Headless verification
 
-From the repository root, using a C++20-capable GCC installation:
+From the repository root in Ubuntu/WSL, use a C++20-capable GCC installation
+with its sanitizer runtime. The same command runs locally and in CI:
+
+```bash
+bash tools/test-terrain-region-query.sh
+```
+
+Expect `SUMMARY 16 passed, 0 failed; 9299 checks` twice, first optimized and
+then under ASan/UBSan, with exit 0. This compiles fresh executables each time;
+it does not use an installed Studio binary or modify authored documents.
+The four existing indentation warnings in terrain read/write are recorded in
+the [coordinator review](terrain-region-query-review.md).
+
+<details>
+<summary>Individual compiler commands for development</summary>
 
 ```bash
 mkdir -p build
@@ -182,6 +196,8 @@ g++ -std=c++20 -O1 -g -fsanitize=address,undefined -fno-omit-frame-pointer \
 env -u DISPLAY -u WAYLAND_DISPLAY ./build/terrain-region-query-test-sanitized
 ```
 
+</details>
+
 The original standalone test uses synthetic snapshots and terrain documents,
 production validation/resolve/query, named cases, independent expected heights,
 and a nonzero failure exit. Ordinary fixtures are not mocked. Malformed-storage
@@ -194,6 +210,8 @@ scenarios or a performance benchmark.
 
 No SDL, OpenGL, OpenXR, source assets, window system, physical input or external
 test framework is required. These commands do not compile the renderer, the
-connected editor, or `src/studio/terrain_test.cpp`. Existing tests and CMake/CI
-are unchanged. Full-project integration, visual review and human acceptance
-are separate work, not established by this component test.
+connected editor, or `src/studio/terrain_test.cpp`. Existing tests and CMake
+are unchanged; the coordinator added the command above to CI. The separate
+[coordinator review](terrain-region-query-review.md) records full-project
+build/regression results and the pending human CLI check. Consumer integration,
+live gameplay and headset acceptance remain outside this component.

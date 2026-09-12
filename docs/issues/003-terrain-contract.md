@@ -1,6 +1,6 @@
 # Add the first versioned authored terrain surface and shared height query
 
-Work package **RV-003** · M2 Terrain · help wanted, area: terrain · terrain/connected explorer, model reuse, camera-driven loading and ground base merged
+Work package **RV-003** · M2 Terrain · help wanted, area: terrain · terrain/explorer/loading/base/bridge merged; region-query component in review; consumers pending
 
 ## Problem
 
@@ -45,10 +45,17 @@ to M8. First-person alone is not an edge fix.
 
 ## Acceptance
 
-- [ ] **In review — [Route 104 bridge](../terrain-bridge.md):** guarded source
+- [x] **Merged — PR #25, [Route 104 bridge](../terrain-bridge.md):** guarded source
   footprint, layered water/deck, bank contacts and canonical Petalburg seam;
   six original maps retained. Native/SDL/save checks and actual GIF pass;
-  maintainer's four checks and merge pending. Complete geography remains open.
+  all four maintainer checks recorded passed on `cf4817f`; merge `7b105c5`.
+  Complete geography remains open.
+- [ ] **In review — [PR #26](https://github.com/ChronoHaxx/rubyvr-studio/pull/26), [connected-region query](../terrain-region-query.md):**
+  one primary owner, explicit gameplay layer and fractional height over stable,
+  pre-resolved maps. Preserve owned refusals and original borrowed surfaces.
+  [Coordinator checks and human handoff](../terrain-region-query-review.md) are
+  separate from the worker's original evidence. Consumer integration for scenery,
+  feet, effects and camera follow remains pending; this component does not close RV-003.
 - [x] Use stable source map identity and guards, not a ROM pointer as a public map key.
 - [x] Keep elevation 0/15 semantics explicit; guest collision remains authoritative.
 - [x] One query resolves the selected surface for model placement; unknown layers remain explicit.

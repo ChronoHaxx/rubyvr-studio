@@ -7,6 +7,17 @@ verification ran on 2026-09-08 on Windows with MSYS2 mingw64, an NVIDIA OpenGL
 
 ## Reproduce locally
 
+The [connected-region query component](terrain-region-query.md) needs only Bash
+and GCC with ASan/UBSan, without graphics libraries, assets or a display:
+
+```bash
+bash tools/test-terrain-region-query.sh
+```
+
+It runs optimized and sanitized builds: 16 named cases / 9,299 checks each,
+including 8,000 repeatability probes. The [coordinator review](terrain-region-query-review.md)
+separates new local results, original worker evidence and pending human acceptance.
+
 Use the native Ubuntu/WSL setup in [building](building.md). The supported
 entrypoints are Bash and native Linux executables:
 
@@ -53,6 +64,7 @@ Do not substitute old captures or change frozen hashes.
 | `test-studio-review.py` | Actual SDL review filters, source/model navigation and orbit at two sizes, flat/padding toggles, search, unchanged save/ledger, unsaved-edit cancellation and keyboard ownership | Requires local synced/exported coverage and source/GL; static placements only; no human usability/live/headset claim |
 | Standalone build | GUI/batch compile/link without gbarecomp or the XR loader | Does not build a game or establish other platforms |
 | `--test-terrain` | 197 original synthetic checks of surfaces/layers, guards, native UV bands, corner grades, neighbour projection, shared model height, persistence and memory bounds | No source art or GL; included in CI |
+| `test-terrain-region-query.sh` | Explicit layers, primary ownership, fractional seams, malformed region refusal and borrowed-pointer preservation; optimized plus ASan/UBSan | No graphics libraries/assets/display; included in CI; no consumers, live gameplay or performance claim |
 | `--test-foundation` | 23 original synthetic checks: actual base bounds exclude roof overhang, highest-corner pad, rigid movement/contact, native art, source/outside-terrain preservation, atomic refusal and exact v7 persistence | No source art or GL; included in CI; rectangular ground pads only |
 | `--test-connected` | 69 synthetic checks of ownership, overhangs, seams, source indices, atomic refusal, rigid reuse, ordered equivalence, camera seam hysteresis, fixed/revisited origins, cancellation and closed ground bases including undefined padding and snapshot boundaries | No source art or GL; included in CI |
 | `test-native-portability.py` | 39 native checks: 29 original writer/loader/capture cases plus ten mouse-input policy cases | Headless file/capture and input policy; no OS pointer grab, GUI journey, rendering or OpenXR runtime |
@@ -69,7 +81,7 @@ Do not substitute old captures or change frozen hashes.
 | `test-studio-terrain.py` | 49 SDL checkpoints: plateau/stairs/slopes, material pick, deck, refusal, history/save/reopen; real corner/seam orbit. Builds all 394 maps to check copied source ownership, 720 terrain copies and 40 two-map seam edges | [Authored local example](terrain-authoring.md); not complete geography, live traversal or headset acceptance |
 | `test-terrain-regions.py` | 13 original synthetic tests: offset joins, integer continuity, tapered ends/reversed elbow, level concave water/shore constraints, source guards and malformed input refusal | Source-free; included in CI |
 | `test-terrain-bridges.py` | Source-free guarded selection/layers/clearance, refusal and immutable input checks | Included in CI; no asset or runtime claims |
-| `test-studio-bridge.py` | 38 decks/299 water planes, four bank contacts, 30 owner seams, 6,000 source-material triangles, five rejected mutations and five SDL save/reopen checkpoints; six previous maps retained | Local Route 104 example; [human check pending](terrain-bridge.md) |
+| `test-studio-bridge.py` | 38 decks/299 water planes, four bank contacts, 30 owner seams, 6,000 source-material triangles, five rejected mutations and five SDL save/reopen checkpoints; six previous maps retained | Local Route 104 example; [PR #25 human result recorded](terrain-bridge.md#human-functional-check--recorded-result) |
 | `render-terrain-bridge.py` | Six actual paired SDL captures in a 12-second GIF | Same source/camera; original flat-floor baseline; no live/headset acceptance |
 | `test-terrain-region-source.py` | 200 native boundary checks, 495 level water cells/7,920 surface triangles and 266 flat shore cells; rejects broken seam/water levels, changed guards, conflicting anchors and input with existing terrain; source art, Route 101 and patterns retained | Pinned local source; [bounded region example](terrain-regions.md) and [water contact](terrain-water.md), not complete geography |
 | `render-terrain-water.py` | Eight actual SDL captures, paired at identical cameras/source art in a 12-second GIF | [Inspected desktop evidence](terrain-water-evidence-2026-09-10.json); no gameplay/headset claim |

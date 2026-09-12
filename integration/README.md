@@ -58,6 +58,8 @@ Our original integration source and shared renderer use the project's
 GPLv3-or-later terms. The standalone editor does not link the
 runner. The pinned framework has its own Noncommercial terms and clarification;
 the pinned RubySapphireRecomp base has no established redistribution permission.
+Current upstream now declares PolyForm Noncommercial as well; see the dated
+[licence update](../docs/licensing.md#separate-native-game-integration).
 Establish compatible rights for the actual combination before distributing it.
 Noncommercial restrictions cannot simply be added to a GPL-covered combined
 work. That distribution needs compatible upstream permission or an appropriate

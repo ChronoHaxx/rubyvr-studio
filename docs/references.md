@@ -95,7 +95,7 @@ The languages alone do not establish correctness, performance or bug counts.
 | Game execution | Integration based on RubySapphireRecomp/gbarecomp translating GBA ROM instructions into native code, with documented fallback paths | Its README describes a LÖVE2D recreation: hand-written Lua engine, script VM and map behavior, with ROM-imported data; not assembly transpilation |
 | Generation/data | Ruby is the current verified authoring source; Sapphire needs separate runtime validation | Gen1/2 lineage; companion voxel source also contains an Emerald-specific adapter. This inspection does not establish complete Emerald gameplay/tool compatibility |
 | Mod support | Editor recipes and local JSON overrides work; supported public runner integration and installable package are pending | Documented registries, events/hooks, per-mod saves/options and in-game mod manager |
-| Licence boundary | Original editor work uses GPLv3-or-later (earlier grants remain); external gbarecomp is PolyForm Noncommercial and the pinned game base has no licence file, so the complete runtime stack is not claimed as FOSS | Inspected engine licence is Source-Available 1.2, including Emerald-specific work; the companion DramaticShapes mod has its own MIT licence. Check the actual file and notices before reuse |
+| Licence boundary | Original editor work uses GPLv3-or-later (earlier grants remain); external gbarecomp and current RubySapphireRecomp declare PolyForm Noncommercial. The older pinned runner predates its declaration. The complete runtime stack is not claimed as FOSS | Inspected engine licence is Source-Available 1.2, including Emerald-specific work; the companion DramaticShapes mod has its own MIT licence. Check the actual file and notices before reuse |
 | Intended contribution | Source-faithful voxel authoring, shared native renderer and PC VR integration | Contributions must follow its own engine, tooling and licence terms |
 
 Sources: [Gen2Recomped README at b017ee1](https://github.com/UNDERdecoded/Gen2Recomped/blob/b017ee194d23e97029b598174d8f2893d42c9cc6/README.md),
@@ -106,6 +106,39 @@ Sources: [Gen2Recomped README at b017ee1](https://github.com/UNDERdecoded/Gen2Re
 [gbarecomp](https://github.com/mstan/gbarecomp).
 Do not copy restricted Gen2 code into this repository or assume its entire tree
 is MIT because inherited files have different terms.
+
+### AI-assisted Melee references (2026-09-12)
+
+Coordinator review of the separate Smash research: retain the current native
+route and the M5 monitor gameplay priority. The strongest independently checked
+example is [Melee PR #3374](https://github.com/doldecomp/melee/pull/3374): its
+author credits Codex/Astra with matching a 3,140-byte function in an existing
+decompilation, and the merged PR's comparison report confirms that function
+match. This supports using precise comparison checks with AI-assisted work;
+it does not demonstrate a newly written game or a desktop/VR port by itself.
+
+The research identified [Kevin Tang's MR post](https://x.com/_KevinTang/status/2098154213696249912),
+but could not establish its runtime technique from an inspectable implementation.
+The coordinator's direct post fetch was also blocked. No original-mechanics,
+standalone-VR performance or migration claim is adopted from that demo.
+
+The local gbarecomp copy contains `gba_mod_register_function_entry_plugin` and
+`gba_mod_set_function_hook_enabled` in `src/runtime/mod_function_hooks.*`.
+Declining a callback restores CPU registers, not arbitrary guest-memory writes.
+Use this existing boundary for future verified Ruby operations; do not invent a
+second hook system or treat its presence as a working inventory action API.
+
+Apply the research's comparison idea under M5/M10 using the existing input
+replay: first establish repeatable original-game behavior, then compare capture
+only and full 3D at matching guest events with BMP recording disabled. Scope
+the first measurement to the accepted actor sequence; broad profiling follows
+when evidence requires it. This is pending work, not a new multi-day prerequisite
+for menu presentation or a reason to replace the engine. The research's effort
+estimate is not a delivery commitment. [Canonical tracking](roadmap.md#m10-performance-and-reliability).
+
+The research also caught the [current runner licence declaration](https://github.com/mstan/RubySapphireRecomp/blob/8720324ca07741efd8b6785a0a6c46162fbc7099/LICENSE),
+dated 2026-09-09. Notices now distinguish it from the older pinned-base absence;
+the separate RV-007 integration/distribution question remains open.
 
 ### Camera, editor and debug reference audit
 

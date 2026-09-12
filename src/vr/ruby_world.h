@@ -165,6 +165,13 @@ struct ObjectSnapshot {
     uint8_t elevation   = 0;
     uint8_t facing      = 0;   // DIR_SOUTH=1 NORTH=2 WEST=3 EAST=4
     int16_t x = 0, y = 0;      // backup-map coordinates
+    uint8_t local_id=0,map_group=0,map_number=0;
+    int16_t initial_x=0,initial_y=0;
+};
+
+struct ActorTemplate {
+    std::array<uint8_t,24> bytes{};
+    bool hidden=true;
 };
 
 // A copied neighbour rectangle, in the same backup coordinates as each map's
@@ -253,6 +260,11 @@ struct Snapshot {
     std::vector<uint16_t> obj_palette;
     bool obj_mapping_1d=false;
     int16_t actor_offset_x=0,actor_offset_y=0;
+    // Verified live event rules, never serialized. Presentation may retain a
+    // previously observed NPC only while these rules still permit it.
+    uint64_t actor_epoch=0;
+    bool actor_range_safe=false;
+    std::vector<ActorTemplate> actor_templates;
 
     // Metatile definitions, read from ROM via gMapHeader.mapLayout. Only
     // refreshed when layout_ptr changes — these are ROM tables and cannot move

@@ -46,7 +46,7 @@ slice](../live-play-session.md) merged in PR #32: retained field menus,
 transparent original field UI, real starter battle/lab/exit/Party/save and
 checkpoint tests. All five human steps are checked for `31b95d2`; broader
 coverage remains pending. [Ordinary NPC views and viewport visibility](../live-npc-views.md)
-are the next in-review M6 batch supporting the canonical
+merged in PR #33 with five passed human checks, supporting the canonical
 [demo delivery targets](../roadmap.md#route-to-a-shareable-playable-demo).
 
 **New post-merge report, 2026-09-12 — M2/M5:** ledge geometry appears walkable

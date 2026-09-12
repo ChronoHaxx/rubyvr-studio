@@ -21,6 +21,9 @@ namespace viewer {
 namespace {
 
 SDL_Window* g_win = nullptr;
+void (*g_overlay)(SDL_Window*)=nullptr;
+bool (*g_overlay_input)()=nullptr;
+void (*g_overlay_shutdown)()=nullptr;
 bool        g_active = false;
 
 // Follow camera in map-cell units. Grid gameplay uses cardinal yaw only;
@@ -131,12 +134,17 @@ void set_yaw_radians(float yaw) {
     if(std::isfinite(yaw)) g_yaw=camera_input::quadrant(yaw)*1.570796327f;
 }
 bool camera_relative() { return g_camera_relative; }
+void set_overlay(void (*draw)(SDL_Window*),bool (*owns_input)(),void (*shutdown)()) {
+    g_overlay=draw;g_overlay_input=owns_input;g_overlay_shutdown=shutdown;
+}
 bool uses_world_controls() {return g_world_controls;}
 presentation::Decision presentation_state() {return g_presentation;}
 void set_camera_relative(bool enabled) { g_camera_relative=enabled; }
 void reset_camera() { g_yaw=0;g_pitch=0.9f;g_dist=12;g_ty=1;g_follow=true;g_turn.reset(); }
 
 void shutdown() {
+    if(g_overlay_shutdown)g_overlay_shutdown();
+    g_overlay=nullptr;g_overlay_input=nullptr;g_overlay_shutdown=nullptr;
     g_cancel=true;
     if(g_pending.valid()) g_pending.wait();
     g_pending={};g_neighbourhood={};g_visible_maps.clear();
@@ -154,7 +162,12 @@ bool map_origin(int group,int number,int* x,int* z) {
 
 bool init(SDL_Window* win, bool visible, world::live::SourceLoader loader) {
     if (!win) return false;
-    shutdown();g_source_loader=loader;
+    const auto overlay=g_overlay;
+    const auto owns_input=g_overlay_input;
+    const auto overlay_shutdown=g_overlay_shutdown;
+    shutdown();
+    set_overlay(overlay,owns_input,overlay_shutdown);
+    g_source_loader=loader;
     g_win = win;
     reset_camera();g_control_time=SDL_GetTicks64();
 
@@ -184,7 +197,7 @@ void frame(const world::Snapshot& s, bool present) {
     const auto now=SDL_GetTicks64();
     const float dt=std::min(float(now-g_control_time)/1000.f,0.05f);
     g_control_time=now;
-    if (const Uint8* k = SDL_GetKeyboardState(nullptr);focused() && k) {
+    if (const Uint8* k = SDL_GetKeyboardState(nullptr);focused() && k && !(g_overlay_input && g_overlay_input())) {
         if (pressed(k,SDL_SCANCODE_R,&g_r_held)) reset_camera();
         const bool walking=k[SDL_SCANCODE_UP] || k[SDL_SCANCODE_DOWN] ||
             k[SDL_SCANCODE_LEFT] || k[SDL_SCANCODE_RIGHT];
@@ -338,6 +351,7 @@ void game_frame(const world::Snapshot& snapshot,const presentation::Input& input
             presentation::name(input.mode),decision.retained?"world retained":"original game view");
         SDL_SetWindowTitle(g_win,title);
     }
+    if(g_overlay)g_overlay(g_win);
     if(present){capture_review(w,h);SDL_GL_SwapWindow(g_win);}
 }
 

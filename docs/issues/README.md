@@ -30,7 +30,7 @@ reviewable PRs and keep evidence up to date.
 | RV-007 | [Define a supported public RubySapphireRecomp integration boundary](007-native-integration.md) | M5 | identity/actors/dev/camera/border and connected native scenery merged; PR #31 connected and PR #32 bounded play-session human sequences passed; broader loop/public integration pending |
 | RV-008 | [Version map identity in source-built and live snapshots](008-map-identity.md) | M5 | source identity/snapshot v2 and bounded live identity/invalidation merged; wider captures pending |
 | RV-009 | [Preview starter-pack updates while preserving personal edits](009-pack-updates.md) | M3 | design |
-| RV-010 | [Capture one animated actor sequence with correct source identity](010-actor-capture.md) | M6 | player facing merged; ordinary NPC views/viewport repair in review; distant actors and broader profiles open |
+| RV-010 | [Capture one animated actor sequence with correct source identity](010-actor-capture.md) | M6 | player facing and ordinary NPC views/viewport repair merged; distant actors and broader profiles open |
 | RV-011 | [Route field, dialogue, menu and battle transitions without stale scenery](011-scene-routing.md) | M7 | desktop play session merged in PR #32; full-game/VR coverage pending |
 | RV-012 | [Add a deterministic sky and time-of-day preview to Studio](012-sky-day-preview.md) | M8 | complete: editor-only preview merged in PR #19; issue #12 closed; runtime M8 remains open |
 | RV-013 | [Benchmark one external sprite converter on the same house and tree](013-converter-benchmark.md) | M3 | ready |

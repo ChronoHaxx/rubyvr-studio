@@ -5,7 +5,7 @@
 #include "vr_math.h"
 namespace vr::actor_render {
 struct Stats {
-    int visible=0,unsupported=0,unresolved=0;
+    int visible=0,unsupported=0,unresolved=0,distant=0;
     bool player=false;
     float player_x=0,player_y=0,player_z=0;
 };

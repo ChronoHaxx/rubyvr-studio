@@ -2,6 +2,7 @@
 #pragma once
 #include "dev/session.h"
 #include <cstdint>
+union SDL_Event;
 namespace gbarecomp { struct RunOptions; }
 namespace vr::dev {
 void configure(gbarecomp::RunOptions& options);
@@ -17,4 +18,6 @@ void pace(int held_fast_forward = 1);
 void refresh_scene();
 void reset_after_load();
 bool accelerated();
+bool viewer_event(const SDL_Event&);
+bool viewer_menu_open();
 }

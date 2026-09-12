@@ -1,16 +1,17 @@
 # Verification and its limits
 
-## NPC views and viewport visibility — in review, 2026-09-12
+## NPC views and viewport visibility — merged PR #33, 2026-09-12
 
-[Native GIF, exact scope and pending human steps](live-npc-views.md).
+[Native GIF, exact scope and five passed human steps](live-npc-views.md).
 `bash tools/test-actor-frame.sh` passes 2,590 player and 16,363 NPC checks,
 including ASan/UBSan; Windows passes both. The local GL test verifies directional
 pixels, short bodies, viewport visibility, script hide/despawn and previous
 menu/connected-world behavior. Three disposable negative controls fail their
 intended assertions. Eight native checks pass; all 3,888 final-run actor poses
 match, including 2,882 NPC poses and seven confirmed queued-flip transitions.
-All 58 sampled viewport-culled NPC poses remain drawable. This does not accept
-distant live-slot actors, all profiles, physical input, free movement or VR.
+All 58 sampled viewport-culled NPC poses remain drawable. PR #33 records all
+five human checks passed for `09d28c0`. This does not accept distant live-slot
+actors, all profiles, free movement or VR.
 
 ## Native desktop play session — merged PR #32, 2026-09-12
 
@@ -356,6 +357,13 @@ control moved. Keep semantic checks for source pixels, exact documents,
 geometry, history and input ownership unchanged.
 
 ## Evidence still needed
+
+Current desktop batch checks and the single human playtest are recorded in
+[demo controls and route](desktop-demo-batch.md#evidence-and-scope). New portable
+checks are `bash tools/test-actor-range.sh` and `python tools/test-demo-ledge.py`;
+the existing terrain-query and local GL suites cover the neutral ledge ground
+and panel/context ownership. `tools/check-runtime-host.py` only checks source
+hook markers; it cannot replace a native build or functional acceptance.
 
 Earlier development live/batch comparisons and short runtime fixtures remain
 historical evidence for their exact inputs. They are not a current full-pack

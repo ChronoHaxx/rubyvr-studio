@@ -19,7 +19,7 @@ The same-frame RGB/UI data and immutable field snapshot stay on the emulation
 thread. This updates desktop presentation only; OpenXR routing remains pending.
 All five desktop human steps are checked for `31b95d2`.
 
-**In review — [NPC views and viewport visibility](../docs/live-npc-views.md):**
+**Merged in PR #33 — [NPC views and viewport visibility](../docs/live-npc-views.md):**
 the existing capture boundary validates active-event ownership, ordinary ROM
 animation profiles and bounded sprite-copy queue entries. Four owned images
 preserve the displayed phase for camera selection. Explicit script hiding and
@@ -111,6 +111,12 @@ This remains [RV-007 / M5](../docs/issues/007-native-integration.md). Standalone
 editor work and private experiments can continue. See [licensing](../docs/licensing.md).
 
 ## Work required for a supported integration
+
+The [2026-09-13 public host audit](../docs/runtime-host-audit.md) pins the current
+framework interfaces and lists the remaining hooks. Run the read-only preflight
+before attempting to attach this adapter to an arbitrary checkout. The viewer
+panel additionally needs its events routed before the original window's menu
+handler; `vr::dev::viewer_event(e)` returns whether it consumed that event.
 
 - Clarify redistribution/integration terms for the pinned runner and honour
   the framework's existing licence. Do not copy restricted upstream code into

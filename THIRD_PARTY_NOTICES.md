@@ -42,7 +42,10 @@ actually redistributes; this source-only preparation is not that binary bundle.
   base `4d49909cbc6dccd3fbb0087cb68347ffbe55ce5d`, local development revision
   `dad4c68251aa3adde77be47884b17870a151f429` plus working changes. No licence
   file was found in the pinned base. Its game runner source/history is not
-  republished in this standalone repository.
+  republished in this standalone repository. Update checked 2026-09-12:
+  upstream [declared PolyForm Noncommercial 1.0.0 with a clarification](https://github.com/mstan/RubySapphireRecomp/blob/8720324ca07741efd8b6785a0a6c46162fbc7099/LICENSE)
+  on 2026-09-09. The earlier absence is a historical observation, not the
+  current upstream licence status. Combined-runtime distribution remains RV-007.
 - [gbarecomp](https://github.com/mstan/gbarecomp), upstream base
   `a1de406b179addf10a534369b64f449e5fe28c4a`, local frame-sink revision
   `13cab0418106e86708cfd10b817379fe2318b201`. It uses

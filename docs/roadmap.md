@@ -684,6 +684,13 @@ mandatory developer console. Camera changes remain independent of authored data.
 
 ## M10: performance and reliability
 
+- [ ] **M5/M10 research follow-up, 2026-09-12:** reuse the accepted native actor
+  input replay for a small original/capture-only/3D comparison, with BMP capture
+  disabled. Establish repeatable baseline state/frames at matching guest events
+  before attributing divergence or timing costs to the renderer. Separate guest
+  timing from presentation deadlines and record interpreter fallback. Expand
+  cold/warm CPU/GPU/memory profiling only when the first results warrant it;
+  this does not replace the current M5 actor/menu work. [Research assessment](references.md#ai-assisted-melee-references-2026-09-12).
 - [x] **Merged — PR #22, RV-014, native Linux/WSL:** batch and GUI builds,
   Bash launchers, source preparation, portable file/capture fixtures and the
   existing editor/connected/streaming checks. Hosted Linux source/build CI passes.

@@ -160,8 +160,8 @@ corresponding source as the GPL requires. There is no custom sales ban.
 See [licensing and earlier grants](docs/licensing.md) for the precise scope.
 
 Dear ImGui and the credited DRAMALESS_SHAPE techniques retain their MIT notices. The external
-`gbarecomp` runtime uses PolyForm Noncommercial; no licence file was found in
-the pinned RubySapphireRecomp base. This editor's licence does not relicense
+`gbarecomp` and current RubySapphireRecomp use PolyForm Noncommercial; the older
+pinned runner predates its licence declaration. This editor's licence does not relicense
 those projects or make the complete game stack FOSS.
 
 See [third-party notices](THIRD_PARTY_NOTICES.md) and [asset policy](docs/asset-policy.md).

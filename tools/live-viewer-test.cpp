@@ -8,6 +8,12 @@
 #include <cstring>
 #include <iostream>
 
+std::vector<vr::world::Snapshot> neighbours;
+bool load_neighbour(int group,int number,vr::world::Snapshot& out) {
+    for(const auto& s:neighbours) if(s.map_group==group && s.map_number==number){out=s;return true;}
+    return false;
+}
+
 void expect(bool ok,const char* label) {
     if(!ok) { std::cerr<<"FAIL: "<<label<<" ("<<SDL_GetError()<<")\n"; std::exit(1); }
 }
@@ -126,6 +132,42 @@ int main(int,char**) {
     vr::viewer::frame(field);
     expect(std::strstr(SDL_GetWindowTitle(window),"live map 0.17")!=nullptr,"identity can change with the same layout");
     expect(vr::diorama::diorama_stats().geometry_hash!=first,"same-layout map change rebuilds its different grid");
+    field.map_number=16;field.grid.assign(600,0);
+    field.connections={{0,17,25,24,7,0,7,10,10,7,false}};
+    auto north=field;north.map_number=17;north.connections={{0,16,25,24,7,17,7,7,10,7,false}};
+    north.bg_palette[1]=31<<10;neighbours={north};
+    expect(vr::viewer::init(window,false,load_neighbour),"connected viewer init");
+    const auto start=SDL_GetTicks64();
+    while(vr::viewer::connected_maps()!=2 && SDL_GetTicks64()-start<10000) {
+        vr::viewer::frame(field,false);SDL_Delay(5);
+    }
+    expect(vr::viewer::connected_maps()==2,"background CPU build publishes complete neighbour on GL thread");
+    expect(!vr::diorama::has_geometry(),"connected consumer releases duplicate single-map mesh");
+    expect(vr::actor_render::stats().player,"connected scene retains live player");
+    int nx=0,nz=0;
+    expect(vr::viewer::map_origin(0,17,&nx,&nz) && nx==0 && nz==-10,"published north map origin");
+    glReadPixels(0,0,1280,800,GL_RGBA,GL_UNSIGNED_BYTE,actor_pixels.data());
+    int green=0,blue=0;
+    for(size_t i=0;i<actor_pixels.size();i+=4) {
+        green+=actor_pixels[i+1]>120 && actor_pixels[i]<10 && actor_pixels[i+2]<10;
+        blue+=actor_pixels[i+2]>120 && actor_pixels[i]<10 && actor_pixels[i+1]<10;
+    }
+    expect(green>100 && blue>100,"both complete maps draw through their own palettes");
+    auto uploads=vr::diorama::mesh_upload_count();field.bg_palette[1]=31|(31<<5);
+    vr::viewer::frame(field,false);
+    expect(vr::diorama::mesh_upload_count()==uploads,"live palette animation does not rebuild region geometry");
+    glReadPixels(0,0,1280,800,GL_RGBA,GL_UNSIGNED_BYTE,actor_pixels.data());
+    int yellow=0;for(size_t i=0;i<actor_pixels.size();i+=4)
+        yellow+=actor_pixels[i]>120 && actor_pixels[i+1]>120 && actor_pixels[i+2]<10;
+    expect(yellow>100,"current map palette refresh reaches actual GL output");
+    vr::viewer::frame(north,false);
+    expect(vr::viewer::map_origin(0,16,&nx,&nz) && nx==0 && nz==0,"crossing retains outgoing map while rebuilding");
+    vr::viewer::frame({},false);
+    expect(vr::actor_render::stats().visible==0,"invalid scene never draws cached actors");
+    expect(std::strstr(SDL_GetWindowTitle(window),"scene unavailable"),"cached region is not presented as an active menu scene");
+    vr::viewer::frame(field,false);
+    expect(vr::viewer::map_origin(0,17,&nx,&nz) && nz==-10,"return keeps stable neighbour placement");
+    vr::viewer::shutdown();
     vr::diorama::shutdown();SDL_GL_DeleteContext(context);SDL_DestroyWindow(window);SDL_Quit();
-    std::cout<<"PASS: live viewer valid -> unavailable -> same map -> new identity (local GL; synthetic art)\n";
+    std::cout<<"PASS: live viewer identity/actors, connected publication/materials/crossing/return (local GL; synthetic art)\n";
 }

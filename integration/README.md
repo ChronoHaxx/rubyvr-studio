@@ -1,10 +1,14 @@
 # Native game integration: prototype source
 
-**Current M5 handoff:** PR #30 camera/facing merged into the open parent PR #29.
+**Current M5 handoff:** PR #29, including PR #30 camera/facing, is merged into main.
 The combined prepared build also includes [source border restoration](../docs/live-borders.md).
 Use that guide's single camera-session launcher; the old main-checkout prepared
 developer executable is historical. Ledge collision/depth, Bag retention and
 broader actor/terrain coverage remain open.
+The active [connected native scenery](../docs/live-connected-world.md) slice
+uses a verified-ROM source reader and the shared region renderer to keep up to
+three nearby complete maps. It uses the same launcher, with a new pending
+human checklist. Distant NPC simulation and unrestricted travel remain open.
 
 The default standalone CMake targets do **not** build the game adapter. The
 optional local GL test builds the desktop viewer with synthetic data. These files preserve our

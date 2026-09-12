@@ -63,6 +63,52 @@ void refused(const Scene& s,Status status,const char* why) {
 }
 }
 int main() {
+    std::vector<uint8_t> decoded;
+    const std::vector<uint8_t> compressed{0x10,9,0,0,0x10,'A','B','C',0x30,2};
+    expect(decode_tiles(compressed,9,decoded) && decoded==std::vector<uint8_t>({'A','B','C','A','B','C','A','B','C'}),
+        "LZ77 overlapping copy and exact declared size");
+    for(size_t n=0;n<compressed.size();++n)
+        expect(!decode_tiles(std::span(compressed).first(n),9,decoded) && decoded.empty(),"truncated compressed data refuses atomically");
+    expect(!decode_tiles(compressed,8,decoded),"compressed allocation limit");
+    for(const auto& corrupt:std::vector<std::vector<uint8_t>>{
+        {0x11,9,0,0},{0x10,0,0,0},{0x10,3,0,0,0x80,0,0}})
+        expect(!decode_tiles(corrupt,16384,decoded) && decoded.empty(),"invalid header, back-reference or overrun refused");
+    const std::vector<uint8_t> final_token{0x10,2,0,0,0x40,'A',0,0};
+    expect(decode_tiles(final_token,4,decoded) && decoded==std::vector<uint8_t>(4,'A'),
+        "BIOS completes the final token even beyond the declared size");
+    expect(!decode_tiles(final_token,3,decoded) && decoded.empty(),"final token cannot cross destination capacity");
+    {
+        Fixture source;
+        for(int half=0;half<2;++half) {
+            const auto ts=Fixture::tiles+uint32_t(half)*24;
+            source.at(ts)[1]=uint8_t(half);
+            source.word(ts+4,0x08020000+uint32_t(half)*16384);
+            source.word(ts+8,0x08046000);source.word(ts+12,0x08040000);
+            source.word(ts+16,0x08045000);
+            std::memset(source.at(0x08020000+uint32_t(half)*16384),half?0x76:0x21,16384);
+        }
+        for(int i=0;i<192;++i) {
+            auto* p=source.at(0x08046000)+i*2;p[0]=uint8_t(i);p[1]=0;
+        }
+        auto m=source.memory();m.ewram={};m.iwram={};
+        Snapshot full;
+        expect(source_snapshot(m,0,0,full),"static source scenery needs no active scene or guest RAM");
+        expect(full.valid && full.has_map_identity() && full.valid_connections() && full.width==25 && full.height==24,
+            "complete source body and connection provenance");
+        expect(full.vram_tiles.front()==0x21 && full.vram_tiles[16384]==0x76 &&
+            full.bg_palette[95]==95 && full.bg_palette[96]==96 && full.bg_palette[191]==191 && full.bg_palette[192]==0,
+            "source-specific primary and secondary tile slots and six-palette halves");
+        expect(full.grid[7*25+7]==0 && full.grid[0]==0 && full.grid[23*25+24]==0x0456,
+            "body, copied neighbours and remaining odd-phase border reconstructed");
+        const auto rom_before=source.rom;
+        expect(source_snapshot(m,0,1,full) && full.width==35 && full.height==26 &&
+            full.player_index==-1 && source.rom==rom_before,"neighbour loaded in full without actors or ROM writes");
+        m.verified_ruby_rev1=false;
+        expect(!source_snapshot(m,0,0,full) && !full.valid && full.grid.empty(),"source loader requires independent ROM verification");
+        m.verified_ruby_rev1=true;
+        source.word(Fixture::tiles+4,0x08fffffc);
+        expect(!source_snapshot(m,0,0,full) && !full.valid,"truncated source pixels refuse instead of borrowing current-map art");
+    }
     Fixture f;
     auto s=inspect(f.memory());
     expect(s.status==Status::Field && s.group==0 && s.number==0,"verified current map identity");

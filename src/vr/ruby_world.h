@@ -343,6 +343,8 @@ bool capture(Snapshot& out, uint32_t previous_layout_ptr = 0);
 // Call before every guest/ROM lifetime, with capture stopped. The runtime
 // adapter hashes an immutable ROM once; pointer reuse must not reuse that gate.
 void reset_capture();
+// Quiescent native adapter only; verified ROM scenery, no guest state writes.
+bool source_map(int group,int number,Snapshot&);
 
 // One-line human-readable summary, rate-limited, for the Phase 4.1 check.
 void debug_dump(const Snapshot& s);

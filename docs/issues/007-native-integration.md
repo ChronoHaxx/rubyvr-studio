@@ -34,10 +34,13 @@ They must appear beside the next PR's human test instructions, not only here.
 
 **Camera/facing PR #30 merged into parent developer-tools PR #29:**
 [north-up and camera-relative walking](../live-camera.md), quarter-turn controls,
-stock menu gates and normal-player directional art are included. The parent
-remains open against main. [Source border restoration](../live-borders.md) is
-now in review there, using the same camera-session launcher. Ten native scripted
-checks pass; current human checks and the complete sequence below remain pending.
+stock menu gates and normal-player directional art are included. Parent PR #29
+merged into main at `9d895c7`, including [source border restoration](../live-borders.md).
+Its launch/border/camera human step is checked; the other four developer steps
+remain unreported. [Connected native scenery](../live-connected-world.md) is now
+in review, using the same camera-session launcher: complete nearby maps,
+asynchronous shared meshing and native forward/reverse crossings. This advances
+step 2 below; broader actors, modes and the complete sequence remain pending.
 
 **New post-merge report, 2026-09-12 — M2/M5:** ledge geometry appears walkable
 where Ruby blocks movement, and the jump activation area feels too deep. Exact

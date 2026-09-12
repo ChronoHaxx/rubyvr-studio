@@ -39,7 +39,7 @@ list(APPEND STUDIO_CORE src/vr/terrain.cpp src/vr/actor_frame.cpp src/vr/actor_r
 set(RUBYVR_TARGETS rubyvr_studio)
 if(RUBYVR_BUILD_RUNTIME_TESTS)
     add_executable(rubyvr_live_viewer_test tools/live-viewer-test.cpp
-        integration/runtime/viewer.cpp src/vr/camera_input.cpp ${STUDIO_CORE})
+        integration/runtime/viewer.cpp integration/runtime/live_region.cpp src/vr/camera_input.cpp ${STUDIO_CORE})
     target_include_directories(rubyvr_live_viewer_test PRIVATE integration/runtime)
     list(APPEND RUBYVR_TARGETS rubyvr_live_viewer_test)
 endif()

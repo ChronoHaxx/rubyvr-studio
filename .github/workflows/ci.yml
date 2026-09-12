@@ -27,7 +27,7 @@ jobs:
         run: python3 tools/check-repo.py --publication
       - name: Test shared terrain query without graphics or assets
         run: bash tools/test-terrain-region-query.sh
-      - name: Test live map identity without graphics or assets
+      - name: Test live map identity and neighbourhoods without graphics or assets
         run: bash tools/test-live-scene.sh
       - name: Test live actor frames without graphics or assets
         run: bash tools/test-actor-frame.sh

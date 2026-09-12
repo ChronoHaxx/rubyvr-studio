@@ -93,6 +93,17 @@ mode reloads, editor regression results and the five checked PR #28 human steps
 are recorded separately in that guide. The subsequent camera/control/facing and
 missing-border report remains open; those behaviors need repair and retesting.
 
+The normal-player camera and repeated-border subsets merged in PR #29 at
+`9d895c7`; its launch/border/camera human step is checked. The active
+[connected native scenery](live-connected-world.md) expands
+`bash tools/test-live-scene.sh` to **99** source-memory/decoder and **17**
+neighbourhood checks in both optimized and ASan/UBSan builds. Its local GL test
+checks complete adjacent maps with distinct palettes, live material updates
+without mesh rebuilds, actors, asynchronous handover, invalidation and return.
+The existing shared-region suite passes **69** checks. Native crossing/return
+and camera/menu captures are separate from these asset-free checks and from
+pending physical-input acceptance.
+
 The [live map identity decoder](live-map-identity.md) runs 55 checks in each
 optimized/sanitized build with `bash tools/test-live-scene.sh`; no graphics or
 assets are required. Its optional GL lifecycle test and local native evidence

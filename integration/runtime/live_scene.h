@@ -47,6 +47,13 @@ Scene inspect(const Memory& memory);
 // for an undefined backup cell. Never writes guest memory or expands the grid.
 bool copy_presentation_grid(const Memory& memory, const Scene& scene,
                             std::vector<uint16_t>& out);
+// Complete static scenery from the same independently verified cartridge.
+// Own tiles/palettes, body and copied borders; no guest writes or actors.
+// Refusal clears the output. RAM and the current callback are not required.
+bool source_snapshot(const Memory&, int group, int number, Snapshot& out);
+// Bounded GBA type-0x10 decoder, also exercised without game assets.
+bool decode_tiles(std::span<const uint8_t> packed, size_t limit,
+                  std::vector<uint8_t>& out);
 // Normal on-foot field control only. Start menu/dialogue locks, other callbacks,
 // bikes/surf and unknown ROMs keep their original directional input.
 bool field_controls_available(const Memory& memory);

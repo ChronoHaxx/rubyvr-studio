@@ -108,11 +108,11 @@ identity. The pinned Ruby live adapter now validates explicit identity and
 connection provenance and publishes invalidation on field refusal; this is
 [merged in PR #27](live-map-identity.md). Original actor frames and single-map
 authored feet/follow-camera placement [merged in PR #28](live-actors.md). Camera
-controls/facing, repeated border scenery, complete transition coverage and
-regional terrain integration remain pending. The bounded
-[camera-input follow-up](live-camera.md) is in review: it maps focused 3D
+controls/normal-player facing and repeated border scenery merged in PR #29;
+complete transition coverage remains pending. The bounded
+[camera-input follow-up](live-camera.md) maps focused 3D
 directions at the runtime input boundary, with a separate verified field/menu
-gate and no guest movement-memory writes. Facing and the other gaps remain open. See the
+gate and no guest movement-memory writes. Broader actor coverage remains open. See the
 [format and authoring contract](terrain-authoring.md).
 
 Capture validity does not define how long a scene should remain visible. The
@@ -120,6 +120,17 @@ M5/M7 menu follow-up must retain a complete host-owned world for recognized
 field menus and compose UI over it, while refusing menu graphics as fresh map
 data. Revalidate on return; unknown modes and warps need explicit handling.
 PR #27 currently clears on all refusals, including Bag, as a temporary safeguard.
+
+The [connected native scenery](live-connected-world.md) consumer reads complete
+static neighbours from the hash-verified cartridge in `live_scene.cpp` and
+selects up to three nearby maps in the display-independent `live_region.cpp`.
+It preserves world origins across crossings, owns its snapshot cache and gives
+immutable copies to one background `prepare_region` job. The frame thread alone
+publishes matching revisions and draws through the shared region renderer.
+Invalid guest scenes do not draw the cache; disconnected warps change the
+coordinate-space generation. Current-map actors and textures update separately
+without duplicating the single-map scenery mesh. Static neighbouring materials,
+the three-map bound and absent distant NPC simulation remain explicit limitations.
 
 ## Editor environment preview
 

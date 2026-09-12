@@ -3308,6 +3308,7 @@ bool segment(const world::Snapshot& s, ObjectModel* out) {
 }
 
 void set_overrides(overrides::OverrideSet ov) {
+    g_actor_terrain={};g_terrain_group=-2;g_terrain_grid.clear();
     g_overrides = std::move(ov);
     g_meshed_layout = 0;   // forces update() to rebuild, exactly as set_min_unit
 }
@@ -3608,6 +3609,40 @@ bool build_region(const std::vector<RegionMap>& maps,const overrides::OverrideSe
     return prepared && publish_region(prepared,error);
 }
 void clear_region() {release_region(g_region);g_region_stats={};}
+void update_region_live(const world::Snapshot& s) {
+    if(!g_ready || !s.valid) {actor_render::clear();return;}
+    if(g_vertex_count) {
+        gl::glBindBuffer(GL_ARRAY_BUFFER,g_vbo);
+        gl::glBufferData(GL_ARRAY_BUFFER,0,nullptr,GL_STATIC_DRAW);
+        g_vertex_count=0;
+    }
+    g_meshed_layout=0;
+    if(g_terrain_group!=s.map_group || g_terrain_number!=s.map_number ||
+       g_terrain_width!=s.width || g_terrain_height!=s.height ||
+       g_terrain_grid!=s.grid || g_terrain_metatiles!=s.metatiles ||
+       g_terrain_attributes!=s.attributes || g_terrain_connections!=s.connections) {
+        g_actor_terrain=terrain::resolve(s,g_overrides.terrain);
+        g_terrain_group=s.map_group;g_terrain_number=s.map_number;
+        g_terrain_width=s.width;g_terrain_height=s.height;
+        g_terrain_grid=s.grid;g_terrain_metatiles=s.metatiles;
+        g_terrain_attributes=s.attributes;g_terrain_connections=s.connections;
+    }
+    actor_render::update(s,g_actor_terrain);
+    for(auto& c:g_region) if(c.group==s.map_group && c.number==s.map_number) {
+        if(c.source_tiles!=s.vram_tiles) {
+            expand_tiles(s);glBindTexture(GL_TEXTURE_2D,c.tiles);
+            glTexSubImage2D(GL_TEXTURE_2D,0,0,0,256,256,GL_RED_INTEGER,GL_UNSIGNED_BYTE,g_tile_scratch.data());
+            c.source_tiles=s.vram_tiles;
+        }
+        if(c.source_palette!=s.bg_palette) {
+            uint32_t palette[world::kPaletteEntries];tileset::expand_palette(s,palette);
+            glBindTexture(GL_TEXTURE_2D,c.palette);
+            glTexSubImage2D(GL_TEXTURE_2D,0,0,0,16,16,GL_RGBA,GL_UNSIGNED_BYTE,palette);
+            c.source_palette=s.bg_palette;
+        }
+    }
+    glBindTexture(GL_TEXTURE_2D,0);
+}
 const RegionStats& region_stats() {return g_region_stats;}
 bool region_bounds(part_geometry::Vec* lo,part_geometry::Vec* hi) {
     if(!lo || !hi || g_region.empty())return false;

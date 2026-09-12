@@ -13,6 +13,7 @@ function(rubyvr_attach_runtime target)
         "${root}/integration/runtime/vr_layer.cpp"
         "${root}/integration/runtime/ruby_world.cpp"
         "${root}/integration/runtime/live_scene.cpp"
+        "${root}/integration/runtime/live_region.cpp"
         "${root}/integration/runtime/map_view.cpp"
         "${root}/integration/runtime/renderer.cpp"
         "${root}/integration/runtime/viewer.cpp"

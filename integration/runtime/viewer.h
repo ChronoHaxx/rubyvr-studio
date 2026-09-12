@@ -32,6 +32,7 @@
 
 #include "ruby_world.h"
 #include "live_region.h"
+#include "live_presentation.h"
 
 namespace vr {
 namespace viewer {
@@ -58,6 +59,14 @@ void set_camera_relative(bool enabled);
 // thread, because no VR thread was ever started.
 // present=false leaves the rendered back buffer available to local GL probes.
 void frame(const world::Snapshot& s, bool present = true);
+
+// Complete native desktop presentation. Original RGB and transparent field UI
+// belong to the same quiescent frame; only recognized menus can retain scenery.
+void game_frame(const world::Snapshot&, const presentation::Input&,
+                std::span<const uint8_t> rgb, int width, int height,
+                std::span<const uint8_t> field_ui={}, bool present=true);
+bool uses_world_controls();
+presentation::Decision presentation_state();
 
 }  // namespace viewer
 }  // namespace vr

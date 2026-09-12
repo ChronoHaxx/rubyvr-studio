@@ -167,7 +167,54 @@ int main(int,char**) {
     expect(std::strstr(SDL_GetWindowTitle(window),"scene unavailable"),"cached region is not presented as an active menu scene");
     vr::viewer::frame(field,false);
     expect(vr::viewer::map_origin(0,17,&nx,&nz) && nz==-10,"return keeps stable neighbour placement");
+
+    // The native presentation path must retain the complete host scene in a
+    // menu, show the actual original UI, and stop borrowing it at loads/battles.
+    using namespace vr::presentation;
+    Input signal{Mode::Field,{field.map_group,field.map_number,field.layout_ptr},0,1,false};
+    std::vector<uint8_t> original(240*160*3),transparent_ui(240*160*4);
+    for(int y=0;y<160;++y)for(int x=0;x<240;++x) {
+        const int p=(y*240+x)*3;original[p]=y<80?250:10;original[p+1]=30;original[p+2]=y<80?10:250;
+    }
+    vr::viewer::game_frame(field,signal,original,240,160,transparent_ui,false);
+    expect(vr::viewer::presentation_state().world && vr::viewer::uses_world_controls(),"game field owns camera-relative controls");
+    uploads=vr::diorama::mesh_upload_count();
+    signal.mode=Mode::Bag;
+    vr::viewer::game_frame({},signal,original,240,160,{},false);
+    expect(vr::viewer::presentation_state().retained && vr::actor_render::stats().player,"Bag retains complete scenery and last valid actor");
+    expect(vr::diorama::mesh_upload_count()==uploads,"opening menu does not re-upload geometry");
+    expect(!vr::viewer::uses_world_controls(),"Bag directions stay in UI coordinates");
+    glReadBuffer(GL_BACK);glReadPixels(0,0,1280,800,GL_RGBA,GL_UNSIGNED_BYTE,actor_pixels.data());
+    auto color=[&](int x,int y,int r,int b){const size_t p=(size_t(y)*1280+x)*4;
+        return actor_pixels[p]==r && actor_pixels[p+1]==30 && actor_pixels[p+2]==b;};
+    expect(color(640,600,250,10) && color(640,200,10,250),"menu shows original RGB upright at integer scale");
+    expect(!color(100,400,250,10) && !color(100,400,10,250),"menu is inset with surrounding world visible");
+    vr::viewer::set_yaw_radians(1.570796327f);
+    vr::viewer::game_frame({},signal,original,240,160,{},false);
+    expect(vr::viewer::presentation_state().retained && vr::diorama::mesh_upload_count()==uploads,"view can turn in retained world without menu pixels entering scenery");
+    signal.mode=Mode::ReturnToField;vr::viewer::game_frame({},signal,original,240,160,{},false);
+    expect(vr::viewer::presentation_state().overlay==Overlay::None,"return does not display partially reloaded field as menu");
+    signal.mode=Mode::Field;vr::viewer::game_frame(field,signal,original,240,160,transparent_ui,false);
+    expect(vr::viewer::presentation_state().update && vr::viewer::uses_world_controls(),"return restores live world and field controls");
+    // Transparent dialog canvas contributes only its intended window pixels.
+    for(int y=120;y<150;++y)for(int x=10;x<230;++x) {
+        const size_t p=(size_t(y)*240+x)*4;transparent_ui[p]=234;transparent_ui[p+1]=56;
+        transparent_ui[p+2]=123;transparent_ui[p+3]=255;
+    }
+    vr::viewer::game_frame(field,signal,original,240,160,transparent_ui,false);
+    glReadPixels(0,0,1280,800,GL_RGBA,GL_UNSIGNED_BYTE,actor_pixels.data());
+    const size_t dialog=(size_t(180)*1280+640)*4;
+    expect(actor_pixels[dialog]==234 && actor_pixels[dialog+1]==56 && actor_pixels[dialog+2]==123,"dialog pixels overlay shared world at readable screen position");
+    signal.mode=Mode::Battle;vr::viewer::game_frame({},signal,original,240,160,{},false);
+    expect(!vr::viewer::presentation_state().world && vr::actor_render::stats().visible==0,"battle uses original game and clears stale actors");
+    glReadPixels(0,0,1280,800,GL_RGBA,GL_UNSIGNED_BYTE,actor_pixels.data());
+    expect(color(640,780,250,10) && color(640,20,10,250),"battle original frame fills available aspect without cropping");
+    signal.mode=Mode::Field;vr::viewer::game_frame(field,signal,original,240,160,transparent_ui,false);
+    ++signal.epoch;signal.mode=Mode::Bag;vr::viewer::game_frame({},signal,original,240,160,{},false);
+    expect(!vr::viewer::presentation_state().world && !vr::viewer::uses_world_controls(),"loading directly into Bag never reuses preceding world");
+    signal.mode=Mode::Interior;vr::viewer::game_frame(field,signal,original,240,160,{},false);
+    expect(!vr::viewer::presentation_state().world && !vr::viewer::uses_world_controls(),"interior original view uses original directions even with valid field data");
     vr::viewer::shutdown();
     vr::diorama::shutdown();SDL_GL_DeleteContext(context);SDL_DestroyWindow(window);SDL_Quit();
-    std::cout<<"PASS: live viewer identity/actors, connected publication/materials/crossing/return (local GL; synthetic art)\n";
+    std::cout<<"PASS: live viewer actors/connected world, menu retention, original-frame/UI pixels, return/load controls (local GL; synthetic art)\n";
 }

@@ -14,6 +14,8 @@ function(rubyvr_attach_runtime target)
         "${root}/integration/runtime/ruby_world.cpp"
         "${root}/integration/runtime/live_scene.cpp"
         "${root}/integration/runtime/live_region.cpp"
+        "${root}/integration/runtime/live_presentation.cpp"
+        "${root}/integration/runtime/screen_overlay.cpp"
         "${root}/integration/runtime/map_view.cpp"
         "${root}/integration/runtime/renderer.cpp"
         "${root}/integration/runtime/viewer.cpp"
@@ -35,6 +37,6 @@ function(rubyvr_attach_runtime target)
     target_include_directories(${target} PRIVATE "${RECOMP_UI_ROOT}/src")
     target_compile_definitions(gbarecomp_runtime PRIVATE RUBYVR_DEV_RUNTIME=1)
     target_compile_definitions(gbarecomp_runtime PRIVATE RUBYVR_CAMERA_INPUT=1)
-    target_include_directories(gbarecomp_runtime PRIVATE "${root}/integration/runtime" "${root}/src")
+    target_include_directories(gbarecomp_runtime PRIVATE "${root}/integration/runtime" "${root}/src/vr" "${root}/src")
     target_link_libraries(${target} PRIVATE SDL2::SDL2 OpenXR::openxr_loader OpenGL::GL)
 endfunction()

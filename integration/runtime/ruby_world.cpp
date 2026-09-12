@@ -16,6 +16,7 @@
 
 #include "ruby_world.h"
 #include "live_scene.h"
+#include "live_presentation.h"
 
 #include "runtime_bus_bridge.h"   // gbarecomp::active_bus()
 #include "gba_bus.h"              // gba::GbaBus region pointers
@@ -25,6 +26,10 @@
 #include <cstdlib>
 #include <cstring>
 
+// Private runner lifecycle signal: increments for file loads, rewind and TCP
+// loads, not just our named checkpoints. Never restore a host world across it.
+extern "C" unsigned long long g_runtime_state_epoch;
+
 namespace vr {
 namespace world {
 namespace {
@@ -32,6 +37,7 @@ const uint8_t* g_verified_rom = nullptr;
 size_t g_verified_size = 0;
 bool g_supported_rom = false;
 int g_last_status = -1;
+uint64_t g_presentation_epoch=0, g_seen_state_epoch=~uint64_t(0);
 
 // ── Guest → host address resolution ──────────────────────────────────────────
 //
@@ -165,6 +171,7 @@ const char* dir_name(uint8_t d) {
 
 void reset_capture() {
     g_verified_rom=nullptr; g_verified_size=0; g_supported_rom=false; g_last_status=-1;
+    ++g_presentation_epoch;
 }
 
 bool source_map(int group,int number,Snapshot& out) {
@@ -407,3 +414,32 @@ void debug_dump(const Snapshot& s) {
 
 }  // namespace world
 }  // namespace vr
+
+namespace vr::presentation {
+Input capture_input() {
+    auto* bus=gbarecomp::active_bus();
+    if(world::g_seen_state_epoch!=g_runtime_state_epoch) {
+        world::g_seen_state_epoch=g_runtime_state_epoch;++world::g_presentation_epoch;
+    }
+    if(!bus)return Input{};
+    const world::live::Memory memory{{bus->rom_ptr(),bus->rom_size()},
+        {bus->ewram_ptr(),0x40000},{bus->iwram_ptr(),0x8000},
+        world::g_supported_rom && world::g_verified_rom==bus->rom_ptr()};
+    const auto input=inspect(memory,world::g_presentation_epoch);
+    static uint32_t last_callback=~uint32_t(0);
+    static uint64_t last_epoch=~uint64_t(0);
+    static bool last_fade=false;
+    if(input.callback!=last_callback || input.epoch!=last_epoch || input.fading!=last_fade) {
+        std::fprintf(stderr,"[presentation] %s callback=%08X epoch=%llu map=%d.%d fading=%d\n",
+            name(input.mode),input.callback,static_cast<unsigned long long>(input.epoch),
+            input.identity.group,input.identity.number,input.fading);
+        last_callback=input.callback;last_epoch=input.epoch;last_fade=input.fading;
+    }
+    return input;
+}
+bool capture_field_ui(std::span<const uint8_t> rgb,std::vector<uint8_t>& rgba) {
+    auto* bus=gbarecomp::active_bus();
+    if(!bus){rgba.clear();return false;}
+    return field_ui({bus->vram_ptr(),0x18000},{bus->io().raw(),0x400},rgb,rgba);
+}
+}

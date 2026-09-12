@@ -39,18 +39,24 @@ The follow-up now selects [camera-facing player art](docs/live-facing.md) while
 preserving the game's displayed animation phase. The 16-second native comparison
 and automated checks pass; the combined launch/border/camera human step is checked.
 The other four developer-mode steps remain unreported. NPC/special-pose
-facing, other actor defects, distant pop-in and the cleared Bag view remain open; [Emerald implementation comparison](docs/emerald-camera-actor-audit.md).
+facing, other actor defects and distant pop-in remain open; [Emerald implementation comparison](docs/emerald-camera-actor-audit.md).
 
 **Border restoration merged in PR #29:** the live viewer now repeats Ruby's
 original forest border outside the map body. [Watch the 12-second comparison and
 use the single current launcher](docs/live-borders.md). The reported ledge
 collision/depth mismatch, foliage polish and performance remain open.
 
-**In review — [connected native scenery](docs/live-connected-world.md):** complete
+**Merged in PR #31 — [connected native scenery](docs/live-connected-world.md):** complete
 nearby maps load before entry and remain when looking back. The native
-Route 101 → Oldale → Route 101 sequence passes agent checks; the short GIF,
-same launch command and pending human steps are in the guide. Up to three maps
-are selected; distant actors, unrestricted noclip and menu composition remain open.
+Route 101 → Oldale → Route 101 sequence passes agent checks and all four recorded
+human steps; the short GIF and same launch command are in the guide. Up to three maps
+are selected; distant actors and unrestricted noclip remain open.
+
+**In review — [play through menus, battles and interiors](docs/live-play-session.md):**
+Bag/Party/Options keep the world, original dialogue/Start/save UI overlays it,
+and battles/interiors play in the same viewer using their original graphics.
+The same launcher and new local situation checkpoints are in the guide.
+Human acceptance, broader scene coverage and VR UI remain pending.
 
 **Watch the result:** [Short acceptance GIF and verdict](docs/acceptance.md).
 For details, the [roadmap and checklist](docs/roadmap.md) tracks M0–M11 work,

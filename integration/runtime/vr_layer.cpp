@@ -776,8 +776,18 @@ void frame_sink(const uint8_t* rgb888, int w, int h, void*) {
             dump_diorama_once(snap);            // RUBYVR_DUMP_SCENE=1, once
 
         }
-        // Invalid captures are events too: both consumers must drop the old map.
-        if (viewer::active()) viewer::frame(snap);
+        // Refusal still invalidates the capture. Desktop presentation separately
+        // retains a host copy only for recognized menus; VR keeps its old guard.
+        if (viewer::active()) {
+            const auto input=presentation::capture_input();
+            std::vector<uint8_t> ui;
+            const bool size_ok=w>0 && h>0 && w<=4096 && h<=4096 && rgb888;
+            const std::span<const uint8_t> rgb=size_ok?
+                std::span<const uint8_t>(rgb888,size_t(w)*h*3):std::span<const uint8_t>{};
+            if(input.mode==presentation::Mode::Field && snap.valid && w==240 && h==160)
+                presentation::capture_field_ui(rgb,ui);
+            viewer::game_frame(snap,input,rgb,w,h,ui);
+        }
         std::lock_guard<std::mutex> lk(g_world_mx);
         if(!snap.valid) g_world_invalidated=true;
         std::swap(snap, g_world_pending);   // O(1): swaps vector pointers

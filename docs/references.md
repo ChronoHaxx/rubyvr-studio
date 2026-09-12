@@ -1,5 +1,10 @@
 # References, inspiration and tools evaluated
 
+The [live border audit](live-borders.md#source-first-implementation) traces
+Ruby's border lookup, the cached Emerald `Gen3.lua` pattern/blocked-cell split,
+and APK 2.4.2's seam-height warning. It underpins the bounded border restoration
+in parent PR #29; no external Lua was copied.
+
 Initial tool/workflow review: 2026-09-08. Native-engine comparison and camera/
 editor/debug source audit refreshed 2026-09-12. This record separates
 dependencies, adapted techniques, observed workflows and untested candidates.
@@ -95,7 +100,7 @@ The languages alone do not establish correctness, performance or bug counts.
 | Game execution | Integration based on RubySapphireRecomp/gbarecomp translating GBA ROM instructions into native code, with documented fallback paths | Its README describes a LÖVE2D recreation: hand-written Lua engine, script VM and map behavior, with ROM-imported data; not assembly transpilation |
 | Generation/data | Ruby is the current verified authoring source; Sapphire needs separate runtime validation | Gen1/2 lineage; companion voxel source also contains an Emerald-specific adapter. This inspection does not establish complete Emerald gameplay/tool compatibility |
 | Mod support | Editor recipes and local JSON overrides work; supported public runner integration and installable package are pending | Documented registries, events/hooks, per-mod saves/options and in-game mod manager |
-| Licence boundary | Original editor work uses GPLv3-or-later (earlier grants remain); external gbarecomp is PolyForm Noncommercial and the pinned game base has no licence file, so the complete runtime stack is not claimed as FOSS | Inspected engine licence is Source-Available 1.2, including Emerald-specific work; the companion DramaticShapes mod has its own MIT licence. Check the actual file and notices before reuse |
+| Licence boundary | Original editor work uses GPLv3-or-later (earlier grants remain); external gbarecomp and current RubySapphireRecomp declare PolyForm Noncommercial. The older pinned runner predates its declaration. The complete runtime stack is not claimed as FOSS | Inspected engine licence is Source-Available 1.2, including Emerald-specific work; the companion DramaticShapes mod has its own MIT licence. Check the actual file and notices before reuse |
 | Intended contribution | Source-faithful voxel authoring, shared native renderer and PC VR integration | Contributions must follow its own engine, tooling and licence terms |
 
 Sources: [Gen2Recomped README at b017ee1](https://github.com/UNDERdecoded/Gen2Recomped/blob/b017ee194d23e97029b598174d8f2893d42c9cc6/README.md),
@@ -106,6 +111,39 @@ Sources: [Gen2Recomped README at b017ee1](https://github.com/UNDERdecoded/Gen2Re
 [gbarecomp](https://github.com/mstan/gbarecomp).
 Do not copy restricted Gen2 code into this repository or assume its entire tree
 is MIT because inherited files have different terms.
+
+### AI-assisted Melee references (2026-09-12)
+
+Coordinator review of the separate Smash research: retain the current native
+route and the M5 monitor gameplay priority. The strongest independently checked
+example is [Melee PR #3374](https://github.com/doldecomp/melee/pull/3374): its
+author credits Codex/Astra with matching a 3,140-byte function in an existing
+decompilation, and the merged PR's comparison report confirms that function
+match. This supports using precise comparison checks with AI-assisted work;
+it does not demonstrate a newly written game or a desktop/VR port by itself.
+
+The research identified [Kevin Tang's MR post](https://x.com/_KevinTang/status/2098154213696249912),
+but could not establish its runtime technique from an inspectable implementation.
+The coordinator's direct post fetch was also blocked. No original-mechanics,
+standalone-VR performance or migration claim is adopted from that demo.
+
+The local gbarecomp copy contains `gba_mod_register_function_entry_plugin` and
+`gba_mod_set_function_hook_enabled` in `src/runtime/mod_function_hooks.*`.
+Declining a callback restores CPU registers, not arbitrary guest-memory writes.
+Use this existing boundary for future verified Ruby operations; do not invent a
+second hook system or treat its presence as a working inventory action API.
+
+Apply the research's comparison idea under M5/M10 using the existing input
+replay: first establish repeatable original-game behavior, then compare capture
+only and full 3D at matching guest events with BMP recording disabled. Scope
+the first measurement to the accepted actor sequence; broad profiling follows
+when evidence requires it. This is pending work, not a new multi-day prerequisite
+for menu presentation or a reason to replace the engine. The research's effort
+estimate is not a delivery commitment. [Canonical tracking](roadmap.md#m10-performance-and-reliability).
+
+The research also caught the [current runner licence declaration](https://github.com/mstan/RubySapphireRecomp/blob/8720324ca07741efd8b6785a0a6c46162fbc7099/LICENSE),
+dated 2026-09-09. Notices now distinguish it from the older pinned-base absence;
+the separate RV-007 integration/distribution question remains open.
 
 ### Camera, editor and debug reference audit
 
@@ -146,9 +184,55 @@ The curved horizon is a visual bend, not a spherical planet simulation.
 No dedicated god/invincibility or noclip command was found in the inspected
 console's built-in verbs; that does not establish absence elsewhere. Requested
 RubyVR test controls are proposals, not claims of reference feature parity.
-Our old native viewer has orbit/follow controls, but the public live adapter
-still clears map identity/connections and the current Studio terrain needs live
-integration. Editor footage cannot close that gap.
+The native viewer has orbit/follow controls; PR #27 added live identity and
+copied-connection provenance, and PR #28 added original actors and authored
+feet/following. Camera-relative controls/facing and complete connected gameplay
+remain open. Editor footage cannot close those gaps.
+
+### Camera, facing and border follow-up (2026-09-12)
+
+The later [Emerald implementation audit](emerald-camera-actor-audit.md) traces
+the actual shared Emerald movement path, phase/facing selection, neighbour
+actors and Ruby's two sprite pop-in boundaries. It records the maintainer's
+PR #30 report and the resulting cardinal-camera correction; the earlier
+inspection below is retained as history.
+
+The maintainer reported rotated controls/facing and missing forest after merging
+PR #28. Inspection of RubyVR's `integration/runtime/viewer.cpp` confirms a
+default yaw of 0.6 radians and free inspection orbit, with game input still owned
+by the original window. `src/vr/actor_render.cpp` rotates an upright card but
+uses the one captured OBJ frame; it does not choose side/back animation art for
+the new view. Near-top-down views therefore also foreshorten the card.
+
+At the same pinned companion-mod revision above, the reference separates two
+behaviors. Its normal tilted orbit remains on the south side and leans actor
+cards about their feet for readable tilt views. The free first/third-person rig
+rotates input by camera yaw, selects the actor's apparent facing and turns
+upright cards toward the eye. See [card orientation and frame selection](https://github.com/UNDERdecoded/Gen2Recomped-DramaticShapes/blob/4a114b3e344db629ac7c7ac5108bd3d910fc4554/lib/VoxelScene.lua#L549-L642),
+[movement transform](https://github.com/UNDERdecoded/Gen2Recomped-DramaticShapes/blob/4a114b3e344db629ac7c7ac5108bd3d910fc4554/lib/FirstPerson.lua#L448-L455)
+and [gameplay movement integration](https://github.com/UNDERdecoded/Gen2Recomped-DramaticShapes/blob/4a114b3e344db629ac7c7ac5108bd3d910fc4554/lib/FreeMove.lua).
+The latter calls engine collision/arrival/special-action handling; changing a
+render matrix alone does not provide that behavior. These are inspected source
+paths, not a hands-on claim that every Emerald movement case works.
+
+The missing forest is a separate, concrete source gap. Ruby's
+[`MapGridGetMetatileIdAt` and `GetBorderBlockAt`](https://github.com/pret/pokeruby/blob/63a8cbf0016b351a4e68f7036fa0b77e23d2f2c1/src/fieldmap.c)
+substitute a repeating 2x2 border pattern for undefined backup cells, with
+parity based on backup coordinates. RubyVR's live capture copies the raw grid,
+the source adapter also leaves border cells undefined, and the mesher skips
+them. The reference's [Gen3 border lookup](https://github.com/UNDERdecoded/Gen2Recomped-DramaticShapes/blob/4a114b3e344db629ac7c7ac5108bd3d910fc4554/lib/Gen3.lua#L653-L690)
+explicitly repeats all four quarters instead of clamping one tile. Restore
+source-derived decorative border presentation while preserving real neighbour
+ownership and non-playable boundaries. Distant underlay/fog and M4 art polish
+do not replace that missing geometry.
+
+Dramatic Shape VR separately documents tabletop and first-person controls in
+its [current guide](https://github.com/prismaticShape/DramaticShapeVR#controls-quick-reference).
+That guide establishes available modes, not the exact implementation or parity
+of its latest restricted release. This follow-up copied no implementation and
+does not start an engine migration. The [canonical roadmap](roadmap.md#current-focus)
+tracks camera/input under M9, actor facing under M6 and border completeness
+under M2/M5, within the continuing native gameplay proof.
 
 Upstream gbarecomp documents versioned `.gbamod` packages and trusted native
 plugins compiled into the runner. This is existing upstream capability. RubyVR

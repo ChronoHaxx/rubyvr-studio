@@ -1,10 +1,31 @@
 # Native game integration: prototype source
 
+**Current M5 handoff:** PR #30 camera/facing merged into the open parent PR #29.
+The combined prepared build also includes [source border restoration](../docs/live-borders.md).
+Use that guide's single camera-session launcher; the old main-checkout prepared
+developer executable is historical. Ledge collision/depth, Bag retention and
+broader actor/terrain coverage remain open.
+
 The default standalone CMake targets do **not** build the game adapter. The
 optional local GL test builds the desktop viewer with synthetic data. These files preserve our
 existing capture, renderer, viewer and OpenXR work so contributors can understand
 the intended connection without importing the upstream game runner's history.
 There is no supported end-user installation command for this folder yet.
+
+[Developer mode](../docs/developer-mode.md) documents the private runtime-menu
+and dispatch-boundary adapter, named checkpoint isolation, pause/step and speed,
+and the reviewed Ruby collision-entry hook. Its portable session controller is
+tested without the external runner; the native build still needs the local
+runner changes described there.
+
+[Camera-relative gameplay](../docs/live-camera.md) adds the runtime-thread
+`game_input::filter(keys, host_menu_open)` boundary after host bindings/settings
+capture, before KEYINPUT and input recording. Replays bypass it because they
+already contain guest directions. Checkpoint loads call `game_input::reset()`.
+Physical input samples SDL focus; deterministic native drivers may provide an
+explicit `Source` through `filter_from_source`, exercising the same mapper and
+verified on-foot field gate. The local runtime call-site changes are still
+required; publishing the adapter does not publish that separately licensed runner.
 
 **Current priority, 2026-09-12:** retain this native game route and complete the
 [monitor gameplay proof](../docs/issues/007-native-integration.md#native-desktop-proof).
@@ -46,7 +67,7 @@ the public integration work package must define a reproducible boundary.
 runner experiment; it still requires the caller's runtime headers, libraries
 and frame-sink integration. See the [checks and limits](../docs/live-map-identity.md).
 
-The [live actor slice](../docs/live-actors.md) is **In review**. It copies original
+The [live actor slice](../docs/live-actors.md) **merged in PR #28**. It copies original
 OBJ frames and selected subsprite profiles into the transient snapshot, renders
 upright actors through the shared diorama path and follows their resolved feet.
 The native desktop recording covers one small walk/turn scene. Menu caching,
@@ -58,6 +79,8 @@ Our original integration source and shared renderer use the project's
 GPLv3-or-later terms. The standalone editor does not link the
 runner. The pinned framework has its own Noncommercial terms and clarification;
 the pinned RubySapphireRecomp base has no established redistribution permission.
+Current upstream now declares PolyForm Noncommercial as well; see the dated
+[licence update](../docs/licensing.md#separate-native-game-integration).
 Establish compatible rights for the actual combination before distributing it.
 Noncommercial restrictions cannot simply be added to a GPL-covered combined
 work. That distribution needs compatible upstream permission or an appropriate

@@ -67,6 +67,10 @@ provenance does not make the current licence a modified GPL or PolyForm licence.
 The standalone editor does not link the game runner or `gbarecomp`. The
 external framework has its own Noncommercial terms and clarification; no
 redistribution permission has been established for the pinned runner base.
+Current-source update, verified 2026-09-12: RubySapphireRecomp added
+[PolyForm Noncommercial 1.0.0 and an upstream clarification](https://github.com/mstan/RubySapphireRecomp/blob/8720324ca07741efd8b6785a0a6c46162fbc7099/LICENSE)
+on 2026-09-09. The older pinned-base absence is historical. This identifies
+current upstream terms; it does not establish rights for the combined runtime.
 Noncommercial restrictions cannot simply be attached to a GPL-covered
 combined work. Distribution of that combination needs compatible upstream
 permission or an appropriate exception from the relevant rightsholders.

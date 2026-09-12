@@ -18,7 +18,8 @@ struct Fixture {
     std::vector<uint8_t> rom=std::vector<uint8_t>(0x1000000);
     std::vector<uint8_t> ew=std::vector<uint8_t>(0x40000), iw=std::vector<uint8_t>(0x8000);
     static constexpr uint32_t table=0x08010000, headers=0x08011000,
-        layouts=0x08012000, tiles=0x08014000, list=0x08015000, entries=0x08015100;
+        layouts=0x08012000, tiles=0x08014000, list=0x08015000, entries=0x08015100,
+        border=0x08017002;
     Memory memory() const { return {rom,ew,iw,true}; }
     uint8_t* at(uint32_t a) {
         return const_cast<uint8_t*>(memory().read(a,1));
@@ -42,6 +43,7 @@ struct Fixture {
             const auto hdr=headers+uint32_t(n)*28, lay=layouts+uint32_t(n)*24;
             word(table+uint32_t(n)*4,hdr); word(hdr,lay);
             word(lay,n==0?10:20); word(lay+4,n==0?10:12);
+            word(lay+8,border);
             // Deliberately only two-byte aligned metatile map data.
             word(lay+12,0x08018002); word(lay+16,tiles); word(lay+20,tiles+24);
         }
@@ -50,12 +52,14 @@ struct Fixture {
         connection(2,3,-10,3); connection(3,4,0,4);
         word(kGBackupMapLayout,25); word(kGBackupMapLayout+4,24);
         word(kGBackupMapLayout+8,0x02000000); select(0);
+        word(border,0xB456A123); word(border+4,0xD678C567);
     }
 };
 void refused(const Scene& s,Status status,const char* why) {
     expect(s.status==status,why);
     expect(s.group==-1 && s.number==-1 && s.layout==0 && s.grid==0 &&
-        s.width==0 && s.height==0 && s.connections.empty(),"refusal clears all scene provenance");
+        s.width==0 && s.height==0 && s.connections.empty() &&
+        s.border==std::array<uint16_t,4>{},"refusal clears all scene provenance");
 }
 }
 int main() {
@@ -63,6 +67,43 @@ int main() {
     auto s=inspect(f.memory());
     expect(s.status==Status::Field && s.group==0 && s.number==0,"verified current map identity");
     expect(s.width==25 && s.height==24,"live backup dimensions");
+    expect(s.border==std::array<uint16_t,4>{0xA123,0xB456,0xC567,0xD678},
+        "source border read at two-byte alignment, all four quarters retained");
+    std::vector<uint16_t> visual;
+    const auto grid=0x02000000u;
+    for(int i=0;i<600;++i) { f.at(grid)[2*i]=0xff; f.at(grid)[2*i+1]=3; }
+    auto set_cell=[&](int x,int y,uint16_t value) {
+        auto* p=f.at(grid)+2*(y*25+x);p[0]=uint8_t(value);p[1]=uint8_t(value>>8);
+    };
+    set_cell(7,7,0x3188); set_cell(17,7,0xE211); set_cell(0,17,0x0C99);
+    const auto ram_before=f.ew;
+    expect(copy_presentation_grid(f.memory(),s,visual),"presentation copy succeeds");
+    expect(visual[0]==0x0678 && visual[1]==0x0567 && visual[25]==0x0456 && visual[26]==0x0523,
+        "northwest border uses odd backup phase and preserves blocked zero-elevation semantics");
+    expect(visual[24]==0x0678 && visual[23*25]==0x0456 && visual.back()==0x0456,
+        "right eighth column and bottom border keep the same repeating phase");
+    expect(visual[7*25+7]==0x3188 && visual[7*25+8]==kGridUndefined,
+        "map body, including an undefined body hole, remains byte-exact");
+    expect(visual[7*25+17]==0xE211 && visual[17*25]==0x0C99,
+        "real east and south neighbour data preserve art, elevation and collision");
+    expect(f.ew==ram_before,"presentation does not modify guest RAM");
+    auto bad=s;bad.status=Status::NonField;
+    expect(!copy_presentation_grid(f.memory(),bad,visual) && visual.empty(),"invalid scene drops old border output");
+    bad=s;bad.width=std::numeric_limits<int>::max();
+    expect(!copy_presentation_grid(f.memory(),bad,visual),"oversized copy refused before allocation");
+    bad=s;bad.grid=0x0203fff0;
+    expect(!copy_presentation_grid(f.memory(),bad,visual),"truncated grid refused");
+    bad=s;bad.border.fill(0xFFFF);
+    expect(copy_presentation_grid(f.memory(),bad,visual) && visual[0]==kGridUndefined,
+        "undefined source border art stays unresolved");
+    bad=s;bad.border.fill(0xF000);
+    expect(copy_presentation_grid(f.memory(),bad,visual) && visual[0]==0x0400,
+        "plain ground border is not assigned source elevation bits as physical height");
+    for(auto pointer:{0u,0x02000000u,0x08017003u,0x08fffffau}) {
+        f.word(Fixture::layouts+8,pointer);
+        refused(inspect(f.memory()),Status::InvalidLayout,"invalid border ROM span rejected");
+    }
+    f.word(Fixture::layouts+8,Fixture::border);
     // Hand-calculated clipping in backup coordinates, including the eighth east column.
     const std::vector<ConnectionSlice> expected{
         {0,1,35,26,0,17,10,7,17,7,true},

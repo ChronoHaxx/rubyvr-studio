@@ -6,13 +6,27 @@
 #include <vector>
 
 namespace vr::actor {
+struct DirectionImage {
+    std::array<uint8_t,256> tiles{}; // one original 16x32 4bpp image
+    uint16_t image=0;
+    bool hflip=false,vflip=false;
+};
 // Transient, host-owned copy of one pinned Ruby Sprite; never a guest pointer.
 struct Source {
     std::array<uint8_t,68> sprite{};
     bool present=false;
     // Raw six-byte Subsprite records from the selected, validated ROM table.
     std::vector<uint8_t> subsprites;
+    // Optional same-phase art for the verified Brendan/May on-foot profile.
+    // Indexed S/N/W/E, not a second animation clock. Zero facing means absent.
+    uint8_t world_facing=0;
+    uint8_t displayed_anim=0,displayed_phase=0;
+    std::array<DirectionImage,4> directions{};
 };
+// Capture-side only, after the caller's Ruby rev1 ROM-identity gate. Refuses
+// unknown profiles and a phase whose source bytes/flips do not match live OBJ.
+bool capture_player_directions(Source&,std::span<const uint8_t> rom,
+                               std::span<const uint8_t> obj_vram,bool mapping_1d);
 enum class Status { Missing, Hidden, Visible, Unsupported, Truncated };
 struct Frame {
     Status status=Status::Missing;
@@ -22,6 +36,11 @@ struct Frame {
 };
 Frame decode(const Source&, std::span<const uint8_t> obj_vram,
              std::span<const uint16_t> obj_palette, bool mapping_1d);
+Frame decode_direction(const Source&,std::span<const uint8_t> obj_vram,
+                       std::span<const uint16_t> obj_palette,bool mapping_1d,
+                       uint8_t apparent_facing);
+// Screen-right in map coordinates, from the actual view/model transform.
+uint8_t apparent_facing(uint8_t world_facing,float right_x,float right_z);
 // Invert the field tilemap's screen-space ring using the sprite's global camera
 // offsets, then select the incarnation nearest its destination event tile.
 // Sprite y2 is a visual jump/bob, not map motion or terrain height.

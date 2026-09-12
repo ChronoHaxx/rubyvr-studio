@@ -22,10 +22,28 @@ merged in PR #27 with all five human checks passed. The private native Windows
 runner now compiles the current shared renderer and validates field identity
 and connections. Playable terrain placement, actors and complete game-mode
 routing form the next bounded steps. The [original actor/follow-camera slice](../live-actors.md)
-is now **In review**, with native Route 101 walking evidence; it does not complete
+**merged in PR #28**, with native Route 101 walking evidence; it does not complete
 the full sequence below. WSL remains the worker/test and Studio editor environment;
 the native game proof currently uses Windows. Preserve both supported paths and
 the private runner's unrelated working changes.
+
+The maintainer's post-merge report identifies wrong controls/facing when the
+camera rotates and missing border forest. These remain M9/M6 and M2/M5 work
+inside this playable proof; see the [specific causes and follow-ups](../roadmap.md#current-focus).
+They must appear beside the next PR's human test instructions, not only here.
+
+**Camera/facing PR #30 merged into parent developer-tools PR #29:**
+[north-up and camera-relative walking](../live-camera.md), quarter-turn controls,
+stock menu gates and normal-player directional art are included. The parent
+remains open against main. [Source border restoration](../live-borders.md) is
+now in review there, using the same camera-session launcher. Ten native scripted
+checks pass; current human checks and the complete sequence below remain pending.
+
+**New post-merge report, 2026-09-12 — M2/M5:** ledge geometry appears walkable
+where Ruby blocks movement, and the jump activation area feels too deep. Exact
+map/build was not supplied. Compare the visible edge with the original
+destination-tile jump query and takeoff/landing; preserve guest collision.
+Border restoration does not repair this mismatch.
 
 Build the proof in small steps:
 

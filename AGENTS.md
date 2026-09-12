@@ -11,6 +11,11 @@ checks. The human contributor owns the PR and its claims.
   developer setup in a clearly labelled collapsed section. Read back the
   published PR description before saying it is updated. A new commit alone
   does not complete the handoff.
+- Beside the primary human test instructions, list known visible limitations
+  in plain language, with their roadmap milestone and whether this PR fixes
+  them. Do not bury camera/control mismatches, missing scenery or temporary
+  menu behavior behind a general "prototype" label or a link. Preserve dated
+  post-merge defect reports separately from the original acceptance result.
 - The maintainer prefers short visual acceptance evidence and delegates routine
   automated and desktop visual review to the contributor or agent. Run the checks,
   inspect the actual captures, and lead with a 10–30 second GIF/video, a concise
@@ -36,6 +41,18 @@ checks. The human contributor owns the PR and its claims.
   only the delivered scope, preserving outstanding visual/live/headset acceptance.
 - Inspect source and reproduce the problem; do not invent API behavior or
   terrain heights from color/elevation values.
+- Before implementing a new feature, inspect relevant existing implementations:
+  our own code, Gen2Recomped's actual Emerald path, the DramaticShapes companion
+  mod, and the locally extracted Dramatic Shape APK Lua modules where applicable.
+  Start with prior audits/cached files; verify relevant versions instead of
+  restarting broad research. Trace the actual behavior and integration hooks,
+  not only README features or demo appearance. Briefly record the exact source
+  files/version, what can be reused or adapted, and what Ruby's native runtime
+  still needs. Carry those findings into the implementation and acceptance
+  checks; do not merely list reference links and independently reinvent it.
+  Keep this pass proportionate to the feature and continue when no suitable
+  reference exists. Reference access alone does not grant copying permission;
+  retain applicable notices for permitted reuse.
 - Use the shared production mesher for previews and evidence. Capture actual
   application output; generated mockups are not validation screenshots.
 - Preserve source palette/texel identity, native pixel scale, object/ground/

@@ -22,6 +22,7 @@
 #include "sha1.h"
 
 #include <cstdio>
+#include <cstdlib>
 #include <cstring>
 
 namespace vr {
@@ -196,16 +197,13 @@ bool capture(Snapshot& out, uint32_t previous_layout_ptr) {
     if (scene.status!=live::Status::Field) return false;
     const auto layout_ptr=scene.layout;
     const auto w=scene.width, h=scene.height;
-    const size_t cells=size_t(w)*h;
-    const auto* grid=memory.read(scene.grid,cells*2);
+    if (!live::copy_presentation_grid(memory,scene,out.grid)) return false;
     out.map_group=scene.group; out.map_number=scene.number;
     out.identity_source=Snapshot::IdentitySource::LiveCapture;
     out.connections=scene.connections;
     out.layout_ptr = layout_ptr;
     out.width      = w;
     out.height     = h;
-    out.grid.resize(cells);
-    std::memcpy(out.grid.data(), grid, cells * sizeof(uint16_t));
 
     // ── Sub-tile camera ──────────────────────────────────────────────────────
     if (const uint8_t* p = host_ptr(bus, kGCameraPixelOffsetX, 4))
@@ -301,6 +299,16 @@ bool capture(Snapshot& out, uint32_t previous_layout_ptr) {
     std::memcpy(out.obj_palette.data(),bus->pal_ptr()+0x200,512);
     // DISPCNT bit 6 selects OBJ 1D mapping. Read through the bus at capture.
     out.obj_mapping_1d=(bus->read16(0x04000000)&0x40)!=0;
+    if(out.player_index>=0) {
+        auto& source=out.actor_sources[out.player_index];
+        actor::capture_player_directions(source,
+            {bus->rom_ptr(),bus->rom_size()},out.obj_tiles,out.obj_mapping_1d);
+        if(std::getenv("RUBYVR_ACTOR_TRACE"))
+            std::fprintf(stderr,"PLAYER_VIEW_CAPTURE anim=%u phase=%u source_facing=%u matched=%u displayed_anim=%u displayed_phase=%u\n",
+                unsigned(source.sprite[0x2a]),unsigned(source.sprite[0x2b]),
+                unsigned(out.objects[out.player_index].facing),unsigned(source.world_facing),
+                unsigned(source.displayed_anim),unsigned(source.displayed_phase));
+    }
     out.actor_offset_x=rds16(bus->iwram_ptr()+0x24d0);
     out.actor_offset_y=rds16(bus->iwram_ptr()+0x27e0);
 

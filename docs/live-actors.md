@@ -1,6 +1,6 @@
 # Original field actors in the native voxel view
 
-**In review — RV-010 / bounded M5–M6. Human acceptance pending.**
+**Merged in PR #28 — RV-010 / bounded M5–M6. Post-merge visible issues remain open.**
 The player now walks and turns in the authored scenery while a tilted camera
 follows smoothly. The same pass displays the other active field actors using
 the original game's current sprite pixels. This is a native desktop prototype;
@@ -12,7 +12,39 @@ The 12-second recording contains 720 native presentation frames, sampled every
 four frames and played at nominal 60 Hz. It uses recorded original game input,
 not editor flight. Camera motion follows the player. Recording writes BMPs and
 is not a performance benchmark. Existing foliage and incomplete scenery remain
-M4 work; the native view currently shows one live map and its copied padding.
+M4 work; the native view currently shows one live map and its valid copied
+neighbour cells, but omits the repeated decorative forest border.
+
+## Known visible limitations after merge
+
+Reported 2026-09-12 after [PR #28](https://github.com/ChronoHaxx/rubyvr-studio/pull/28)
+merged as `0ea20c0`. The PR's five human checkboxes are checked against its
+prepared `ae4a3ef` implementation; their exact completion time was not recorded.
+The later screenshot does not independently identify its executable. Source
+inspection confirms these limitations in the merged implementation; no repair
+or retest is claimed by this documentation update.
+
+- **Camera/control mismatch (M9):** the view starts diagonally and can orbit,
+  but arrows still mean the original map's compass directions. The viewer has
+  inspection controls, not camera-relative gameplay controls or a north-up reset.
+  The separate [camera-input follow-up](live-camera.md) now addresses those two
+  controls and is in review, with native scripted checks passed and human input
+  pending. It does not change this merged build or the actor-facing defect below.
+- **Actor facing/readability (M6/RV-010):** rotating the sprite card does not
+  select the side/back frame appropriate to the new viewpoint. Always-upright
+  cards also become foreshortened at steep overhead angles.
+- **Missing forest border (M2/M5):** the original game repeats its map-specific
+  2x2 border pattern where the backup grid is undefined. Our renderer skips
+  these cells. Restoring them is separate from M4's unfinished tree models and
+  from loading whole neighbouring maps.
+- **Bag (M5/M7):** opening Bag still temporarily clears the scene; retained
+  scenery and intentional UI composition are unfinished.
+
+The [reference audit](references.md#camera-facing-and-border-follow-up-2026-09-12)
+records the source evidence; the [canonical roadmap](roadmap.md#current-focus)
+holds the remaining acceptance. Keep these limitations beside launch steps in
+future PRs. The initial walk/turn pass does not establish rotated-control,
+camera-facing, border completeness or headset acceptance.
 
 ## Delivered behavior
 
@@ -63,7 +95,7 @@ Agent checks on 2026-09-12:
 | Actual native walk | Route 101, five field actors in all 180 captured samples, no unsupported/unresolved actors in this sequence; x 16.5–18.5, z 22.5–24.5; one scenery build |
 | Local terrain | Walking traverses authored 0–1 px ground grades in this small area; the 16 px height/jump contract is separately established by the synthetic GL fixture. A live ledge jump/bridge crossing is not established here |
 | Native reload modes | Separate prepared field/Bag/return states: 5/0/5 actors; three frames presented per case |
-| Human/headset | Pending / not tested |
+| Human/headset | At agent capture: pending / not tested. Later: five checked PR steps; post-merge camera/border report still open, headset untested |
 
 The native test uses private runner changes based on
 `dad4c68251aa3adde77be47884b17870a151f429` and framework base
@@ -77,7 +109,9 @@ Unsupported affine, blended/object-window, mosaic and 8bpp actors are refused.
 The whole-object path does not reconstruct each subsprite's original BG
 priority: opaque 3D scenery supplies depth occlusion. Grass covering the feet,
 reflections, shadows, independent field-effect sprites, cycling/surf/dive,
-scripted special actors and all camera-relative facing modes remain M6 work.
+scripted special actors and broader camera-facing modes remain M6 work. The
+[normal-player facing/phase follow-up](live-facing.md) is now in review in PR #30;
+the original merged scope and its human acceptance are preserved here.
 The native OBJ buffer supports at most the existing 16 active object events.
 The captured scene contains the player and four other events; it does not
 establish coverage of every NPC or effect.
@@ -104,21 +138,23 @@ viewer. Original game input still belongs to the original window. This is a
 private local handoff, not a public executable download or a WSL game launcher.
 Public native distribution is still tracked in RV-007.
 
-Human check — required before merge, exact revision recorded in the PR:
+Original human checks — all five are checked in the merged PR for its prepared
+build. They establish only the expected behavior below; the [known issues above](#known-visible-limitations-after-merge)
+need separate repair and retesting. Future builds require their own checklist.
 
-- [ ] Start with the command above. Expect Route 101 with the original player
+- [x] Start with the command above. Expect Route 101 with the original player
   and other field actors in the voxel viewer, without missing-DLL prompts.
-- [ ] Focus the original game window. Hold Left briefly, release, then Right;
+- [x] Focus the original game window. Hold Left briefly, release, then Right;
   repeat Up/Down in the nearby clear space. Expect original walk/turn frames,
   smooth camera following, and a stopped player after release. The tree to the
   right blocks movement at the starting position; it is not a missing input.
-- [ ] Focus the voxel viewer. Use J/L and I/K to orbit, U/O to zoom and H to
+- [x] Focus the voxel viewer. Use J/L and I/K to orbit, U/O to zoom and H to
   toggle follow/map centre. Expect readable upright sprites and no camera
   control response after switching focus to the original game window.
-- [ ] In the original window press Enter, then X for Bag. Expect the existing
+- [x] In the original window press Enter, then X for Bag. Expect the existing
   temporary unavailable voxel view. Press Z to leave Bag and Z to close the
   menu if needed. Expect the player and scenery to return without stale art.
-- [ ] Close the original game window and run the same command again. Expect
+- [x] Close the original game window and run the same command again. Expect
   the same initial review state and normal movement. This checks handoff
   reopening; it is not an in-game save/load acceptance test.
 

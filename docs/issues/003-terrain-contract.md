@@ -1,5 +1,12 @@
 # Add the first versioned authored terrain surface and shared height query
 
+**M2/M5 update, 2026-09-12:** [source border forest](../live-borders.md) is in
+review in parent PR #29. The maintainer separately reported apparent walkable
+space being blocked and ledges activating too deeply after merging PR #30.
+That geometry/collision mismatch remains open: verify rendered edges, jump
+takeoff/landing, approach from both sides and walk-around continuity against
+Ruby's original movement query. Do not change collision to fit an incorrect mesh.
+
 Work package **RV-003** · M2 Terrain · help wanted, area: terrain · terrain/explorer/loading/base/bridge/region-query component merged; consumers pending
 
 ## Problem

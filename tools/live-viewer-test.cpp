@@ -24,6 +24,7 @@ int main(int,char**) {
     const auto context=SDL_GL_CreateContext(window);
     expect(context!=nullptr && vr::gl::load(),"GL context");
     expect(vr::viewer::init(window,false),"viewer init");
+    expect(vr::viewer::yaw_radians()==0,"gameplay starts north-up");
     vr::world::Snapshot field;
     field.valid=true; field.map_group=0;field.map_number=16;
     field.identity_source=vr::world::Snapshot::IdentitySource::LiveCapture;
@@ -52,6 +53,33 @@ int main(int,char**) {
     glReadPixels(0,0,1280,800,GL_RGBA,GL_UNSIGNED_BYTE,actor_pixels.data());
     int red=0;for(size_t i=0;i<actor_pixels.size();i+=4)red+=actor_pixels[i]>240 && actor_pixels[i+1]<10;
     expect(red>100,"actual player pixels in GL frame");
+    vr::viewer::set_yaw_radians(1.570796327f);vr::viewer::frame(field,false);
+    expect(vr::diorama::diorama_stats().geometry_hash==first,"orbit keeps the same scenery");
+    expect(vr::actor_render::stats().visible==1,"quarter-turn keeps the original actor visible");
+    // A stationary north-facing actor must show back/right/front/left art as
+    // the camera moves around it. Test actual GL colors, not only a facing enum.
+    sprite.world_facing=2;
+    for(int d=0;d<4;++d)sprite.directions[d].tiles.fill(uint8_t((d+1)*17));
+    field.obj_palette[2]=31<<10;field.obj_palette[3]=31|(31<<5);field.obj_palette[4]=0x7fff;
+    const uint8_t colors[4][3]={{0,0,255},{255,255,255},{255,0,0},{255,255,0}};
+    for(int q=0;q<4;++q) {
+        vr::viewer::set_yaw_radians(q*1.570796327f);vr::viewer::frame(field,false);
+        glReadPixels(0,0,1280,800,GL_RGBA,GL_UNSIGNED_BYTE,actor_pixels.data());
+        int count=0;for(size_t i=0;i<actor_pixels.size();i+=4)
+            count+=actor_pixels[i]==colors[q][0] && actor_pixels[i+1]==colors[q][1] && actor_pixels[i+2]==colors[q][2];
+        expect(count>100,"camera selects the corresponding original directional pixels in GL");
+        vr::diorama::player_cell(&px,&py,&pz);
+        expect(px==12.5f && pz==12.5f && py==0,"view-only change keeps actor foot stationary");
+        expect(vr::diorama::diorama_stats().geometry_hash==first,"directional art does not rebuild scenery");
+    }
+    sprite.world_facing=0;
+    vr::viewer::reset_camera();
+    expect(vr::viewer::yaw_radians()==0,"north-up reset is exact");
+    vr::viewer::set_yaw_radians(0.4f);
+    expect(vr::viewer::yaw_radians()==0,"grid view cannot settle between cardinal angles");
+    vr::viewer::set_yaw_radians(1.1f);
+    expect(vr::viewer::yaw_radians()==1.570796327f,"off-angle view request selects nearest cardinal angle");
+    vr::viewer::reset_camera();
     put(0x20,196);vr::viewer::frame(field,false);vr::diorama::player_cell(&px,&py,&pz);
     expect(px==12.25f && vr::diorama::diorama_stats().geometry_hash==first,"subtile actor move does not rebuild scenery");
     // Explicit terrain layer chooses the surface; visual jump leaves it alone.

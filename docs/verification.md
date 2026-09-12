@@ -358,6 +358,13 @@ geometry, history and input ownership unchanged.
 
 ## Evidence still needed
 
+Current desktop batch checks and the single human playtest are recorded in
+[demo controls and route](desktop-demo-batch.md#evidence-and-scope). New portable
+checks are `bash tools/test-actor-range.sh` and `python tools/test-demo-ledge.py`;
+the existing terrain-query and local GL suites cover the neutral ledge ground
+and panel/context ownership. `tools/check-runtime-host.py` only checks source
+hook markers; it cannot replace a native build or functional acceptance.
+
 Earlier development live/batch comparisons and short runtime fixtures remain
 historical evidence for their exact inputs. They are not a current full-pack
 runtime run. This extraction does not ship those captures or build the runner.

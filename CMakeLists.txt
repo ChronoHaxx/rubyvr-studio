@@ -34,7 +34,7 @@ set(STUDIO_CORE
     src/vr/diorama.cpp src/vr/gl_loader.cpp src/vr/json_scan.cpp
     src/vr/overrides.cpp src/vr/cutout.cpp src/vr/part_geometry.cpp
     src/vr/tileset.cpp src/vr/world_io.cpp)
-list(APPEND STUDIO_CORE src/vr/terrain.cpp src/vr/actor_frame.cpp src/vr/actor_render.cpp)
+list(APPEND STUDIO_CORE src/vr/terrain.cpp src/vr/actor_frame.cpp src/vr/actor_render.cpp src/vr/actor_range.cpp)
 
 set(RUBYVR_TARGETS rubyvr_studio)
 if(RUBYVR_BUILD_RUNTIME_TESTS)
@@ -42,7 +42,12 @@ if(RUBYVR_BUILD_RUNTIME_TESTS)
         integration/runtime/viewer.cpp integration/runtime/live_region.cpp
         integration/runtime/live_presentation.cpp integration/runtime/live_scene.cpp
         integration/runtime/screen_overlay.cpp src/vr/camera_input.cpp ${STUDIO_CORE})
+    target_sources(rubyvr_live_viewer_test PRIVATE src/dev/demo_panel.cpp
+        third_party/imgui/imgui.cpp third_party/imgui/imgui_draw.cpp third_party/imgui/imgui_tables.cpp third_party/imgui/imgui_widgets.cpp
+        third_party/imgui/backends/imgui_impl_sdl2.cpp third_party/imgui/backends/imgui_impl_opengl3.cpp)
+    target_include_directories(rubyvr_live_viewer_test PRIVATE third_party/imgui third_party/imgui/backends)
     target_include_directories(rubyvr_live_viewer_test PRIVATE integration/runtime)
+    target_compile_definitions(rubyvr_live_viewer_test PRIVATE SDL_MAIN_HANDLED)
     list(APPEND RUBYVR_TARGETS rubyvr_live_viewer_test)
 endif()
 add_executable(rubyvr_studio src/studio/compare.cpp src/studio/asset_catalog.cpp

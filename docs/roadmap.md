@@ -100,6 +100,17 @@ does not satisfy the other-player installation requirement. Do not change
 licences, contact upstream developers or publish a release without the required
 specific authorization. Continue independent demo work while this is resolved.
 
+**Batch 1 implementation, 2026-09-13 — awaiting combined review/human acceptance:**
+[demo controls and route](desktop-demo-batch.md) brings the existing test controls
+into the voxel viewer, retains previously observed ordinary NPCs beyond Ruby's
+live slots, and corrects Route 101's ledge surface/contact. The native route and
+component checks are recorded in that guide; the milestone remains unchecked.
+The [public host audit](runtime-host-audit.md) confirms menu extension callbacks
+and native function hooks exist upstream, but our frame/input/checkpoint/event
+integration is not available as a ready public adapter. Checkpoint safe-boundary
+latency remains a release-quality issue: the scripted route save took about
+28 seconds before completing. Preserve the original named states while testing.
+
 **Midweek decision:** surface a concrete blocker as soon as it threatens the
 target, with the smallest useful fallback and remaining work. Do not spend the
 whole week silently extending scope, quietly drop a camera mode, or label a
@@ -796,6 +807,10 @@ guest-memory reads from the VR thread.
   neighbour maps using verified presentation records; preserve script/event
   hiding, unknown state, identity and checkpoint/warp invalidation. The viewport
   cull repair above does not complete this broader pop-in requirement.
+  **Batch 1, awaiting acceptance:** retain the last observed pose of verified
+  ordinary NPCs on the current map, rechecking source flags/templates and both
+  spawn coordinates. Unseen actors, neighbour-map actors and offscreen simulation
+  remain open; no new gameplay actors are spawned.
 - [ ] Cover bikes, surf/dive, jumps/ledges, scripted movement and followers or
   special event actors where the supported game actually provides them.
 - [ ] Align feet/jump offsets to terrain layers; handle depth ordering,

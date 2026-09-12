@@ -1,114 +1,47 @@
 # Native developer mode
 
-**M5: implementation merged in PR #29; detailed developer human checks remain unreported.** This adds visible
-test controls to the private Windows Ruby runner. It is not the Studio map editor
-or an installable public game/mod package.
-
-The current build includes PR #29's merged tools, PR #30's merged
-[camera/facing fixes](live-camera.md), and [border forest restoration](live-borders.md).
-Use the single camera-session launcher below. Its checkpoints are preserved;
-the older developer build in the main checkout is historical.
-The [connected-scenery slice](live-connected-world.md) uses the same launcher
-and has all four human steps recorded passed in merged PR #31.
-The newer [desktop play-session slice](live-play-session.md) merged in PR #32,
-using that launcher with additional local battle/lab/field checkpoints and a
-separate five-step human checklist recorded passed for `31b95d2`.
-The [NPC views follow-up](live-npc-views.md) now adds **NPC views** beside the
-Littleroot walkers, through the same launcher. Its five human checks passed in PR #33;
-NPCs beyond Ruby's live slots and M9 free third-person/first-person remain open.
-
-![Developer menu and tree collision check in the native game](media/native-developer.gif)
-
-The recording comes from the actual native game and shared voxel renderer.
-The local harness drives the menu callbacks and guest input; it does not prove
-physical mouse/keyboard acceptance. Windows Computer Use capture failed with
-`SetIsBorderRequired: No such interface supported` on this machine.
-
-## Try the prepared build
-
-For the maintainer's prepared Windows workspace:
+**Current: [desktop demo batch 1](desktop-demo-batch.md), awaiting human acceptance.**
+The test controls are now available over the voxel viewer. This is the prepared
+private Windows game, separate from the Studio editor and a public installation.
 
 ```powershell
 & E:\Coding\vr-modding-research\_worktrees\live-camera\tools\run-dev-game.ps1
 ```
 
-In the **original Ruby window**, press **Esc**:
+The same launcher starts **NPC views** in Littleroot. Click **Demo controls** or
+press **Esc in the voxel viewer** for pause, one-frame stepping, speed, obstacle
+bypass and a direct list of named checkpoints. **Return to game** closes the
+panel. The original Ruby window retains its existing Esc menu.
 
-- **Developer:** game speed, pause, advance one frame, and walk through obstacles.
-- **Checkpoints:** select a named situation, load it, or enter a new name and
-  save the current situation. Names are never overwritten. Previous/Next select
-  the checkpoint; Load actually restores it.
+Select **Demo ledge**, **Demo battle**, **Demo lab ready** or another situation
+and click **Load selected situation**. Loading resets speed to 1x and disables
+obstacle bypass. Save under a new name; existing names are refused. Checkpoints
+stay separate from the normal game save. All existing prepared states are kept.
 
-The prepared session preserves **Route 101**, **Bag open**, and **Back from bag**.
-The play-session handoff also adds **Demo Bag**, **Demo battle**, **Demo lab ready**
-and **Demo field ready**; see that guide for their intended use.
-Create captures before a trainer, interaction, map transition or battle to return
-to that exact situation. Up to 64 named captures appear in the session.
-Checkpoint files and the test battery save live in `build/dev-session`, separately
-from normal play. The launcher prevents two instances sharing this test session.
+For normal play, arrows walk, J/L turn in 90-degree steps, R resets the view,
+I/K tilt and U/O zoom. Enter opens Start, X confirms/talks and Z goes back.
+Original Bag/Party/Options retain scenery; battles and interiors use the original
+frame in this viewer. The WSL Studio editor remains separate; Linux live-game
+support is not established by this prepared Windows build.
 
-Normal speed is **1x**. The other choices target **2x, 4x, 8x, 16x, 32x, 64x** or
-**MAX**, which removes the limiter. These speed up the whole game, including
-dialogue and battles. Hardware and rendering still limit the actual rate;
-accelerated sound is muted. Accelerated rendering targets 20 presentations per
-second while guest execution continues between them.
+Use the [current five-step human check and visible limitations](desktop-demo-batch.md#combined-human-check--pending).
+In particular, the measured route checkpoint save took about 28 seconds to reach
+a safe boundary; wait for **Saved** before closing. Unseen/neighbour NPCs, other
+routes' contact defects, free camera/movement, foliage polish, public setup and
+release performance remain unfinished. No new human acceptance is claimed yet.
 
-**Walk through obstacles** bypasses the player's collision query while on foot
-inside the verified current map. It does not disable events, grant invincibility,
-edit map data, or replace border transitions. Bikes, surfing, underwater movement,
-menus and unsupported ROMs retain normal behavior. Load a checkpoint to recover
-if an event or position stops further movement. Loading switches noclip off and
-returns speed to 1x.
+## Earlier developer slice
 
-**Reported after merge, 2026-09-12 (M5/M9):** the maintainer could only travel a
-short distance with noclip. The boundary/event restrictions above still apply;
-complete neighbouring scenery does not grant unrestricted travel. Debug warp
-and broader movement remain open roadmap work.
+The underlying controls merged in PR #29. Its launch/camera step was reported
+passed, while the detailed original developer checklist remained unreported.
+The new combined checklist supersedes those instructions for this revision;
+it does not retroactively tick the historical checks. PR #32's bounded menu/
+battle/interior session and PR #33's ordinary NPC views were accepted separately.
 
-To reopen another named capture, supply `-Checkpoint 'Your name'` to the same
-launcher. `-Fresh` boots normally at the title screen using the isolated test
-battery save. `-Check` verifies the prepared executable and inputs without opening
-the game. These are options to the same workflow, not additional required steps.
+The recording and implementation notes below preserve the earlier PR #29 scope.
+They do not describe the new panel or prove current physical-input acceptance.
 
-## Known visible limitations beside the test steps
-
-- **M9/M6:** camera-relative cardinal controls and normal-player facing are
-  included. [Ordinary NPC facing and viewport visibility](live-npc-views.md) are
-  in review; special-player facing, distant live-slot pop-in and free walking remain open.
-- **M2/M5:** the source border forest is included. The newly reported ledge
-  depth/geometry-versus-collision mismatch remains open; noclip does not fix it.
-- **M4/M10:** tree/grass polish and live geometry reuse/performance remain open.
-  Restoring the border increases the rendered tree count.
-- **M5/M7:** the voxel view still clears during Bag/unsupported scenes; use the
-  original game window. Keeping the world behind menus is still pending.
-- **M5:** arbitrary map warp, event/party/flag editing, encounter switches and
-  invincibility remain unimplemented. Existing Studio editing stays separate.
-- **M10:** the final recording reaches 1.63x at 4x requested and 1.76x at MAX,
-  missing the exploratory 2x throughput target with both windows and capture
-  enabled. MAX is not a promise
-  that this scene can run at 64x. No headset or Linux live-game acceptance is claimed.
-
-## Human functional check — pending
-
-Use the build revision recorded in the PR and printed by the launcher. Close its original Ruby
-window when finished; the same launcher reopens the session.
-
-- [ ] Launch with the command above. Press Esc in original Ruby and open
-  Developer; the five controls/status rows are visible.
-- [ ] Turn Pause on, then Advance one frame. The frame counter advances once
-  and remains still; turn Pause off to resume.
-- [ ] Try 4x and MAX, then return to 1x. Movement/dialogue speeds up subject to
-  the PC's limit, and ordinary movement works again at 1x.
-- [ ] Open Checkpoints, enter a new name and Save new checkpoint. Resume and
-  move, then Load that checkpoint: return to the captured position. Try saving
-  the same name again; it must report that the name already exists.
-- [ ] At the Route 101 start, try walking right into the trees. Enable Walk
-  through obstacles and walk right again: the player can enter the trees.
-  Load Route 101; noclip is off and speed is 1x again. Story triggers still run.
-- [ ] Load Bag open, then Back from bag. Close the game, reopen the same launcher,
-  and load your named capture. The saved situation remains available. Switch
-  focus between windows and verify ordinary movement and key release.
-
+![Earlier native developer menu and collision check](media/native-developer.gif)
 ## Verification and integration boundary
 
 `python tools/test-dev-session.py` compiles the host checkpoint/transport code

@@ -1,5 +1,13 @@
 # Watch the acceptance check
 
+**Current batch — [demo controls, distant NPCs and Route 101 ledge contact](desktop-demo-batch.md).**
+Agent/native checks pass; the combined human checklist is pending. Controls now
+open over the voxel viewer, remembered ordinary NPCs survive source distance
+removal, and the ledge jump keeps its visible character and original collision.
+Save latency and public runner installation remain open beside camera/foliage work.
+
+![Actual native demo batch](media/desktop-demo-batch.gif)
+
 **Merged PR #33 — [NPC camera views and nearby visibility](live-npc-views.md), M6 supporting M5.**
 The 18-second native recording shows ordinary NPCs from four camera views and
 walking away/back. Directional source art and queued-flip transitions are

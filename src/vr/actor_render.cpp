@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 #include "actor_render.h"
 #include "gl_loader.h"
+#include "actor_range.h"
 #include <cmath>
 #include <cstdio>
 
@@ -12,7 +13,8 @@ struct Item {
     uint8_t world_facing=0;
     float x=0,y=0,z=0; bool visible=false;
 };
-Item items[world::kObjectEventCount];
+Item items[world::kObjectEventCount+64];
+actor::RangeCache range;
 Stats result;
 GLuint program=0,vao=0,vbo=0;
 GLint matrix=-1,sampler=-1;
@@ -46,9 +48,10 @@ void main(){color=texture(image,texcoord);if(color.a<0.5)discard;})";
 }
 }
 const Stats& stats(){return result;}
-void clear(){result={};for(auto& item:items)item.visible=false;}
+void clear(){result={};range.reset();for(auto& item:items)item.visible=false;}
 void update(const world::Snapshot& s,const terrain::Resolved& terrain) {
-    clear();if(!s.valid)return;
+    result={};for(auto& item:items)item.visible=false;
+    range.update(s);if(!s.valid)return;
     for(int i=0;i<world::kObjectEventCount;++i) {
         auto& item=items[i];const auto& object=s.objects[i];
         if(!object.active || object.invisible)continue;
@@ -78,6 +81,23 @@ void update(const world::Snapshot& s,const terrain::Resolved& terrain) {
             // Follow ground contact; a jump is actor motion, not a camera lift.
             result.player_y=height.pixels/16.f;
         }
+    }
+    size_t index=world::kObjectEventCount;
+    for(const auto& remembered:range.distant()) {
+        auto& item=items[index++];const auto& p=remembered.position;
+        const int x=int(std::floor(p.x)),z=int(std::floor(p.z));
+        const auto height=terrain.query(x,z,remembered.object.elevation,p.x-x,p.z-z);
+        if(!height.resolved()){++result.unresolved;continue;}
+        item.x=p.x;item.y=height.pixels/16.f+p.lift;item.z=p.z;
+        if(!item.texture) {
+            glGenTextures(1,&item.texture);glBindTexture(GL_TEXTURE_2D,item.texture);
+            glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+            glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+            glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_CLAMP_TO_EDGE);
+            glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_CLAMP_TO_EDGE);
+        }
+        item.frame=remembered.frame;item.directions=remembered.directions;item.world_facing=remembered.facing;
+        item.visible=true;++result.visible;++result.distant;
     }
     glBindTexture(GL_TEXTURE_2D,0);
 }

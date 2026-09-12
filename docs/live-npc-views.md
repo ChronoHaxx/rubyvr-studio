@@ -1,5 +1,9 @@
 # NPC views and nearby visibility
 
+**Current follow-up:** [desktop demo batch 1](desktop-demo-batch.md) adds the
+voxel-view control panel, bounded distant NPC retention and Route 101 ledge
+contact. Its human acceptance is separate from the historical PR #33 result below.
+
 **M6 / RV-010, supporting the M5 playable demo — merged in PR #33 (`b4f6423`).** Ordinary NPCs now
 show their available front, back or side art when the camera turns. Loaded NPCs
 also remain visible past Ruby's original 2D screen edge. The game still owns
@@ -21,8 +25,9 @@ Use the prepared Windows game session:
 & E:\Coding\vr-modding-research\_worktrees\live-camera\tools\run-dev-game.ps1
 ```
 
-In the original Ruby window, **Esc > Checkpoints**, select **NPC views** and
-load it. This new local checkpoint starts beside the walking NPCs in Littleroot.
+The current launcher starts **NPC views**. To return, use **Demo controls** in
+the voxel viewer, select **NPC views**, and load it. The original window's
+**Esc > Checkpoints** also remains available. This local checkpoint starts beside the walking NPCs in Littleroot.
 Existing checkpoints are preserved. The launcher prints the exact prepared
 source revision; the draft PR records its build hash. No game assets or saves
 are distributed in this repository. The WSL Studio editor is a separate program.

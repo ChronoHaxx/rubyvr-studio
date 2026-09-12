@@ -77,6 +77,12 @@ remain open. All five human checks passed for `09d28c0`.
 
 ## What works
 
+**Current batch for review:** [demo controls, distant NPCs and Route 101 ledges](docs/desktop-demo-batch.md).
+Test controls open in the voxel viewer; previously seen ordinary NPCs survive
+source distance removal; the ledge jump keeps the player on its visible terrain.
+The same prepared launcher is used. Human acceptance, save-latency repairs and
+a public runner installation remain pending. [Host integration audit](docs/runtime-host-audit.md).
+
 - [Terrain authoring](docs/terrain-authoring.md): explicit heights, steps,
   materials/underlays and layered decks, with undo/save/reopen. A local
   [six-map example](docs/terrain-regions.md) exercises connected heights and

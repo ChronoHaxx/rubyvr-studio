@@ -53,6 +53,8 @@ void set_yaw_radians(float yaw);
 void reset_camera();
 bool camera_relative();
 void set_camera_relative(bool enabled);
+// Host overlay is optional; standalone rendering/tests keep no runtime dependency.
+void set_overlay(void (*draw)(SDL_Window*), bool (*owns_input)(), void (*shutdown)());
 
 // Update the mesh from `s`, draw one frame, and present. Must be called on the
 // thread that owns the GL context — which, in viewer mode, is the emulation

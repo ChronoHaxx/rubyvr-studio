@@ -17,6 +17,7 @@
 #include "ruby_world.h"
 #include "live_scene.h"
 #include "live_presentation.h"
+#include "actor_rules.h"
 
 #include "runtime_bus_bridge.h"   // gbarecomp::active_bus()
 #include "gba_bus.h"              // gba::GbaBus region pointers
@@ -183,6 +184,9 @@ bool source_map(int group,int number,Snapshot& out) {
 }
 
 bool capture(Snapshot& out, uint32_t previous_layout_ptr) {
+    if(g_seen_state_epoch!=g_runtime_state_epoch) {
+        g_seen_state_epoch=g_runtime_state_epoch;++g_presentation_epoch;
+    }
     out.valid = false;
     out.map_group=out.map_number=-1;
     out.identity_source=Snapshot::IdentitySource::Unknown;
@@ -193,6 +197,7 @@ bool capture(Snapshot& out, uint32_t previous_layout_ptr) {
     for (auto& source:out.actor_sources) source={};
     out.obj_tiles.clear();out.obj_palette.clear();out.obj_mapping_1d=false;
     out.actor_offset_x=out.actor_offset_y=0;
+    out.actor_range_safe=false;out.actor_templates.clear();
 
     gba::GbaBus* bus = gbarecomp::active_bus();
     if (!bus || !bus->rom_ptr()) return false;
@@ -274,6 +279,8 @@ bool capture(Snapshot& out, uint32_t previous_layout_ptr) {
         o.facing      = static_cast<uint8_t>(e[kObjDirection] & 0x0F);
         o.x           = rds16(e + kObjCurrentCoords + 0);
         o.y           = rds16(e + kObjCurrentCoords + 2);
+        o.local_id=e[8];o.map_number=e[9];o.map_group=e[10];
+        o.initial_x=rds16(e+12);o.initial_y=rds16(e+14);
         // Pinned Ruby gSprites (0x02020004), 64 entries of 0x44 bytes.
         // Sprite.data[0] must still identify this object event. Do not bind a
         // recycled sprite slot or a UI sprite to an old actor.
@@ -335,6 +342,7 @@ bool capture(Snapshot& out, uint32_t previous_layout_ptr) {
     }
     out.actor_offset_x=rds16(bus->iwram_ptr()+0x24d0);
     out.actor_offset_y=rds16(bus->iwram_ptr()+0x27e0);
+    live::capture_actor_rules(memory,out,g_presentation_epoch);
 
     // ── Metatile tables: ROM data, so only on a map change ───────────────────
     if (layout_ptr != previous_layout_ptr ||

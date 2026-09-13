@@ -314,7 +314,12 @@ Frame decode(const Source& source,std::span<const uint8_t> tiles,
     f.status=Status::Visible;return f;
 }
 Position position(const Frame& f,int view_x,int view_y,int base_x,int base_y,
-                  int offset_x,int offset_y,int cell_x,int cell_y) {
+                  int offset_x,int offset_y,int cell_x,int cell_y,const Motion* motion) {
+    // Reject stale/non-finite motion rather than moving an actor to a different
+    // cell. A tiny tolerance accommodates double-to-float rounding at a border.
+    if(motion && motion->valid && std::isfinite(motion->x) && std::isfinite(motion->z) &&
+       std::abs(motion->x-(cell_x+.5f))<=.50001f && std::abs(motion->z-(cell_y+.5f))<=.50001f)
+        return {motion->x,motion->z,-f.y2/16.f};
     // Invert the same 256px field ring used for map drawing. Choose its
     // incarnation nearest the event's destination tile, preserving step pixels.
     float x=view_x+(f.x+offset_x+f.x2-base_x)/16.f;

@@ -189,5 +189,10 @@ void input(Point direction,bool controls){
 }
 void reset(){intent={};owned=false;entry_pending=false;tracked_object=-1;}
 bool available(){return registered_step&&registered_transition&&registered_camera;}
+bool foot_position(int object_index,int x,int z,Point& out) {
+    if(!owned || epoch!=g_runtime_state_epoch || tracked_object!=object_index ||
+       cell_x!=x || cell_z!=z || !world::live::field_controls_available(memory()))return false;
+    out=position;return true;
+}
 Stats stats(){return {owned,position.x,position.z,ticks,entries,handoffs};}
 }

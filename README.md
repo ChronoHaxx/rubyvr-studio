@@ -78,6 +78,8 @@ remain open. All five human checks passed for `09d28c0`.
 ## What works
 
 **Current batch for review: [free walking, third-person and first-person](docs/free-camera-movement.md).**
+**13 September retest:** the reported diagonal shake is repaired in this PR;
+sustained movement still needs the maintainer's retest.
 Smooth camera-relative walking, diagonal movement, right-click mouse look and
 pitch-aware sprites work in the prepared native game. Watch the actual recording
 and use the same launcher in the guide. Human playtesting, ledge-corner repairs,

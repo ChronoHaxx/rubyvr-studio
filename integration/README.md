@@ -69,6 +69,13 @@ existing `gba_mod_register_function_entry_plugin`/enable API, bounded interprete
 bridge and call-stack save/restore API in the prepared host. These declarations
 are our hook configuration; no generated ROM code is distributed.
 
+The 13 September diagonal repair completes both collision-checked axes before
+one resulting-cell notification. A validated copy of the active player's exact
+foot travels in `actor::Source::motion`; the renderer and follow camera use that
+value instead of rounding back through the GBA Sprite. Capture refuses another
+actor/cell or load epoch, and the renderer accepts it only for the player. Native
+special/grid motion falls back to the unchanged source placement.
+
 The existing input filter supplies the view-relative fractional vector only
 while the viewer owns verified field controls. Original-window input restores
 native control. The viewer's event hook releases relative mouse capture on

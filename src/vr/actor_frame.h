@@ -6,6 +6,9 @@
 #include <vector>
 
 namespace vr::actor {
+// Optional precise foot copied from an active native movement owner. The GBA
+// Sprite itself stays pixel-rounded; the 3D camera must not inherit that rounding.
+struct Motion { bool valid=false; float x=0,z=0; };
 struct DirectionImage {
     std::array<uint8_t,512> tiles{}; // bounded original 4bpp image, up to 32x32
     uint16_t byte_count=256;
@@ -15,6 +18,7 @@ struct DirectionImage {
 // Transient, host-owned copy of one pinned Ruby Sprite; never a guest pointer.
 struct Source {
     std::array<uint8_t,68> sprite{};
+    Motion motion{};
     bool present=false;
     // Capture verified the owning live event is off-screen, not script-hidden.
     // This only bypasses Ruby's 2D draw cull; the original Sprite stays intact.
@@ -76,5 +80,6 @@ JumpSpan jump_span(const Source&,const Position&);
 // captured original arc is sampled over the remaining 20. No extra clock.
 float approach_jump_lift(const Source&,float original_lift);
 Position position(const Frame&, int view_x, int view_y,int base_x,int base_y,
-                  int offset_x,int offset_y,int cell_x,int cell_y);
+                  int offset_x,int offset_y,int cell_x,int cell_y,
+                  const Motion* motion=nullptr);
 }

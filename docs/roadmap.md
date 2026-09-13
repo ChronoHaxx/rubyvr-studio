@@ -136,7 +136,10 @@ stays in terrain/contact work.
 fractional/diagonal movement, continuous orbit, right-click mouse capture and
 speed, first-person player hiding, pitch-aware actor cards and camera continuity.
 Component/sanitizer, actual GL and native encounter/Bag/connection/checkpoint
-checks pass. A native partial-reversal camera defect found during integration
+checks pass. **13 September human failure:** diagonal movement shook after the
+`6c9bcd1` handoff. The current PR repairs axis loss at cell crossings and rounded
+camera placement; sustained diagonal, precise-foot and native regressions pass.
+Movement acceptance remains failed/pending retest, not restored by automated checks. A native partial-reversal camera defect found during integration
 is repaired. Six combined human checks remain pending. This does not finish
 lip-exact ledge triggers, corner art, camera obstacle avoidance or public setup.
 

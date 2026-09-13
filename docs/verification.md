@@ -2,6 +2,13 @@
 
 ## Free walking and camera modes — batch 2 in review, 2026-09-13
 
+**13 September diagonal follow-up:** the maintainer reported shake after
+`6c9bcd1`. The movement case remains failed/pending human retest. New 23-case
+movement and 3,504-case player suites pass with sanitizers, plus exact-foot GL
+checks. Two negative controls reject the old axis-drop/rounded-foot behavior.
+A native straight-diagonal segment and the existing 16 movement/input and six
+encounter/Bag/connection checks pass on the repaired build.
+
 [Actual native recording, check counts, worker accounting and six pending human
 steps](free-camera-movement.md). Free movement and billboard checks pass with
 ASan/UBSan; existing actor/camera/presentation suites pass. Windows GL verifies

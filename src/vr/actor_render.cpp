@@ -64,7 +64,8 @@ void update(const world::Snapshot& s,const terrain::Resolved& terrain) {
         if(frame.status==actor::Status::Unsupported || frame.status==actor::Status::Truncated)++result.unsupported;
         if(frame.status!=actor::Status::Visible)continue;
         const auto p=actor::position(frame,s.view_x,s.view_y,s.view_base_x,s.view_base_y,
-            s.actor_offset_x,s.actor_offset_y,object.x,object.y);
+            s.actor_offset_x,s.actor_offset_y,object.x,object.y,
+            item.player?&s.actor_sources[i].motion:nullptr);
         const int x=int(std::floor(p.x)),z=int(std::floor(p.z));
         const auto height=terrain.query(x,z,object.elevation,p.x-x,p.z-z);
         if(!height.resolved()){++result.unresolved;continue;}

@@ -18,6 +18,7 @@
 #include "live_scene.h"
 #include "live_presentation.h"
 #include "actor_rules.h"
+#include "free_walk_runtime.h"
 
 #include "runtime_bus_bridge.h"   // gbarecomp::active_bus()
 #include "gba_bus.h"              // gba::GbaBus region pointers
@@ -343,6 +344,15 @@ bool capture(Snapshot& out, uint32_t previous_layout_ptr) {
     out.actor_offset_x=rds16(bus->iwram_ptr()+0x24d0);
     out.actor_offset_y=rds16(bus->iwram_ptr()+0x27e0);
     live::capture_actor_rules(memory,out,g_presentation_epoch);
+    // Preserve the active player's fractional movement before it was rounded
+    // for the original GBA Sprite. It travels in the immutable frame snapshot,
+    // so retained menus, scene changes and the renderer share one camera foot.
+    if(out.player_index>=0 && out.player_index<kObjectEventCount) {
+        const auto& object=out.objects[out.player_index];free_walk::Point foot;
+        if(object.active && object.is_player && out.actor_sources[out.player_index].present &&
+           free_walk::runtime::foot_position(out.player_index,object.x,object.y,foot))
+            out.actor_sources[out.player_index].motion={true,float(foot.x),float(foot.z)};
+    }
 
     // ── Metatile tables: ROM data, so only on a map change ───────────────────
     if (layout_ptr != previous_layout_ptr ||

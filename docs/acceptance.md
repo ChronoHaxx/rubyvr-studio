@@ -1,6 +1,9 @@
 # Watch the acceptance check
 
 **Current batch — [free walking, third-person and first-person](free-camera-movement.md).**
+**13 September:** the maintainer failed the initial diagonal-motion check.
+Axis loss at cell boundaries and pixel-rounded camera follow are repaired;
+the current recording/checklist is updated and human retest remains pending.
 Continuous/diagonal walking, smooth orbit, right-click mouse look and pitch-aware
 sprites are ready for the combined human playtest. Native movement, checkpoint,
 ledge, encounter escape, Bag and map-connection checks pass; physical input

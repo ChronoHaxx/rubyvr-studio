@@ -1,6 +1,6 @@
 # Free walking, third-person and first-person
 
-**Batch 2, M5/M6/M9 — implementation ready for review; human playtest pending.**
+**Batch 2, M5/M6/M9 — diagonal shake repaired; human retest pending.**
 Third person and First person now move between Ruby's tile centres, including
 diagonally. The view can turn smoothly with the mouse while walking. Grid remains
 available. Player/NPC cards tilt toward the camera around their feet, so steep
@@ -11,6 +11,30 @@ views retain a readable sprite instead of showing its thin top edge.
 This recording uses the actual native game and shared renderer, with scripted
 input. It is sampled, captioned and retimed for review; it does not establish
 physical mouse feel, performance or headset acceptance.
+
+## Diagonal shake follow-up — 13 September
+
+The maintainer reported earthquake-like diagonal motion after the `6c9bcd1`
+handoff; they did not restate the tested revision. This fails the movement
+acceptance case, despite the earlier short automated walk passing. That evidence
+is retained as historical; it did not check sustained diagonal continuity.
+
+Two errors are repaired: a tile crossing discarded the second movement axis,
+and the 3D camera followed rounded GBA sprite pixels. The bounded movement step
+now completes both collision-checked axes and notifies Ruby once at the resulting
+cell. The renderer/camera receives the active player's precise foot in its
+immutable snapshot. It is validated against the actor, cell and load epoch;
+ordinary/native special movement keeps its source-pixel placement. No camera
+smoothing or change to mouse sensitivity is used to conceal the error.
+
+New long-diagonal tests cover all four signs across many tile boundaries at
+constant speed. Both deliberately broken controls fail their intended checks.
+An actual native open-ground segment had 0.0442-cell sideways camera deviation
+before; the corrected sampled positions remain on the diagonal to the recorded
+precision. The GL consumer also checks the exact fractional foot. Component,
+sanitizer, ledge/checkpoint/input and encounter/Bag/connection regressions pass.
+These measurements are not physical-input acceptance: repeat steps 1 and 3 below
+in particular before considering the batch ready to merge.
 
 ## Try the prepared build
 
@@ -39,15 +63,17 @@ Use the implementation/build revision recorded in the PR and printed by the
 launcher. Agent results below do not tick these boxes.
 
 - [ ] **Start and walk:** load **NPC views**, select **Third person**, close the
-  panel and use W, then W+D. Expect smooth movement in the view's direction and
-  a diagonal that is no faster than straight walking. Approach a tree/building:
+  panel and use W, then hold W+D, W+A, S+D and S+A over open ground for several
+  seconds each, including after rotating the view. Expect a steady, straight
+  diagonal with no shake and no extra speed. Approach a tree/building:
   ordinary collision should stop you.
 - [ ] **Mouse and release:** right-click, look and walk; select Slow if needed.
   Right-click again, press Esc, and Alt-Tab away/back. Expect a released cursor,
   usable panel and no stuck walking/spinning; release held keys before resuming.
 - [ ] **Camera and actors:** orbit around the nearby NPC and tilt steeply with I.
   Expect readable, foot-anchored player/NPC art. Try **First person**, then
-  **Grid**: your own card disappears only in first person; Grid restores 90° turns.
+  **Grid**: your own card disappears only in first person. Repeat a sustained diagonal
+  in first person; the camera should remain steady. Grid restores 90° turns.
 - [ ] **Ledge and connection:** load **Demo ledge**, choose Third person, walk
   down the straight ledge and try walking back up. Expect the native jump and
   blocked reverse climb. Walk between Route 101 and Littleroot and look back:
@@ -88,8 +114,10 @@ launcher. Agent results below do not tick these boxes.
 
 ## Implementation and reference checks
 
-The small body advances at most one source pixel per guest tick and resolves
-each crossed cell through Ruby's original event handling. Native collision,
+The small body advances at most one source pixel per guest tick. A completed
+step that enters a new cell notifies Ruby's original event handling once,
+including a diagonal corner crossing. Both body axes are checked before that
+notification; the next step waits for the original event handlers. Native collision,
 ledge, dialogue, encounter and connection routines remain authoritative. A
 checkpoint load invalidates host movement state and reconstructs the foot from
 the original sprite/camera data. Returning focus to the original window returns
@@ -117,10 +145,10 @@ the adapter verifies Ruby USA rev1 before reading/writing its supported layout.
 
 | Evidence | Result and scope |
 |---|---|
-| Free-walk component | 14 checks, optimized and ASan/UBSan: view direction, normalized diagonal, body collision, sliding, corner blocking, bounded steps and one cell crossing |
+| Free-walk component | 23 checks, optimized and ASan/UBSan: sustained straight diagonals through boundaries, constant speed, collision/sliding, corner blocking, bounded steps and cell notification |
 | Billboard component | 10,079 assertions, optimized and ASan/UBSan: basis, near-vertical view, foot pivot, finite guards and vertex geometry |
-| Existing camera/presentation/actor checks | Camera 1,107; presentation 53; player frame 3,500; NPC frame 16,363; actor range 25. Actor suites also pass sanitizers |
-| Actual Windows OpenGL viewer | Steep card retains height; first person hides only player; arbitrary yaw retained; battle-return yaw/pitch/mode preserved; existing actor, menu, overlay and connected-scene checks pass |
+| Existing camera/presentation/actor checks | Camera 1,107; presentation 53; player frame 3,504; NPC frame 16,363; actor range 25. Actor suites also pass sanitizers |
+| Actual Windows OpenGL viewer | Exact fractional camera/actor foot survives rounded source pixels; steep card retains height; first person hides only player; arbitrary yaw retained; battle-return yaw/pitch/mode preserved; existing actor, menu, overlay and connected-scene checks pass |
 | Native movement sequence | 16 checks: fractional/diagonal movement, grid return, native ledge/reverse collision, fractional checkpoint, repeated partial reversals and scripted Windows mouse capture/release |
 | Native gameplay journey | Six checks: a real wild encounter, successful Run (`gBattleOutcome == 4`) with north/free mode preserved, Bag retention/return, native connection and return |
 | Native Windows build | Passed with existing upstream warnings. No physical input or headset acceptance inferred |
@@ -149,3 +177,6 @@ tests, integrated the renderer and accepted the bounded result; no functional
 repair to the worker helper was required. Native movement, integration, the
 partial-reversal repair, recording and acceptance work were Astra's work and
 are not claimed as worker time savings.
+
+This follow-up is Astra integration rework attributed to PR #35, with no new
+DeepSeek call or API charge. The original billboard worker result is unchanged.

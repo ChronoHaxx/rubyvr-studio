@@ -153,6 +153,15 @@ int main(int,char**) {
     vr::viewer::reset_camera();
     put(0x20,196);vr::viewer::frame(field,false);vr::diorama::player_cell(&px,&py,&pz);
     expect(px==12.25f && vr::diorama::diorama_stats().geometry_hash==first,"subtile actor move does not rebuild scenery");
+    // Simulate rounded source pixels during diagonal walking. The production
+    // actor/camera foot must instead follow the precise immutable motion sample.
+    for(int tick=0;tick<10;++tick) {
+        const float x=12.25f+tick*.044194174f,z=12.75f-tick*.044194174f;
+        sprite.motion={true,x,z};put(0x20,int(std::lround(x*16)));put(0x22,int(std::lround(z*16))-8);
+        vr::viewer::frame(field,false);vr::diorama::player_cell(&px,&py,&pz);
+        expect(std::abs(px-x)<.00001f&&std::abs(pz-z)<.00001f,"actual GL consumer retains subpixel diagonal camera foot");
+    }
+    sprite.motion={};put(0x20,196);put(0x22,192);vr::viewer::frame(field,false);
     // Explicit terrain layer chooses the surface; visual jump leaves it alone.
     vr::overrides::OverrideSet authored;authored.version=vr::overrides::kTerrainVersion;vr::overrides::TerrainMap tm;
     tm.group=0;tm.number=16;tm.width=25;tm.height=24;

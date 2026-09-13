@@ -44,11 +44,13 @@ Step advance(Point p,Point v,double distance,Blocked blocked,void* context) {
         out.position=candidate;
         out.crossed=int(std::floor(candidate.x))!=old_x || int(std::floor(candidate.z))!=old_z;
     };
-    // Larger axis first prevents a persistent diagonal preference. Stop on a
-    // crossing so the game can run its script/encounter/warp before continuing.
+    // Resolve both components of this bounded step. Dropping the second axis
+    // at a tile boundary bends a straight diagonal and jerks its follow camera.
+    // The caller notifies the game once, at the resulting cell, before another
+    // step; body checks still prevent cutting through a blocked corner.
     const bool x_first=std::abs(v.x)>=std::abs(v.z);
     sweep(x_first,x_first?v.x:v.z);
-    if(!out.crossed)sweep(!x_first,x_first?v.z:v.x);
+    sweep(!x_first,x_first?v.z:v.x);
     return out;
 }
 }

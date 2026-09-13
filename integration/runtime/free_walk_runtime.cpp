@@ -21,6 +21,7 @@ Point intent{},position{};
 bool owned=false,entry_pending=false,calling=false;
 bool viewer_controls=true;
 int tracked_object=-1,cell_x=0,cell_z=0;
+int door_contact=0;
 uint64_t ticks=0,entries=0,handoffs=0;
 uint64_t epoch=~uint64_t(0);
 const uint8_t* checked_rom=nullptr;
@@ -88,13 +89,16 @@ bool blocked(int x,int z,int direction,void* context) {
 void release(uint8_t* sprite,bool centre) {
     if(owned && centre && sprite)shift_sprite(sprite,position,{cell_x+0.5,cell_z+0.5});
     if(owned)++handoffs;
-    owned=false;entry_pending=false;tracked_object=-1;
+    owned=false;entry_pending=false;tracked_object=-1;door_contact=0;
 }
 int intercept(uint32_t address,int thumb,ArmCpuState* cpu) {
     if(calling || !thumb || !cpu || !viewer::active())return 0;
     if(epoch!=g_runtime_state_epoch){epoch=g_runtime_state_epoch;reset();}
     const auto m=memory();
-    if(!world::live::field_controls_available(m)){release(nullptr,false);return 0;}
+    // The selected camera mode persists indoors, but ownership must not. Ruby
+    // uses the same field callbacks there while input uses original 2D axes.
+    // Read the guest map type, not a potentially one-frame-old rendered scene.
+    if(!world::live::outdoor_controls_available(m)){release(nullptr,false);return 0;}
     if(address==camera_entry){
         auto* camera=writable(0x03004880,0x18);
         if(!camera || s32(camera+4)<=0 || s32(camera+4)>=64)return 0;
@@ -147,15 +151,27 @@ int intercept(uint32_t address,int thumb,ArmCpuState* cpu) {
     const Point before=position;
     const auto moved=advance(position,intent,1.0/16,blocked,reinterpret_cast<void*>(uintptr_t(object_address)));
     ++ticks;
-    if(moved.blocked && !moved.crossed) {
+    if(moved.blocked) {
         const auto scene=world::live::inspect(m);
         Point push{moved.blocked_x?intent.x:0,moved.blocked_z?intent.z:0};
         // Check the denied axis even if the other axis can slide. At a corner,
         // try the stronger contact first, then the other blocked direction.
-        // A cell crossing instead completes below, letting Ruby process its
-        // event before a special action is considered on the next tick.
+        // A door can take this uncommitted step before a tangential cell
+        // crossing slips past its one-cell entrance. Other special contacts
+        // still complete a crossing first and run its event on the next tick.
         for(int contact=free_walk::facing(push);contact;contact=free_walk::facing(push)) {
             const int nx=x+(contact==4)-(contact==3),nz=z+(contact==1)-(contact==2);
+            if(contact==2 && guest(0x08056EB8,guest(0x080564BC,uint16_t(nx),uint16_t(nz)))) {
+                // Ruby opens north-facing doors before player_step. Give its
+                // next input/interaction pass this contact direction, then let
+                // the original warp/script decide whether entry is permitted.
+                // No teleport, duplicate event dispatch, or collision bypass.
+                door_contact=contact;
+                guest(0x0805C530,object_address,contact);
+                sprite[0x2c]|=0x40;avatar[2]=0;
+                cpu->R[15]=cpu->R[14]&~1u;return 1;
+            }
+            if(moved.crossed){if(contact>=3)push.x=0;else push.z=0;continue;}
             const auto collision=guest(0x0805FF80,object_address,uint16_t(nx),uint16_t(nz),contact);
             const bool ledge=guest(0x08063BE4,uint16_t(nx),uint16_t(nz),contact)!=0;
             const bool border=nx<7 || nz<7 || nx>=scene.width-8 || nz>=scene.height-7;
@@ -197,7 +213,9 @@ const bool registered_step=gba_mod_register_function_entry_plugin("rubyvr.free-w
 const bool registered_transition=gba_mod_register_function_entry_plugin("rubyvr.free-walk.transition",transition_entry,1,intercept)!=0;
 const bool registered_camera=gba_mod_register_function_entry_plugin("rubyvr.free-walk.camera",camera_entry,1,intercept)!=0;
 }
-void input(Point direction,bool controls){
+int input(Point direction,bool controls){
+    const int native_direction=free_walk::contact_facing(direction,controls?door_contact:0);
+    door_contact=0;
     intent=direction;viewer_controls=controls;
     // The host resets plugins on state load. These guards are safe while grid
     // mode is selected too, and must run once to return fractional motion home.
@@ -206,12 +224,13 @@ void input(Point direction,bool controls){
         gba_mod_set_function_hook_enabled("rubyvr.free-walk.transition",1);
         gba_mod_set_function_hook_enabled("rubyvr.free-walk.camera",1);
     }
+    return native_direction;
 }
-void reset(){intent={};owned=false;entry_pending=false;tracked_object=-1;}
+void reset(){intent={};owned=false;entry_pending=false;tracked_object=-1;door_contact=0;}
 bool available(){return registered_step&&registered_transition&&registered_camera;}
 bool foot_position(int object_index,int x,int z,Point& out) {
     if(!owned || epoch!=g_runtime_state_epoch || tracked_object!=object_index ||
-       cell_x!=x || cell_z!=z || !world::live::field_controls_available(memory()))return false;
+       cell_x!=x || cell_z!=z || !world::live::outdoor_controls_available(memory()))return false;
     out=position;return true;
 }
 Stats stats(){return {owned,position.x,position.z,ticks,entries,handoffs};}

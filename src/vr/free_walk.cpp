@@ -17,6 +17,12 @@ int facing(Point v) {
     if(!std::isfinite(v.x)||!std::isfinite(v.z)||std::hypot(v.x,v.z)<1e-9)return 0;
     return std::abs(v.x)>std::abs(v.z)?(v.x>0?4:3):(v.z>0?1:2);
 }
+int contact_facing(Point v,int contact) {
+    const int normal=facing(v);
+    if(!normal)return 0;
+    const double push=contact==1?v.z:contact==2?-v.z:contact==3?-v.x:contact==4?v.x:0;
+    return push>1e-9?contact:normal;
+}
 Step advance(Point p,Point v,double distance,Blocked blocked,void* context) {
     Step out{p};
     if(!std::isfinite(p.x)||!std::isfinite(p.z)||std::abs(p.x)>32760||std::abs(p.z)>32760||

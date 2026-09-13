@@ -143,8 +143,13 @@ camera placement; sustained diagonal, precise-foot and native regressions pass.
 approaches failed. The contact-direction handoff is repaired in this same PR;
 twelve native approach cases, downhill landings and blocked reverse checks pass.
 The expanded ledge playtest and a focused native comparison are in the batch guide.
+**Further M5/M9 human failure after `4d1fb46`:** house/interior entry could hang
+with a free camera selected. Native reproduction found indoor input interception
+and missed shallow door approaches. Both are repaired in this same PR; four
+house entry/walk/exit cases pass with the camera and heading retained. The guide
+adds a house clip, checkpoint and human check. Interiors retain original graphics.
 Movement acceptance remains failed/pending retest, not restored by automated checks. A native partial-reversal camera defect found during integration
-is repaired. Six combined human checks remain pending. This does not finish
+is repaired. Seven combined human checks remain pending. This does not finish
 lip-exact ledge triggers, corner art, camera obstacle avoidance or public setup.
 
 The [public host audit](runtime-host-audit.md) confirms menu extension callbacks

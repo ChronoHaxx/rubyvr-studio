@@ -1,6 +1,13 @@
 # Watch the acceptance check
 
 **Current batch — [free walking, third-person and first-person](free-camera-movement.md).**
+**Interior follow-up after `4d1fb46`:** house entry could miss a shallow approach,
+and free movement consumed indoor walking input. The repaired handoff passes
+four house entry/walk/exit approaches in Third/First person (20 native assertions).
+The focused house clip and new **House approach** checkpoint are in the guide.
+Repeat its house step; this remains failed/pending human retest. Interiors keep
+their original 2D view while the chosen outdoor camera is retained.
+
 **Angled ledge follow-up:** the maintainer's `ce1b542`-era report is reproduced;
 the old build fails ten angled/diagonal approaches. The corrected native handoff
 passes all twelve approaches across Third/First person, including blocked uphill
@@ -14,7 +21,7 @@ the current recording/checklist is updated and human retest remains pending.
 Continuous/diagonal walking, smooth orbit, right-click mouse look and pitch-aware
 sprites are ready for the combined human playtest. Native movement, checkpoint,
 ledge, encounter escape, Bag and map-connection checks pass; physical input
-acceptance is pending. Use the guide's same launcher and six checks.
+acceptance is pending. Use the guide's same launcher and seven checks.
 
 ![Actual native free walking and camera modes](media/free-camera-movement.gif)
 

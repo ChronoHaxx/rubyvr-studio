@@ -101,8 +101,23 @@ int main() {
     put(kMain,kOverworldInputCallback);put(kMain+4,kOverworldCallback);
     put(vr::world::kGPlayerAvatar,1);
     expect(field_controls_available(memory),"verified ordinary on-foot field accepts camera input");
+    // An indoor overworld callback is still a valid native field. The optional
+    // outdoor controller must not swallow its input when a free camera remains
+    // selected, including during the frame before the renderer changes views.
+    for(unsigned type=0;type<256;++type){
+        put(vr::world::kGMapHeader+0x17,type);
+        expect(outdoor_controls_available(memory)==(type>=1&&type<=3),
+               "only town/city/route maps grant outdoor movement ownership");
+    }
+    for(unsigned type:{4u,5u,6u,7u,8u,9u}){
+        put(vr::world::kGMapHeader+0x17,type);
+        expect(field_controls_available(memory)&&!outdoor_controls_available(memory),
+               "indoor and other map types keep native field controls");
+    }
+    put(vr::world::kGMapHeader+0x17,2);
     iwram[kFieldControlsLock&0x7fff]=1;
     expect(!field_controls_available(memory),"start-menu/dialogue field lock retains raw navigation");
+    expect(!outdoor_controls_available(memory),"outdoor map does not bypass native input locks");
     iwram[kFieldControlsLock&0x7fff]=0;put(kMain,0);
     expect(!field_controls_available(memory),"other input callback refuses remapping");
     put(kMain,kOverworldInputCallback);put(kMain+4,0);
@@ -116,7 +131,9 @@ int main() {
     }
     put(vr::world::kGPlayerAvatar,1);memory.verified_ruby_rev1=false;
     expect(!field_controls_available(memory),"unknown ROM keeps original behavior");
+    expect(!outdoor_controls_available(memory),"outdoor gate refuses an unverified ROM");
     memory.verified_ruby_rev1=true;memory.iwram={};
     expect(!field_controls_available(memory),"unreadable state refuses remapping");
+    expect(!outdoor_controls_available(memory),"outdoor gate refuses incomplete memory");
     std::cout<<"PASS: "<<checks<<" camera input and verified field-control checks\n";
 }

@@ -2,7 +2,8 @@
 #pragma once
 #include "free_walk.h"
 namespace vr::free_walk::runtime {
-void input(Point direction,bool viewer_controls=true);
+// Returns the cardinal input for Ruby's original pre-step event handlers.
+int input(Point direction,bool viewer_controls=true);
 void reset();
 bool available();
 // Capture on the emulation thread only. Refuses another actor/cell or load epoch.

@@ -1,6 +1,6 @@
 # Free walking, third-person and first-person
 
-**Batch 2, M5/M6/M9 — diagonal shake and angled ledge handoff repaired; human retest pending.**
+**Batch 2, M5/M6/M9 — diagonal shake, angled ledges and interior control handoff repaired; human retest pending.**
 Third person and First person now move between Ruby's tile centres, including
 diagonally. The view can turn smoothly with the mouse while walking. Grid remains
 available. Player/NPC cards tilt toward the camera around their feet, so steep
@@ -63,6 +63,31 @@ ASan/UBSan, covering all four contact normals and parallel/departing motion.
 Repeat the affected ledge check below; this does not repair corner geometry or
 the separately tracked visible-lip/trigger mismatch.
 
+## House/interior follow-up — 13 September
+
+After the `4d1fb46` handoff, the maintainer reported house-entry hangs in oblique
+Third person and First person. The native reproducer found two defects. Indoors,
+the free adapter consumed walking input even though the viewer used Ruby's
+original view. At a shallow doorway approach, the dominant sideways input could
+also prevent Ruby's earlier door-opening handler from seeing a northward push.
+
+![Actual diagonal house entry, interior walking and camera return](media/free-interior-return.gif)
+
+The adapter now yields indoors using the current native map type. At an outdoor
+door contact, it supplies the contact direction to Ruby's next normal input
+pass while the player keeps pushing into the door. Ruby still checks and runs
+the original warp/script. Releasing or turning away cancels that direction.
+The selected camera and heading remain available when returning outdoors.
+Interiors still use their original 2D graphics and controls.
+
+All four native house approaches pass: cardinal-view diagonal keys, oblique
+Third person, oblique First person and shallow First person. Each verifies
+normal collision, entry, walking indoors, exit with the same mode/heading and
+resumed outdoor movement ownership (20 assertions). The lab sequence also passed
+six ownership, walking and return checks after the interior gate repair. The
+10-second clip shows the actual house sequence in Third person, scripted and
+retimed. It is not an all-interior or physical-input acceptance result.
+
 ## Try the prepared build
 
 Close the old game, then use the same Windows launcher:
@@ -75,6 +100,8 @@ The existing prepared runner, local game inputs and named checkpoints are the
 prerequisites. This is the maintainer's prepared Windows game, not the separate
 WSL Studio editor or a public installation recipe. The launcher verifies the
 executable and pack; existing saves/checkpoints and the previous binary are kept.
+The new **House approach** checkpoint starts outside the tested house with
+obstacle bypass off; all ten previous checkpoints remain available.
 
 Open **Demo controls → Camera and movement → Third person**. WASD/arrows walk;
 right-click toggles mouse look. Right-click again releases it. Escape releases
@@ -111,6 +138,12 @@ launcher. Agent results below do not tick these boxes.
   choose Run and return. Repeat with another heading. Expect the chosen view/mode
   to survive. Open Start → Bag and return, then talk to an NPC: original menus
   and dialogue should still respond without walking through them.
+- [ ] **House entry and return:** load **House approach**, select **Third person**,
+  reset the view with R, and approach the door using W+D. Expect the house to
+  open, then ordinary indoor walking with WASD/arrows. Walk back out and expect
+  the same Third person view. Reload the checkpoint, select **First person**,
+  turn the camera obliquely with J/L and approach again. Expect indoor controls
+  and the same First person heading on exit; release held keys before resuming.
 - [ ] **Save and reopen:** stop between tile centres, save a uniquely named
   checkpoint, move and reload it. Expect the same foot position within one source
   pixel. Close/reopen using the command above and load it again. The new process
@@ -178,16 +211,26 @@ native hook registry restores registers when a callback declines, so the adapter
 must execute one bounded original step with the contact direction and handle its
 return. Merely changing a register and declining cannot redirect the jump.
 
-## Agent verification — passed, separate from human results
+For the interior repair, the same cached `FreeMove.lua` yields to script/input
+locks and uses original collision/warp behavior. Ruby's pinned
+`field_control_avatar.c` handles north-facing warp doors in
+`ProcessPlayerFieldInput`, before `player_step`; the adapter therefore supplies
+one contact-directed input pass rather than dispatching a warp itself. Both
+input mapping and free ownership use `outdoor_controls_available`: verified,
+unlocked town/city/route maps only. Generic field controls remain valid indoors.
+This native gate does not depend on the renderer's possibly older scene.
+
+## Agent verification — scope and limitations
 
 | Evidence | Result and scope |
 |---|---|
-| Free-walk component | 49 checks, optimized and ASan/UBSan: sustained straight diagonals through boundaries, constant speed, contact normals during shallow/diagonal sliding, parallel/departing motion, corner blocking, bounded steps and cell notification |
+| Free-walk component | 66 checks, optimized and ASan/UBSan: sustained diagonals, speed, sliding/contact normals, corner blocking, bounded steps, cell notification and cancelling pending door direction on release/reversal/parallel/invalid input |
 | Billboard component | 10,079 assertions, optimized and ASan/UBSan: basis, near-vertical view, foot pivot, finite guards and vertex geometry |
-| Existing camera/presentation/actor checks | Camera 1,107; presentation 53; player frame 3,504; NPC frame 16,363; actor range 25. Actor suites also pass sanitizers |
+| Camera/presentation/actor checks | Camera 1,372 and presentation 53 pass on Windows and WSL ASan/UBSan; camera coverage includes all 256 map-type bytes and indoor native control. Earlier unchanged player frame 3,504, NPC frame 16,363 and actor range 25 results remain regression evidence |
 | Actual Windows OpenGL viewer | Exact fractional camera/actor foot survives rounded source pixels; steep card retains height; first person hides only player; arbitrary yaw retained; battle-return yaw/pitch/mode preserved; existing actor, menu, overlay and connected-scene checks pass |
 | Native movement sequence | 16 checks: fractional/diagonal movement, grid return, native ledge/reverse collision, fractional checkpoint, repeated partial reversals and scripted Windows mouse capture/release |
 | Native angled ledges | 48 assertions across twelve Third/First person approaches: original jump action, landing, unchanged heading and blocked reverse; old build fails all ten angled/diagonal jump cases |
+| Native house/interior return | 20 house assertions across four approaches: normal collision, completed entry, native indoor walking, restored camera/heading and outdoor ownership. Six lab checks passed after the ownership gate repair |
 | Native gameplay journey | Six checks: a real wild encounter, successful Run (`gBattleOutcome == 4`) with north/free mode preserved, Bag retention/return, native connection and return |
 | Native Windows build | Passed with existing upstream warnings. No physical input or headset acceptance inferred |
 
@@ -195,6 +238,9 @@ The native connection outward leg used the existing obstacle bypass to reach
 the border; return used ordinary collision. The Bag sequence followed battle
 return; it is not exhaustive coverage of every fractional menu position. Native
 drivers, private saves and raw captures remain local under `build/dev-session`.
+The first movement regression run could not acquire window focus and failed its
+two mouse assertions. With no other probe active, the unchanged rerun acquired
+focus and passed all 16 checks. This still does not establish physical mouse feel.
 The reproducible public component checks need no SDL, OpenGL or game assets:
 
 ```bash

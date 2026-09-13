@@ -133,6 +133,12 @@ bool field_controls_available(const Memory& m) {
         !(main[0x43d]&2) && (avatar[0]&1) && !(avatar[0]&0x1e);
 }
 
+bool outdoor_controls_available(const Memory& m) {
+    if(!field_controls_available(m))return false;
+    const auto* header=m.read(kGMapHeader,28);
+    return header && header[0x17]>=1 && header[0x17]<=3;
+}
+
 Scene inspect(const Memory& m) {
     Scene out;
     auto refuse = [&](Status status) {

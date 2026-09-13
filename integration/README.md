@@ -78,7 +78,7 @@ special/grid motion falls back to the unchanged source placement.
 
 The angled-ledge follow-up preserves each blocked body axis and checks the
 adjacent special tile in that axis's direction even while the other axis slides.
-A cell crossing completes before special handoff. On a valid ledge/push/exit,
+A cell crossing completes before ledge/push/border handoff. On a valid contact,
 discard the uncommitted slide, centre the existing sprite, and invoke one bounded
 original `player_step` with the contact direction and original action buttons.
 The hook handles the return: a declined hook restores CPU registers, so changing
@@ -87,12 +87,27 @@ Ruby still validates/executes the special action; ordinary wall sliding and the
 collision dimensions are unchanged.
 
 The existing input filter supplies the view-relative fractional vector only
-while the viewer owns verified field controls. Original-window input restores
+while the viewer owns verified outdoor field controls. Original-window input restores
 native control. The viewer's event hook releases relative mouse capture on
 Escape, focus loss, scene changes and panel use. Button-only host recording and
 replay cannot encode the free vector/camera pose, so the panel refuses free modes
 when either is active. Original Grid playback is unchanged. See the batch guide
 for centring, special-action, camera-collision and platform limitations.
+
+The interior follow-up shares `outdoor_controls_available` between the input
+filter and movement adapter. It checks current guest map type (town/city/route),
+verified ROM and unlocked field callbacks. Interiors keep generic field control
+but cannot be adopted by free movement, even if the renderer still shows the
+previous outdoor frame. The selected camera survives the native indoor session.
+
+Ruby's `ProcessPlayerFieldInput` handles north-facing doors before `player_step`.
+On blocked contact with `MetatileBehavior_IsWarpDoor`, the adapter retains the
+current foot, sets native facing and queues that direction for the next input
+pass. This can preempt an uncommitted tangential cell crossing past the entrance;
+no crossing/event is committed twice. `contact_facing` applies it only while
+input still pushes into that contact; release, reversal, parallel input, control
+loss and reset cancel it. Ruby's original handler validates and performs the
+warp/script. Other special actions and collision dimensions are unchanged.
 
 Public adapter source and configuration are not a complete upstream host patch;
 the separately licensed local runner integration and public installation work

@@ -2,6 +2,17 @@
 
 ## Free walking and camera modes — batch 2 in review, 2026-09-13
 
+**13 September interior follow-up:** the `4d1fb46` native build consumes indoor
+walking input while a free camera remains selected. After fixing that ownership
+gate, a shallow approach also reproduced a missed native door-opening event.
+Both are repaired: all four normal-collision house entry/walk/exit approaches
+pass (20 assertions) with Third/First person camera and heading retained. The
+lab gate/return sequence passed six checks. Camera 1,372 and presentation 53 pass
+on Windows and WSL ASan/UBSan; movement 66 passes optimized and ASan/UBSan.
+The ledge (48) and encounter/Bag/connection (six) native checks pass again.
+The new house clip and checkpoint support the affected human retest; current
+acceptance remains failed/pending. Interiors retain original 2D graphics.
+
 **13 September angled-ledge follow-up:** the native reproducer fails ten
 angled/diagonal approaches on `ce1b542`. The repair preserves each blocked axis
 and executes Ruby's original step toward the valid special tile even while
@@ -17,7 +28,7 @@ checks. Two negative controls reject the old axis-drop/rounded-foot behavior.
 A native straight-diagonal segment and the existing 16 movement/input and six
 encounter/Bag/connection checks pass on the repaired build.
 
-[Actual native recording, check counts, worker accounting and six pending human
+[Actual native recording, check counts, worker accounting and seven pending human
 steps](free-camera-movement.md). Free movement and billboard checks pass with
 ASan/UBSan; existing actor/camera/presentation suites pass. Windows GL verifies
 steep sprite readability, first-person hiding and camera retention. Sixteen

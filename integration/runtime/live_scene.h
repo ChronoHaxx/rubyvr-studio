@@ -57,6 +57,9 @@ bool decode_tiles(std::span<const uint8_t> packed, size_t limit,
 // Normal on-foot field control only. Start menu/dialogue locks, other callbacks,
 // bikes/surf and unknown ROMs keep their original directional input.
 bool field_controls_available(const Memory& memory);
+// Only the outdoor map types currently rendered with 3D movement. Interiors
+// use the same guest callbacks but must retain native controls and stepping.
+bool outdoor_controls_available(const Memory& memory);
 const char* status_name(Status status);
 
 } // namespace vr::world::live

@@ -21,6 +21,15 @@ int main(){
     check(near(e.x,1)&&near(e.z,0)&&facing(e)==4,"west eye looks east");
     check(facing(direction(0x30f,0))==0,"opposite keys cancel");
     check(facing(direction(0x3bf,std::numeric_limits<double>::quiet_NaN()))==0,"invalid yaw is idle");
+    for(int contact:{1,2,3,4}) {
+        const Point into=contact==1?Point{4,1}:contact==2?Point{4,-1}:contact==3?Point{-1,4}:Point{1,4};
+        check(contact_facing(into,contact)==contact,"shallow push can aim a native door event along its contact");
+        check(contact_facing({-into.x,-into.z},contact)==facing({-into.x,-into.z}),"reversal cancels pending contact");
+        const Point parallel=contact<3?Point{1,0}:Point{0,1};
+        check(contact_facing(parallel,contact)==facing(parallel),"parallel input cancels pending contact");
+        check(contact_facing({},contact)==0,"key release cannot trigger pending contact");
+    }
+    check(contact_facing({std::numeric_limits<double>::quiet_NaN(),-1},2)==0,"invalid input cannot trigger a door");
     std::set<std::pair<int,int>> walls;
     Point p{10.5,10.5};int entries=0;
     for(int i=0;i<16;++i){auto r=advance(p,n,1.0/16,blocked,&walls);p=r.position;entries+=r.crossed;}

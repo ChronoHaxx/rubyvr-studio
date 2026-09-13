@@ -8,6 +8,9 @@ struct Point { double x=0, z=0; };
 // have the same speed as straight movement; conflicting keys cancel.
 Point direction(uint16_t active_low_keys, double yaw);
 int facing(Point vector); // Ruby: south=1, north=2, west=3, east=4; zero=idle
+// A pending native contact may override the dominant axis only while input
+// continues pushing toward it. Release, reversal and parallel motion cancel it.
+int contact_facing(Point vector,int contact);
 using Blocked = bool (*)(int x,int z,int direction,void* context);
 struct Step {
     Point position;

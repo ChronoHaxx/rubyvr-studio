@@ -113,6 +113,17 @@ jump clock. This is presentation timing, with the native grid trigger unchanged.
 The affected human retest stays in the batch guide. Moving the physical trigger
 closer to the lip, with the ability to stop there, belongs to M9/batch 2 continuous
 movement; neither all-map collision nor that movement work is complete here.
+
+**Further maintainer reports, 13 September — unresolved and deferred:** ledge
+corners look broken (M2/M5; exact corner/location not yet captured); facing north
+before an encounter becomes west after successfully running away (M5/M7/M9);
+sprites look thin from high camera angles (the existing M6/M9 pitch-orientation
+issue below). These reports followed the `ee4f71d` prepared handoff; the user did
+not restate the tested revision. They have not been independently reproduced,
+and prior straight-ledge/scene-return checks do not accept these cases. Keep the
+camera continuity and readable sprite tilt cases in batch 2, and retain the
+corner repair in terrain/contact work. No completion boxes change from this report.
+
 The [public host audit](runtime-host-audit.md) confirms menu extension callbacks
 and native function hooks exist upstream, but our frame/input/checkpoint/event
 integration is not available as a ready public adapter. Checkpoint safe-boundary
@@ -833,6 +844,9 @@ guest-memory reads from the VR thread.
   Select available original directional art for the apparent facing without
   changing the guest's actual facing. Separate unavailable poses from ordinary
   walkers; one captured OBJ frame alone cannot supply unseen side/back art.
+  **Reconfirmed 13 September during PR #34 review:** steep views still make
+  sprites look too thin. Include pitch-aware orientation with anchored feet and
+  stable animation in batch 2's camera checks; yaw-facing fixes do not close it.
 
 **Exit:** every discovered actor/effect state has an intended renderer and live
 evidence, with no doubled source sprites, missing frames or drifting feet.
@@ -929,6 +943,12 @@ alongside arrows, with the existing camera/menu/focus gates. The maintainer chos
 continuous movement in batch 2**. Include clear cursor capture/release, sensitivity,
 Escape/focus-loss recovery and access to the demo panel in that combined check;
 this control is not implemented by the current WASD follow-up.
+
+**13 September battle-return report (M5/M7/M9):** north-facing field view changes
+to west after a successful encounter escape. The cause is unverified. Batch 2
+must preserve the selected yaw, pitch, zoom and view mode when returning to the
+same field after battle. Test encounter/escape from all four headings; keep
+deliberate camera reset, checkpoint load and map-warp policies explicit.
 
 - [x] Provide tested editor orbit/fly/orthographic/focus controls, independent
   of saved authoring data ([camera verification](verification.md)).

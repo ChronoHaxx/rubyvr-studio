@@ -1,7 +1,8 @@
 # Watch the acceptance check
 
 **Current batch — [demo controls, distant NPCs and Route 101 ledge contact](desktop-demo-batch.md).**
-Agent/native checks pass; the combined human checklist is pending. Controls now
+Previous agent/native checks pass for their bounded cases; the combined human
+checklist is pending, with further unresolved reports below. Controls now
 open over the voxel viewer, remembered ordinary NPCs survive source distance
 removal, and the ledge jump keeps its visible character and original collision.
 Save latency and public runner installation remain open beside camera/foliage work.
@@ -11,6 +12,15 @@ alignment and then rejected a thinner ledge shape. The fuller terrain is restore
 The follow-up retimes the visible jump to include a grounded approach. Physical
 grid triggers remain unchanged; smaller triggers belong to continuous movement.
 The affected human retest is pending. Original batch evidence is retained below.
+
+**Further reports, 13 September:** ledge corners look broken (M2/M5); successful
+encounter escape changes a north-facing camera to west (M5/M7/M9); steep camera
+angles make upright sprite cards look thin (the existing M6/M9 issue). These
+followed the `ee4f71d` prepared handoff without a restated tested revision. They
+are deferred, not fixed or independently reproduced. See the explicit
+[known limits beside the playtest](desktop-demo-batch.md#known-limits-beside-the-playtest).
+Earlier straight-ledge and scene/UI evidence does not establish corner fidelity,
+battle-return heading preservation or pitch-aware sprites.
 
 ![Actual corrected takeoff and native jump](media/ledge-takeoff-correction.gif)
 

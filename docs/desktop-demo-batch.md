@@ -1,7 +1,7 @@
 # Desktop demo: controls, distant NPCs and ledge contact
 
-**Batch 1, M2/M5/M6/M7 — implementation ready for combined review; human checks
-pending.** Open the test controls directly over the voxel game, select a named
+**Batch 1, M2/M5/M6/M7 — in review; human checks pending and further defects
+reported below.** Open the test controls directly over the voxel game, select a named
 situation, change speed, pause/step, save/load or enable obstacle bypass. Ordinary
 NPCs previously seen on the current map can remain visible after Ruby releases
 their distant sprite slots. Route 101 keeps its fuller rocky ledge and the player
@@ -86,6 +86,15 @@ retained as the reference for batch 2, without copying restricted implementation
   Other routes, bridges and broader collision/geometry coverage remain open.
   Noclip stays on-foot and within normal map/story limits; use the actual path
   opening to cross a map border.
+- **M2/M5, reported 13 September:** ledge corners look broken. The exact corner
+  and location have not been captured; the straight-ledge checks below do not
+  accept corners. Deferred terrain/contact repair; not fixed by this follow-up.
+- **M5/M7/M9, reported 13 September:** entering an encounter while facing north
+  and successfully running away returns to a west-facing field view. Cause not
+  yet reproduced; preserve the chosen camera through battle return in batch 2.
+- **M6/M9, existing issue reconfirmed 13 September:** sprites look too thin from
+  steep camera angles. Cards turn with camera yaw but stay upright. Pitch-aware
+  orientation with stable feet/animation belongs to batch 2; it is not fixed here.
 - **M5/M10:** a route checkpoint save took about 28 seconds to reach the runner's
   safe save boundary. It completed; the delay still needs fixing. Wait for the
   saved status before closing. MAX speed remains limited by hardware/runtime.
@@ -119,6 +128,11 @@ below do not tick these boxes.
 5. [ ] Open/close the original Bag/Party UI, load **Demo battle** or **Demo lab
    ready**, then return to **NPC views**. Close and reopen using the same launcher.
    Expect correct scene/UI ownership and existing checkpoint names preserved.
+
+The three reports above remain unresolved. In particular, step 5's original
+scene/UI check does not establish preservation of camera heading after escape.
+The maintainer deferred these defects; this is not a recorded pass or a waiver
+of the remaining human checks.
 
 ## Evidence and scope
 
@@ -157,6 +171,14 @@ is an additional local situation. The PR records the final source/binary/pack
 hashes and the concise combined checklist.
 
 ## Source comparison and acceptance repairs
+
+**13 September report follow-up:** broken ledge corners, north-to-west camera
+heading after a successful encounter escape, and thin sprites at steep pitch
+were reported after the `ee4f71d` prepared handoff. The user did not restate the
+tested revision or exact corner/location. These are human reports, not newly
+reproduced failures or new test passes; root causes remain to be checked. This
+follow-up only records the defects and their roadmap placement. The executable,
+terrain pack, existing evidence and five pending human checks are unchanged.
 
 The focused source pass used the pinned `pret/pokeruby`
 `63a8cbf0016b351a4e68f7036fa0b77e23d2f2c1`:

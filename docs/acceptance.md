@@ -6,6 +6,13 @@ open over the voxel viewer, remembered ordinary NPCs survive source distance
 removal, and the ledge jump keeps its visible character and original collision.
 Save latency and public runner installation remain open beside camera/foliage work.
 
+**13 September follow-up:** the maintainer rejected the earlier visible ledge
+alignment. The revised Route 101 drop begins at the near barrier edge and follows
+the source jump clock without a vertical snap. Native/component checks pass;
+the affected human retest is pending. Original batch evidence is retained below.
+
+![Actual corrected takeoff and native jump](media/ledge-takeoff-correction.gif)
+
 ![Actual native demo batch](media/desktop-demo-batch.gif)
 
 **Merged PR #33 — [NPC camera views and nearby visibility](live-npc-views.md), M6 supporting M5.**

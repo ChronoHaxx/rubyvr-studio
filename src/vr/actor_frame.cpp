@@ -144,13 +144,33 @@ bool capture_object_directions(Source& source,std::span<const uint8_t> rom,
 
 bool bind_event(Source& source,std::span<const uint8_t> event,unsigned slot) {
     source.viewport_culled=false;
+    source.jump_direction=source.jump_ticks=0;
     if(!source.present || event.size()!=0x24 || slot>=16 || !(event[0]&1) ||
        (event[1]&0x20) || word(source.sprite.data()+0x2e)!=slot) {
         source={};return false;
     }
     source.viewport_culled=(event[1]&0x40)!=0;
     source.fixed_pose=(event[1]&0x10)!=0;
+    // Pinned Ruby Jump2 0x0c..0x0f: Sprite data[2] is the active step,
+    // data[3..6] hold direction, distance kind, arc kind and elapsed ticks.
+    // Reject stale action bytes, other jumps, scripted bobs and finished steps.
+    const auto* data=source.sprite.data()+0x2e;
+    const unsigned action=event[0x1c],ticks=word(data+12);
+    if((event[0]&0x42) && action>=0x0c && action<=0x0f && word(data+4)==1 &&
+       word(data+6)==action-0x0b && word(data+8)==2 && word(data+10)==0 && ticks>=1 && ticks<=32) {
+        source.jump_direction=uint8_t(action-0x0b);source.jump_ticks=uint8_t(ticks);
+    }
     return true;
+}
+
+JumpSpan jump_span(const Source& source,const Position& p) {
+    const auto d=source.jump_direction,ticks=source.jump_ticks;
+    if(d<1 || d>4 || ticks<1 || ticks>32 || !source.present ||
+       !std::isfinite(p.x) || !std::isfinite(p.z))return {};
+    const float dx=d==3?-1.f:d==4?1.f:0.f,dz=d==1?1.f:d==2?-1.f:0.f;
+    const float distance=ticks/16.f;
+    const float x=p.x-dx*distance,z=p.z-dz*distance;
+    return {true,ticks/32.f,x,z,x+2*dx,z+2*dz};
 }
 
 uint8_t apparent_facing(uint8_t facing,float rx,float rz) {

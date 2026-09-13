@@ -63,7 +63,23 @@ void update(const world::Snapshot& s,const terrain::Resolved& terrain) {
         const int x=int(std::floor(p.x)),z=int(std::floor(p.z));
         const auto height=terrain.query(x,z,object.elevation,p.x-x,p.z-z);
         if(!height.resolved()){++result.unresolved;continue;}
-        item.x=p.x;item.y=height.pixels/16.f+p.lift;item.z=p.z;
+        float ground=height.pixels;
+        const auto jump=actor::jump_span(s.actor_sources[i],p);
+        if(jump.active) {
+            auto ground_at=[&](float px,float pz) {
+                const int cx=int(std::floor(px)),cz=int(std::floor(pz));
+                return terrain.query(cx,cz,object.elevation,px-cx,pz-cz);
+            };
+            const auto from=ground_at(jump.start_x,jump.start_z),to=ground_at(jump.end_x,jump.end_z);
+            auto solid_ground=[](const terrain::Height& h) {
+                return h.resolved() && (!h.surface || h.surface->kind==terrain::TerrainKind::Ground);
+            };
+            // A real cliff is discontinuous; an airborne actor must not snap
+            // vertically when its projected feet pass that edge. Interpolate
+            // the two ground contacts on Ruby's clock, preserving its arc.
+            if(solid_ground(from) && solid_ground(to))ground=from.pixels+(to.pixels-from.pixels)*jump.progress;
+        }
+        item.x=p.x;item.y=ground/16.f+p.lift;item.z=p.z;
         if(!item.texture) {
             glGenTextures(1,&item.texture);glBindTexture(GL_TEXTURE_2D,item.texture);
             glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
@@ -79,7 +95,7 @@ void update(const world::Snapshot& s,const terrain::Resolved& terrain) {
         if(i==s.player_index && object.is_player) {
             result.player=true;result.player_x=item.x;result.player_z=item.z;
             // Follow ground contact; a jump is actor motion, not a camera lift.
-            result.player_y=height.pixels/16.f;
+            result.player_y=ground/16.f;
         }
     }
     size_t index=world::kObjectEventCount;

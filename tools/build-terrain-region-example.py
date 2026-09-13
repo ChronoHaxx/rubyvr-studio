@@ -106,7 +106,7 @@ def build(recipe,pack):
         w,h=m['width'],m['height'];cells=[];used={135};grades=0
         for (x,y),(nw,ne,sw,se) in corners[name].items():
             packed=m['blocks'][y*w+x]
-            top=1 if (x,y) in m['clear'] and name!='Route101' else -1
+            top=1 if (x,y) in m['clear'] else -1
             surface=dict(layer=packed>>12,height=nw,thickness=nw,kind='ground',top=top,side=135,side_offset=8)
             if (x,y) in m['water']:
                 if any(v!=m['water'][x,y] for v in (nw,ne,sw,se)):

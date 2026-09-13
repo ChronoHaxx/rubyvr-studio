@@ -150,6 +150,33 @@ int main(int,char**) {
     authored.terrain[0].cells[0].surfaces[0].layer=0;
     vr::diorama::set_overrides(authored);vr::viewer::frame(field,false);
     expect(vr::actor_render::stats().visible==1 && vr::actor_render::stats().player_y==1.f,"jumping player remains on sole source-neutral ground");
+    // A source-timed Jump2 spans a real 8px cliff at the entry to its barrier.
+    // An independently captured frame must interpolate both contacts, rather
+    // than snapping the actor/camera down at the first low cell under its feet.
+    const auto before_jump=field;
+    auto jump_terrain=authored;jump_terrain.terrain[0].cells.clear();
+    for(int z=11;z<=13;++z) {
+        auto cell=tc;cell.y=z;cell.surfaces[0].height=cell.surfaces[0].thickness=z==11?8:0;
+        jump_terrain.terrain[0].cells.push_back(cell);
+    }
+    vr::diorama::set_overrides(jump_terrain);
+    object.x=12;object.y=13;put(0x20,200);
+    std::array<uint8_t,36> jumping_event{};jumping_event[0]=0x41;jumping_event[0x1c]=0x0c;
+    put(0x2e,0);put(0x32,1);put(0x34,1);put(0x36,2);put(0x38,0);
+    for(int tick=1;tick<=32;++tick) {
+        put(0x22,176+tick);put(0x3a,tick);
+        expect(vr::actor::bind_event(sprite,jumping_event,0),"source Jump2 binds in live consumer");
+        vr::viewer::frame(field,false);
+        const auto& stats=vr::actor_render::stats();
+        expect(stats.player && stats.player_y==.5f*(1-tick/32.f),"real cliff crossing follows source clock without a vertical snap");
+    }
+    // Non-ground landing surfaces must keep their layer/material semantics.
+    jump_terrain.terrain[0].cells[2].surfaces[0].kind=vr::terrain::TerrainKind::Deck;
+    vr::diorama::set_overrides(jump_terrain);put(0x22,184);put(0x3a,8);
+    expect(vr::actor::bind_event(sprite,jumping_event,0),"bridge refusal fixture binds");
+    vr::viewer::frame(field,false);
+    expect(vr::actor_render::stats().player_y==0,"ground jump interpolation never borrows a deck landing");
+    field=before_jump;
     authored.terrain[0].cells[0].surfaces[0].layer=3;vr::diorama::set_overrides(authored);
     field.objects[0].elevation=4;vr::viewer::frame(field,false);
     expect(vr::actor_render::stats().visible==0 && vr::actor_render::stats().unresolved==1,"wrong layer is unresolved rather than guessed");

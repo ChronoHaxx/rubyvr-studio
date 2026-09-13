@@ -20,8 +20,25 @@ def u16(path):
     return struct.unpack('<'+'H'*(len(data)//2), data)
 
 
+def route_cliffs():
+    """High-cell edges at entry to Route 101's blocked south ledge cells.
+
+    Geometry moves toward takeoff; original source/art guards stay in place.
+    The elbow joins z=6 to z=7 rather than leaving a disconnected corner.
+    """
+    return ({('s', x, 6) for x in range(2, 6)} |
+            {('s', x, 5) for x in range(6, 11)} |
+            {('e', 5, 6)} | {('s', x, 12) for x in range(8, 12)})
+
+
+def route_ledge_cells():
+    """Original guarded floor artwork replaced by the physical cliff faces."""
+    return ({(x,6) for x in range(6,11)} |
+            {(x,7) for x in range(2,7)} | {(x,13) for x in range(8,12)})
+
+
 def route_corners():
-    """Keep plateaus and place rocky descents in the inspected ledge cells.
+    """Keep plateaus and place rocky drops at entry to the blocked ledge cells.
 
     Relax the two authored transition bands, pinning the cliff lips and the
     flat land outside those bands. A cliff endpoint shares one corner, so its
@@ -36,8 +53,7 @@ def route_corners():
             i = parent[i]
         return i
     def join(a, b): parent[root(b)] = root(a)
-    cliffs = {('s', x, 7) for x in range(2, 6)} | {('s', x, 6) for x in range(6, 11)}
-    cliffs |= {('e', 5, 7)} | {('s', x, 13) for x in range(8, 12)}
+    cliffs = route_cliffs()
     lips = set()
     for y in range(20):
         for x in range(20):
@@ -51,7 +67,7 @@ def route_corners():
     heights, positions, adjacent = defaultdict(list), {}, defaultdict(set)
     for y in range(20):
         for x in range(20):
-            level = 16 if y < (8 if x < 6 else 7) else 8 if y < 14 else 0
+            level = 16 if y < (7 if x < 6 else 6) else 8 if y < 13 else 0
             for k in range(4):
                 i = root(key(x,y,k))
                 heights[i].append(level)
@@ -67,19 +83,6 @@ def route_corners():
     for _ in range(160):
         values = {i:values[i] if i in pinned else sum(values[j] for j in adjacent[i])/len(adjacent[i])
                   for i in values}
-    # Ruby jumps across the destination ledge cell (two cell centres), and
-    # blocks entry from below. Put the rocky descent in that cell instead of
-    # painting its whole surface as walkable high grass with a drop beyond it.
-    # Transfer each lower lip to the shared upper-side corner group, retaining
-    # existing plateau heights and continuous paths around every endpoint.
-    lowered = {}
-    for side,x,y in cliffs:
-        pairs = ((2,0),(3,1)) if side=='s' else ((1,0),(3,2))
-        nx,ny=x+(side=='e'),y+(side=='s')
-        for a,b in pairs:
-            ia,ib=root(key(x,y,a)),root(key(nx,ny,b))
-            lowered[ia]=values[ib]
-    values.update(lowered)
     corners = {(x,y):[round(values[root(key(x,y,k))]) for k in range(4)]
                for y in range(20) for x in range(20)}
     # Every unmarked edge has exactly the same endpoints on both cells.
@@ -121,9 +124,9 @@ def main():
             for x in range(20):
                 packed = blocks[y*20+x]
                 nw, ne, sw, se = route[x,y] if name == 'Route101' else (16,16,16,16)
-                # Preserve the original rock/grass boundary on the now-sloped
-                # ledge cell. Ground replacement was what made it look open.
-                top = -1
+                # The original top-down cliff band is now on the near wall;
+                # do not leave a second rocky stripe on the lower floor.
+                top = 1 if (x,y) in route_ledge_cells() and name=='Route101' else -1
                 surface = dict(layer=packed>>12, height=nw, thickness=nw,
                                kind='ground', top=top, side=0x87, side_offset=8)
                 for key,value in dict(rise_x=ne-nw,rise_z=sw-nw,corner_delta=se-ne-sw+nw).items():

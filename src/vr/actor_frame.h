@@ -20,6 +20,9 @@ struct Source {
     // This only bypasses Ruby's 2D draw cull; the original Sprite stays intact.
     bool viewport_culled=false;
     bool fixed_pose=false; // event/script explicitly disabled directional animation
+    // Validated original Jump2 action and its 32-frame source clock. These
+    // transient fields never alter guest position, collision or animation.
+    uint8_t jump_direction=0,jump_ticks=0;
     // Raw six-byte Subsprite records from the selected, validated ROM table.
     std::vector<uint8_t> subsprites;
     // Optional same-phase art for a verified directional field profile.
@@ -60,6 +63,13 @@ uint8_t apparent_facing(uint8_t world_facing,float right_x,float right_z);
 // offsets, then select the incarnation nearest its destination event tile.
 // Sprite y2 is a visual jump/bob, not map motion or terrain height.
 struct Position { float x=0,z=0,lift=0; };
+struct JumpSpan {
+    bool active=false;
+    float progress=0,start_x=0,start_z=0,end_x=0,end_z=0;
+};
+// Recover the two cell centres from the source's one-pixel-per-frame Jump2.
+// No retained state or second clock: loading halfway through a jump works too.
+JumpSpan jump_span(const Source&,const Position&);
 Position position(const Frame&, int view_x, int view_y,int base_x,int base_y,
                   int offset_x,int offset_y,int cell_x,int cell_y);
 }

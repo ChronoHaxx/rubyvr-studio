@@ -4,8 +4,25 @@
 pending.** Open the test controls directly over the voxel game, select a named
 situation, change speed, pause/step, save/load or enable obstacle bypass. Ordinary
 NPCs previously seen on the current map can remain visible after Ruby releases
-their distant sprite slots. Route 101's rocky ledge occupies its actual jump
-barrier tile, and the player stays visible while crossing its neutral elevation.
+their distant sprite slots. Route 101's rocky drop starts at the near edge of
+the actual jump barrier, and the player stays visible during the source-timed jump.
+
+![Actual native before/after takeoff and corrected jump](media/ledge-takeoff-correction.gif)
+
+**Ledge follow-up, 13 September:** the maintainer's screenshots showed that the
+earlier correction still left a broad strip of apparently walkable grass before
+the visible drop. That human check failed; the earlier automated visibility and
+collision checks had missed the visual alignment defect. The drop now begins
+half a tile ahead of the saved takeoff centre. The original ledge art is on the
+vertical face, with the old floor stripe cleared. Original barrier cells and
+source IDs stay fixed. The character descends between its takeoff and landing
+heights using Ruby's original 32-tick jump clock and vertical arc, avoiding a
+vertical snap as its projected feet cross the cliff. All three Route 101 ledge
+runs and their elbow/endpoints use this profile; other routes remain open.
+
+The 14-second recording compares the same saved takeoff, then shows the actual
+native jump and blocked return climb. It is cropped and retimed. Human retest of
+step 4 below is pending; it does not establish physical-input acceptance.
 
 ![Actual native demo controls and Route 101 ledge](media/desktop-demo-batch.gif)
 
@@ -93,9 +110,10 @@ below do not tick these boxes.
    Look back at the previously seen walkers. Expect retained sprites rather
    than disappearance at the original draw/spawn range; source-stopped distant
    poses are a known limitation. Walk through the actual forest opening.
-4. [ ] Load **Demo ledge**. Press Down to jump; then try Up from below. Expect a
-   visible character crossing the rocky descent, landing below, and the original
-   collision blocking the climb back up. No noclip is needed for the jump.
+4. [ ] Load **Demo ledge**. Before moving, expect the rocky drop close to the
+   player's feet, as in the new before/after GIF, without the old wide grass gap.
+   Press S/Down to jump; then try W/Up from below. Expect a visible, smooth descent
+   and landing, with original collision blocking the climb back up. Noclip is off.
 5. [ ] Open/close the original Bag/Party UI, load **Demo battle** or **Demo lab
    ready**, then return to **NPC views**. Close and reopen using the same launcher.
    Expect correct scene/UI ownership and existing checkpoint names preserved.
@@ -106,8 +124,8 @@ below do not tick these boxes.
   4x choice, noclip, new checkpoint save/load and return-to-game checks.
 - The native journey observes retained ordinary NPCs while walking from
   Littleroot through the original Route 101 connection. The two-cell ledge jump
-  stays rendered on continuous ground; ordinary collision prevents climbing
-  back. No story/actor/position bytes are written by the harness. Noclip is used
+  stays rendered across the real terrain drop; ordinary collision prevents
+  climbing back. No story/actor/position bytes are written by the harness. Noclip is used
   only to prepare the takeoff position, then disabled before saving/testing it.
 - Actor visibility/capture: **25** source-free checks, optimized and ASan/UBSan.
   They cover template/flag hiding, inside/outside both source removal bounds,
@@ -118,6 +136,15 @@ below do not tick these boxes.
 - Actual Windows GL regression covers live/distant actors, layers, connected
   scenery, menu composition, two ImGui contexts and viewer event/lifecycle
   ownership. Native source and public Studio targets compile separately.
+- Ledge follow-up: **4** source-free geometry tests cover near-edge takeoff,
+  shared corners/town boundaries, the connected elbow, tapered endpoints and
+  unchanged source-art guards. The **13** region tests pass. Actor-frame tests
+  pass **3,238 checks**, optimized and ASan/UBSan, covering all four Jump2
+  directions, every source tick, stale/finished actions and independent midjump
+  capture. The Windows GL consumer tests the real cliff and refuses to borrow
+  water/deck heights. A fresh native replay passes takeoff, original two-cell
+  landing, smooth source-timed descent and blocked climbing. Existing objects
+  and every other prepared terrain map are unchanged.
 - Existing accepted PR #32/#33 menu/NPC evidence is retained for unchanged
   coverage. No new whole-game, physical-input, headset or release claim.
 
@@ -150,4 +177,12 @@ lookup found by the live jump. The native harness was corrected to use the
 actual two-cell forest opening and to wait for a step action to complete before
 counting it. The public GL test now has an explicit Windows SDL entry point.
 One combined Codex review is used; the previously blocked private-source Claude
-handoff was not retried. No paid API call or DeepSeek spending was used here.
+handoff was not retried. The ledge follow-up tried the official DeepSeek Harness
+SDK through the maintainer's configured InferX `deepseek-v4.1-flash` free offer.
+That worker read the scoped sources but produced no patch before its 600-second
+limit (600.074 seconds including teardown). Astra implemented and accepted the
+local correction; there was no worker patch to repair. Offer-based expected
+cost is $0, with no provider billing receipt or final in-flight usage returned.
+The viewer's generic DeepSeek cost estimate is not an InferX charge. Raw worker
+sessions and configuration remain private. Future authorized InferX runs use the
+maintainer's requested 30-minute limit; this completed trial retains its timing.

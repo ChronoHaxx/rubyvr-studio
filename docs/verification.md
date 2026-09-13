@@ -374,6 +374,15 @@ the existing terrain-query and local GL suites cover the neutral ledge ground
 and panel/context ownership. `tools/check-runtime-host.py` only checks source
 hook markers; it cannot replace a native build or functional acceptance.
 
+The 13 September ledge follow-up adds four geometry intent tests for the visible
+near-edge drop, connected elbow/endpoints, town joins and unchanged source guards.
+`bash tools/test-actor-frame.sh` covers the validated source Jump2 clock and
+independent midjump capture. The actual Windows GL viewer check exercises
+contact-height interpolation across a cliff while retaining deck/layer refusal.
+The native takeoff/jump/blocked-climb recording is separate evidence; the earlier
+agent PASS missed the maintainer's visible grass-gap complaint. Human retest of
+that alignment remains required in the current batch checklist.
+
 Earlier development live/batch comparisons and short runtime fixtures remain
 historical evidence for their exact inputs. They are not a current full-pack
 runtime run. This extraction does not ship those captures or build the runner.

@@ -17,12 +17,12 @@
       "water":[{"name":"PetalburgCity-water","bounds":[0,0,30,30],"behaviors":[16],"height":16,"shore":1,"guard":"af2c94fb8d1da3247198e43afcb640cbc7ca54bb59640aea01f3d6d7eed65063"}]},
     {
       "name":"Route101","size":[20,20],"fixed_profile":"route101","base":0,
-      "review":"near-edge ledge contact aligned to original jump barriers, with graded paths around endpoints",
+      "review":"existing two ledges and complete connected corner field retained",
       "cliffs":[
-        {"axis":"s","start":[2,6],"length":4,"before":16,"after":8},
-        {"axis":"s","start":[6,5],"length":5,"before":16,"after":8},
-        {"axis":"e","start":[5,6],"length":1,"before":16,"after":8},
-        {"axis":"s","start":[8,12],"length":4,"before":8,"after":0}
+        {"axis":"s","start":[2,7],"length":4,"before":16,"after":8},
+        {"axis":"s","start":[6,6],"length":5,"before":16,"after":8},
+        {"axis":"e","start":[5,7],"length":1,"before":16,"after":8},
+        {"axis":"s","start":[8,13],"length":4,"before":8,"after":0}
       ],
       "guards":[
         {"start":[6,6],"axis":"x","ids":[110,135,135,135,214]},

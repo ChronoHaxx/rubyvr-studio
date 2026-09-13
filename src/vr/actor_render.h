@@ -7,7 +7,7 @@ namespace vr::actor_render {
 struct Stats {
     int visible=0,unsupported=0,unresolved=0,distant=0;
     bool player=false;
-    float player_x=0,player_y=0,player_z=0;
+    float player_x=0,player_y=0,player_z=0,player_lift=0;
 };
 void update(const world::Snapshot&,const terrain::Resolved&);
 void clear();

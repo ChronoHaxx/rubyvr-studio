@@ -165,5 +165,29 @@ int main(){
     }
     auto inactive=event;inactive[0]=1;
     expect(bind_event(jump,inactive,3) && !jump_span(jump,{16.5f,20.25f,1}).active,"inactive movement cannot reuse jump clock");
+    auto approach=t;approach.jump_direction=1;approach.jump_ticks=18;
+    // Original synthetic arc, deliberately unlike the cartridge's values.
+    const std::array<uint8_t,16> test_arc={2,3,4,5,6,7,8,9,8,7,6,5,4,3,1,0};
+    for(unsigned n=0;n<16;++n)rom[0x3761b6 + n]=uint8_t(-int(test_arc[n]));
+    expect(capture_player_directions(approach,rom,tiles,true) && approach.jump_arc_valid && approach.jump_arc==test_arc,
+           "validated on-foot profile reads the actual ROM arc");
+    rom32(0x0836dc70,0x08371080);rom16(0x08371088,16);rom16(0x0837108a,32);
+    rom32(0x08371098,0x08370fc8);rom32(0x0837109c,0x0836e068);
+    expect(capture_object_directions(approach,rom,tiles,true,0) && approach.jump_arc_valid && approach.jump_arc==test_arc,
+           "runtime unified object capture also reads the on-foot player arc");
+    for(unsigned direction=1;direction<=4;++direction)for(unsigned tick=1;tick<=32;++tick) {
+        auto frame=approach;frame.jump_direction=uint8_t(direction);frame.jump_ticks=uint8_t(tick);
+        const auto value=approach_jump_lift(frame,.5f);
+        if(tick<=12 || tick==32)expect(value==0,"approach and exact landing remain grounded in every direction");
+        else expect(value>0 && value<=9.f/16,"retimed flight stays within captured source arc");
+        expect(approach_jump_lift(frame,.5f)==value,"independent repeated capture has no secondary animation clock");
+    }
+    approach.jump_ticks=17;expect(std::abs(approach_jump_lift(approach,.5f)-5.f/16)<1e-6f,"later takeoff samples captured arc at the new source phase");
+    auto unsupported=approach;unsupported.jump_arc_valid=false;
+    expect(approach_jump_lift(unsupported,.5f)==.5f,"missing arc preserves original source lift");
+    unsupported.jump_arc_valid=true;unsupported.jump_ticks=33;
+    expect(approach_jump_lift(unsupported,.5f)==.5f,"invalid clock preserves original source lift");
+    rom[0x3761b6]=1;
+    expect(capture_player_directions(approach,rom,tiles,true) && !approach.jump_arc_valid,"corrupt arc cannot retain prior data");
     std::cout<<"PASS: actor frame "<<checks<<" checks (original synthetic pixels)\n";
 }

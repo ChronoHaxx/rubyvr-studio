@@ -7,9 +7,10 @@ removal, and the ledge jump keeps its visible character and original collision.
 Save latency and public runner installation remain open beside camera/foliage work.
 
 **13 September follow-up:** the maintainer rejected the earlier visible ledge
-alignment. The revised Route 101 drop begins at the near barrier edge and follows
-the source jump clock without a vertical snap. Native/component checks pass;
-the affected human retest is pending. Original batch evidence is retained below.
+alignment and then rejected a thinner ledge shape. The fuller terrain is restored.
+The follow-up retimes the visible jump to include a grounded approach. Physical
+grid triggers remain unchanged; smaller triggers belong to continuous movement.
+The affected human retest is pending. Original batch evidence is retained below.
 
 ![Actual corrected takeoff and native jump](media/ledge-takeoff-correction.gif)
 

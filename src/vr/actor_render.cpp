@@ -63,7 +63,7 @@ void update(const world::Snapshot& s,const terrain::Resolved& terrain) {
         const int x=int(std::floor(p.x)),z=int(std::floor(p.z));
         const auto height=terrain.query(x,z,object.elevation,p.x-x,p.z-z);
         if(!height.resolved()){++result.unresolved;continue;}
-        float ground=height.pixels;
+        float ground=height.pixels,lift=p.lift;
         const auto jump=actor::jump_span(s.actor_sources[i],p);
         if(jump.active) {
             auto ground_at=[&](float px,float pz) {
@@ -78,8 +78,24 @@ void update(const world::Snapshot& s,const terrain::Resolved& terrain) {
             // vertically when its projected feet pass that edge. Interpolate
             // the two ground contacts on Ruby's clock, preserving its arc.
             if(solid_ground(from) && solid_ground(to))ground=from.pixels+(to.pixels-from.pixels)*jump.progress;
+            const float dx=(jump.end_x-jump.start_x)*.5f,dz=(jump.end_z-jump.start_z)*.5f;
+            const auto approach_contact=ground_at(jump.start_x+.75f*dx,jump.start_z+.75f*dz);
+            const auto slope_contact=ground_at(jump.start_x+1.25f*dx,jump.start_z+1.25f*dz);
+            // On the authored sloping ledge with its original top-down rock
+            // band, let the player approach before lifting. A real vertical
+            // cliff keeps the original arc above; water/decks keep their own
+            // semantics. The source still owns all X/Z motion and collision.
+            const auto& source=s.actor_sources[i];
+            if(object.is_player && source.jump_arc_valid && approach_contact.surface && approach_contact.surface==slope_contact.surface &&
+               from.status==terrain::Status::Authored && to.status==terrain::Status::Authored &&
+               solid_ground(from) && solid_ground(to) && solid_ground(approach_contact) && solid_ground(slope_contact) &&
+               from.pixels>to.pixels && approach_contact.pixels>slope_contact.pixels) {
+                ground=source.jump_ticks<=12?height.pixels:
+                    approach_contact.pixels+(to.pixels-approach_contact.pixels)*(source.jump_ticks-12)/20.f;
+                lift=actor::approach_jump_lift(source,p.lift);
+            }
         }
-        item.x=p.x;item.y=ground/16.f+p.lift;item.z=p.z;
+        item.x=p.x;item.y=ground/16.f+lift;item.z=p.z;
         if(!item.texture) {
             glGenTextures(1,&item.texture);glBindTexture(GL_TEXTURE_2D,item.texture);
             glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
@@ -96,6 +112,7 @@ void update(const world::Snapshot& s,const terrain::Resolved& terrain) {
             result.player=true;result.player_x=item.x;result.player_z=item.z;
             // Follow ground contact; a jump is actor motion, not a camera lift.
             result.player_y=ground/16.f;
+            result.player_lift=lift;
         }
     }
     size_t index=world::kObjectEventCount;

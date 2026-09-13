@@ -170,12 +170,39 @@ int main(int,char**) {
         const auto& stats=vr::actor_render::stats();
         expect(stats.player && stats.player_y==.5f*(1-tick/32.f),"real cliff crossing follows source clock without a vertical snap");
     }
+    // Keep the original sloped rock band: approach on the ground for 12 ticks,
+    // then lift from closer to the lip, reaching the same source landing.
+    jump_terrain.terrain[0].cells[1].surfaces[0].height=8;
+    jump_terrain.terrain[0].cells[1].surfaces[0].thickness=8;
+    jump_terrain.terrain[0].cells[1].surfaces[0].rise_z=-8;
+    vr::diorama::set_overrides(jump_terrain);
+    for(int tick=1;tick<=32;++tick) {
+        put(0x22,176+tick);put(0x3a,tick);
+        expect(vr::actor::bind_event(sprite,jumping_event,0),"sloped ledge Jump2 binds");
+        sprite.jump_arc_valid=true;sprite.jump_arc.fill(8);sprite.jump_arc.back()=0;
+        vr::viewer::frame(field,false);
+        const auto& stats=vr::actor_render::stats();
+        const float expected_ground=tick<=8?8.f:tick<=12?8.f-(tick-8)*.5f:6.f*(32-tick)/20.f;
+        expect(stats.player && std::abs(stats.player_y*16-expected_ground)<1e-5f,"approach feet stay on slope and end at original landing");
+        if(tick<=12 || tick==32)expect(stats.player_lift==0,"visible takeoff waits until close to the rock band");
+        else expect(stats.player_lift>0,"visible flight occurs after the approach");
+    }
     // Non-ground landing surfaces must keep their layer/material semantics.
     jump_terrain.terrain[0].cells[2].surfaces[0].kind=vr::terrain::TerrainKind::Deck;
+    jump_terrain.terrain[0].cells[2].surfaces[0].height=1;
+    jump_terrain.terrain[0].cells[2].surfaces[0].thickness=1;
+    expect(vr::terrain::valid(jump_terrain.terrain),"deck refusal uses valid terrain rather than a rejected scene");
     vr::diorama::set_overrides(jump_terrain);put(0x22,184);put(0x3a,8);
     expect(vr::actor::bind_event(sprite,jumping_event,0),"bridge refusal fixture binds");
     vr::viewer::frame(field,false);
-    expect(vr::actor_render::stats().player_y==0,"ground jump interpolation never borrows a deck landing");
+    sprite.jump_arc_valid=true;sprite.jump_arc.fill(8);
+    vr::viewer::frame(field,false);
+    expect(vr::actor_render::stats().player_y==.5f && vr::actor_render::stats().player_lift==.5f,"ground jump presentation never borrows a deck landing");
+    jump_terrain.terrain[0].cells[2].surfaces[0].kind=vr::terrain::TerrainKind::Water;
+    jump_terrain.terrain[0].cells[2].surfaces[0].thickness=0;
+    expect(vr::terrain::valid(jump_terrain.terrain),"water refusal uses valid terrain");
+    vr::diorama::set_overrides(jump_terrain);vr::viewer::frame(field,false);
+    expect(vr::actor_render::stats().player_y==.5f && vr::actor_render::stats().player_lift==.5f,"ground jump presentation never borrows a water landing");
     field=before_jump;
     authored.terrain[0].cells[0].surfaces[0].layer=3;vr::diorama::set_overrides(authored);
     field.objects[0].elevation=4;vr::viewer::frame(field,false);

@@ -4,25 +4,27 @@
 pending.** Open the test controls directly over the voxel game, select a named
 situation, change speed, pause/step, save/load or enable obstacle bypass. Ordinary
 NPCs previously seen on the current map can remain visible after Ruby releases
-their distant sprite slots. Route 101's rocky drop starts at the near edge of
-the actual jump barrier, and the player stays visible during the source-timed jump.
+their distant sprite slots. Route 101 keeps its fuller rocky ledge and the player
+visibly approaches before lifting into the jump.
 
-![Actual native before/after takeoff and corrected jump](media/ledge-takeoff-correction.gif)
+![Actual native original and later visible takeoff](media/ledge-takeoff-correction.gif)
 
 **Ledge follow-up, 13 September:** the maintainer's screenshots showed that the
 earlier correction still left a broad strip of apparently walkable grass before
-the visible drop. That human check failed; the earlier automated visibility and
-collision checks had missed the visual alignment defect. The drop now begins
-half a tile ahead of the saved takeoff centre. The original ledge art is on the
-vertical face, with the old floor stripe cleared. Original barrier cells and
-source IDs stay fixed. The character descends between its takeoff and landing
-heights using Ruby's original 32-tick jump clock and vertical arc, avoiding a
-vertical snap as its projected feet cross the cliff. All three Route 101 ledge
-runs and their elbow/endpoints use this profile; other routes remain open.
+the visible drop. The subsequent thin vertical-face revision was also rejected
+as uglier. The fuller prior terrain and original artwork are restored exactly.
+The first 12 ticks of a validated on-foot jump now stay visibly grounded while
+the player approaches; the captured original ROM arc plays over the remaining
+20 ticks. X/Z motion, total duration, landing and one-way collision stay under
+Ruby's control. This applies only over a resolved authored sloping ground ledge;
+vertical cliffs retain the original arc, and water/decks are not borrowed.
 
 The 14-second recording compares the same saved takeoff, then shows the actual
-native jump and blocked return climb. It is cropped and retimed. Human retest of
-step 4 below is pending; it does not establish physical-input acceptance.
+native jump and blocked return climb. It is cropped and retimed. This changes
+visible takeoff timing, not the physical trigger: a grid input still commits the
+whole jump, including its original sound timing. Freely stopping at the lip and
+a smaller physical trigger belong to batch 2's continuous movement. Human retest
+of step 4 remains pending; the recording is not physical-input acceptance.
 
 ![Actual native demo controls and Route 101 ledge](media/desktop-demo-batch.gif)
 
@@ -110,10 +112,10 @@ below do not tick these boxes.
    Look back at the previously seen walkers. Expect retained sprites rather
    than disappearance at the original draw/spawn range; source-stopped distant
    poses are a known limitation. Walk through the actual forest opening.
-4. [ ] Load **Demo ledge**. Before moving, expect the rocky drop close to the
-   player's feet, as in the new before/after GIF, without the old wide grass gap.
-   Press S/Down to jump; then try W/Up from below. Expect a visible, smooth descent
-   and landing, with original collision blocking the climb back up. Noclip is off.
+4. [ ] Load **Demo ledge**. Expect the fuller original rocky ledge. Press S/Down:
+   the player should approach before lifting into the hop, then land below.
+   Try W/Up from below: original collision must still block climbing. Noclip is
+   off. This retimes the visible hop; the grid input still commits the full jump.
 5. [ ] Open/close the original Bag/Party UI, load **Demo battle** or **Demo lab
    ready**, then return to **NPC views**. Close and reopen using the same launcher.
    Expect correct scene/UI ownership and existing checkpoint names preserved.
@@ -124,7 +126,7 @@ below do not tick these boxes.
   4x choice, noclip, new checkpoint save/load and return-to-game checks.
 - The native journey observes retained ordinary NPCs while walking from
   Littleroot through the original Route 101 connection. The two-cell ledge jump
-  stays rendered across the real terrain drop; ordinary collision prevents
+  stays rendered across the sloping terrain; ordinary collision prevents
   climbing back. No story/actor/position bytes are written by the harness. Noclip is used
   only to prepare the takeoff position, then disabled before saving/testing it.
 - Actor visibility/capture: **25** source-free checks, optimized and ASan/UBSan.
@@ -136,15 +138,15 @@ below do not tick these boxes.
 - Actual Windows GL regression covers live/distant actors, layers, connected
   scenery, menu composition, two ImGui contexts and viewer event/lifecycle
   ownership. Native source and public Studio targets compile separately.
-- Ledge follow-up: **4** source-free geometry tests cover near-edge takeoff,
-  shared corners/town boundaries, the connected elbow, tapered endpoints and
-  unchanged source-art guards. The **13** region tests pass. Actor-frame tests
-  pass **3,238 checks**, optimized and ASan/UBSan, covering all four Jump2
-  directions, every source tick, stale/finished actions and independent midjump
-  capture. The Windows GL consumer tests the real cliff and refuses to borrow
-  water/deck heights. A fresh native replay passes takeoff, original two-cell
-  landing, smooth source-timed descent and blocked climbing. Existing objects
-  and every other prepared terrain map are unchanged.
+- Ledge follow-up: the two existing geometry tests and **13** region tests are
+  retained. **3,500** actor-frame checks pass optimized and ASan/UBSan, covering
+  all four Jump2 directions, every source tick,
+  stale/finished actions, independent midjump capture, the real unified capture
+  entry point, and sampling original ROM arc data after the grounded approach.
+  The Windows GL consumer checks approach/flight/landing and valid water/deck
+  refusal fixtures. Native replay checks grounded approach, later visible lift,
+  original two-cell landing and blocked climbing. The prepared terrain/object
+  pack is byte-identical to the version before the rejected thin-face revision.
 - Existing accepted PR #32/#33 menu/NPC evidence is retained for unchanged
   coverage. No new whole-game, physical-input, headset or release claim.
 
@@ -162,6 +164,9 @@ The focused source pass used the pinned `pret/pokeruby`
 `IsZCoordMismatchAt`, and two-cell jump routines;
 `field_player_avatar.c` destination-cell ledge checks;
 `global.fieldmap.h` event/template layouts; and `event_data.c` flag lookup.
+The Ruby rev1 imported data-symbol table places the normal arc at `0x083761B6`;
+the address-like historical symbol name `Unknown_837619E` is not its rev1 address.
+The runtime uses the unified `capture_object_directions` path for the player too.
 
 The cached Gen2Recomped engine at `b2a28281b1042eb25ce0b83941be0ef756fcade9`
 (`src/world/OverworldController.lua`) confirms source visibility must win over
@@ -170,6 +175,11 @@ presentation caching. Companion `4a114b3e344db629ac7c7ac5108bd3d910fc4554`
 scene/source-movement reference. These are behavior references; restricted Lua
 implementation was not copied or translated into this GPL code. Ruby retains
 its native event simulation and collision.
+The focused ledge recheck traced `FreeMove.lua`'s blocked push into
+`OverworldController.lua`'s `checkLedgeHop` / `startLedgeHop`. Its continuous
+collision body can approach before handing a special move to the engine; Ruby's
+current grid mode tests the destination tile. There is no box-size setting to
+change in `ShouldJumpLedge`. The smaller physical trigger remains M9 work.
 
 Acceptance repaired an ImGui context initialization conflict, preserved overlay
 registration through viewer initialization, and fixed the neutral ledge surface

@@ -106,11 +106,13 @@ into the voxel viewer, retains previously observed ordinary NPCs beyond Ruby's
 live slots, and corrects Route 101's ledge surface/contact. The native route and
 component checks are recorded in that guide; the milestone remains unchecked.
 The maintainer's 13 September screenshots failed the earlier ledge alignment
-check: the jump began before the visible rocky drop. The follow-up moves Route
-101's face to the near edge of its source barrier and uses the original jump
-clock for smooth contact-height descent. Fresh native and component checks pass;
-the new before/after GIF and affected human retest remain in the batch guide.
-This is a bounded M2/M5 acceptance repair, not completion of all-map collision.
+check: the jump began before the visible rocky drop. The maintainer also rejected
+the subsequent thin-face shape. The fuller prior terrain is restored; the
+follow-up adds a grounded approach before the visible hop using the original
+jump clock. This is presentation timing, with the native grid trigger unchanged.
+The affected human retest stays in the batch guide. Moving the physical trigger
+closer to the lip, with the ability to stop there, belongs to M9/batch 2 continuous
+movement; neither all-map collision nor that movement work is complete here.
 The [public host audit](runtime-host-audit.md) confirms menu extension callbacks
 and native function hooks exist upstream, but our frame/input/checkpoint/event
 integration is not available as a ready public adapter. Checkpoint safe-boundary

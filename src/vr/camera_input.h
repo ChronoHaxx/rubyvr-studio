@@ -8,6 +8,8 @@ inline constexpr uint16_t directions = 0x00f0;
 // Yaw zero looks north; positive yaw moves the eye toward the east.
 int quadrant(float yaw);
 uint16_t rotate(uint16_t active_low_keys, int quadrant);
+// Add screen-space WASD aliases without replacing existing host/controller bits.
+uint16_t with_wasd(uint16_t active_low_keys, bool w, bool a, bool s, bool d);
 
 // One quarter-turn per press. Finish held arrow input before applying a turn.
 class TurnLatch {

@@ -1,5 +1,14 @@
 # Verification and its limits
 
+## WASD controls follow-up — in review with PR #34
+
+`python tools/test-camera-input.py` passes **1,107** assertions on Windows and
+with WSL `--sanitize`. The additional cases cover WASD at all four camera views,
+combining arrow/controller/action input, original menu directions, panel/focus
+release and queued-turn behavior. See the [current control and human checks](desktop-demo-batch.md).
+The earlier batch GIF remains baseline evidence; it does not prove physical WASD
+input. Right-click toggle free orbit stays with continuous movement in batch 2.
+
 ## NPC views and viewport visibility — merged PR #33, 2026-09-12
 
 [Native GIF, exact scope and five passed human steps](live-npc-views.md).

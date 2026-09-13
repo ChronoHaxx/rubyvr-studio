@@ -18,11 +18,18 @@ and click **Load selected situation**. Loading resets speed to 1x and disables
 obstacle bypass. Save under a new name; existing names are refused. Checkpoints
 stay separate from the normal game save. All existing prepared states are kept.
 
-For normal play, arrows walk, J/L turn in 90-degree steps, R resets the view,
+For normal play in the voxel viewer, WASD or arrows walk, J/L turn in 90-degree steps, R resets the view,
 I/K tilt and U/O zoom. Enter opens Start, X confirms/talks and Z goes back.
 Original Bag/Party/Options retain scenery; battles and interiors use the original
 frame in this viewer. The WSL Studio editor remains separate; Linux live-game
 support is not established by this prepared Windows build.
+
+WASD also navigates ordinary game menus in the voxel viewer; the developer panel
+keeps typing separate from gameplay. A held movement key must be released after
+returning from a menu or another window. Right-click toggle free mouse orbit is
+planned with continuous movement in batch 2, as requested by the maintainer.
+After an update, close the old game and use the same command; the launcher selects
+the new, hash-verified executable without overwriting a still-running version.
 
 Use the [current five-step human check and visible limitations](desktop-demo-batch.md#combined-human-check--pending).
 In particular, the measured route checkpoint save took about 28 seconds to reach

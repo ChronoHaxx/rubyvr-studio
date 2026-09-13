@@ -79,7 +79,7 @@ void draw(SDL_Window* win) {
     ImGui::Begin("RubyVR toolbar",nullptr,flags);
     if(ImGui::Button(visible?"Close controls [Esc]":"Demo controls [Esc]"))visible=!visible;
     ImGui::SameLine();if(ImGui::Button("Reset view"))change("camera.reset");
-    ImGui::SameLine();ImGui::TextUnformatted(model.paused?"PAUSED":"Arrows: walk   J/L: turn   Enter: Start   X/Z: confirm/back");
+    ImGui::SameLine();ImGui::TextUnformatted(model.paused?"PAUSED":"WASD/Arrows: walk   J/L: turn   Enter: Start   X/Z: confirm/back");
     ImGui::End();
     if(visible) {
         ImGui::SetNextWindowPos({12,70},ImGuiCond_Always);

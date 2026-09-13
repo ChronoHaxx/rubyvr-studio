@@ -24,7 +24,7 @@ Use the same prepared Windows launcher:
 
 It starts **NPC views** beside Littleroot's walkers. Click **Demo controls** or
 press **Esc in the voxel viewer**. The original Ruby window keeps its existing
-menu. **Return to game** closes the panel; arrows walk, J/L turn 90 degrees,
+menu. **Return to game** closes the panel; WASD or arrows walk, J/L turn 90 degrees,
 R resets the camera, Enter opens Start, X confirms/talks and Z goes back.
 
 The list includes **Demo ledge**, **Demo battle**, **Demo lab ready** and the
@@ -33,6 +33,29 @@ Loading resets speed to 1x and switches obstacle bypass off. Existing checkpoint
 names are never overwritten; saves stay separate from the ordinary game save.
 The launcher verifies its prepared executable/pack hashes before starting.
 The WSL Studio editor remains a separate program; this prepared game is Windows.
+
+**Controls follow-up, 13 September:** WASD is an additional direction binding in
+the voxel viewer, including ordinary game menus. Arrows and X/Z/Enter keep working;
+the original Ruby window keeps its configured bindings. Opening the demo panel or
+changing focus blocks gameplay input while typing. Release a held movement key
+before continuing after a menu/focus change. J/L turns wait for WASD release too.
+The launcher can select a separately named, verified executable, so preparing an
+update does not replace an executable that is still running. Close the old game
+and reopen with the same command to use an update.
+
+Per the maintainer's clarification, **right-click toggle mouse look for free
+third-person orbit** will arrive with continuous movement in batch 2. It is not
+enabled by this WASD change. The GIF above predates the WASD label; its batch-1
+behavior remains representative and is not new keyboard-input evidence.
+
+The focused camera/input check now passes **1,107 assertions** on Windows and
+under WSL ASan/UBSan. These include WASD at all four views, combined arrow/action
+input, menu direction, focus/panel suppression and deferred turns. The runtime
+adds aliases before the existing mapper and recording boundary; replay input is
+not remapped a second time. The original host's configured bindings stay intact.
+The cached Emerald `OverworldController.lua` / `FreeMove.lua` and APK 2.4.2
+`FreeMove.lua` input gates were rechecked; their scripted-movement ownership is
+retained as the reference for batch 2, without copying restricted implementation.
 
 ## Known limits beside the playtest
 
@@ -58,9 +81,11 @@ The WSL Studio editor remains a separate program; this prepared game is Windows.
 Use the exact prepared revision and hashes recorded in the PR. Agent results
 below do not tick these boxes.
 
-1. [ ] Launch with the command above. Open **Demo controls** in the voxel viewer.
+1. [ ] Launch with the command above. Try WASD and arrows, including after a J/L
+   turn, then open **Demo controls** in the voxel viewer.
    Pause, advance a frame and resume; choose 4x and return to 1x. Expect controls
-   to respond without switching windows, and no game movement while typing.
+   to respond without switching windows, and no game movement while typing WASD
+   into a new checkpoint name. Release keys before returning to the game.
 2. [ ] Save under a new name, wait for **Saved**, move after returning to the
    game, then load that situation. Expect the saved place, 1x speed and obstacle
    bypass off. Try the same name again: expect refusal, preserving that save.

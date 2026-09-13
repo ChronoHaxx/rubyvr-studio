@@ -200,7 +200,8 @@ void frame(const world::Snapshot& s, bool present) {
     if (const Uint8* k = SDL_GetKeyboardState(nullptr);focused() && k && !(g_overlay_input && g_overlay_input())) {
         if (pressed(k,SDL_SCANCODE_R,&g_r_held)) reset_camera();
         const bool walking=k[SDL_SCANCODE_UP] || k[SDL_SCANCODE_DOWN] ||
-            k[SDL_SCANCODE_LEFT] || k[SDL_SCANCODE_RIGHT];
+            k[SDL_SCANCODE_LEFT] || k[SDL_SCANCODE_RIGHT] ||
+            k[SDL_SCANCODE_W] || k[SDL_SCANCODE_A] || k[SDL_SCANCODE_S] || k[SDL_SCANCODE_D];
         const int turn=g_turn.update(k[SDL_SCANCODE_J],k[SDL_SCANCODE_L],walking);
         if(turn) set_yaw_radians(g_yaw+turn*1.570796327f);
         if (k[SDL_SCANCODE_I]) g_pitch += 0.9f*dt;

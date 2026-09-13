@@ -915,6 +915,13 @@ checks and correct actor views; implement first-person player-card hiding and
 camera/eye height deliberately. The NPC batch in M6 supplies more of the actor
 view contract but does not implement those modes or change movement authority.
 
+**13 September controls clarification:** WASD aliases are in review with PR #34,
+alongside arrows, with the existing camera/menu/focus gates. The maintainer chose
+**right-click toggle mouse look for unrestricted third-person orbit together with
+continuous movement in batch 2**. Include clear cursor capture/release, sensitivity,
+Escape/focus-loss recovery and access to the demo panel in that combined check;
+this control is not implemented by the current WASD follow-up.
+
 - [x] Provide tested editor orbit/fly/orthographic/focus controls, independent
   of saved authoring data ([camera verification](verification.md)).
 - [x] **Merged into main in PR #29 — [native north-up and camera-relative grid walking](live-camera.md):**

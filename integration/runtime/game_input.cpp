@@ -19,6 +19,11 @@ uint16_t filter(uint16_t keys, bool host_menu_open) {
     if (!viewer::active()) return keys;
     const auto source=(!SDL_GetKeyboardFocus() || host_menu_open || dev::viewer_menu_open())?Source::Inactive:
         viewer::focused()?Source::Viewer:Source::Original;
+    if(source==Source::Viewer) {
+        const auto* k=SDL_GetKeyboardState(nullptr);
+        keys=camera_input::with_wasd(keys,k[SDL_SCANCODE_W],k[SDL_SCANCODE_A],
+                                    k[SDL_SCANCODE_S],k[SDL_SCANCODE_D]);
+    }
     return filter_from_source(keys,source);
 }
 uint16_t filter_from_source(uint16_t keys, Source source) {

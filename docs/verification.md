@@ -1,6 +1,19 @@
 # Verification and its limits
 
-## Free walking and camera modes — batch 2 in review, 2026-09-13
+## Free walking and camera modes — batch 2 in review, 2026-09-14
+
+**14 September 3D house pilot:** twelve native assertions pass through May's
+house entry, diagonal movement, actual chair collision, dialogue/return,
+upstairs first person, bed collision, stairs down and camera-preserving exit.
+Public free-walk 67, live-scene 122, neighbourhood 17 and presentation 60 checks
+pass, including WSL ASan/UBSan. The prepared build adds direct 1F/2F checkpoints;
+other interiors retain original views. The current native clip and pending
+human checklist are in the guide. Recipe generation uses local pinned source
+art; all unrelated starter patterns/terrain are retained. Native input/focus,
+angled-ledge and unsupported-lab regressions accompany this bounded journey.
+Automated and capture review do not establish human input or headset acceptance.
+
+The earlier repair records below describe their historical revisions.
 
 **13 September interior follow-up:** the `4d1fb46` native build consumes indoor
 walking input while a free camera remains selected. After fixing that ownership

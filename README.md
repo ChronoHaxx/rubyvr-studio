@@ -78,9 +78,10 @@ remain open. All five human checks passed for `09d28c0`.
 ## What works
 
 **Current batch for review: [free walking, third-person and first-person](docs/free-camera-movement.md).**
-**13 September retest:** the reported diagonal shake, angled ledge and interior handoff
-are repaired in this PR. Twelve ledge and four house entry/return approaches
-pass native checks; movement and interior controls still need the maintainer's retest.
+**14 September addition:** both floors of May's house now support free Third/First
+person movement, solid furniture, dialogue and stairs. The guide has the actual
+house recording and two direct indoor checkpoints. Other interiors retain the
+original view. Diagonal, angled-ledge and house controls still need human retest.
 Smooth camera-relative walking, diagonal movement, right-click mouse look and
 pitch-aware sprites work in the prepared native game. Watch the actual recording
 and use the same launcher in the guide. Human playtesting, ledge-corner repairs,

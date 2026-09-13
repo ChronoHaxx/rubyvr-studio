@@ -1,6 +1,7 @@
 // viewer.cpp — see viewer.h for what this is for.
 
 #include "viewer.h"
+#include "indoor_house_assets.h"
 #include "diorama.h"
 #include "actor_render.h"
 #include "gl_loader.h"
@@ -365,11 +366,16 @@ void frame(const world::Snapshot& s, bool present) {
         math::look_at(ex, ey, ez, tx, ty, tz));
 
     actor_render::set_camera(g_yaw,g_pitch,g_mode==CameraMode::FirstPerson);
+    const auto room=indoor_house::room(s.map_group,s.map_number);
+    if(room.width) diorama::set_room_cutaway(g_mode!=CameraMode::FirstPerson,
+        float(origin_x+7),float(origin_z+room.wall_front)-.25f,
+        float(origin_x+s.width-8),float(origin_z+s.height-7),std::sin(g_yaw),std::cos(g_yaw));
     if(connected) {
         diorama::draw_region_raw(vp,g_debug);
         actor_render::draw(vp,math::translation(float(origin_x),0,float(origin_z)));
     } else diorama::draw_raw(vp, math::identity(), g_debug);
     actor_render::clear_camera();
+    diorama::set_room_cutaway(false);
     g_world_drawn=true;
 
     if(present)capture_review(w,h);
@@ -381,15 +387,18 @@ void game_frame(const world::Snapshot& snapshot,const presentation::Input& input
                 std::span<const uint8_t> rgb,int sw,int sh,
                 std::span<const uint8_t> field_ui,bool present) {
     if(!g_active || !g_win)return;
-    auto decision=g_lifetime.next(input,snapshot.valid);
+    auto supported=input;
+    if(input.indoor_3d && !indoor_house::authored(snapshot,diorama::current_overrides()))
+        supported.indoor_3d=false;
+    auto decision=g_lifetime.next(supported,snapshot.valid);
     if(decision.update)g_retained=snapshot;
     if(!decision.world)g_retained={};
     // frame() owns the existing camera, shared mesher, live materials and actor
     // renderer. Retained frames read only the host copy, never menu VRAM/OBJ.
-    g_world_controls=decision.world && input.mode==presentation::Mode::Field;
+    g_world_controls=decision.world && presentation::world_mode(input);
     frame(decision.world?g_retained:world::Snapshot{},false);
     if(!g_world_drawn) {decision.world=decision.retained=false;decision.overlay=presentation::Overlay::Original;}
-    g_world_controls=decision.world && input.mode==presentation::Mode::Field;
+    g_world_controls=decision.world && presentation::world_mode(input);
     int w=0,h=0;SDL_GL_GetDrawableSize(g_win,&w,&h);
     if(w<=0||h<=0)return;
     gl::glBindFramebuffer(GL_FRAMEBUFFER,0);glViewport(0,0,w,h);
@@ -405,7 +414,7 @@ void game_frame(const world::Snapshot& snapshot,const presentation::Input& input
         screen_overlay::draw(rgba,sw,sh,w,h,decision.world);
     }
     g_presentation=decision;
-    if(input.mode!=presentation::Mode::Field || !decision.world) {
+    if(!presentation::world_mode(input) || !decision.world) {
         char title[256];std::snprintf(title,sizeof(title),
             "RubyRecomp - %s | %s | X: confirm / Z: back / Enter: Start | Arrows: original controls | J/L: view",
             presentation::name(input.mode),decision.retained?"world retained":"original game view");

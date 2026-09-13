@@ -16,7 +16,11 @@ struct Input {
     uint32_t callback=0;
     uint64_t epoch=0;
     bool fading=false;
+    bool indoor_3d=false;
 };
+inline bool world_mode(const Input& in) {
+    return in.mode==Mode::Field || (in.mode==Mode::Interior && in.indoor_3d);
+}
 // Hash-gated pinned Ruby signals only. An unknown callback is never a menu.
 Input inspect(const world::live::Memory& memory, uint64_t epoch=0);
 const char* name(Mode);

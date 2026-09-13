@@ -7,6 +7,8 @@
 #include "sha1.h"
 #include "actor_frame.h"
 #include "dev_runtime.h"
+#include "diorama.h"
+#include "indoor_house_assets.h"
 #include "mod_function_hooks.h"
 #include "runtime_arm.h"
 #include <cmath>
@@ -84,21 +86,36 @@ bool blocked(int x,int z,int direction,void* context) {
         const auto scene=world::live::inspect(memory());
         if(scene.status==world::live::Status::Field && x>=7 && z>=7 && x<scene.width-8 && z<scene.height-7)return false;
     }
-    return guest(0x0805FF80,uint32_t(reinterpret_cast<uintptr_t>(context)),uint16_t(x),uint16_t(z),direction)!=0;
+    const auto address=uint32_t(reinterpret_cast<uintptr_t>(context));
+    auto* object=writable(address,0x24);
+    // In a small room the fractional camera can already be on the last row
+    // while the player's body is approaching it. The camera-next-row test
+    // would reject that valid destination because it looks one tile farther.
+    // Query the native target border/collision/elevation/NPC rules without this
+    // camera-only check, then restore trackedByCamera before any game update.
+    struct Restore {uint8_t* byte;uint8_t saved;~Restore(){if(byte)*byte=saved;}};
+    const bool room=object && world::live::indoor_house_available(memory());
+    Restore restore{room?object+1:nullptr,object?object[1]:uint8_t(0)};
+    if(room)object[1]&=uint8_t(~0x80);
+    return guest(0x0805FF80,address,uint16_t(x),uint16_t(z),direction)!=0;
 }
 void release(uint8_t* sprite,bool centre) {
     if(owned && centre && sprite)shift_sprite(sprite,position,{cell_x+0.5,cell_z+0.5});
     if(owned)++handoffs;
     owned=false;entry_pending=false;tracked_object=-1;door_contact=0;
 }
+bool room_body_blocked(Point p,void*) {
+    if(dev::obstacles_bypassed())return false;
+    const auto* id=memory().read(world::kGSaveBlock1+4,2);
+    return id && indoor_house::body_blocked(diorama::current_overrides(),id[0],id[1],p.x,p.z);
+}
 int intercept(uint32_t address,int thumb,ArmCpuState* cpu) {
     if(calling || !thumb || !cpu || !viewer::active())return 0;
     if(epoch!=g_runtime_state_epoch){epoch=g_runtime_state_epoch;reset();}
     const auto m=memory();
-    // The selected camera mode persists indoors, but ownership must not. Ruby
-    // uses the same field callbacks there while input uses original 2D axes.
-    // Read the guest map type, not a potentially one-frame-old rendered scene.
-    if(!world::live::outdoor_controls_available(m)){release(nullptr,false);return 0;}
+    // Read verified guest scene support, not a potentially older rendered frame.
+    // Unsupported interiors continue to use original control/stepping.
+    if(!world::live::scene_controls_available(m)){release(nullptr,false);return 0;}
     if(address==camera_entry){
         auto* camera=writable(0x03004880,0x18);
         if(!camera || s32(camera+4)<=0 || s32(camera+4)>=64)return 0;
@@ -149,7 +166,7 @@ int intercept(uint32_t address,int thumb,ArmCpuState* cpu) {
         cpu->R[15]=cpu->R[14]&~1u;return 1;
     }
     const Point before=position;
-    const auto moved=advance(position,intent,1.0/16,blocked,reinterpret_cast<void*>(uintptr_t(object_address)));
+    const auto moved=advance(position,intent,1.0/16,blocked,reinterpret_cast<void*>(uintptr_t(object_address)),room_body_blocked);
     ++ticks;
     if(moved.blocked) {
         const auto scene=world::live::inspect(m);
@@ -230,7 +247,7 @@ void reset(){intent={};owned=false;entry_pending=false;tracked_object=-1;door_co
 bool available(){return registered_step&&registered_transition&&registered_camera;}
 bool foot_position(int object_index,int x,int z,Point& out) {
     if(!owned || epoch!=g_runtime_state_epoch || tracked_object!=object_index ||
-       cell_x!=x || cell_z!=z || !world::live::outdoor_controls_available(memory()))return false;
+       cell_x!=x || cell_z!=z || !world::live::scene_controls_available(memory()))return false;
     out=position;return true;
 }
 Stats stats(){return {owned,position.x,position.z,ticks,entries,handoffs};}

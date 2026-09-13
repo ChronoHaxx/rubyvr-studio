@@ -154,11 +154,27 @@ uniform usampler2D uTiles;   // 256x256 R8UI: 32x32 tiles of 8x8 palette indices
 uniform sampler2D  uPal;     // 16x16 RGBA8:  x = colour index, y = palette
 uniform int        uDebug;   // 0 normal, 1 false-colour by unit height
 uniform vec4       uTint;    // presentation only; never changes palette indices
+uniform vec4       uRoom;
+uniform vec2       uRoomView; // camera side; zero disables room cutaway
 
 out vec4 FragColor;
 
 void main() {
     ivec2 origin = ivec2(int(vTile % 32u) * 8, int(vTile / 32u) * 8);
+    // Indoor backup padding is opaque black source art, not more floor.
+    if (uRoom.z > uRoom.x && vUnitH == 0u &&
+        (vPosition.x < uRoom.x || vPosition.x > uRoom.z ||
+         vPosition.z < uRoom.y || vPosition.z > uRoom.w)) discard;
+    if (dot(uRoomView, uRoomView) > 0.01 &&
+        vPosition.x >= uRoom.x-0.001 && vPosition.x <= uRoom.z+0.001 &&
+        vPosition.z >= uRoom.y-0.001 && vPosition.z <= uRoom.w+0.001) {
+        if (vPosition.y >= 2.499) discard;
+        if (vPosition.y > 0.25 &&
+            ((uRoomView.x < -0.15 && vPosition.x < uRoom.x+0.251) ||
+             (uRoomView.x >  0.15 && vPosition.x > uRoom.z-0.251) ||
+             (uRoomView.y < -0.15 && vPosition.z < uRoom.y+0.251) ||
+             (uRoomView.y >  0.15 && vPosition.z > uRoom.w-0.251))) discard;
+    }
     ivec2 inTile = ivec2(clamp(vUV * 8.0, vec2(0.0), vec2(7.999)));
     uint idx = texelFetch(uTiles, origin + inTile, 0).r;
 
@@ -197,6 +213,8 @@ GLuint   g_tex_tiles = 0, g_tex_pal = 0;
 GLint    g_u_mvp = -1, g_u_tiles = -1, g_u_pal = -1, g_u_debug = -1;
 GLint    g_u_tint = -1;
 GLint    g_u_placed = -1, g_u_region = -1;
+GLint    g_u_room = -1, g_u_room_view = -1;
+float    g_room[4]{}, g_room_view[2]{};
 uint64_t g_mesh_upload_count = 0;
 GLsizei  g_vertex_count = 0;
 
@@ -3239,6 +3257,8 @@ void submit(const math::Mat4& view_proj, const math::Mat4& model, int debug, Tin
     gl::glUniform4f(g_u_tint, tint.r, tint.g, tint.b, 1.f);
     gl::glUniform2f(g_u_region,chunk?float(chunk->x):0.f,chunk?float(chunk->z):0.f);
     gl::glUniform1i(g_u_placed,0);
+    gl::glUniform4f(g_u_room,g_room[0],g_room[1],g_room[2],g_room[3]);
+    gl::glUniform2f(g_u_room_view,g_room_view[0],g_room_view[1]);
 
     gl::glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, chunk?chunk->tiles:g_tex_tiles);
@@ -3285,6 +3305,10 @@ void submit(const math::Mat4& view_proj, const math::Mat4& model, int debug, Tin
 }  // namespace
 
 // ── The object model, made public ───────────────────────────────────────────
+void set_room_cutaway(bool enabled,float x0,float z0,float x1,float z1,float vx,float vz) {
+    g_room[0]=x0;g_room[1]=z0;g_room[2]=x1;g_room[3]=z1;
+    g_room_view[0]=enabled?vx:0;g_room_view[1]=enabled?vz:0;
+}
 //
 // See diorama.h for what this exposes and, more importantly, what it does not.
 //
@@ -3381,6 +3405,8 @@ bool init() {
     g_u_tint = gl::glGetUniformLocation(g_prog, "uTint");
     g_u_placed = gl::glGetUniformLocation(g_prog, "uPlaced");
     g_u_region = gl::glGetUniformLocation(g_prog, "uRegion");
+    g_u_room = gl::glGetUniformLocation(g_prog, "uRoom");
+    g_u_room_view = gl::glGetUniformLocation(g_prog, "uRoomView");
     g_u_tiles = gl::glGetUniformLocation(g_prog, "uTiles");
     g_u_pal   = gl::glGetUniformLocation(g_prog, "uPal");
 

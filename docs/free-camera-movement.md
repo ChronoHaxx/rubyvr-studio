@@ -1,6 +1,6 @@
 # Free walking, third-person and first-person
 
-**Batch 2, M5/M6/M9 — diagonal shake, angled ledges and interior control handoff repaired; human retest pending.**
+**Batch 2, M4/M5/M6/M9 — free cameras and a playable two-floor house; human retest pending.**
 Third person and First person now move between Ruby's tile centres, including
 diagonally. The view can turn smoothly with the mouse while walking. Grid remains
 available. Player/NPC cards tilt toward the camera around their feet, so steep
@@ -11,6 +11,37 @@ views retain a readable sprite instead of showing its thin top edge.
 This recording uses the actual native game and shared renderer, with scripted
 input. It is sampled, captioned and retimed for review; it does not establish
 physical mouse feel, performance or headset acceptance.
+
+## Playable house — 14 September
+
+![Native house gameplay: downstairs dialogue, first person upstairs, orbit and exit](media/indoor-house.gif)
+
+**May's Littleroot house now has both floors in 3D.** Third person and First
+person support diagonal movement, original dialogue, stairs and the trip outside
+with the selected heading intact. Tables, chairs, cabinets and the bed have solid
+geometry. Free movement checks those actual box parts as well as Ruby's original
+tile/NPC collision. Grid keeps Ruby's original tile collision.
+
+The ordinary Studio parts retain the original source palette, wooden floor,
+carpets and furniture fronts. Third-person/Grid views open the ceiling and near
+walls; first person keeps them. This is one authored house, not automatic
+reconstruction of all interiors. Other rooms, or this house without its complete
+matching recipe, use the original game view and controls. Camera obstacle
+avoidance and final furniture art polish remain open.
+
+The 13.44-second clip is sampled, captioned and retimed from actual native input
+and rendered frames. Twelve assertions cover entry, diagonal walking, stopping
+at a chair, dialogue and return, upstairs first person, bed collision, downstairs
+return, exit with the same heading and resumed outdoor movement. No obstacle
+bypass was used. The two new checkpoints skip directly to either floor.
+
+Native integration also exposed two faults: indoor original-frame composition
+covered the 3D room, and Ruby's camera-boundary collision rejected a valid tile
+in the small room. Original UI extraction now applies to supported 3D interiors;
+the collision query temporarily omits only its camera-boundary flag, restoring
+it immediately. Original map boundaries, tile collision, elevation, NPCs,
+warps and scripts still run. Local review also confined room-padding clipping
+to these rooms so outdoor border trees remain visible.
 
 ## Diagonal shake follow-up — 13 September
 
@@ -78,7 +109,8 @@ door contact, it supplies the contact direction to Ruby's next normal input
 pass while the player keeps pushing into the door. Ruby still checks and runs
 the original warp/script. Releasing or turning away cancels that direction.
 The selected camera and heading remain available when returning outdoors.
-Interiors still use their original 2D graphics and controls.
+At that revision interiors still used their original 2D graphics and controls.
+The 14 September house pilot above supersedes that behavior for two rooms only.
 
 All four native house approaches pass: cardinal-view diagonal keys, oblique
 Third person, oblique First person and shallow First person. Each verifies
@@ -100,8 +132,9 @@ The existing prepared runner, local game inputs and named checkpoints are the
 prerequisites. This is the maintainer's prepared Windows game, not the separate
 WSL Studio editor or a public installation recipe. The launcher verifies the
 executable and pack; existing saves/checkpoints and the previous binary are kept.
-The new **House approach** checkpoint starts outside the tested house with
-obstacle bypass off; all ten previous checkpoints remain available.
+**House approach** starts outside the tested house. **House 1F ready** and
+**House 2F ready** start inside either floor. Loading turns obstacle bypass off;
+all eleven previous checkpoints and the ordinary save remain available.
 
 Open **Demo controls → Camera and movement → Third person**. WASD/arrows walk;
 right-click toggles mouse look. Right-click again releases it. Escape releases
@@ -138,12 +171,13 @@ launcher. Agent results below do not tick these boxes.
   choose Run and return. Repeat with another heading. Expect the chosen view/mode
   to survive. Open Start → Bag and return, then talk to an NPC: original menus
   and dialogue should still respond without walking through them.
-- [ ] **House entry and return:** load **House approach**, select **Third person**,
-  reset the view with R, and approach the door using W+D. Expect the house to
-  open, then ordinary indoor walking with WASD/arrows. Walk back out and expect
-  the same Third person view. Reload the checkpoint, select **First person**,
-  turn the camera obliquely with J/L and approach again. Expect indoor controls
-  and the same First person heading on exit; release held keys before resuming.
+- [ ] **House, furniture and stairs:** load **House approach**, select **Third
+  person**, press R, and enter using W+D. Expect a 3D room. Walk diagonally,
+  approach the green chairs/table and talk to May's mother with X: furniture
+  blocks you and dialogue responds without walking. Take the northwest stairs;
+  select **First person**, walk toward the bed, then return downstairs and out.
+  Expect solid furniture, both floors, working stairs and the same heading on
+  exit. **House 1F ready / House 2F ready** let you retry either floor directly.
 - [ ] **Save and reopen:** stop between tile centres, save a uniquely named
   checkpoint, move and reload it. Expect the same foot position within one source
   pixel. Close/reopen using the command above and load it again. The new process
@@ -167,9 +201,11 @@ launcher. Agent results below do not tick these boxes.
   can centre an actor during an original scene transition.
 - **M6/M9:** original actor art still supplies four directions, not new 3D bodies
   or eight-direction artwork. Distant NPCs can retain their last known pose.
-- **M4/M5/M10:** foliage, missing scenery, void edges, save latency, public runner
-  setup and performance budgets remain open. Battles/interiors still use the
-  original graphics where voxel coverage is unavailable.
+- **M4/M5/M10:** the house pilot covers May's two floors only; remaining interiors
+  and battles use original graphics. Final furniture polish, foliage, missing
+  scenery, void edges, save latency, public setup and performance budgets remain
+  open. Indoor free-mode furniture collision currently supports unrotated boxes;
+  an incompatible/partial house recipe falls back to the original game.
 - **M5:** the existing button-only input recording/replay format cannot capture
   fractional movement and camera vectors. Free modes are refused when that
   recorder/replayer is active; use Grid for those developer sessions.
@@ -216,21 +252,39 @@ locks and uses original collision/warp behavior. Ruby's pinned
 `field_control_avatar.c` handles north-facing warp doors in
 `ProcessPlayerFieldInput`, before `player_step`; the adapter therefore supplies
 one contact-directed input pass rather than dispatching a warp itself. Both
-input mapping and free ownership use `outdoor_controls_available`: verified,
-unlocked town/city/route maps only. Generic field controls remain valid indoors.
-This native gate does not depend on the renderer's possibly older scene.
+input mapping and free ownership originally used `outdoor_controls_available`.
+The house pilot uses `scene_controls_available`: verified, unlocked outdoor maps
+or the two exact room identities/layouts. The viewer also requires both complete
+room patterns and matching source metatile definitions before enabling 3D input.
+An unsupported room retains original input even when a free camera is selected;
+an inactive supported world keeps a zero vector to avoid a focus-loss recenter.
+
+The indoor reference pass used the same pinned companion's `FirstPerson.lua`
+(150–178), `FreeMove.lua` (345–385), `VoxelScene.lua` (1906 onward) and `Gen3.lua`
+(2320–2335 and 2710 onward): valid authored indoor scenes can share free cameras,
+explicit furniture profiles retain native interactions, and indoor priority bits
+are not physical heights. The cached APK 2.4.2 modules provide the same relevant
+separation. No restricted source was copied or translated. Our two-room recipe
+is original ordinary Studio box parts with locally supplied source textures.
+
+`tools/build-indoor-house-example.py` merges those four room strips and flat
+terrain into a local starter pack, preserving unrelated models and terrain.
+It requires the pinned local `pokeruby` source and a generated starter pack;
+`--pack` selects an existing pack and `--out` keeps the result separate. The
+maintainer's prepared launcher already includes this output. No extracted art,
+pack, saves or native game executable is published.
 
 ## Agent verification — scope and limitations
 
 | Evidence | Result and scope |
 |---|---|
-| Free-walk component | 66 checks, optimized and ASan/UBSan: sustained diagonals, speed, sliding/contact normals, corner blocking, bounded steps, cell notification and cancelling pending door direction on release/reversal/parallel/invalid input |
+| Free-walk component | 67 checks, optimized and ASan/UBSan: sustained diagonals, speed, sliding/contact normals, corner blocking, bounded steps, cell notification and cancelling pending door direction on release/reversal/parallel/invalid input |
 | Billboard component | 10,079 assertions, optimized and ASan/UBSan: basis, near-vertical view, foot pivot, finite guards and vertex geometry |
-| Camera/presentation/actor checks | Camera 1,372 and presentation 53 pass on Windows and WSL ASan/UBSan; camera coverage includes all 256 map-type bytes and indoor native control. Earlier unchanged player frame 3,504, NPC frame 16,363 and actor range 25 results remain regression evidence |
+| Camera/presentation/actor checks | Camera 1,372 earlier regression checks; current presentation 60 and live-scene 122 pass on Windows and WSL ASan/UBSan; camera coverage includes all 256 map-type bytes and indoor native control. Earlier unchanged player frame 3,504, NPC frame 16,363 and actor range 25 results remain regression evidence |
 | Actual Windows OpenGL viewer | Exact fractional camera/actor foot survives rounded source pixels; steep card retains height; first person hides only player; arbitrary yaw retained; battle-return yaw/pitch/mode preserved; existing actor, menu, overlay and connected-scene checks pass |
 | Native movement sequence | 16 checks: fractional/diagonal movement, grid return, native ledge/reverse collision, fractional checkpoint, repeated partial reversals and scripted Windows mouse capture/release |
 | Native angled ledges | 48 assertions across twelve Third/First person approaches: original jump action, landing, unchanged heading and blocked reverse; old build fails all ten angled/diagonal jump cases |
-| Native house/interior return | 20 house assertions across four approaches: normal collision, completed entry, native indoor walking, restored camera/heading and outdoor ownership. Six lab checks passed after the ownership gate repair |
+| Native 3D house | 12 assertions: both floors, diagonal movement, actual chair/bed collision, native dialogue, stairs and exit with camera retained. The earlier 20 original-view house assertions remain historical evidence. Six lab fallback/return checks pass on the indoor build |
 | Native gameplay journey | Six checks: a real wild encounter, successful Run (`gBattleOutcome == 4`) with north/free mode preserved, Bag retention/return, native connection and return |
 | Native Windows build | Passed with existing upstream warnings. No physical input or headset acceptance inferred |
 
@@ -238,13 +292,14 @@ The native connection outward leg used the existing obstacle bypass to reach
 the border; return used ordinary collision. The Bag sequence followed battle
 return; it is not exhaustive coverage of every fractional menu position. Native
 drivers, private saves and raw captures remain local under `build/dev-session`.
-The first movement regression run could not acquire window focus and failed its
+The earlier 13 September movement regression run could not acquire window focus and failed its
 two mouse assertions. With no other probe active, the unchanged rerun acquired
 focus and passed all 16 checks. This still does not establish physical mouse feel.
 The reproducible public component checks need no SDL, OpenGL or game assets:
 
 ```bash
 bash tools/test-free-walk.sh
+bash tools/test-live-scene.sh
 bash tools/test-billboard.sh
 bash tools/test-actor-frame.sh
 bash tools/test-actor-range.sh
@@ -262,5 +317,10 @@ repair to the worker helper was required. Native movement, integration, the
 partial-reversal repair, recording and acceptance work were Astra's work and
 are not claimed as worker time savings.
 
-This follow-up is Astra integration rework attributed to PR #35, with no new
-DeepSeek call or API charge. The original billboard worker result is unchanged.
+The diagonal/door repairs and indoor pilot are Astra work in PR #35, with no
+new DeepSeek call or API charge. The original billboard worker is unchanged.
+A Claude Opus/xhigh read-only review was attempted for the indoor integration;
+automatic approval review rejected exporting the uncommitted source. No Claude
+run occurred. Astra completed local code review, native checks and capture
+inspection. Active implementation/review time and tokens were not separately
+metered; native probe timings and failed repair attempts are retained locally.

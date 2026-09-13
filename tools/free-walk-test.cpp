@@ -86,6 +86,10 @@ int main(){
     walls.clear();
     auto capped=advance({10.5,10.5},{1,0},10000,blocked,&walls);
     check(near(capped.position.x,10.5625),"large delta cannot tunnel");
+    auto furniture=[](Point p,void*){return p.x>=10.53;};
+    auto body=advance({10.5,10.5},{1,1},1.0/16,blocked,&walls,furniture);
+    check(body.blocked_x&&!body.blocked_z&&near(body.position.x,10.5)&&body.position.z>10.5,
+          "subtile furniture stops contact axis and allows sliding");
     auto invalid=advance({10.5,10.5},{1,0},1.0/16,nullptr,nullptr);
     check(near(invalid.position.x,10.5),"missing collision query fails closed");
     std::printf("free-walk: %d contract checks, %d failures\n",checks,failures);return failures?1:0;

@@ -784,7 +784,7 @@ void frame_sink(const uint8_t* rgb888, int w, int h, void*) {
             const bool size_ok=w>0 && h>0 && w<=4096 && h<=4096 && rgb888;
             const std::span<const uint8_t> rgb=size_ok?
                 std::span<const uint8_t>(rgb888,size_t(w)*h*3):std::span<const uint8_t>{};
-            if(input.mode==presentation::Mode::Field && snap.valid && w==240 && h==160)
+            if(presentation::world_mode(input) && snap.valid && w==240 && h==160)
                 presentation::capture_field_ui(rgb,ui);
             viewer::game_frame(snap,input,rgb,w,h,ui);
         }

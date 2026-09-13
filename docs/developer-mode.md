@@ -13,7 +13,8 @@ press **Esc in the voxel viewer** for pause, one-frame stepping, speed, obstacle
 bypass and a direct list of named checkpoints. **Return to game** closes the
 panel. The original Ruby window retains its existing Esc menu.
 
-Select **House approach**, **Demo ledge**, **Demo battle**, **Demo lab ready** or another situation
+Select **House approach**, **House 1F ready**, **House 2F ready**, **Demo ledge**,
+**Demo battle**, **Demo lab ready** or another situation
 and click **Load selected situation**. Loading resets speed to 1x and disables
 obstacle bypass. Save under a new name; existing names are refused. Checkpoints
 stay separate from the normal game save. All existing prepared states are kept.
@@ -21,9 +22,10 @@ stay separate from the normal game save. All existing prepared states are kept.
 WASD/arrows walk. In **Grid**, J/L turn in 90-degree steps; **Third person** and
 **First person** use continuous walking and smooth J/L or right-click mouse look.
 R resets the view, I/K tilt and U/O zoom. Enter opens Start, X confirms/talks and Z goes back.
-Original Bag/Party/Options retain scenery; battles and interiors use the original
-frame and original controls in this viewer; the chosen outdoor camera returns on
-exit. The WSL Studio editor remains separate; Linux live-game
+Original Bag/Party/Options retain scenery. May's house has both floors in 3D,
+with free Third/First person movement, solid furniture and native dialogue/stairs.
+Other interiors and battles use the original view and controls; the selected
+camera returns on exit. The WSL Studio editor remains separate; Linux live-game
 support is not established by this prepared Windows build.
 
 WASD also navigates ordinary game menus in the voxel viewer; the developer panel

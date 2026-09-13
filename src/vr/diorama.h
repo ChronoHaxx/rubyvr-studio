@@ -308,6 +308,10 @@ void update_region_live(const world::Snapshot&);
 const RegionStats& region_stats();
 bool region_bounds(part_geometry::Vec* lo,part_geometry::Vec* hi);
 void draw_region_raw(const math::Mat4& view_proj, int debug=0, Tint tint={});
+// Open near shell walls and ceiling for an outside camera. First person clears
+// this presentation-only cutaway; geometry and collision remain unchanged.
+void set_room_cutaway(bool enabled, float x0=0, float z0=0, float x1=0, float z1=0,
+                      float view_x=0, float view_z=0);
 
 // Change the minimum standing-unit height and force a rebuild. Exists so the
 // live viewer can sweep the height rule and watch the world change, which beats

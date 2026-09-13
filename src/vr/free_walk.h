@@ -12,6 +12,7 @@ int facing(Point vector); // Ruby: south=1, north=2, west=3, east=4; zero=idle
 // continues pushing toward it. Release, reversal and parallel motion cancel it.
 int contact_facing(Point vector,int contact);
 using Blocked = bool (*)(int x,int z,int direction,void* context);
+using BodyBlocked = bool (*)(Point position,void* context);
 struct Step {
     Point position;
     bool crossed=false, blocked=false;
@@ -22,5 +23,5 @@ struct Step {
 };
 // One fixed guest tick, at most one cell-entry event. Axis sliding checks the
 // full body, including both corners. The caller owns game events and cadence.
-Step advance(Point position,Point direction,double distance,Blocked,void* context);
+Step advance(Point position,Point direction,double distance,Blocked,void* context,BodyBlocked=nullptr);
 }

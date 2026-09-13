@@ -60,6 +60,9 @@ bool field_controls_available(const Memory& memory);
 // Only the outdoor map types currently rendered with 3D movement. Interiors
 // use the same guest callbacks but must retain native controls and stepping.
 bool outdoor_controls_available(const Memory& memory);
+// The bounded indoor capability also verifies the current source header/layout.
+bool indoor_house_available(const Memory& memory);
+bool scene_controls_available(const Memory& memory);
 const char* status_name(Status status);
 
 } // namespace vr::world::live

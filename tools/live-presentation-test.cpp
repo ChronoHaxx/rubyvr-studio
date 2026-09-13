@@ -63,6 +63,18 @@ int main() {
     life.next(field,true);auto battle=bag;battle.mode=Mode::Battle;
     check(!life.next(battle,false).world && !life.next(bag,false).world,"battle drops world and does not reuse it in battle Bag");
     life.next(field,true);life.reset();check(!life.next(bag,false).world,"explicit reset drops retained scene");
+    auto indoors=field;indoors.mode=Mode::Interior;indoors.identity={1,2,0x08012000};indoors.indoor_3d=true;
+    check(life.next(indoors,true).update,"authored indoor room publishes 3D field");
+    auto indoor_bag=indoors;indoor_bag.mode=Mode::Bag;indoor_bag.indoor_3d=false;
+    d=life.next(indoor_bag,false);
+    check(d.world && d.retained && d.overlay==Overlay::Original,"indoor Bag overlays retained room");
+    check(life.next(indoors,true).overlay==Overlay::FieldUi,"return to house restores UI ownership extraction");
+    auto upstairs=indoors;upstairs.identity.number=3;upstairs.fading=true;
+    check(!life.next(upstairs,true).world,"stairs never retain downstairs into upstairs fade");
+    upstairs.fading=false;check(life.next(upstairs,true).update,"loaded upstairs publishes its own scene");
+    indoors.indoor_3d=false;
+    check(!life.next(indoors,true).world,"missing house assets use original presentation");
+    check(!life.next(indoor_bag,false).world,"unsupported room cannot borrow an earlier menu backdrop");
 
     std::vector<uint8_t> vram(0x18000),io(0x400),rgb(240*160*3),rgba;
     word(io,0,0x100);word(io,8,0x1f08);

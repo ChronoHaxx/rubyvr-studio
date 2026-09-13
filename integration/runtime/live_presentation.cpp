@@ -28,6 +28,7 @@ Input inspect(const world::live::Memory& m,uint64_t epoch) {
     }
     if(out.callback==world::live::kOverworldCallback) {
         out.mode=header[0x17]>=1 && header[0x17]<=3 ? Mode::Field : Mode::Interior;
+        out.indoor_3d=out.mode==Mode::Interior && world::live::indoor_house_available(m);
         return out;
     }
     // Imported rev1 symbols, cross-checked against the pinned source call paths.
@@ -71,7 +72,7 @@ void Lifetime::reset(){identity_={};epoch_=0;cached_=menu_=false;}
 Decision Lifetime::next(const Input& in,bool valid_field) {
     if(epoch_!=in.epoch){reset();epoch_=in.epoch;}
     const bool same=cached_ && identity_==in.identity;
-    if(in.mode==Mode::Field && valid_field) {
+    if(world_mode(in) && valid_field) {
         menu_=false;
         // Preserve the last fully colored material/actor state through the
         // source fade into menus. Revalidate before publishing the return.

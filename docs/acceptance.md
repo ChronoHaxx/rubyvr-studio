@@ -1,12 +1,20 @@
 # Watch the acceptance check
 
 **Current batch — [free walking, third-person and first-person](free-camera-movement.md).**
+**14 September — playable 3D house:** May's house now has both floors, free
+diagonal/first-person movement, furniture collision, dialogue and working stairs.
+The native journey passes 12 assertions. Load **House 1F ready** or **House 2F
+ready** using the same prepared launcher. Other interiors still use the original
+view; human playtesting and final furniture polish remain pending.
+
+![Actual native house gameplay, sampled and retimed](media/indoor-house.gif)
+
 **Interior follow-up after `4d1fb46`:** house entry could miss a shallow approach,
 and free movement consumed indoor walking input. The repaired handoff passes
 four house entry/walk/exit approaches in Third/First person (20 native assertions).
 The focused house clip and new **House approach** checkpoint are in the guide.
-Repeat its house step; this remains failed/pending human retest. Interiors keep
-their original 2D view while the chosen outdoor camera is retained.
+Repeat the updated house step; this remains failed/pending human retest. That
+earlier revision kept original interior views; the pilot above replaces two rooms.
 
 **Angled ledge follow-up:** the maintainer's `ce1b542`-era report is reproduced;
 the old build fails ten angled/diagonal approaches. The corrected native handoff

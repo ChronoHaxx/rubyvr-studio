@@ -23,7 +23,7 @@ int contact_facing(Point v,int contact) {
     const double push=contact==1?v.z:contact==2?-v.z:contact==3?-v.x:contact==4?v.x:0;
     return push>1e-9?contact:normal;
 }
-Step advance(Point p,Point v,double distance,Blocked blocked,void* context) {
+Step advance(Point p,Point v,double distance,Blocked blocked,void* context,BodyBlocked body_blocked) {
     Step out{p};
     if(!std::isfinite(p.x)||!std::isfinite(p.z)||std::abs(p.x)>32760||std::abs(p.z)>32760||
        !std::isfinite(distance)||distance<=0||!blocked)return out;
@@ -41,6 +41,7 @@ Step advance(Point p,Point v,double distance,Blocked blocked,void* context) {
         const int edge=int(std::floor((horizontal?candidate.x:candidate.z)+(delta>0?radius:-radius)));
         const double across=horizontal?candidate.z:candidate.x;
         bool hit=false;
+        if(body_blocked && body_blocked(candidate,context))hit=true;
         for(int side=int(std::floor(across-radius));side<=int(std::floor(across+radius));++side) {
             const int x=horizontal?edge:side,z=horizontal?side:edge;
             if(x==old_x && z==old_z)continue;

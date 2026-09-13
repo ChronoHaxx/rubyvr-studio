@@ -123,7 +123,8 @@ Layer numbers are gameplay constraints, never physical heights.
 |---|---|
 | Water at 8 px on layer 1 plus deck at 16 px on layer 3 | Layer 1 returns water; layer 3 returns deck |
 | Same stack, another layer or ambiguous `-1/0/15` | Unresolved, with owner retained |
-| Sole authored surface | `-1/0/15` resolve that surface; `1..14` still require an exact layer match |
+| Sole authored surface | `-1/0/15` resolve that surface; `1..14` require an exact layer match except the neutral-ground rule below |
+| Sole ground surface authored on layer 0, with guarded source elevation 0 | Concrete actor layers resolve that ground too, matching Ruby's neutral ledge cells; this never selects a deck or water surface |
 | Defined unauthored cell | LegacyFlat at **0 px**, with no surface pointer |
 | Source cell equals `world::kGridUndefined` | Unresolved with owner retained, even when Resolved would return LegacyFlat or SourceMismatch |
 | Defined cell rejected by source/material guards | SourceMismatch with owner retained; no padding fallback |

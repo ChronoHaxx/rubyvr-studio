@@ -4,6 +4,8 @@
 #include "diorama.h"
 #include "gl_loader.h"
 #include "actor_render.h"
+#include "dev/demo_panel.h"
+#include "imgui.h"
 #include <cstdlib>
 #include <cstring>
 #include <iostream>
@@ -18,6 +20,7 @@ void expect(bool ok,const char* label) {
     if(!ok) { std::cerr<<"FAIL: "<<label<<" ("<<SDL_GetError()<<")\n"; std::exit(1); }
 }
 int main(int,char**) {
+    SDL_SetMainReady();
     expect(SDL_Init(SDL_INIT_VIDEO)==0,"SDL init");
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION,3);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION,3);
@@ -105,6 +108,26 @@ int main(int,char**) {
     npc_source.viewport_culled=true;npc.active=false;vr::viewer::frame(field,false);
     expect(vr::actor_render::stats().visible==1,"inactive NPC does not reuse previous GPU pose");
     field.actor_sources[1]={};field.objects[1]={};
+    // Presentation retains a previously observed ordinary NPC past Ruby's
+    // despawn rectangle. It still selects view-correct pixels, without OBJ RAM.
+    field.actor_range_safe=true;
+    vr::world::ActorTemplate definition;definition.bytes[0]=1;definition.hidden=false;
+    field.actor_templates={definition};
+    field.objects[1]=object;field.objects[1].is_player=false;field.objects[1].x=14;field.objects[1].local_id=1;
+    field.objects[1].map_number=16;field.objects[1].initial_x=14;field.objects[1].initial_y=12;
+    field.actor_sources[1]=sprite;field.actor_sources[1].world_facing=2;
+    field.actor_sources[1].sprite[0x20]=232;
+    vr::viewer::frame(field,false);
+    field.objects[1].active=false;field.actor_sources[1]={};field.view_x=40;
+    vr::viewer::frame(field,false);
+    expect(vr::actor_render::stats().distant==1,"distant NPC owns an independent GPU item");
+    for(int q=0;q<4;++q) {
+        vr::viewer::set_yaw_radians(q*1.570796327f);vr::viewer::frame(field,false);
+        expect(vr::actor_render::stats().visible==2,"all views retain a known distant NPC beside live player");
+    }
+    field.actor_templates[0].hidden=true;vr::viewer::frame(field,false);
+    expect(vr::actor_render::stats().distant==0,"source hide removes distant GPU pose immediately");
+    field.actor_range_safe=false;field.actor_templates.clear();field.view_x=0;field.objects[1]={};
     vr::viewer::reset_camera();
     expect(vr::viewer::yaw_radians()==0,"north-up reset is exact");
     vr::viewer::set_yaw_radians(0.4f);
@@ -124,6 +147,64 @@ int main(int,char**) {
     vr::diorama::set_overrides(authored);
     put(0x26,-8);vr::viewer::frame(field,false);vr::diorama::player_cell(&px,&py,&pz);
     expect(py==1.f && vr::diorama::has_geometry(),"camera uses authored height independently of jump");
+    authored.terrain[0].cells[0].surfaces[0].layer=0;
+    vr::diorama::set_overrides(authored);vr::viewer::frame(field,false);
+    expect(vr::actor_render::stats().visible==1 && vr::actor_render::stats().player_y==1.f,"jumping player remains on sole source-neutral ground");
+    // A source-timed Jump2 spans a real 8px cliff at the entry to its barrier.
+    // An independently captured frame must interpolate both contacts, rather
+    // than snapping the actor/camera down at the first low cell under its feet.
+    const auto before_jump=field;
+    auto jump_terrain=authored;jump_terrain.terrain[0].cells.clear();
+    for(int z=11;z<=13;++z) {
+        auto cell=tc;cell.y=z;cell.surfaces[0].height=cell.surfaces[0].thickness=z==11?8:0;
+        jump_terrain.terrain[0].cells.push_back(cell);
+    }
+    vr::diorama::set_overrides(jump_terrain);
+    object.x=12;object.y=13;put(0x20,200);
+    std::array<uint8_t,36> jumping_event{};jumping_event[0]=0x41;jumping_event[0x1c]=0x0c;
+    put(0x2e,0);put(0x32,1);put(0x34,1);put(0x36,2);put(0x38,0);
+    for(int tick=1;tick<=32;++tick) {
+        put(0x22,176+tick);put(0x3a,tick);
+        expect(vr::actor::bind_event(sprite,jumping_event,0),"source Jump2 binds in live consumer");
+        vr::viewer::frame(field,false);
+        const auto& stats=vr::actor_render::stats();
+        expect(stats.player && stats.player_y==.5f*(1-tick/32.f),"real cliff crossing follows source clock without a vertical snap");
+    }
+    // Keep the original sloped rock band: approach on the ground for 12 ticks,
+    // then lift from closer to the lip, reaching the same source landing.
+    jump_terrain.terrain[0].cells[1].surfaces[0].height=8;
+    jump_terrain.terrain[0].cells[1].surfaces[0].thickness=8;
+    jump_terrain.terrain[0].cells[1].surfaces[0].rise_z=-8;
+    vr::diorama::set_overrides(jump_terrain);
+    for(int tick=1;tick<=32;++tick) {
+        put(0x22,176+tick);put(0x3a,tick);
+        expect(vr::actor::bind_event(sprite,jumping_event,0),"sloped ledge Jump2 binds");
+        sprite.jump_arc_valid=true;sprite.jump_arc.fill(8);sprite.jump_arc.back()=0;
+        vr::viewer::frame(field,false);
+        const auto& stats=vr::actor_render::stats();
+        const float expected_ground=tick<=8?8.f:tick<=12?8.f-(tick-8)*.5f:6.f*(32-tick)/20.f;
+        expect(stats.player && std::abs(stats.player_y*16-expected_ground)<1e-5f,"approach feet stay on slope and end at original landing");
+        if(tick<=12 || tick==32)expect(stats.player_lift==0,"visible takeoff waits until close to the rock band");
+        else expect(stats.player_lift>0,"visible flight occurs after the approach");
+    }
+    // Non-ground landing surfaces must keep their layer/material semantics.
+    jump_terrain.terrain[0].cells[2].surfaces[0].kind=vr::terrain::TerrainKind::Deck;
+    jump_terrain.terrain[0].cells[2].surfaces[0].height=1;
+    jump_terrain.terrain[0].cells[2].surfaces[0].thickness=1;
+    expect(vr::terrain::valid(jump_terrain.terrain),"deck refusal uses valid terrain rather than a rejected scene");
+    vr::diorama::set_overrides(jump_terrain);put(0x22,184);put(0x3a,8);
+    expect(vr::actor::bind_event(sprite,jumping_event,0),"bridge refusal fixture binds");
+    vr::viewer::frame(field,false);
+    sprite.jump_arc_valid=true;sprite.jump_arc.fill(8);
+    vr::viewer::frame(field,false);
+    expect(vr::actor_render::stats().player_y==.5f && vr::actor_render::stats().player_lift==.5f,"ground jump presentation never borrows a deck landing");
+    jump_terrain.terrain[0].cells[2].surfaces[0].kind=vr::terrain::TerrainKind::Water;
+    jump_terrain.terrain[0].cells[2].surfaces[0].thickness=0;
+    expect(vr::terrain::valid(jump_terrain.terrain),"water refusal uses valid terrain");
+    vr::diorama::set_overrides(jump_terrain);vr::viewer::frame(field,false);
+    expect(vr::actor_render::stats().player_y==.5f && vr::actor_render::stats().player_lift==.5f,"ground jump presentation never borrows a water landing");
+    field=before_jump;
+    authored.terrain[0].cells[0].surfaces[0].layer=3;vr::diorama::set_overrides(authored);
     field.objects[0].elevation=4;vr::viewer::frame(field,false);
     expect(vr::actor_render::stats().visible==0 && vr::actor_render::stats().unresolved==1,"wrong layer is unresolved rather than guessed");
     authored.version=vr::overrides::kVersion;vr::diorama::set_overrides(authored);
@@ -240,7 +321,29 @@ int main(int,char**) {
     expect(!vr::viewer::presentation_state().world && !vr::viewer::uses_world_controls(),"loading directly into Bag never reuses preceding world");
     signal.mode=Mode::Interior;vr::viewer::game_frame(field,signal,original,240,160,{},false);
     expect(!vr::viewer::presentation_state().world && !vr::viewer::uses_world_controls(),"interior original view uses original directions even with valid field data");
+    // Two UI contexts coexist in the native runner. The demo panel must not
+    // initialize its SDL backend on the game's context, steal another window's
+    // keys or lose its callbacks when viewer init clears the previous scene.
+    auto* game_ui=ImGui::CreateContext();
+    ImGui::GetIO().BackendPlatformUserData=reinterpret_cast<void*>(1);
+    rubyvr::dev::panel::configure({[](){rubyvr::dev::panel::Model m;m.available=true;m.checkpoints={"Synthetic A","Synthetic B"};return m;},nullptr});
+    vr::viewer::set_overlay(rubyvr::dev::panel::draw,rubyvr::dev::panel::open,rubyvr::dev::panel::shutdown);
+    expect(vr::viewer::init(window,false),"viewer reinitializes with overlay hooks");
+    vr::viewer::game_frame(field,signal,original,240,160,{},false);
+    expect(ImGui::GetCurrentContext()==game_ui && ImGui::GetIO().BackendPlatformUserData==reinterpret_cast<void*>(1),"panel restores original game UI context");
+    SDL_Event escape{};escape.type=SDL_KEYDOWN;escape.key.keysym.scancode=SDL_SCANCODE_ESCAPE;
+    escape.key.windowID=SDL_GetWindowID(window)+100;
+    expect(!rubyvr::dev::panel::event(escape) && !rubyvr::dev::panel::open(),"other window Escape stays with its owner");
+    escape.key.windowID=SDL_GetWindowID(window);
+    expect(rubyvr::dev::panel::event(escape) && rubyvr::dev::panel::open(),"viewer Escape opens controls through retained hooks");
+    escape.key.repeat=1;rubyvr::dev::panel::event(escape);
+    expect(rubyvr::dev::panel::open(),"held Escape does not flicker panel");
+    SDL_Event close{};close.type=SDL_WINDOWEVENT;close.window.windowID=SDL_GetWindowID(window);close.window.event=SDL_WINDOWEVENT_CLOSE;
+    expect(!rubyvr::dev::panel::event(close),"panel never eats window close");
+    vr::viewer::game_frame(field,signal,original,240,160,{},false);
     vr::viewer::shutdown();
+    expect(!rubyvr::dev::panel::open() && ImGui::GetCurrentContext()==game_ui,"shutdown releases only viewer UI");
+    ImGui::GetIO().BackendPlatformUserData=nullptr;ImGui::DestroyContext(game_ui);
     vr::diorama::shutdown();SDL_GL_DeleteContext(context);SDL_DestroyWindow(window);SDL_Quit();
     std::cout<<"PASS: live viewer actors/connected world, menu retention, original-frame/UI pixels, return/load controls (local GL; synthetic art)\n";
 }

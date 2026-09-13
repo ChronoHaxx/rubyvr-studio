@@ -5,6 +5,7 @@
 #include <cmath>
 #include <algorithm>
 #include <limits>
+#include <utility>
 using namespace vr::actor;
 int checks=0;
 void expect(bool ok,const char* label){++checks;if(!ok){std::cerr<<"FAIL: "<<label<<'\n';std::exit(1);}}
@@ -137,5 +138,56 @@ int main(){
     expect(capture_player_directions(bad,rom,tiles,true) && bad.displayed_anim==4,"idle transition retains matching walking pose until copied");
     bad=t;bad.sprite[0x2c]|=64;
     expect(capture_player_directions(bad,rom,tiles,true) && bad.displayed_phase==0,"paused animation uses the same displayed phase");
+    // Original Jump2 moves 32 pixels in 32 ticks. Binding an independently
+    // captured middle frame (including after load) must recover both contacts.
+    for(unsigned direction=1;direction<=4;++direction)for(unsigned tick=1;tick<=32;++tick) {
+        Source jumping;jumping.present=true;put(jumping,0x2e,3);
+        std::array<uint8_t,36> owner{};owner[0]=0x41;owner[0x1c]=uint8_t(0x0b+direction);
+        put(jumping,0x32,1);put(jumping,0x34,int(direction));put(jumping,0x36,2);put(jumping,0x38,0);put(jumping,0x3a,int(tick));
+        const auto original=jumping.sprite;
+        expect(bind_event(jumping,owner,3),"original active jump owner binds");
+        const float dx=direction==3?-1.f:direction==4?1.f:0.f,dz=direction==1?1.f:direction==2?-1.f:0.f;
+        const Position feet{16.5f+dx*tick/16.f,19.5f+dz*tick/16.f,.75f};
+        const auto span=jump_span(jumping,feet);
+        expect(span.active && span.progress==tick/32.f,"source jump progress including midpoint and last tick");
+        expect(span.start_x==16.5f && span.start_z==19.5f && span.end_x==16.5f+2*dx && span.end_z==19.5f+2*dz,
+               "midjump capture recovers fixed takeoff and landing in every direction");
+        expect(jumping.sprite==original && feet.lift==.75f,"jump presentation does not write the source arc");
+        owner[0x1c]=0;expect(bind_event(jumping,owner,3) && !jump_span(jumping,feet).active,"ordinary movement clears prior jump metadata");
+    }
+    Source jump;jump.present=true;put(jump,0x2e,3);
+    std::array<uint8_t,36> event{};event[0]=0x41;event[0x1c]=0x0c;
+    put(jump,0x32,1);put(jump,0x34,1);put(jump,0x36,2);put(jump,0x38,0);put(jump,0x3a,12);
+    expect(bind_event(jump,event,3) && jump_span(jump,{16.5f,20.25f,1}).active,"active takeoff fixture");
+    for(auto [offset,value]:{std::pair{0x32,2},{0x34,2},{0x36,1},{0x38,1},{0x3a,0},{0x3a,33}}) {
+        auto invalid=jump;put(invalid,offset,value);
+        expect(bind_event(invalid,event,3) && !jump_span(invalid,{16.5f,20.25f,1}).active,"finished/stale/unrelated jump data refused");
+    }
+    auto inactive=event;inactive[0]=1;
+    expect(bind_event(jump,inactive,3) && !jump_span(jump,{16.5f,20.25f,1}).active,"inactive movement cannot reuse jump clock");
+    auto approach=t;approach.jump_direction=1;approach.jump_ticks=18;
+    // Original synthetic arc, deliberately unlike the cartridge's values.
+    const std::array<uint8_t,16> test_arc={2,3,4,5,6,7,8,9,8,7,6,5,4,3,1,0};
+    for(unsigned n=0;n<16;++n)rom[0x3761b6 + n]=uint8_t(-int(test_arc[n]));
+    expect(capture_player_directions(approach,rom,tiles,true) && approach.jump_arc_valid && approach.jump_arc==test_arc,
+           "validated on-foot profile reads the actual ROM arc");
+    rom32(0x0836dc70,0x08371080);rom16(0x08371088,16);rom16(0x0837108a,32);
+    rom32(0x08371098,0x08370fc8);rom32(0x0837109c,0x0836e068);
+    expect(capture_object_directions(approach,rom,tiles,true,0) && approach.jump_arc_valid && approach.jump_arc==test_arc,
+           "runtime unified object capture also reads the on-foot player arc");
+    for(unsigned direction=1;direction<=4;++direction)for(unsigned tick=1;tick<=32;++tick) {
+        auto frame=approach;frame.jump_direction=uint8_t(direction);frame.jump_ticks=uint8_t(tick);
+        const auto value=approach_jump_lift(frame,.5f);
+        if(tick<=12 || tick==32)expect(value==0,"approach and exact landing remain grounded in every direction");
+        else expect(value>0 && value<=9.f/16,"retimed flight stays within captured source arc");
+        expect(approach_jump_lift(frame,.5f)==value,"independent repeated capture has no secondary animation clock");
+    }
+    approach.jump_ticks=17;expect(std::abs(approach_jump_lift(approach,.5f)-5.f/16)<1e-6f,"later takeoff samples captured arc at the new source phase");
+    auto unsupported=approach;unsupported.jump_arc_valid=false;
+    expect(approach_jump_lift(unsupported,.5f)==.5f,"missing arc preserves original source lift");
+    unsupported.jump_arc_valid=true;unsupported.jump_ticks=33;
+    expect(approach_jump_lift(unsupported,.5f)==.5f,"invalid clock preserves original source lift");
+    rom[0x3761b6]=1;
+    expect(capture_player_directions(approach,rom,tiles,true) && !approach.jump_arc_valid,"corrupt arc cannot retain prior data");
     std::cout<<"PASS: actor frame "<<checks<<" checks (original synthetic pixels)\n";
 }

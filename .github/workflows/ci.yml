@@ -35,6 +35,8 @@ jobs:
           python3 tools/test-live-presentation.py --sanitize
       - name: Test live actor frames without graphics or assets
         run: bash tools/test-actor-frame.sh
+      - name: Test distant actor visibility without graphics or assets
+        run: bash tools/test-actor-range.sh
       - name: Test developer checkpoints and transport without graphics or assets
         run: python3 tools/test-dev-session.py
       - name: Test camera input and menu gates without graphics or assets
@@ -48,6 +50,7 @@ jobs:
           python3 tools/test-native-trace.py
           python3 tools/test-coverage-disposition.py
           python3 tools/test-terrain-regions.py
+          python3 tools/test-demo-ledge.py
           python3 tools/test-terrain-bridges.py
       # No ROM/decomp assets, GPU or headset fixtures are downloaded or uploaded.
       - name: Build the native batch tool

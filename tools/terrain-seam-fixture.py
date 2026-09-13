@@ -21,7 +21,7 @@ def u16(path):
 
 
 def route_corners():
-    """Join every ground edge except the three inspected cliff segments.
+    """Keep plateaus and place rocky descents in the inspected ledge cells.
 
     Relax the two authored transition bands, pinning the cliff lips and the
     flat land outside those bands. A cliff endpoint shares one corner, so its
@@ -67,6 +67,19 @@ def route_corners():
     for _ in range(160):
         values = {i:values[i] if i in pinned else sum(values[j] for j in adjacent[i])/len(adjacent[i])
                   for i in values}
+    # Ruby jumps across the destination ledge cell (two cell centres), and
+    # blocks entry from below. Put the rocky descent in that cell instead of
+    # painting its whole surface as walkable high grass with a drop beyond it.
+    # Transfer each lower lip to the shared upper-side corner group, retaining
+    # existing plateau heights and continuous paths around every endpoint.
+    lowered = {}
+    for side,x,y in cliffs:
+        pairs = ((2,0),(3,1)) if side=='s' else ((1,0),(3,2))
+        nx,ny=x+(side=='e'),y+(side=='s')
+        for a,b in pairs:
+            ia,ib=root(key(x,y,a)),root(key(nx,ny,b))
+            lowered[ia]=values[ib]
+    values.update(lowered)
     corners = {(x,y):[round(values[root(key(x,y,k))]) for k in range(4)]
                for y in range(20) for x in range(20)}
     # Every unmarked edge has exactly the same endpoints on both cells.
@@ -108,10 +121,9 @@ def main():
             for x in range(20):
                 packed = blocks[y*20+x]
                 nw, ne, sw, se = route[x,y] if name == 'Route101' else (16,16,16,16)
-                ledge = False
-                if name == 'Route101':
-                    ledge = y in (6, 7, 13) and packed&1023 in (0x6e,0x87,0xd6,0xd5,0x8e)
-                top = 1 if ledge else -1
+                # Preserve the original rock/grass boundary on the now-sloped
+                # ledge cell. Ground replacement was what made it look open.
+                top = -1
                 surface = dict(layer=packed>>12, height=nw, thickness=nw,
                                kind='ground', top=top, side=0x87, side_offset=8)
                 for key,value in dict(rise_x=ne-nw,rise_z=sw-nw,corner_delta=se-ne-sw+nw).items():

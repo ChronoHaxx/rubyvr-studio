@@ -542,9 +542,29 @@ void immutable_borrowed_results(Check& t) {
 }
 } // namespace
 
+void neutral_ledge_ground(Check& t) {
+    Fixture f;f.source.grid[7*f.source.width+7]=1;
+    auto slope=ground(8,0);slope.rise_z=-8;f.add(7,7,{slope});
+    f.resolved=terrain::resolve(f.source,f.document);
+    for(int layer=1;layer<15;++layer) {
+        const auto h=f.resolved.query(7,7,layer,.5f,.75f);
+        t.expect(h.status==Status::Authored && near(h.pixels,2.f),"neutral source ledge supports concrete actor layer");
+    }
+    f.source.grid[7*f.source.width+7]=0x3001;f.document[0].cells[0].expected=0x3001;
+    f.resolved=terrain::resolve(f.source,f.document);
+    t.expect(!f.resolved.query(7,7,3).resolved(),"author-only neutral label does not override concrete source layer");
+    f.source.grid[7*f.source.width+7]=1;f.document[0].cells[0].expected=1;
+    auto p=ground(8,0);p.kind=TerrainKind::Deck;p.thickness=4;f.document[0].cells[0].surfaces={p};
+    f.resolved=terrain::resolve(f.source,f.document);
+    t.expect(!f.resolved.query(7,7,3).resolved(),"neutral deck never substitutes for actor layer");
+    p.kind=TerrainKind::Water;p.thickness=0;f.document[0].cells[0].surfaces={p};
+    f.resolved=terrain::resolve(f.source,f.document);
+    t.expect(!f.resolved.query(7,7,3).resolved(),"neutral water never substitutes for actor layer");
+}
 int main() {
     struct Case {const char* name;void (*run)(Check&);};
     const Case cases[]{
+        {"neutral_source_ledge_ground",neutral_ledge_ground},
         {"bridge_explicit_layers",bridge_layers},
         {"sole_surface_and_legacy_zero",sole_and_legacy},
         {"undefined_cells_retain_owner",undefined_owned_cells},

@@ -4,7 +4,25 @@ Read README.md, CONTRIBUTING.md and the selected issue before changing code.
 Use docs/architecture.md and docs/verification.md for component boundaries and
 checks. The human contributor owns the PR and its claims.
 
-- Work on one bounded issue. Preserve unrelated changes and authored assets.
+- Work on one coherent user-visible outcome. Maintainer decision, 2026-09-12:
+  group related implementation tasks and defects into substantial demo batches;
+  one issue or one small fix does not require its own PR. Preserve unrelated
+  changes and authored assets. Use the one-week desktop demo target in
+  docs/roadmap.md to select the current batch.
+- Implement the batch before its combined review. During implementation use
+  focused component checks to catch failures; run broad integration, a single
+  useful visual recording and the human playtest at the batch boundary. Do not
+  defer all testing until the end, or repeat unchanged full-suite/build/recording
+  work for every small edit. Retest affected behavior after a verified repair.
+- Keep local commits reviewable, but publish one coherent batch PR and request
+  one short human playtest for that revision. Do not create a standalone
+  bookkeeping PR for the batch plan or routine merge reconciliation. Update
+  relevant docs, roadmap and the actual PR body together at the handoff.
+- Keep the reference pass focused on cached/pinned sources relevant to the
+  current behavior. Use an external review only when it adds useful coverage;
+  do not repeatedly retry an unavailable or approval-blocked reviewer. Record
+  the limitation and complete the available review. Deadline pressure is not
+  permission to weaken save/input/collision checks or claim untested acceptance.
 - When updating a PR, update its description, human test steps and relevant
   documentation to match the delivered revision and the commands given in chat.
   Give the maintainer one primary launch/reopen workflow; put alternative

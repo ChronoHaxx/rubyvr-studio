@@ -2,6 +2,7 @@
 #include "actor_frame.h"
 #include <cmath>
 #include <cstring>
+#include <algorithm>
 
 namespace vr::actor {
 namespace {
@@ -112,11 +113,32 @@ bool capture_directions(Source& source,std::span<const uint8_t> rom,
 }
 }
 
+static void capture_jump_arc(Source& source,std::span<const uint8_t> rom) {
+    source.jump_arc_valid=false;
+    if(source.jump_direction && source.jump_ticks) {
+        // Ruby rev1 imported_data_symbols: Unknown_837619E is at 0x083761B6
+        // (its historical symbol name is not the rev1 address). Read ROM data,
+        // or an invented curve; refuse unsupported/corrupt/missing data.
+        if(const auto* arc=read(rom,0x083761b6u,16)) {
+            unsigned peak=0;bool valid=true;
+            for(unsigned i=0;i<16;++i) {
+                const int value=arc[i]<=127?arc[i]:int(arc[i])-256;
+                valid&=value>=-32 && value<=0;
+                source.jump_arc[i]=uint8_t(-value);peak=std::max(peak,unsigned(source.jump_arc[i]));
+            }
+            source.jump_arc_valid=valid && peak>0 && !source.jump_arc.back();
+        }
+    }
+}
+
 bool capture_player_directions(Source& source,std::span<const uint8_t> rom,
                                std::span<const uint8_t> tiles,bool mapping_1d) {
     const uint32_t images=ptr(source.sprite.data()+12);
     const uint32_t start=images==0x0836e068u?0x0830fd60u:images==0x0836f720u?0x0831a5c0u:0;
-    return capture_directions(source,rom,tiles,mapping_1d,{0x08370fc8u,images,start,16,32,24,18});
+    source.jump_arc_valid=false;
+    const bool ok=capture_directions(source,rom,tiles,mapping_1d,{0x08370fc8u,images,start,16,32,24,18});
+    if(ok)capture_jump_arc(source,rom);
+    return ok;
 }
 
 bool capture_object_directions(Source& source,std::span<const uint8_t> rom,
@@ -124,6 +146,7 @@ bool capture_object_directions(Source& source,std::span<const uint8_t> rom,
                                std::span<const uint8_t> pending_copies) {
     source.world_facing=0;
     source.pending_flip_transition=false;
+    source.jump_arc_valid=false;
     // Ruby rev1: 218 graphics records. Variable graphics must already have
     // resolved to a real event ID; do not guess a profile from a sheet's shape.
     if(graphics_id>=218)return false;
@@ -138,19 +161,54 @@ bool capture_object_directions(Source& source,std::span<const uint8_t> rom,
     if(anims!=0x08370f78u && anims!=0x08370f28u && anims!=0x08370fc8u)return false;
     const auto* first=read(rom,images,8);
     if(!first)return false;
-    return capture_directions(source,rom,tiles,mapping_1d,{anims,images,ptr(first),width,height,
+    const bool ok=capture_directions(source,rom,tiles,mapping_1d,{anims,images,ptr(first),width,height,
         anims==0x08370fc8u?24u:20u,anims==0x08370fc8u?18u:anims==0x08370f28u?7u:9u},pending_copies);
+    if(ok && anims==0x08370fc8u && width==16 && height==32 &&
+       (images==0x0836e068u || images==0x0836f720u))capture_jump_arc(source,rom);
+    return ok;
 }
 
 bool bind_event(Source& source,std::span<const uint8_t> event,unsigned slot) {
     source.viewport_culled=false;
+    source.jump_direction=source.jump_ticks=0;
+    source.jump_arc_valid=false;
     if(!source.present || event.size()!=0x24 || slot>=16 || !(event[0]&1) ||
        (event[1]&0x20) || word(source.sprite.data()+0x2e)!=slot) {
         source={};return false;
     }
     source.viewport_culled=(event[1]&0x40)!=0;
     source.fixed_pose=(event[1]&0x10)!=0;
+    // Pinned Ruby Jump2 0x0c..0x0f: Sprite data[2] is the active step,
+    // data[3..6] hold direction, distance kind, arc kind and elapsed ticks.
+    // Reject stale action bytes, other jumps, scripted bobs and finished steps.
+    const auto* data=source.sprite.data()+0x2e;
+    const unsigned action=event[0x1c],ticks=word(data+12);
+    if((event[0]&0x42) && action>=0x0c && action<=0x0f && word(data+4)==1 &&
+       word(data+6)==action-0x0b && word(data+8)==2 && word(data+10)==0 && ticks>=1 && ticks<=32) {
+        source.jump_direction=uint8_t(action-0x0b);source.jump_ticks=uint8_t(ticks);
+    }
     return true;
+}
+
+JumpSpan jump_span(const Source& source,const Position& p) {
+    const auto d=source.jump_direction,ticks=source.jump_ticks;
+    if(d<1 || d>4 || ticks<1 || ticks>32 || !source.present ||
+       !std::isfinite(p.x) || !std::isfinite(p.z))return {};
+    const float dx=d==3?-1.f:d==4?1.f:0.f,dz=d==1?1.f:d==2?-1.f:0.f;
+    const float distance=ticks/16.f;
+    const float x=p.x-dx*distance,z=p.z-dz*distance;
+    return {true,ticks/32.f,x,z,x+2*dx,z+2*dz};
+}
+
+float approach_jump_lift(const Source& source,float original_lift) {
+    const unsigned tick=source.jump_ticks;
+    if(!source.present || !source.jump_arc_valid || source.jump_direction<1 ||
+       source.jump_direction>4 || tick<1 || tick>32)return original_lift;
+    if(tick<=12 || tick==32)return 0;
+    const float sample=(tick-12)*32.f/20.f;
+    const unsigned a=unsigned(sample),b=std::min(a+1,32u);
+    auto height=[&](unsigned t){return t==0 || t==32?0.f:float(source.jump_arc[(t-1)/2]);};
+    return (height(a)+(height(b)-height(a))*(sample-a))/16.f;
 }
 
 uint8_t apparent_facing(uint8_t facing,float rx,float rz) {

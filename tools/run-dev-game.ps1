@@ -1,6 +1,6 @@
 [CmdletBinding()]
 param(
-    [string]$Checkpoint = 'Route 101',
+    [string]$Checkpoint = 'NPC views',
     [switch]$Fresh,
     [switch]$Check
 )
@@ -12,6 +12,11 @@ if (-not (Test-Path -LiteralPath $manifestPath)) {
     throw 'The private native developer build is not prepared. See docs/developer-mode.md.'
 }
 $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json
+$exeName = if ($manifest.PSObject.Properties['executable']) { [string]$manifest.executable } else { 'RubyRecomp.exe' }
+if ($exeName -notmatch '^RubyRecomp(?:-[0-9a-f]{12})?\.exe$' -or
+    @($manifest.files | Where-Object { $_.name -ceq $exeName }).Count -ne 1) {
+    throw 'The prepared executable must be a named, hash-verified local build.'
+}
 foreach ($entry in $manifest.files) {
     $path = Join-Path $devRoot $entry.name
     if (-not (Test-Path -LiteralPath $path) -or
@@ -24,17 +29,17 @@ $checkpoints = Join-Path $devRoot 'checkpoints'
 $state = Join-Path $checkpoints ($Checkpoint + '.state')
 if (-not $Fresh -and -not (Test-Path -LiteralPath $state -PathType Leaf)) { throw "Checkpoint missing: $Checkpoint" }
 Write-Host "RubyVR Developer build: $($manifest.source_commit)"
-Write-Host 'Camera follow-up: focus 3D to walk relative to the view; J/L turn 90 degrees, R resets north-up. Release arrows to apply a queued turn. Esc > Camera offers presets.'
+Write-Host 'Play in the voxel viewer: WASD or arrows walk, J/L turn 90 degrees, R resets the view. Release movement keys to apply a queued turn.'
 Write-Host 'Play in the viewer: Enter opens Start; X confirms, Z goes back. Field menus keep the world; battles/interiors show the original game here.'
-Write-Host 'NPC follow-up: load NPC views from Esc > Checkpoints in the original window. Loaded ordinary NPCs now turn their artwork with the camera; distant despawning remains open.'
-Write-Host 'In the original Ruby window: Esc > Developer for pause/step, speed and noclip; Checkpoints for named save/load.'
+Write-Host 'In the voxel viewer, click Demo controls or press Esc: pause/step, speed, obstacle bypass and named checkpoints.'
+Write-Host 'Try NPC views, Demo ledge, Demo battle or Demo lab ready. Loading resets speed and obstacle bypass.'
 if ($Check) { Write-Host 'PASS: prepared developer inputs verified'; return }
 try {
     $sessionLock = [IO.File]::Open((Join-Path $devRoot 'session.lock'), 'OpenOrCreate', 'ReadWrite', 'None')
 } catch { throw 'This developer session is already running. Close its Ruby window before reopening.' }
 try {
 $psi = [Diagnostics.ProcessStartInfo]::new()
-$psi.FileName = Join-Path $devRoot 'RubyRecomp.exe'
+$psi.FileName = Join-Path $devRoot $exeName
 $psi.WorkingDirectory = $manifest.game_directory
 $psi.UseShellExecute = $false
 $psi.CreateNoWindow = $true

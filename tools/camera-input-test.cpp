@@ -18,6 +18,31 @@ int main() {
     constexpr uint16_t expected[4][4]={{up,right,down,left},{left,up,right,down},
         {down,left,up,right},{right,down,left,up}};
     constexpr uint16_t screen[]={up,right,down,left};
+    const std::array<uint16_t,4> wasd={
+        with_wasd(0x3ff,true,false,false,false),
+        with_wasd(0x3ff,false,false,false,true),
+        with_wasd(0x3ff,false,false,true,false),
+        with_wasd(0x3ff,false,true,false,false)};
+    for(int q=0;q<4;++q)for(int i=0;i<4;++i) {
+        Mapper alias;
+        expect(alias.update(wasd[i],q*1.570796327f,Context::Camera)==press(expected[q][i]),
+            "WASD follows all four camera views like arrows");
+    }
+    expect(with_wasd(press(right|1|2|8),true,false,false,false)==press(up|right|1|2|8),
+        "W adds to arrow/controller input without changing action buttons");
+    expect(with_wasd(press(up),true,false,false,false)==press(up),"W and Up do not cancel each other");
+    expect(with_wasd(press(up),false,false,true,false)==press(up|down),"opposing aliases keep source input semantics");
+    expect(with_wasd(0xffff,false,false,false,false)==0xffff,"released aliases preserve every host bit");
+    Mapper aliases;
+    aliases.update(0x3ff,1.57f,Context::Camera);
+    expect(aliases.update(wasd[0],1.57f,Context::Camera)==press(left),"W begins a camera-relative walk");
+    expect(aliases.update(wasd[0],1.57f,Context::Menu)==0x3ff,"opening game UI releases held W");
+    aliases.update(0x3ff,1.57f,Context::Menu);
+    expect(aliases.update(wasd[0],1.57f,Context::Menu)==press(up),"W navigates game menus without camera rotation");
+    expect(aliases.update(wasd[0],1.57f,Context::Inactive)==0x3ff,"host panel or focus loss suppresses aliases");
+    expect(aliases.update(wasd[0],1.57f,Context::Camera)==0x3ff,"closing panel requires W release before walking");
+    aliases.update(0x3ff,1.57f,Context::Camera);
+    expect(aliases.update(wasd[0],1.57f,Context::Camera)==press(left),"W resumes normally after release");
     for(int q=0;q<4;++q)for(int i=0;i<4;++i) {
         Mapper m;
         expect(m.update(press(screen[i]|1|8),q*1.570796327f,Context::Camera)==
@@ -45,6 +70,9 @@ int main() {
     expect(turn.update(false,true,false)==0,"focus reset discards pending turn and held key");
     turn.update(false,false,false);
     expect(turn.update(false,true,false)==1,"new camera press works after focus neutral");
+    turn.update(false,false,false);
+    expect(turn.update(false,true,((~wasd[0])&directions)!=0)==0,"W walk also defers a camera turn");
+    expect(turn.update(false,false,false)==1,"W release applies the queued turn once");
     Mapper m;
     expect(m.update(press(up),0,Context::Camera)==press(up),"start held walk");
     expect(m.update(press(up),1.57f,Context::Camera)==press(up),"orbit cannot turn an already held walk");

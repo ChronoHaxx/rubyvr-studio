@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 #include "actor_render.h"
 #include "gl_loader.h"
+#include "actor_range.h"
 #include <cmath>
 #include <cstdio>
 
@@ -12,7 +13,8 @@ struct Item {
     uint8_t world_facing=0;
     float x=0,y=0,z=0; bool visible=false;
 };
-Item items[world::kObjectEventCount];
+Item items[world::kObjectEventCount+64];
+actor::RangeCache range;
 Stats result;
 GLuint program=0,vao=0,vbo=0;
 GLint matrix=-1,sampler=-1;
@@ -46,9 +48,10 @@ void main(){color=texture(image,texcoord);if(color.a<0.5)discard;})";
 }
 }
 const Stats& stats(){return result;}
-void clear(){result={};for(auto& item:items)item.visible=false;}
+void clear(){result={};range.reset();for(auto& item:items)item.visible=false;}
 void update(const world::Snapshot& s,const terrain::Resolved& terrain) {
-    clear();if(!s.valid)return;
+    result={};for(auto& item:items)item.visible=false;
+    range.update(s);if(!s.valid)return;
     for(int i=0;i<world::kObjectEventCount;++i) {
         auto& item=items[i];const auto& object=s.objects[i];
         if(!object.active || object.invisible)continue;
@@ -60,7 +63,39 @@ void update(const world::Snapshot& s,const terrain::Resolved& terrain) {
         const int x=int(std::floor(p.x)),z=int(std::floor(p.z));
         const auto height=terrain.query(x,z,object.elevation,p.x-x,p.z-z);
         if(!height.resolved()){++result.unresolved;continue;}
-        item.x=p.x;item.y=height.pixels/16.f+p.lift;item.z=p.z;
+        float ground=height.pixels,lift=p.lift;
+        const auto jump=actor::jump_span(s.actor_sources[i],p);
+        if(jump.active) {
+            auto ground_at=[&](float px,float pz) {
+                const int cx=int(std::floor(px)),cz=int(std::floor(pz));
+                return terrain.query(cx,cz,object.elevation,px-cx,pz-cz);
+            };
+            const auto from=ground_at(jump.start_x,jump.start_z),to=ground_at(jump.end_x,jump.end_z);
+            auto solid_ground=[](const terrain::Height& h) {
+                return h.resolved() && (!h.surface || h.surface->kind==terrain::TerrainKind::Ground);
+            };
+            // A real cliff is discontinuous; an airborne actor must not snap
+            // vertically when its projected feet pass that edge. Interpolate
+            // the two ground contacts on Ruby's clock, preserving its arc.
+            if(solid_ground(from) && solid_ground(to))ground=from.pixels+(to.pixels-from.pixels)*jump.progress;
+            const float dx=(jump.end_x-jump.start_x)*.5f,dz=(jump.end_z-jump.start_z)*.5f;
+            const auto approach_contact=ground_at(jump.start_x+.75f*dx,jump.start_z+.75f*dz);
+            const auto slope_contact=ground_at(jump.start_x+1.25f*dx,jump.start_z+1.25f*dz);
+            // On the authored sloping ledge with its original top-down rock
+            // band, let the player approach before lifting. A real vertical
+            // cliff keeps the original arc above; water/decks keep their own
+            // semantics. The source still owns all X/Z motion and collision.
+            const auto& source=s.actor_sources[i];
+            if(object.is_player && source.jump_arc_valid && approach_contact.surface && approach_contact.surface==slope_contact.surface &&
+               from.status==terrain::Status::Authored && to.status==terrain::Status::Authored &&
+               solid_ground(from) && solid_ground(to) && solid_ground(approach_contact) && solid_ground(slope_contact) &&
+               from.pixels>to.pixels && approach_contact.pixels>slope_contact.pixels) {
+                ground=source.jump_ticks<=12?height.pixels:
+                    approach_contact.pixels+(to.pixels-approach_contact.pixels)*(source.jump_ticks-12)/20.f;
+                lift=actor::approach_jump_lift(source,p.lift);
+            }
+        }
+        item.x=p.x;item.y=ground/16.f+lift;item.z=p.z;
         if(!item.texture) {
             glGenTextures(1,&item.texture);glBindTexture(GL_TEXTURE_2D,item.texture);
             glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
@@ -76,8 +111,26 @@ void update(const world::Snapshot& s,const terrain::Resolved& terrain) {
         if(i==s.player_index && object.is_player) {
             result.player=true;result.player_x=item.x;result.player_z=item.z;
             // Follow ground contact; a jump is actor motion, not a camera lift.
-            result.player_y=height.pixels/16.f;
+            result.player_y=ground/16.f;
+            result.player_lift=lift;
         }
+    }
+    size_t index=world::kObjectEventCount;
+    for(const auto& remembered:range.distant()) {
+        auto& item=items[index++];const auto& p=remembered.position;
+        const int x=int(std::floor(p.x)),z=int(std::floor(p.z));
+        const auto height=terrain.query(x,z,remembered.object.elevation,p.x-x,p.z-z);
+        if(!height.resolved()){++result.unresolved;continue;}
+        item.x=p.x;item.y=height.pixels/16.f+p.lift;item.z=p.z;
+        if(!item.texture) {
+            glGenTextures(1,&item.texture);glBindTexture(GL_TEXTURE_2D,item.texture);
+            glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+            glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+            glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_CLAMP_TO_EDGE);
+            glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_CLAMP_TO_EDGE);
+        }
+        item.frame=remembered.frame;item.directions=remembered.directions;item.world_facing=remembered.facing;
+        item.visible=true;++result.visible;++result.distant;
     }
     glBindTexture(GL_TEXTURE_2D,0);
 }

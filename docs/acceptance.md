@@ -1,11 +1,37 @@
 # Watch the acceptance check
 
-**In review — [NPC camera views and nearby visibility](live-npc-views.md), M6 supporting M5.**
+**Current batch — [demo controls, distant NPCs and Route 101 ledge contact](desktop-demo-batch.md).**
+Previous agent/native checks pass for their bounded cases; the combined human
+checklist is pending, with further unresolved reports below. Controls now
+open over the voxel viewer, remembered ordinary NPCs survive source distance
+removal, and the ledge jump keeps its visible character and original collision.
+Save latency and public runner installation remain open beside camera/foliage work.
+
+**13 September follow-up:** the maintainer rejected the earlier visible ledge
+alignment and then rejected a thinner ledge shape. The fuller terrain is restored.
+The follow-up retimes the visible jump to include a grounded approach. Physical
+grid triggers remain unchanged; smaller triggers belong to continuous movement.
+The affected human retest is pending. Original batch evidence is retained below.
+
+**Further reports, 13 September:** ledge corners look broken (M2/M5); successful
+encounter escape changes a north-facing camera to west (M5/M7/M9); steep camera
+angles make upright sprite cards look thin (the existing M6/M9 issue). These
+followed the `ee4f71d` prepared handoff without a restated tested revision. They
+are deferred, not fixed or independently reproduced. See the explicit
+[known limits beside the playtest](desktop-demo-batch.md#known-limits-beside-the-playtest).
+Earlier straight-ledge and scene/UI evidence does not establish corner fidelity,
+battle-return heading preservation or pitch-aware sprites.
+
+![Actual corrected takeoff and native jump](media/ledge-takeoff-correction.gif)
+
+![Actual native demo batch](media/desktop-demo-batch.gif)
+
+**Merged PR #33 — [NPC camera views and nearby visibility](live-npc-views.md), M6 supporting M5.**
 The 18-second native recording shows ordinary NPCs from four camera views and
 walking away/back. Directional source art and queued-flip transitions are
 verified; loaded actors ignore the original 2D viewport cull. The guide uses
-the existing launcher and new **NPC views** checkpoint, with five pending human
-steps. Distant despawning, ledge/contact alignment, foliage and M9's continuous
+the existing launcher and new **NPC views** checkpoint. All five human steps
+are checked for `09d28c0`; merge `b4f6423` was verified on 2026-09-12. Distant despawning, ledge/contact alignment, foliage and M9's continuous
 third-person/first-person modes remain open.
 
 ![Native NPC camera and nearby visibility](media/live-npc-views.gif)

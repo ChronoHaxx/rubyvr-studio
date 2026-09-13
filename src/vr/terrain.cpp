@@ -176,6 +176,15 @@ Height Resolved::query(int x,int y,int layer,float u,float v) const {
     const auto* c=cell(x,y);if(!c) return {};
     if(layer>0 && layer<15) {
         for(const auto& p:c->surfaces) if(p.layer==layer) return {Status::Authored,surface_height(p,u,v),&p};
+        // Ruby IsZCoordMismatchAt treats source elevation 0 as neutral. A
+        // single authored ground surface on that neutral cell supports a
+        // crossing actor (notably ledge jumps). Never pick an unrelated deck,
+        // water layer, or an author-only zero over a non-neutral source cell.
+        if(c->surfaces.size()==1 && (c->expected>>12)==0) {
+            const auto& p=c->surfaces.front();
+            if(p.layer==0 && p.kind==TerrainKind::Ground)
+                return {Status::Authored,surface_height(p,u,v),&p};
+        }
         return {Status::Unresolved};
     }
     if(c->surfaces.size()==1) return {Status::Authored,surface_height(c->surfaces.front(),u,v),&c->surfaces.front()};

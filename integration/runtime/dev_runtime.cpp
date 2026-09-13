@@ -10,6 +10,7 @@
 #include "viewer.h"
 #include "game_input.h"
 #include "camera_input.h"
+#include "dev/demo_panel.h"
 #include <array>
 #include <chrono>
 #include <cstdio>
@@ -152,6 +153,20 @@ int selectable(const char* key) {
     if (!std::strcmp(key, "dev.step")) return transport.paused();
     return 1;
 }
+rubyvr::dev::panel::Model panel_model() {
+    rubyvr::dev::panel::Model out;out.available=bool(session);
+    if(!session)return out;
+    out.paused=transport.paused();out.noclip=noclip;out.can_noclip=verified && registered;
+    out.busy=session->busy();out.selected=session->selected();out.checkpoints=session->names();
+    get("dev.speed",&out.speed);out.location=scene;
+    out.status=error.empty()?session->message():error;return out;
+}
+void panel_change(const char* key,int value,const char* text) {
+    if(!session)return;
+    if(!std::strcmp(key,"dev.select")){if(!session->busy())session->select(value);return;}
+    if(!std::strcmp(key,"dev.save"))name=text;
+    if(!set(key,value))action(key);
+}
 }
 void configure(gbarecomp::RunOptions& options) {
     const char* directory = std::getenv("RUBYVR_DEV_DIR");
@@ -168,9 +183,13 @@ void configure(gbarecomp::RunOptions& options) {
     options.ui_get = get; options.ui_set = set; options.ui_action = action;
     options.ui_get_text = get_text; options.ui_set_text = set_text;
     options.ui_enabled = selectable;
+    rubyvr::dev::panel::configure({panel_model,panel_change});
+    viewer::set_overlay(rubyvr::dev::panel::draw,rubyvr::dev::panel::open,rubyvr::dev::panel::shutdown);
     std::fprintf(stderr, "[rubyvr:dev] enabled; Esc > Developer; checkpoints=%s\n", directory);
 }
 bool enabled() { return bool(session); }
+bool viewer_event(const SDL_Event& e){return rubyvr::dev::panel::event(e);}
+bool viewer_menu_open(){return rubyvr::dev::panel::open();}
 bool pending() { return session && session->pending(); }
 std::optional<rubyvr::dev::Request> take_request() { return session ? session->take_request() : std::nullopt; }
 void reset_after_load() {

@@ -4,6 +4,10 @@
 #include <numbers>
 
 namespace vr::camera_input {
+uint16_t with_wasd(uint16_t keys, bool w, bool a, bool s, bool d) {
+    const uint16_t held=(w?0x40:0)|(a?0x20:0)|(s?0x80:0)|(d?0x10:0);
+    return keys & uint16_t(~held);
+}
 int quadrant(float yaw) {
     if (!std::isfinite(yaw)) return 0;
     const double angle = std::remainder(double(yaw), 2 * std::numbers::pi);

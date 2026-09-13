@@ -1,6 +1,10 @@
 # NPC views and nearby visibility
 
-**M6 / RV-010, supporting the M5 playable demo — in review.** Ordinary NPCs now
+**Current follow-up:** [desktop demo batch 1](desktop-demo-batch.md) adds the
+voxel-view control panel, bounded distant NPC retention and Route 101 ledge
+contact. Its human acceptance is separate from the historical PR #33 result below.
+
+**M6 / RV-010, supporting the M5 playable demo — merged in PR #33 (`b4f6423`).** Ordinary NPCs now
 show their available front, back or side art when the camera turns. Loaded NPCs
 also remain visible past Ruby's original 2D screen edge. The game still owns
 their movement, animation, palette, script visibility and collision.
@@ -10,7 +14,7 @@ their movement, animation, palette, script visibility and collision.
 An 18-second close-up from the actual native viewer, retimed from scripted input.
 The four camera views are followed by walking away and back below Birch's lab.
 NPCs continue their original walking routines. This is agent visual evidence;
-the human steps below remain pending. It does not demonstrate distant actors
+the five human steps below were subsequently checked for `09d28c0`. It does not demonstrate distant actors
 outside Ruby's live object slots, free movement or a headset.
 
 ## Try it with the existing launcher
@@ -21,8 +25,9 @@ Use the prepared Windows game session:
 & E:\Coding\vr-modding-research\_worktrees\live-camera\tools\run-dev-game.ps1
 ```
 
-In the original Ruby window, **Esc > Checkpoints**, select **NPC views** and
-load it. This new local checkpoint starts beside the walking NPCs in Littleroot.
+The current launcher starts **NPC views**. To return, use **Demo controls** in
+the voxel viewer, select **NPC views**, and load it. The original window's
+**Esc > Checkpoints** also remains available. This local checkpoint starts beside the walking NPCs in Littleroot.
 Existing checkpoints are preserved. The launcher prints the exact prepared
 source revision; the draft PR records its build hash. No game assets or saves
 are distributed in this repository. The WSL Studio editor is a separate program.
@@ -51,22 +56,26 @@ turning. **Enter** opens Start; **X** confirms/talks and **Z** goes back.
 - **M5/M10/M11:** public runner installation and desktop/headset performance
   acceptance remain open; this is the prepared private native runner.
 
-## Human functional check — pending for this revision
+## Human functional check — passed for `09d28c0`
 
-1. [ ] Launch and load **NPC views**. Focus the viewer and watch both the small
+All five steps were checked in merged PR #33; the merge and checklist were
+verified on 2026-09-12. The exact time of each physical check was not recorded.
+This is bounded desktop acceptance, not full actor or headset acceptance.
+
+1. [x] Launch and load **NPC views**. Focus the viewer and watch both the small
    child and taller walkers. Expect complete sprites with feet on the ground.
-2. [ ] While standing still, press J or L four times, releasing each press.
+2. [x] While standing still, press J or L four times, releasing each press.
    Watch an NPC's walking direction and front/back/side drawing. Expect the
    drawing to match the viewpoint, with no reversed stride or reset to a wrong
    view. R returns north-up. Check once at a lower tilt using K.
-3. [ ] With north-up restored, walk left to the lab entrance area, then a couple
+3. [x] With north-up restored, walk left to the lab entrance area, then a couple
    of tiles down and back. Watch the child farther north: crossing the original
    screen edge should not alone hide a still-loaded NPC. Larger-distance
    despawning remains a known limit, not a pass claim for this step.
-4. [ ] Open Start with Enter, navigate and close it with Z; walk and release
+4. [x] Open Start with Enter, navigate and close it with Z; walk and release
    arrows, then switch focus between windows. Expect normal menu directions,
    no stuck movement and unchanged NPC appearance on return.
-5. [ ] Close the game, reopen with the same command and load **NPC views** again.
+5. [x] Close the game, reopen with the same command and load **NPC views** again.
    Turn the camera, then load **Demo field ready**. Expect the correct current
    NPCs and situation, without an actor carried over from the previous state.
 
@@ -137,6 +146,7 @@ a second reversal. No previous snapshot or timer is substituted.
   implementation, repair and acceptance review. External review did not run;
   no DeepSeek call or paid fallback was used.
 
-The [roadmap](roadmap.md#current-focus) records this as an in-review M6 follow-up
+The [roadmap](roadmap.md#current-focus) records this as a merged M6 follow-up
 to the NPC report after PR #32. The earlier player and PR #32 human acceptance
-remain recorded separately; this revision still needs the five steps above.
+remain recorded separately. This revision has all five steps above checked;
+the next work follows the larger [demo batches](roadmap.md#one-week-desktop-demo-target).

@@ -1,6 +1,6 @@
 # Capture one animated actor sequence with correct source identity
 
-Work package **RV-010** · M6 Actors and effects · help wanted, area: runtime · player slice merged; NPC follow-up in review
+Work package **RV-010** · M6 Actors and effects · help wanted, area: runtime · player and ordinary NPC slices merged; broader actor coverage pending
 
 ## Problem
 
@@ -38,11 +38,11 @@ items below remain unchecked.
 **Dated follow-up, 2026-09-12, after PR #32 (`a6c8aa0`):** the maintainer reports
 NPCs showing the opposite view during camera turns. The previous player-only
 scope did not cover NPC profiles; its original acceptance remains recorded.
-The [NPC views and viewport repair](../live-npc-views.md) is now in review:
+The [NPC views and viewport repair](../live-npc-views.md) merged in PR #33 (`b4f6423`):
 ordinary directional profiles, exact displayed phase/palette/feet, queued-copy
 flip transitions and active-event visibility past the original screen. Eight
-native replay checks pass. User retest is pending, as are live-slot/neighbor
-presentation, unsupported profiles and full effects. No paid worker was used;
+native replay checks pass. All five user retest steps are checked for `09d28c0`;
+live-slot/neighbor presentation, unsupported profiles and full effects remain open. No paid worker was used;
 exact Codex token/time attribution for the repair is not separately available.
 
 ## Acceptance

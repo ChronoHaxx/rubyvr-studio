@@ -5,10 +5,15 @@ developers, testers and people who can explain a confusing workflow clearly.
 You can contribute with or without AI tools. You do not need a VR headset to
 work on the editor or review static models.
 
-## Pick a bounded piece of work
+## Pick a coherent piece of work
 
 Start with the [issue backlog](docs/issues/README.md). Each work package names
 the problem, source entry points, acceptance criteria and evidence to return.
+For the active desktop demo, group related tasks around one playable outcome;
+the maintainer prefers one substantial PR and one end-of-batch playtest over
+separate PRs for each small fix. The [one-week target](docs/roadmap.md#one-week-desktop-demo-target)
+defines scope and order. Keep quick component checks during implementation, then
+perform the combined integration and visual review before the human handoff.
 The [roadmap and progress tracker](docs/roadmap.md) is the single M0–M11 checklist;
 work packages describe smaller contributions within it.
 Use `good first issue` for genuinely small starting points. Larger runtime,
@@ -34,7 +39,7 @@ acceptance. See the [PR template](.github/pull_request_template.md).
 
 1. Follow [building](docs/building.md), branch from the public repository's
    default branch, and reproduce the problem before editing.
-2. Keep the change within the selected issue. Preserve existing authored files
+2. Keep the change within the selected issue or agreed demo batch. Preserve existing authored files
    and the v5/v6 format meaning. Test malformed input and rollback when changing
    persistence, masks or authoring operations.
 3. Run the checks relevant to the change in [verification](docs/verification.md).

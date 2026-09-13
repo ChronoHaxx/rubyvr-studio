@@ -1,6 +1,6 @@
 # Free walking, third-person and first-person
 
-**Batch 2, M5/M6/M9 — diagonal shake repaired; human retest pending.**
+**Batch 2, M5/M6/M9 — diagonal shake and angled ledge handoff repaired; human retest pending.**
 Third person and First person now move between Ruby's tile centres, including
 diagonally. The view can turn smoothly with the mouse while walking. Grid remains
 available. Player/NPC cards tilt toward the camera around their feet, so steep
@@ -35,6 +35,33 @@ precision. The GL consumer also checks the exact fractional foot. Component,
 sanitizer, ledge/checkpoint/input and encounter/Bag/connection regressions pass.
 These measurements are not physical-input acceptance: repeat steps 1 and 3 below
 in particular before considering the batch ready to merge.
+
+## Angled ledge follow-up — 13 September
+
+After the `ce1b542` handoff, the maintainer reported that ledges refused angled
+approaches in Third person/First person and diagonal input at cardinal views.
+The native reproducer confirmed it: straight approaches passed, while all ten
+angled/diagonal approaches failed. Earlier cardinal-only ledge evidence did not
+cover this case. Movement acceptance remains failed/pending human retest.
+
+![Before and after: diagonal and oblique native ledge jumps](media/angled-ledge-jump.gif)
+
+The body now reports which axis hit the ledge, even while sliding along its
+other axis. The adapter checks the adjacent native tile in that direction and
+lets Ruby execute its original jump. Shallow approaches use the ledge direction,
+even when sideways input is stronger. A pending cell entry completes its event
+first. Ordinary walls still slide/stop; parallel motion and uphill approaches
+do not acquire a downhill jump. Collision boxes and ledge artwork are unchanged.
+
+The 10-second comparison uses the actual native game and the same checkpoint
+and approach directions, scripted and retimed. All twelve native approaches
+now pass across both modes: straight, both cardinal-view diagonals, oblique,
+and shallow left/right. Each checks checkpoint placement, the original south
+jump action and landing, unchanged camera heading, and blocked uphill movement
+(48 assertions). The 49-case public movement suite also passes optimized and
+ASan/UBSan, covering all four contact normals and parallel/departing motion.
+Repeat the affected ledge check below; this does not repair corner geometry or
+the separately tracked visible-lip/trigger mismatch.
 
 ## Try the prepared build
 
@@ -74,9 +101,11 @@ launcher. Agent results below do not tick these boxes.
   Expect readable, foot-anchored player/NPC art. Try **First person**, then
   **Grid**: your own card disappears only in first person. Repeat a sustained diagonal
   in first person; the camera should remain steady. Grid restores 90° turns.
-- [ ] **Ledge and connection:** load **Demo ledge**, choose Third person, walk
-  down the straight ledge and try walking back up. Expect the native jump and
-  blocked reverse climb. Walk between Route 101 and Littleroot and look back:
+- [ ] **Ledge and connection:** load **Demo ledge**, choose Third person and
+  approach the straight ledge diagonally. Reload, rotate away from a 90° heading
+  and approach again, including a shallow angle. Repeat in First person.
+  Expect the native downhill jump with the same camera heading; walking back up
+  must stay blocked. Walk between Route 101 and Littleroot and look back:
   expect the connected scenery to remain. Corner shape defects remain below.
 - [ ] **Battle and ordinary UI:** choose a heading, walk in encounter grass,
   choose Run and return. Repeat with another heading. Expect the chosen view/mode
@@ -141,15 +170,24 @@ the contract; no restricted implementation was copied or translated. Ruby's
 pinned `pret/pokeruby` source is `63a8cbf0016b351a4e68f7036fa0b77e23d2f2c1`;
 the adapter verifies Ruby USA rev1 before reading/writing its supported layout.
 
+For the angled-ledge repair, the cached companion `FreeMove.lua` resolves blocked
+axes separately and checks special actions while the other axis slides. Ruby's
+`field_player_avatar.c` takes a cardinal direction in `player_step`; its
+`GetLedgeJumpDirection` reads the adjacent tile's permitted jump direction. The
+native hook registry restores registers when a callback declines, so the adapter
+must execute one bounded original step with the contact direction and handle its
+return. Merely changing a register and declining cannot redirect the jump.
+
 ## Agent verification — passed, separate from human results
 
 | Evidence | Result and scope |
 |---|---|
-| Free-walk component | 23 checks, optimized and ASan/UBSan: sustained straight diagonals through boundaries, constant speed, collision/sliding, corner blocking, bounded steps and cell notification |
+| Free-walk component | 49 checks, optimized and ASan/UBSan: sustained straight diagonals through boundaries, constant speed, contact normals during shallow/diagonal sliding, parallel/departing motion, corner blocking, bounded steps and cell notification |
 | Billboard component | 10,079 assertions, optimized and ASan/UBSan: basis, near-vertical view, foot pivot, finite guards and vertex geometry |
 | Existing camera/presentation/actor checks | Camera 1,107; presentation 53; player frame 3,504; NPC frame 16,363; actor range 25. Actor suites also pass sanitizers |
 | Actual Windows OpenGL viewer | Exact fractional camera/actor foot survives rounded source pixels; steep card retains height; first person hides only player; arbitrary yaw retained; battle-return yaw/pitch/mode preserved; existing actor, menu, overlay and connected-scene checks pass |
 | Native movement sequence | 16 checks: fractional/diagonal movement, grid return, native ledge/reverse collision, fractional checkpoint, repeated partial reversals and scripted Windows mouse capture/release |
+| Native angled ledges | 48 assertions across twelve Third/First person approaches: original jump action, landing, unchanged heading and blocked reverse; old build fails all ten angled/diagonal jump cases |
 | Native gameplay journey | Six checks: a real wild encounter, successful Run (`gBattleOutcome == 4`) with north/free mode preserved, Bag retention/return, native connection and return |
 | Native Windows build | Passed with existing upstream warnings. No physical input or headset acceptance inferred |
 

@@ -1,6 +1,13 @@
 # Watch the acceptance check
 
 **Current batch — [free walking, third-person and first-person](free-camera-movement.md).**
+**Angled ledge follow-up:** the maintainer's `ce1b542`-era report is reproduced;
+the old build fails ten angled/diagonal approaches. The corrected native handoff
+passes all twelve approaches across Third/First person, including blocked uphill
+movement. Watch the focused comparison in the guide and repeat its ledge step.
+This remains failed/pending human retest; ledge artwork and trigger depth are
+separate known limits.
+
 **13 September:** the maintainer failed the initial diagonal-motion check.
 Axis loss at cell boundaries and pixel-rounded camera follow are repaired;
 the current recording/checklist is updated and human retest remains pending.

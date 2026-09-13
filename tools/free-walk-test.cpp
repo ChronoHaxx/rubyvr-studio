@@ -33,6 +33,25 @@ int main(){
     check(p.x<=10.78&&p.x>10.7&&near(p.z,10.5),"body stops before blocked tile without recentring");
     p={10.75,10.5};auto slide=advance(p,{1,1},1.0/16,blocked,&walls);
     check(slide.blocked&&near(slide.position.x,p.x)&&slide.position.z>p.z,"diagonal slides along wall");
+    check(slide.blocked_x&&!slide.blocked_z,"sliding retains the wall contact for native special actions");
+    // Contact direction must be independent of the camera and of the stronger
+    // input axis. A shallow approach still pushes into a ledge while sliding.
+    for(int axis:{0,1})for(int sign:{-1,1})for(double slope:{.25,1.0,4.0}) {
+        walls.clear();
+        for(int along=8;along<=12;++along)
+            walls.insert(axis==0?std::pair{10+sign,along}:std::pair{along,10+sign});
+        const Point start=axis==0?Point{10.5+sign*.275,10.5}:Point{10.5,10.5+sign*.275};
+        const Point input=axis==0?Point{double(sign),slope}:Point{slope,double(sign)};
+        const auto hit=advance(start,input,1.0/16,blocked,&walls);
+        check(hit.blocked&&hit.blocked_x==(axis==0)&&hit.blocked_z==(axis==1)&&
+              (axis==0?near(hit.position.x,start.x)&&hit.position.z>start.z:
+                       near(hit.position.z,start.z)&&hit.position.x>start.x),
+              "all four contact normals survive diagonal and shallow sliding");
+        const auto parallel=advance(start,axis==0?Point{0,1}:Point{1,0},1.0/16,blocked,&walls);
+        const auto away=advance(start,axis==0?Point{-double(sign),0}:Point{0,-double(sign)},1.0/16,blocked,&walls);
+        check(!parallel.blocked_x&&!parallel.blocked_z&&!away.blocked_x&&!away.blocked_z,
+              "parallel and departing motion cannot request a contact handoff");
+    }
     walls={{11,9}};p={10.75,10.08};auto corner=advance(p,{1,0},1.0/16,blocked,&walls);
     check(corner.blocked&&near(corner.position.x,p.x),"body corner cannot cut across wall");
     walls.clear();p={10.99,10.99};auto crossing=advance(p,{1,1},1.0/16,blocked,&walls);
@@ -53,6 +72,8 @@ int main(){
     walls={{11,10},{10,11}};p={10.5,10.5};
     for(int i=0;i<32;++i)p=advance(p,{1,1},1.0/16,blocked,&walls).position;
     check(p.x<10.78&&p.z<10.78,"complete diagonal cannot squeeze through blocked side cells");
+    auto two_contacts=advance(p,{1,1},1.0/16,blocked,&walls);
+    check(two_contacts.blocked_x&&two_contacts.blocked_z,"blocked corner preserves both candidate directions");
     walls.clear();
     auto capped=advance({10.5,10.5},{1,0},10000,blocked,&walls);
     check(near(capped.position.x,10.5625),"large delta cannot tunnel");

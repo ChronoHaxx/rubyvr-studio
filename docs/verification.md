@@ -2,8 +2,16 @@
 
 ## Free walking and camera modes — batch 2 in review, 2026-09-13
 
-**13 September diagonal follow-up:** the maintainer reported shake after
-`6c9bcd1`. The movement case remains failed/pending human retest. New 23-case
+**13 September angled-ledge follow-up:** the native reproducer fails ten
+angled/diagonal approaches on `ce1b542`. The repair preserves each blocked axis
+and executes Ruby's original step toward the valid special tile even while
+sliding sideways. All twelve native approaches now pass in Third/First person
+(48 assertions including landing, heading and reverse collision). The public
+49-case movement suite passes optimized and ASan/UBSan. The focused comparison
+and expanded ledge playtest are in the guide below; human retest stays pending.
+
+**Earlier 13 September diagonal follow-up:** the maintainer reported shake after
+`6c9bcd1`. The movement case remains failed/pending human retest. The then-23-case
 movement and 3,504-case player suites pass with sanitizers, plus exact-foot GL
 checks. Two negative controls reject the old axis-drop/rounded-foot behavior.
 A native straight-diagonal segment and the existing 16 movement/input and six

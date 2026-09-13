@@ -146,17 +146,37 @@ int intercept(uint32_t address,int thumb,ArmCpuState* cpu) {
     }
     const Point before=position;
     const auto moved=advance(position,intent,1.0/16,blocked,reinterpret_cast<void*>(uintptr_t(object_address)));
-    position=moved.position;++ticks;
-    if(moved.blocked && std::hypot(position.x-before.x,position.z-before.z)<1e-8) {
-        const int nx=x+(dir==4)-(dir==3),nz=z+(dir==1)-(dir==2);
-        const auto collision=guest(0x0805FF80,object_address,uint16_t(nx),uint16_t(nz),dir);
-        const bool ledge=guest(0x08063BE4,uint16_t(nx),uint16_t(nz),dir)!=0;
+    ++ticks;
+    if(moved.blocked && !moved.crossed) {
         const auto scene=world::live::inspect(m);
-        const bool border=nx<7 || nz<7 || nx>=scene.width-8 || nz>=scene.height-7;
-        // A normal wall stops the small body exactly where it is. Only special
-        // collisions need Ruby's centred movement action (ledge, object push or
-        // border). Its dialogue/door handler already ran before this hook.
-        if(ledge || collision==4 || border){release(sprite,true);return 0;}
+        Point push{moved.blocked_x?intent.x:0,moved.blocked_z?intent.z:0};
+        // Check the denied axis even if the other axis can slide. At a corner,
+        // try the stronger contact first, then the other blocked direction.
+        // A cell crossing instead completes below, letting Ruby process its
+        // event before a special action is considered on the next tick.
+        for(int contact=free_walk::facing(push);contact;contact=free_walk::facing(push)) {
+            const int nx=x+(contact==4)-(contact==3),nz=z+(contact==1)-(contact==2);
+            const auto collision=guest(0x0805FF80,object_address,uint16_t(nx),uint16_t(nz),contact);
+            const bool ledge=guest(0x08063BE4,uint16_t(nx),uint16_t(nz),contact)!=0;
+            const bool border=nx<7 || nz<7 || nx>=scene.width-8 || nz>=scene.height-7;
+            if(ledge || collision==4 || border) {
+                // Discard this uncommitted slide before recentering: the sprite
+                // still represents `before`. Ruby's player_step direction must
+                // match the ledge/push/exit normal, not the dominant input axis.
+                release(sprite,true);
+                guest(0x0805C530,object_address,contact);
+                // A declined function hook restores CPU registers. Execute
+                // this one original step with the contact direction, then own
+                // the return; never mutate R0 and decline the hook.
+                guest(step_entry,uint32_t(contact),cpu->R[1],cpu->R[2]);
+                cpu->R[15]=cpu->R[14]&~1u;
+                return 1;
+            }
+            if(contact>=3)push.x=0;else push.z=0;
+        }
+    }
+    position=moved.position;
+    if(moved.blocked && std::hypot(position.x-before.x,position.z-before.z)<1e-8) {
         guest(0x0805C530,object_address,dir);sprite[0x2c]|=0x40;avatar[2]=0;
         cpu->R[15]=cpu->R[14]&~1u;return 1;
     }

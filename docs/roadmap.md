@@ -139,6 +139,10 @@ Component/sanitizer, actual GL and native encounter/Bag/connection/checkpoint
 checks pass. **13 September human failure:** diagonal movement shook after the
 `6c9bcd1` handoff. The current PR repairs axis loss at cell crossings and rounded
 camera placement; sustained diagonal, precise-foot and native regressions pass.
+**Further M5/M9 human failure after `ce1b542`:** oblique and diagonal ledge
+approaches failed. The contact-direction handoff is repaired in this same PR;
+twelve native approach cases, downhill landings and blocked reverse checks pass.
+The expanded ledge playtest and a focused native comparison are in the batch guide.
 Movement acceptance remains failed/pending retest, not restored by automated checks. A native partial-reversal camera defect found during integration
 is repaired. Six combined human checks remain pending. This does not finish
 lip-exact ledge triggers, corner art, camera obstacle avoidance or public setup.
@@ -977,7 +981,9 @@ explicit in the batch guide.
   native collision queries, once-per-cell events and original special-action
   handoff; third-person/first-person, right-click toggle, sensitivity,
   Escape/focus release and anchored pitch-aware actors. Component/sanitizer,
-  Windows GL and native game checks pass. Six human checks pending.
+  Windows GL and native game checks pass. Angled ledge contact now hands back in
+  the blocked direction even while sliding; twelve native approach cases pass.
+  Six human checks pending, including the expanded ledge retest.
 - [ ] Finish lip-exact ledge handoff, camera obstruction handling, persistent
   camera preferences and free-vector input recording/replay. Current special
   actions can centre the player; old button-only replay requires Grid.

@@ -76,6 +76,16 @@ value instead of rounding back through the GBA Sprite. Capture refuses another
 actor/cell or load epoch, and the renderer accepts it only for the player. Native
 special/grid motion falls back to the unchanged source placement.
 
+The angled-ledge follow-up preserves each blocked body axis and checks the
+adjacent special tile in that axis's direction even while the other axis slides.
+A cell crossing completes before special handoff. On a valid ledge/push/exit,
+discard the uncommitted slide, centre the existing sprite, and invoke one bounded
+original `player_step` with the contact direction and original action buttons.
+The hook handles the return: a declined hook restores CPU registers, so changing
+R0 and returning zero would incorrectly retain the dominant input direction.
+Ruby still validates/executes the special action; ordinary wall sliding and the
+collision dimensions are unchanged.
+
 The existing input filter supplies the view-relative fractional vector only
 while the viewer owns verified field controls. Original-window input restores
 native control. The viewer's event hook releases relative mouse capture on

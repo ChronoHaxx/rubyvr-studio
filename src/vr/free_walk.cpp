@@ -40,7 +40,7 @@ Step advance(Point p,Point v,double distance,Blocked blocked,void* context) {
             if(x==old_x && z==old_z)continue;
             if(blocked(x,z,dir,context)){hit=true;break;}
         }
-        if(hit){out.blocked=true;return;}
+        if(hit){out.blocked=true;(horizontal?out.blocked_x:out.blocked_z)=true;return;}
         out.position=candidate;
         out.crossed=int(std::floor(candidate.x))!=old_x || int(std::floor(candidate.z))!=old_z;
     };

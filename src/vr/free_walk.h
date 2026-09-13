@@ -12,6 +12,10 @@ using Blocked = bool (*)(int x,int z,int direction,void* context);
 struct Step {
     Point position;
     bool crossed=false, blocked=false;
+    // The body can touch a special tile while its other axis still slides.
+    // Report each denied axis so the caller can hand off along that contact,
+    // rather than the input's dominant (possibly tangential) direction.
+    bool blocked_x=false, blocked_z=false;
 };
 // One fixed guest tick, at most one cell-entry event. Axis sliding checks the
 // full body, including both corners. The caller owns game events and cadence.

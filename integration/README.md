@@ -53,6 +53,34 @@ Verified live identity/invalidation is the first bounded change, now
 desktop viewer is a prototype, not evidence that the current Studio terrain
 and complete gameplay already work together. See the [single roadmap](../docs/roadmap.md).
 
+## Continuous on-foot adapter
+
+[Batch 2](../docs/free-camera-movement.md) adds `runtime/free_walk_runtime.*`
+on the emulation thread. Unlike the read-only snapshot renderer, this optional
+adapter writes verified guest player/sprite state and invokes bounded original
+collision/event/camera helpers. It verifies Ruby USA rev1, yields to scripted
+and special actions, and resets ownership on `g_runtime_state_epoch` changes.
+
+The native host must merge `free-walk-hooks.toml` into its recompiler config and
+regenerate guarded Thumb entries for `0x080587FC` (`player_step`), `0x08059224`
+(tile transition) and `0x0805810C` (`CameraUpdate`). The last handles partial Y
+reversals that ordinary full-tile stepping does not exercise. It requires the
+existing `gba_mod_register_function_entry_plugin`/enable API, bounded interpreter
+bridge and call-stack save/restore API in the prepared host. These declarations
+are our hook configuration; no generated ROM code is distributed.
+
+The existing input filter supplies the view-relative fractional vector only
+while the viewer owns verified field controls. Original-window input restores
+native control. The viewer's event hook releases relative mouse capture on
+Escape, focus loss, scene changes and panel use. Button-only host recording and
+replay cannot encode the free vector/camera pose, so the panel refuses free modes
+when either is active. Original Grid playback is unchanged. See the batch guide
+for centring, special-action, camera-collision and platform limitations.
+
+Public adapter source and configuration are not a complete upstream host patch;
+the separately licensed local runner integration and public installation work
+remain open. Human playtesting is pending; no executable is distributed here.
+
 ## Development base
 
 | Component | Upstream base | Local development reference |

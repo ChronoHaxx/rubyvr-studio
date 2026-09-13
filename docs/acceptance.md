@@ -1,6 +1,16 @@
 # Watch the acceptance check
 
-**Current batch — [demo controls, distant NPCs and Route 101 ledge contact](desktop-demo-batch.md).**
+**Current batch — [free walking, third-person and first-person](free-camera-movement.md).**
+Continuous/diagonal walking, smooth orbit, right-click mouse look and pitch-aware
+sprites are ready for the combined human playtest. Native movement, checkpoint,
+ledge, encounter escape, Bag and map-connection checks pass; physical input
+acceptance is pending. Use the guide's same launcher and six checks.
+
+![Actual native free walking and camera modes](media/free-camera-movement.gif)
+
+**Earlier batch — PR #34 merged at `4a6f2246` on 13 September:**
+[demo controls, distant NPCs and Route 101 ledge contact](desktop-demo-batch.md).
+Individual human results remain unreported; the report history below is retained.
 Previous agent/native checks pass for their bounded cases; the combined human
 checklist is pending, with further unresolved reports below. Controls now
 open over the voxel viewer, remembered ordinary NPCs survive source distance
@@ -17,7 +27,9 @@ The affected human retest is pending. Original batch evidence is retained below.
 encounter escape changes a north-facing camera to west (M5/M7/M9); steep camera
 angles make upright sprite cards look thin (the existing M6/M9 issue). These
 followed the `ee4f71d` prepared handoff without a restated tested revision. They
-are deferred, not fixed or independently reproduced. See the explicit
+were deferred at that handoff. Batch 2 now adds camera-continuity and pitch-facing
+implementation/checks; original-revision reset reproduction and human retesting
+remain pending. Ledge-corner repair remains deferred. See the explicit
 [known limits beside the playtest](desktop-demo-batch.md#known-limits-beside-the-playtest).
 Earlier straight-ledge and scene/UI evidence does not establish corner fidelity,
 battle-return heading preservation or pitch-aware sprites.

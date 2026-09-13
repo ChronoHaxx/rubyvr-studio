@@ -130,3 +130,14 @@ actors. Native four-view/phase/viewport evidence is recorded; live-slot and
 neighbour presentation remain open. The full acceptance sequence above is not
 claimed complete by this bounded viewport repair. First/third-person continuous
 movement remains required under M9, as reconfirmed by the maintainer.
+
+
+## Batch 2 reference follow-through — 2026-09-13
+
+The [free walking and camera delivery](free-camera-movement.md) rechecked the
+pinned controller/FreeMove/VoxelScene sources above and cached APK 2.4.2 modules.
+Fractional movement, once-per-cell events, small-body collision, original
+special-action handoff and anchored facing cards informed the independent
+native adapter and its tests. No restricted code was copied or translated.
+Actual Ruby encounter escape, Bag, connection, checkpoint, collision and GL
+camera checks pass; human input and broad source coverage remain pending.

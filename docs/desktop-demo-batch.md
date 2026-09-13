@@ -1,7 +1,10 @@
 # Desktop demo: controls, distant NPCs and ledge contact
 
-**Batch 1, M2/M5/M6/M7 — in review; human checks pending and further defects
-reported below.** Open the test controls directly over the voxel game, select a named
+**Batch 1, M2/M5/M6/M7 — merged in PR #34 at `4a6f2246` on 13 September.**
+The five individual human results remain unreported; merging alone does not
+check them. **The same launcher now prepares [batch 2's free walking and camera
+modes](free-camera-movement.md); use that guide's current combined playtest.**
+This page retains batch 1's exact evidence and reported defects. Open the test controls directly over the voxel game, select a named
 situation, change speed, pause/step, save/load or enable obstacle bypass. Ordinary
 NPCs previously seen on the current map can remain visible after Ruby releases
 their distant sprite slots. Route 101 keeps its fuller rocky ledge and the player
@@ -63,7 +66,8 @@ update does not replace an executable that is still running. Close the old game
 and reopen with the same command to use an update.
 
 Per the maintainer's clarification, **right-click toggle mouse look for free
-third-person orbit** will arrive with continuous movement in batch 2. It is not
+third-person orbit** is now implemented with continuous movement in
+[batch 2](free-camera-movement.md), pending human playtesting. It was not
 enabled by this WASD change. The GIF above predates the WASD label; its batch-1
 behavior remains representative and is not new keyboard-input evidence.
 

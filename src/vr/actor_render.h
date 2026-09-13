@@ -11,6 +11,9 @@ struct Stats {
 };
 void update(const world::Snapshot&,const terrain::Resolved&);
 void clear();
+// Optional desktop camera basis; XR/editor callers retain their existing policy.
+void set_camera(float yaw,float pitch,bool hide_player);
+void clear_camera();
 void draw(const math::Mat4& view_projection,const math::Mat4& model);
 void shutdown();
 const Stats& stats();

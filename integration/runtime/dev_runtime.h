@@ -20,4 +20,5 @@ void reset_after_load();
 bool accelerated();
 bool viewer_event(const SDL_Event&);
 bool viewer_menu_open();
+bool obstacles_bypassed();
 }

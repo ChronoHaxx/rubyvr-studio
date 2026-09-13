@@ -73,7 +73,11 @@ const bool registered = gba_mod_register_function_entry_plugin(hook_id, collisio
 const char* const speeds[] = {"1x (normal)", "2x", "4x", "8x", "16x", "32x", "64x", "MAX (uncapped)"};
 constexpr int speed_values[] = {1, 2, 4, 8, 16, 32, 64, 0};
 const char* const views[]={"North up","West up","South up","East up"};
+const char* const modes[]={"Grid","Third person","First person"};
+const char* const mouse_speeds[]={"Slow","Normal","Fast"};
 RecompRuntimeUiItem items[] = {
+    {"camera.mode","Camera","Camera and movement","Free modes use continuous on-foot movement. Special movement remains owned by Ruby.",RECOMP_RUNTIME_UI_CHOICE,0,2,1,modes,3},
+    {"camera.mouse_speed","Camera","Mouse speed","Sensitivity for right-click mouse look.",RECOMP_RUNTIME_UI_CHOICE,0,2,1,mouse_speeds,3},
     {"camera.view", "Camera", "View direction", "Choose which compass direction appears toward the top of the 3D view.", RECOMP_RUNTIME_UI_CHOICE, 0, 3, 1, views, 4},
     {"camera.relative", "Camera", "Movement follows 3D camera", "Applies while the 3D window is focused. Original game and menu directions stay unchanged.", RECOMP_RUNTIME_UI_BOOL, 0, 1, 1},
     {"camera.reset", "Camera", "Reset north-up", "Restore the north-up tilted view, normal zoom and player following.", RECOMP_RUNTIME_UI_ACTION},
@@ -91,7 +95,9 @@ RecompRuntimeUiItem items[] = {
     {"dev.status", "Checkpoints", "Last action", "", RECOMP_RUNTIME_UI_TEXT},
 };
 int get(const char* key, int* value) {
-    if (!std::strcmp(key,"camera.view")) *value=camera_input::quadrant(viewer::yaw_radians());
+    if (!std::strcmp(key,"camera.mode")) *value=int(viewer::camera_mode());
+    else if (!std::strcmp(key,"camera.mouse_speed")) *value=viewer::mouse_speed();
+    else if (!std::strcmp(key,"camera.view")) *value=camera_input::quadrant(viewer::yaw_radians());
     else if (!std::strcmp(key,"camera.relative")) *value=viewer::camera_relative();
     else if (!std::strcmp(key, "dev.pause")) *value = transport.paused();
     else if (!std::strcmp(key, "dev.noclip")) *value = noclip;
@@ -102,7 +108,15 @@ int get(const char* key, int* value) {
     return 1;
 }
 int set(const char* key, int value) {
-    if (!std::strcmp(key,"camera.view") && value>=0 && value<4) viewer::set_yaw_radians(value*1.570796327f);
+    if (!std::strcmp(key,"camera.mode") && value>=0 && value<3) {
+        if(value && (std::getenv("GBARECOMP_INPUT_REPLAY") || std::getenv("GBARECOMP_INPUT_RECORD"))) {
+            error="Free movement is not supported by the old button-only replay format. Use Grid mode for recording/replay.";
+            return 0;
+        }
+        viewer::set_camera_mode(viewer::CameraMode(value));
+    }
+    else if (!std::strcmp(key,"camera.mouse_speed") && value>=0 && value<3) viewer::set_mouse_speed(value);
+    else if (!std::strcmp(key,"camera.view") && value>=0 && value<4) viewer::set_yaw_radians(value*1.570796327f);
     else if (!std::strcmp(key,"camera.relative")) viewer::set_camera_relative(value!=0);
     else if (!std::strcmp(key, "dev.pause")) pause(value != 0);
     else if (!std::strcmp(key, "dev.noclip")) {
@@ -158,7 +172,7 @@ rubyvr::dev::panel::Model panel_model() {
     if(!session)return out;
     out.paused=transport.paused();out.noclip=noclip;out.can_noclip=verified && registered;
     out.busy=session->busy();out.selected=session->selected();out.checkpoints=session->names();
-    get("dev.speed",&out.speed);out.location=scene;
+    get("dev.speed",&out.speed);out.camera_mode=int(viewer::camera_mode());out.mouse_speed=viewer::mouse_speed();out.location=scene;
     out.status=error.empty()?session->message():error;return out;
 }
 void panel_change(const char* key,int value,const char* text) {
@@ -188,8 +202,14 @@ void configure(gbarecomp::RunOptions& options) {
     std::fprintf(stderr, "[rubyvr:dev] enabled; Esc > Developer; checkpoints=%s\n", directory);
 }
 bool enabled() { return bool(session); }
-bool viewer_event(const SDL_Event& e){return rubyvr::dev::panel::event(e);}
+bool viewer_event(const SDL_Event& e){
+    const bool camera=viewer::event(e);
+    const bool panel=rubyvr::dev::panel::event(e);
+    if(rubyvr::dev::panel::open())viewer::release_mouse();
+    return camera || panel;
+}
 bool viewer_menu_open(){return rubyvr::dev::panel::open();}
+bool obstacles_bypassed(){return noclip && verified && registered;}
 bool pending() { return session && session->pending(); }
 std::optional<rubyvr::dev::Request> take_request() { return session ? session->take_request() : std::nullopt; }
 void reset_after_load() {

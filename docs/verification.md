@@ -1,13 +1,24 @@
 # Verification and its limits
 
-## WASD controls follow-up — in review with PR #34
+## Free walking and camera modes — batch 2 in review, 2026-09-13
+
+[Actual native recording, check counts, worker accounting and six pending human
+steps](free-camera-movement.md). Free movement and billboard checks pass with
+ASan/UBSan; existing actor/camera/presentation suites pass. Windows GL verifies
+steep sprite readability, first-person hiding and camera retention. Sixteen
+native movement/input checks and six real encounter/Bag/connection checks pass.
+The outward connection check uses obstacle bypass; these are bounded automated
+checks, not physical-input, full-world or headset acceptance. Original battle
+reset cause is unconfirmed; ledge corners remain deferred.
+
+## WASD controls follow-up — merged PR #34 at `4a6f2246`, 2026-09-13
 
 `python tools/test-camera-input.py` passes **1,107** assertions on Windows and
 with WSL `--sanitize`. The additional cases cover WASD at all four camera views,
 combining arrow/controller/action input, original menu directions, panel/focus
 release and queued-turn behavior. See the [current control and human checks](desktop-demo-batch.md).
 The earlier batch GIF remains baseline evidence; it does not prove physical WASD
-input. Right-click toggle free orbit stays with continuous movement in batch 2.
+input. Right-click toggle and continuous movement are now in review in batch 2 above.
 
 ## NPC views and viewport visibility — merged PR #33, 2026-09-12
 

@@ -79,7 +79,7 @@ void draw(SDL_Window* win) {
     ImGui::Begin("RubyVR toolbar",nullptr,flags);
     if(ImGui::Button(visible?"Close controls [Esc]":"Demo controls [Esc]"))visible=!visible;
     ImGui::SameLine();if(ImGui::Button("Reset view"))change("camera.reset");
-    ImGui::SameLine();ImGui::TextUnformatted(model.paused?"PAUSED":"WASD/Arrows: walk   J/L: turn   Enter: Start   X/Z: confirm/back");
+    ImGui::SameLine();ImGui::TextUnformatted(model.paused?"PAUSED":model.camera_mode?"WASD: walk   Right-click: mouse look   Esc: release / controls":"WASD/Arrows: walk   J/L: turn   Enter: Start   X/Z: confirm/back");
     ImGui::End();
     if(visible) {
         ImGui::SetNextWindowPos({12,70},ImGuiCond_Always);
@@ -90,6 +90,13 @@ void draw(SDL_Window* win) {
         ImGui::Separator();
         if(!model.available)ImGui::TextWrapped("Developer controls need a prepared local game session.");
         ImGui::BeginDisabled(!model.available);
+        constexpr const char* cameras[]={"Grid - 90 degree turns","Third person - free walking","First person - free walking"};
+        int camera=model.camera_mode;ImGui::SetNextItemWidth(300);
+        if(ImGui::Combo("Camera and movement",&camera,cameras,3))change("camera.mode",camera);
+        if(camera){const char* mouse_speeds[]={"Slow","Normal","Fast"};int look=model.mouse_speed;
+            ImGui::SetNextItemWidth(200);if(ImGui::Combo("Mouse speed",&look,mouse_speeds,3))change("camera.mouse_speed",look);}
+        ImGui::TextWrapped(camera?"WASD walks relative to the view. Right-click toggles mouse look; Esc releases it. I/K tilts, J/L turns. Menus keep their original controls.":"Ruby's original step movement, with a camera that turns in 90 degree steps.");
+        ImGui::Separator();
         bool paused=model.paused;
         if(ImGui::Checkbox("Pause game",&paused))change("dev.pause",paused);
         ImGui::SameLine();ImGui::BeginDisabled(!paused);

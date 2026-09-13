@@ -29,7 +29,8 @@ $checkpoints = Join-Path $devRoot 'checkpoints'
 $state = Join-Path $checkpoints ($Checkpoint + '.state')
 if (-not $Fresh -and -not (Test-Path -LiteralPath $state -PathType Leaf)) { throw "Checkpoint missing: $Checkpoint" }
 Write-Host "RubyVR Developer build: $($manifest.source_commit)"
-Write-Host 'Play in the voxel viewer: WASD or arrows walk, J/L turn 90 degrees, R resets the view. Release movement keys to apply a queued turn.'
+Write-Host 'Demo controls > Camera and movement: Grid, Third person or First person. Free modes use WASD and right-click toggle mouse look; Esc releases the mouse.'
+Write-Host 'Grid uses J/L quarter turns. Free modes turn smoothly with J/L or mouse; I/K tilts and R resets the view. Mouse speed is in Demo controls.'
 Write-Host 'Play in the viewer: Enter opens Start; X confirms, Z goes back. Field menus keep the world; battles/interiors show the original game here.'
 Write-Host 'In the voxel viewer, click Demo controls or press Esc: pause/step, speed, obstacle bypass and named checkpoints.'
 Write-Host 'Try NPC views, Demo ledge, Demo battle or Demo lab ready. Loading resets speed and obstacle bypass.'

@@ -167,7 +167,7 @@ def stripe(data, floor, x0, width, output):
 
 def build(starter, decomp, output):
     result = copy.deepcopy(starter)
-    result['version'] = 7
+    result['version'] = max(7, result.get('version', 7))
     result['patterns'] = [p for p in result['patterns'] if not p['id'].startswith('indoor-may-')]
     terrain = result.setdefault('terrain', {'version': 1}).setdefault('maps', [])
     terrain[:] = [m for m in terrain if (m['group'], m['number']) not in ((1, 2), (1, 3))]

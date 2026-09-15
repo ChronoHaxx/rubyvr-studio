@@ -1,6 +1,9 @@
 # Free walking, third-person and first-person
 
-**Batch 2, M4/M5/M6/M9 — free cameras and a playable two-floor house; human retest pending.**
+**Merged in PR #35, 15 September — implementation `c7ed26d`.** All seven human
+checks were checked in the merged PR. Earlier failure/retest notes below are
+historical. The bounded sequence is accepted; broad scenery/comfort remains open.
+The active delivery and playtest are now [common interiors](common-interiors.md).
 Third person and First person now move between Ruby's tile centres, including
 diagonally. The view can turn smoothly with the mouse while walking. Grid remains
 available. Player/NPC cards tilt toward the camera around their feet, so steep
@@ -144,41 +147,41 @@ and R resets the view. **First person** uses the same walking controls and hides
 the player's own sprite. **Grid** restores quarter-turn J/L and native stepping.
 Enter opens Start, X confirms/talks, and Z goes back in every mode.
 
-## Human playtest — pending before merge
+## Historical PR #35 human playtest — passed on c7ed26d
 
-Use the implementation/build revision recorded in the PR and printed by the
-launcher. Agent results below do not tick these boxes.
+These seven results were verified as checked in merged PR #35 on 15 September.
+They do not accept the new room recipes; use the current guide for that playtest.
 
-- [ ] **Start and walk:** load **NPC views**, select **Third person**, close the
+- [x] **Start and walk:** load **NPC views**, select **Third person**, close the
   panel and use W, then hold W+D, W+A, S+D and S+A over open ground for several
   seconds each, including after rotating the view. Expect a steady, straight
   diagonal with no shake and no extra speed. Approach a tree/building:
   ordinary collision should stop you.
-- [ ] **Mouse and release:** right-click, look and walk; select Slow if needed.
+- [x] **Mouse and release:** right-click, look and walk; select Slow if needed.
   Right-click again, press Esc, and Alt-Tab away/back. Expect a released cursor,
   usable panel and no stuck walking/spinning; release held keys before resuming.
-- [ ] **Camera and actors:** orbit around the nearby NPC and tilt steeply with I.
+- [x] **Camera and actors:** orbit around the nearby NPC and tilt steeply with I.
   Expect readable, foot-anchored player/NPC art. Try **First person**, then
   **Grid**: your own card disappears only in first person. Repeat a sustained diagonal
   in first person; the camera should remain steady. Grid restores 90° turns.
-- [ ] **Ledge and connection:** load **Demo ledge**, choose Third person and
+- [x] **Ledge and connection:** load **Demo ledge**, choose Third person and
   approach the straight ledge diagonally. Reload, rotate away from a 90° heading
   and approach again, including a shallow angle. Repeat in First person.
   Expect the native downhill jump with the same camera heading; walking back up
   must stay blocked. Walk between Route 101 and Littleroot and look back:
   expect the connected scenery to remain. Corner shape defects remain below.
-- [ ] **Battle and ordinary UI:** choose a heading, walk in encounter grass,
+- [x] **Battle and ordinary UI:** choose a heading, walk in encounter grass,
   choose Run and return. Repeat with another heading. Expect the chosen view/mode
   to survive. Open Start → Bag and return, then talk to an NPC: original menus
   and dialogue should still respond without walking through them.
-- [ ] **House, furniture and stairs:** load **House approach**, select **Third
+- [x] **House, furniture and stairs:** load **House approach**, select **Third
   person**, press R, and enter using W+D. Expect a 3D room. Walk diagonally,
   approach the green chairs/table and talk to May's mother with X: furniture
   blocks you and dialogue responds without walking. Take the northwest stairs;
   select **First person**, walk toward the bed, then return downstairs and out.
   Expect solid furniture, both floors, working stairs and the same heading on
   exit. **House 1F ready / House 2F ready** let you retry either floor directly.
-- [ ] **Save and reopen:** stop between tile centres, save a uniquely named
+- [x] **Save and reopen:** stop between tile centres, save a uniquely named
   checkpoint, move and reload it. Expect the same foot position within one source
   pixel. Close/reopen using the command above and load it again. The new process
   starts in Grid; camera/mouse preferences are currently session-only.

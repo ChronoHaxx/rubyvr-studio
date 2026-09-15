@@ -64,6 +64,17 @@ int main() {
     check(!life.next(battle,false).world && !life.next(bag,false).world,"battle drops world and does not reuse it in battle Bag");
     life.next(field,true);life.reset();check(!life.next(bag,false).world,"explicit reset drops retained scene");
     auto indoors=field;indoors.mode=Mode::Interior;indoors.identity={1,2,0x08012000};indoors.indoor_3d=true;
+    check(same_control_scene(indoors,indoors),"matching authored publication owns input");
+    auto stale=indoors;stale.identity.number=3;
+    check(!same_control_scene(indoors,stale),"old floor cannot own input during a warp");
+    stale=indoors;stale.identity.layout++;
+    check(!same_control_scene(indoors,stale),"changed layout cannot borrow old room control");
+    stale=indoors;stale.epoch++;
+    check(!same_control_scene(indoors,stale),"checkpoint reload requires a fresh room publication");
+    stale=indoors;stale.fading=true;
+    check(!same_control_scene(indoors,stale),"fade keeps native transition ownership");
+    stale=indoors;stale.indoor_3d=false;
+    check(!same_control_scene(indoors,stale),"unsupported room cannot borrow indoor controls");
     check(life.next(indoors,true).update,"authored indoor room publishes 3D field");
     auto indoor_bag=indoors;indoor_bag.mode=Mode::Bag;indoor_bag.indoor_3d=false;
     d=life.next(indoor_bag,false);

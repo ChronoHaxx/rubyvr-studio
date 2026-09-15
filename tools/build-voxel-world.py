@@ -161,6 +161,8 @@ class Source:
         p["cutout"] = rle(self.w, self.h, self.obj)
         p["voxel"] = dict(pixels_per_cell=16, ground=rle(self.w, self.h, ground), shadow=rle(self.w, self.h, self.shadow))
         assert len(p["parts"]) <= 64 and (p["parts"] or (not any(self.obj) and any(self.shadow))), (p["name"],len(p["parts"]))
+        if output is None:
+            return p
         # Authoring evidence shows the exact source role masks used by the pack.
         for role, mask in (("object",self.obj),("shadow",self.shadow),("ground",ground)):
             im = Image.new("RGB",(self.w,self.h),(25,29,32))

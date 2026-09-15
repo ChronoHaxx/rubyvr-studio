@@ -73,7 +73,8 @@ namespace overrides {
 inline constexpr uint32_t kVersion = 5;
 inline constexpr uint32_t kVoxelVersion = 6;
 inline constexpr uint32_t kTerrainVersion = 7;
-inline bool supported_version(uint32_t v) { return v == kVersion || v == kVoxelVersion || v == kTerrainVersion; }
+inline constexpr uint32_t kIndoorVersion = 8;
+inline bool supported_version(uint32_t v) { return v >= kVersion && v <= kIndoorVersion; }
 
 // One referenced metatile's definition, as the pattern expects to find it.
 struct TileDef {
@@ -170,9 +171,17 @@ struct Part {
     bool operator==(const Part&) const = default;
 };
 
+// V8: a room fragment is placed only at its source origin in this map.
+// Every fragment declares the same room bounds. A complete, matching cover is
+// required before live indoor controls are enabled; ordinary patterns still repeat.
+struct IndoorScope {
+    int group = -1, number = -1, width = 0, height = 0, wall_front = 0;
+    bool operator==(const IndoorScope&) const = default;
+};
 struct Pattern {
     std::string id;              // stable editor identity; optional for batch definitions
     Source source;
+    std::optional<IndoorScope> indoor;
     std::string name;            // a human label. NOT an identity.
     int         w = 0;
     int         extent = 0;
@@ -239,8 +248,9 @@ struct Match {
     int x = 0, y = 0;
 };
 
-// Every match of every pattern against `s`, sorted by origin (north to south,
-// then west to east) so that overlap resolution is deterministic.
+// Every match against `s`: explicit indoor placements first, then repeating
+// patterns. Each group is sorted by origin (north to south, west to east),
+// followed by pattern index, so overlap resolution is deterministic.
 //
 // Verification is structural and complete: a Match is only produced where the
 // ids, the mask and every referenced metatile definition agree. A pattern whose

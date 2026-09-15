@@ -8,7 +8,7 @@
 #include "actor_frame.h"
 #include "dev_runtime.h"
 #include "diorama.h"
-#include "indoor_house_assets.h"
+#include "indoor_scene.h"
 #include "mod_function_hooks.h"
 #include "runtime_arm.h"
 #include <cmath>
@@ -94,7 +94,7 @@ bool blocked(int x,int z,int direction,void* context) {
     // Query the native target border/collision/elevation/NPC rules without this
     // camera-only check, then restore trackedByCamera before any game update.
     struct Restore {uint8_t* byte;uint8_t saved;~Restore(){if(byte)*byte=saved;}};
-    const bool room=object && world::live::indoor_house_available(memory());
+    const bool room=object && world::live::indoor_scene_available(memory());
     Restore restore{room?object+1:nullptr,object?object[1]:uint8_t(0)};
     if(room)object[1]&=uint8_t(~0x80);
     return guest(0x0805FF80,address,uint16_t(x),uint16_t(z),direction)!=0;
@@ -107,7 +107,7 @@ void release(uint8_t* sprite,bool centre) {
 bool room_body_blocked(Point p,void*) {
     if(dev::obstacles_bypassed())return false;
     const auto* id=memory().read(world::kGSaveBlock1+4,2);
-    return id && indoor_house::body_blocked(diorama::current_overrides(),id[0],id[1],p.x,p.z);
+    return id && indoor_scene::body_blocked(diorama::current_overrides(),id[0],id[1],p.x,p.z);
 }
 int intercept(uint32_t address,int thumb,ArmCpuState* cpu) {
     if(calling || !thumb || !cpu || !viewer::active())return 0;
@@ -132,6 +132,9 @@ int intercept(uint32_t address,int thumb,ArmCpuState* cpu) {
         }
         return 0;
     }
+    // The source camera must finish a connection scroll before the new scene
+    // can be published. Its repair above does not own movement or input.
+    if(!viewer::controls_for_scene(presentation::capture_input())){release(nullptr,false);return 0;}
     auto* avatar=writable(world::kGPlayerAvatar,0x24);
     if(!avatar || avatar[5]>=16)return 0;
     const uint32_t object_address=world::kGObjectEvents+avatar[5]*0x24;

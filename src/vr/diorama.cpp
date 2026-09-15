@@ -2061,9 +2061,10 @@ bool build_authored_diorama(const world::Snapshot& s,const overrides::OverrideSe
                             const std::vector<TerrainNeighbor>* neighbors=nullptr,
                             bool closed_base=false) {
     if(!s.valid || !out || !stats || !overrides::supported_version(set.version)) return false;
-    if(!terrain::valid(set.terrain) || (!set.terrain.empty() && set.version!=overrides::kTerrainVersion)) return false;
+    if(!terrain::valid(set.terrain) || (!set.terrain.empty() && set.version<overrides::kTerrainVersion)) return false;
     for(const auto& p:set.patterns) if(!cutout::valid(p) || !overrides::valid_parts(p) ||
         (p.voxel && set.version<overrides::kVoxelVersion) ||
+        (p.indoor && set.version<overrides::kIndoorVersion) ||
         p.w<1 || p.extent<1 || p.anchor<0 || p.anchor>=p.cells() ||
         p.mask.size()!=size_t(p.cells()) || p.ids.size()!=p.mask.size()) return false;
     const auto claims=overrides::resolve(s,set);

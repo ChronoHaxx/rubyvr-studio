@@ -61,7 +61,7 @@ See [live borders](live-borders.md).
   green leaves/decorations must survive masking.
 - **Shared geometry:** preview, batch audit and game integration call the same
   mesher. A separate attractive preview cannot establish game fidelity.
-- **Versioned documents:** v5 parts/cutouts, v6 voxel definitions and v7 terrain coexist.
+- **Versioned documents:** v5 parts/cutouts, v6 voxels, v7 terrain and v8 scoped room fragments coexist.
   Do not silently reinterpret old files. Save/reopen and undo must preserve the
   complete document, source choice and geometry.
 - **Exact matching:** reuse depends on source tile structure and membership,
@@ -171,3 +171,15 @@ against a supported upstream API remains a separate integration task.
 See [references](references.md) for exact source pins and comparisons,
 [verification](verification.md) for evidence, and [the roadmap](roadmap.md) for
 what is still needed.
+
+## Authored indoor capability
+
+V8 `Pattern::indoor` scopes a normal part fragment to its exact source origin and
+map/dimensions. The normal matcher still verifies source IDs and tile definitions;
+scoped placements take priority over repeating motifs. `indoor_scene.h` requires
+a complete, nonoverlapping room and guarded flat terrain before free indoor
+controls activate. `live_scene.cpp` verifies native indoor identity/layout;
+`viewer.cpp` publishes the matching scene/load epoch. Missing or changed assets
+retain original presentation and input. No map-ID whitelist needs extending for
+a newly authored room. See [common interiors](common-interiors.md) for the format,
+profile limits, shared-mesher behavior and tests.

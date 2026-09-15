@@ -21,71 +21,32 @@ The [work-package index](docs/issues/README.md) explains scope and dependencies.
 **Delivery priority:** [one-week desktop demo target](docs/roadmap.md#one-week-desktop-demo-target),
 with substantial batches and one combined review/playtest per batch. The target
 is a small playable area another player can install, with public runner setup
-still to resolve. Free walking and camera modes are now in review below.
+still to resolve. Free walking/camera modes merged in PR #35; [common indoor playability](docs/common-interiors.md) is now in review.
 
-**Next milestone:** [native gameplay on a monitor](docs/issues/007-native-integration.md#native-desktop-proof)
-using our authored world: walking, connected maps, an interior and the original
-game UI. We retain the RubySapphireRecomp route. The first
-[live map identity/invalidation foundation](docs/live-map-identity.md) is merged in PR #27;
-the [original player/NPC rendering and follow camera](docs/live-actors.md) are
-merged in **PR #28**, with an actual native walking recording. The following
-merged repairs and current connected-world work advance the
-[native gameplay proof](docs/roadmap.md#current-focus).
+The native game integration keeps [RubySapphireRecomp](integration/README.md).
+The prepared desktop demo supports the original player and nearby NPCs,
+connected outdoor walking, original menus/dialogue, and Third person and First
+person free cameras. Developer controls provide named checkpoints, pause/step,
+speed and obstacle bypass. See [the demo guide](docs/developer-mode.md).
 
-**Merged in PR #29:** [Developer mode](docs/developer-mode.md) adds named test
-checkpoints, pause/frame step, game speed/MAX and an on-foot noclip toggle to
-the prepared native Windows game. Human input checks are pending.
-
-**Camera follow-up merged into main with PR #29:** [North-up and camera-relative walking](docs/live-camera.md)
-adds four compass-view presets and a reset, while preserving original menu
-directions. J/L now turn in 90-degree steps to match grid movement. The current
-combined build includes the developer tools above; PR #29 merged at `9d895c7`.
-The follow-up now selects [camera-facing player art](docs/live-facing.md) while
-preserving the game's displayed animation phase. The 16-second native comparison
-and automated checks pass; the combined launch/border/camera human step is checked.
-The other four developer-mode steps remain unreported. NPC/special-pose
-facing, other actor defects and distant pop-in remain open; [Emerald implementation comparison](docs/emerald-camera-actor-audit.md).
-
-**Border restoration merged in PR #29:** the live viewer now repeats Ruby's
-original forest border outside the map body. [Watch the 12-second comparison and
-use the single current launcher](docs/live-borders.md). The reported ledge
-collision/depth mismatch, foliage polish and performance remain open.
-
-**Merged in PR #31 — [connected native scenery](docs/live-connected-world.md):** complete
-nearby maps load before entry and remain when looking back. The native
-Route 101 → Oldale → Route 101 sequence passes agent checks and all four recorded
-human steps; the short GIF and same launch command are in the guide. Up to three maps
-are selected; distant actors and unrestricted noclip remain open.
-
-**Merged in PR #32 — [play through menus, battles and interiors](docs/live-play-session.md):**
-Bag/Party/Options keep the world, original dialogue/Start/save UI overlays it,
-and battles/interiors play in the same viewer using their original graphics.
-The same launcher and new local situation checkpoints are in the guide.
-All five human checks are recorded passed on `31b95d2`; broader scene coverage
-and VR UI remain pending.
-
-**Watch the result:** [Short acceptance GIF and verdict](docs/acceptance.md).
-For details, the [roadmap and checklist](docs/roadmap.md) tracks M0–M11 work,
-completed tasks, open PRs and remaining acceptance in one place.
-
-**Merged in PR #33 — [NPC camera views and nearby visibility](docs/live-npc-views.md):**
-ordinary NPCs use their original directional art when the camera turns, retain
-walking phase through image-copy transitions, and stay visible past the original
-2D screen edge while still loaded. The same launcher gains an **NPC views**
-checkpoint. Distant despawning and M9's free third-person/first-person modes
-remain open. All five human checks passed for `09d28c0`.
+**Watch the current result:** [short native gameplay GIF and playtest](docs/acceptance.md).
+[The roadmap](docs/roadmap.md) tracks the remaining art, gameplay, camera,
+performance, public installation and VR work. Completed PRs and their bounded
+human results are recorded there; they do not imply full-game acceptance.
 
 ## What works
 
-**Current batch for review: [free walking, third-person and first-person](docs/free-camera-movement.md).**
-**14 September addition:** both floors of May's house now support free Third/First
-person movement, solid furniture, dialogue and stairs. The guide has the actual
-house recording and two direct indoor checkpoints. Other interiors retain the
-original view. Diagonal, angled-ledge and house controls still need human retest.
-Smooth camera-relative walking, diagonal movement, right-click mouse look and
-pitch-aware sprites work in the prepared native game. Watch the actual recording
-and use the same launcher in the guide. Human playtesting, ledge-corner repairs,
-camera collision and public runner installation remain pending.
+**Current batch for review: [common houses, shops, Centers and labs](docs/common-interiors.md).**
+Reusable guarded room recipes extend free Third/First person beyond May's house.
+Four new checkpoints lead directly into representative rooms. The guide includes
+native gameplay footage and the short playtest; furniture art and broad acceptance
+remain provisional. [Free walking and camera modes](docs/free-camera-movement.md)
+merged in PR #35 with seven checked human steps for `c7ed26d`.
+
+The merged [two-floor May house pilot](docs/free-camera-movement.md) remains
+available, with furniture collision, dialogue and stairs. Unsupported room
+recipes and battles use the original view. Camera obstacle avoidance, ledge
+corner repairs, all-map art acceptance and public runner setup remain open.
 
 **PR #34 merged at `4a6f2246` on 13 September:**
 [demo controls, distant NPCs and Route 101 ledges](docs/desktop-demo-batch.md).

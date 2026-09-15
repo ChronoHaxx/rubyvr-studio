@@ -93,7 +93,8 @@ bool from_cells(const vr::world::Snapshot& s, const std::vector<Cell>& cells,
 }
 
 bool same_key(const vr::overrides::Pattern& a, const vr::overrides::Pattern& b) {
-    if (a.w != b.w || a.extent != b.extent || a.mask != b.mask || a.tiles != b.tiles ||
+    if (a.indoor!=b.indoor || (a.indoor && (a.source.x!=b.source.x || a.source.y!=b.source.y)) ||
+        a.w != b.w || a.extent != b.extent || a.mask != b.mask || a.tiles != b.tiles ||
         a.ids.size() != b.ids.size()) return false;
     for (size_t i = 0; i < a.mask.size(); ++i)
         if (a.mask[i] && a.ids[i] != b.ids[i]) return false;
@@ -112,10 +113,11 @@ void quoted(std::FILE* f, const std::string& value) {
 
 bool write(const char* path, const vr::overrides::OverrideSet& set) {
     if(!vr::overrides::supported_version(set.version)) return false;
-    if(!vr::terrain::valid(set.terrain) || (!set.terrain.empty() && set.version!=vr::overrides::kTerrainVersion)) return false;
+    if(!vr::terrain::valid(set.terrain) || (!set.terrain.empty() && set.version<vr::overrides::kTerrainVersion)) return false;
     for (const auto& pattern : set.patterns)
         if (!vr::cutout::valid(pattern) || !vr::overrides::valid_parts(pattern) ||
-            (pattern.voxel && set.version<vr::overrides::kVoxelVersion)) return false;
+            (pattern.voxel && set.version<vr::overrides::kVoxelVersion) ||
+            (pattern.indoor && set.version<vr::overrides::kIndoorVersion)) return false;
     if (!path || !*path) return false;
     // The temporary is a sibling of `path`, created exclusively. That is what
     // lets the publication below be a single atomic rename and keeps a failed
@@ -152,6 +154,11 @@ bool write(const char* path, const vr::overrides::OverrideSet& set) {
             std::fputs("      \"source\": { \"room\": ", f); quoted(f, p.source.room);
             std::fprintf(f, ", \"x\": %d, \"y\": %d, \"coordinates\": \"backup-map\" },\n",
                          p.source.x, p.source.y);
+        }
+        if(p.indoor) {
+            const auto& r=*p.indoor;
+            std::fprintf(f,"      \"indoor\": {\"group\":%d,\"number\":%d,\"width\":%d,\"height\":%d,\"wall_front\":%d},\n",
+                         r.group,r.number,r.width,r.height,r.wall_front);
         }
         std::fprintf(f, "      \"w\": %d,\n      \"extent\": %d,\n", p.w, p.extent);
 
@@ -259,7 +266,7 @@ bool write(const char* path, const vr::overrides::OverrideSet& set) {
     }
 
     std::fputs("  ]",f);
-    if(set.version==vr::overrides::kTerrainVersion) vr::terrain::write(f,set.terrain);
+    if(set.version>=vr::overrides::kTerrainVersion) vr::terrain::write(f,set.terrain);
     std::fputs("\n}\n",f);
     // Flush, then synchronise the bytes to the device BEFORE the rename. A
     // crash between the two must not leave a published file whose contents

@@ -212,8 +212,8 @@ static bool load_data(const char* path, OverrideSet* out) {
     }
 
     if(const auto* t=doc.find("terrain")) {
-        if(out->version!=kTerrainVersion || !terrain::read(*t,&out->terrain)) return false;
-    } else if(out->version==kTerrainVersion) return false;
+        if(out->version<kTerrainVersion || !terrain::read(*t,&out->terrain)) return false;
+    } else if(out->version>=kTerrainVersion) return false;
     const json::Value* arr = doc.find("patterns");
     if (!arr || !arr->is_array()) {
         std::fprintf(stderr, "[override] %s has no patterns array\n", path);
@@ -223,7 +223,7 @@ static bool load_data(const char* path, OverrideSet* out) {
     if (arr->items.size() > 4096) return false;
     std::set<std::string> identities;
     for (const json::Value& e : arr->items) {
-        if (!fields(e, {"name", "id", "source", "w", "extent", "ids", "mask", "tiles", "apply", "cutout", "parts", "model_seeded", "voxel", "follow_ground"}))
+        if (!fields(e, {"name", "id", "source", "indoor", "w", "extent", "ids", "mask", "tiles", "apply", "cutout", "parts", "model_seeded", "voxel", "follow_ground"}))
             return false;
         Pattern p;
         if (const auto name = e.find("name")) {
@@ -249,6 +249,19 @@ static bool load_data(const char* path, OverrideSet* out) {
         if (!integer(e.find("w"), 1, 64) || !integer(e.find("extent"), 1, 64)) return false;
         p.w      = e.find("w")      ? e.find("w")->as_int()      : 0;
         p.extent = e.find("extent") ? e.find("extent")->as_int() : 0;
+
+        if(const auto* r=e.find("indoor")) {
+            if(out->version<kIndoorVersion || !fields(*r,{"group","number","width","height","wall_front"}) ||
+               !integer(r->find("group"),0,255) || !integer(r->find("number"),0,255) ||
+               !integer(r->find("width"),16,143) || !integer(r->find("height"),15,142) ||
+               !integer(r->find("wall_front"),7,141))return false;
+            p.indoor=IndoorScope{r->find("group")->as_int(),r->find("number")->as_int(),
+                r->find("width")->as_int(),r->find("height")->as_int(),r->find("wall_front")->as_int()};
+            const auto& b=*p.indoor;
+            if(p.source.room.empty() || p.source.x<7 || p.source.y<7 ||
+               p.source.x+p.w>b.width-8 || p.source.y+p.extent>b.height-7 ||
+               b.wall_front>=b.height-7)return false;
+        }
 
         if (p.w <= 0 || p.extent <= 0 || p.w > 64 || p.extent > 64) {
             std::fprintf(stderr, "[override] %s: implausible size %dx%d\n",
@@ -410,6 +423,16 @@ static bool load_data(const char* path, OverrideSet* out) {
 }
 
 bool valid_parts(const Pattern& p) {
+    if(p.indoor) {
+        const auto& r=*p.indoor;
+        if(r.group<0 || r.group>255 || r.number<0 || r.number>255 ||
+           r.width<16 || r.width>143 || r.height<15 || r.height>142 ||
+           r.wall_front<7 || r.wall_front>=r.height-7 || p.source.room.empty() ||
+           p.w<1 || p.w>64 || p.extent<1 || p.extent>64 ||
+           p.source.x<7 || p.source.y<7 || p.source.x>r.width-8 || p.source.y>r.height-7 ||
+           p.source.x+p.w>r.width-8 || p.source.y+p.extent>r.height-7)
+            return false;
+    }
     if(p.follow_ground && !p.voxel) return false;
     auto valid_mask=[](const Cutout& c,int w,int h) {
         return c.w==w && c.h==h && c.opacity.size()==size_t(w)*h &&
@@ -497,6 +520,9 @@ std::vector<Match> find(const world::Snapshot& s, const OverrideSet& set) {
     for (size_t pi = 0; pi < set.patterns.size(); ++pi) {
         const Pattern& p = set.patterns[pi];
 
+        if(p.indoor && (p.indoor->group!=s.map_group || p.indoor->number!=s.map_number ||
+           p.indoor->width!=s.width || p.indoor->height!=s.height))continue;
+
         if (!tileset_matches(s, p)) {
             // Not an error. A file authored for another tileset pair simply
             // does not apply here, and saying so beats matching silently.
@@ -506,6 +532,10 @@ std::vector<Match> find(const world::Snapshot& s, const OverrideSet& set) {
             continue;
         }
 
+        if(p.indoor) {
+            if(cells_match(s,p,p.source.x,p.source.y))out.push_back({int(pi),p.source.x,p.source.y});
+            continue;
+        }
         const int ax = p.anchor % p.w, ay = p.anchor / p.w;
         const uint16_t aid = p.ids[p.anchor];
         int found = 0;
@@ -528,9 +558,13 @@ std::vector<Match> find(const world::Snapshot& s, const OverrideSet& set) {
         std::fprintf(stderr, "[override] %s: %d match(es)\n", p.name.c_str(), found);
     }
 
-    // Sorted by ORIGIN so that overlap resolution downstream is deterministic
-    // rather than a function of which pattern happened to be listed first.
-    std::sort(out.begin(), out.end(), [](const Match& a, const Match& b) {
+    // Resolve explicit placement priority, then stable origin order. Pattern
+    // order only breaks ties at the same origin within one priority group.
+    std::sort(out.begin(), out.end(), [&](const Match& a, const Match& b) {
+        // Explicit room placements win over repeating catalog motifs. Their
+        // source guards still apply; no partial recipe gains control of a room.
+        const bool sa=set.patterns[a.pattern].indoor.has_value(),sb=set.patterns[b.pattern].indoor.has_value();
+        if(sa!=sb)return sa;
         if (a.y != b.y) return a.y < b.y;
         if (a.x != b.x) return a.x < b.x;
         return a.pattern < b.pattern;

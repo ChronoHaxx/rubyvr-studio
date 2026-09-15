@@ -239,3 +239,32 @@ plugins compiled into the runner. This is existing upstream capability. RubyVR
 has not yet connected its pack format to that API, and does not currently
 promise arbitrary DLL mods, hot loading or a complete mod ecosystem. Distinguish
 the framework's capabilities from what our integration has actually verified.
+
+### Common interiors (2026-09-15)
+
+Focused cached-source pass for the [common-room batch](common-interiors.md):
+
+- Emerald companion `UNDERdecoded/Gen2Recomped-DramaticShapes` at
+  `4a114b3e344db629ac7c7ac5108bd3d910fc4554`, `lib/Gen3.lua` around
+  2320–2335 and 2500–2550: interior furniture needs tileset-specific roles;
+  a normal behavior byte alone cannot distinguish a chair, cabinet or floor.
+  Its blocked-cell fallback is conservative and must not create solids over
+  passable approaches. This informs our explicit profiles and native collision
+  checks, not a promise that automatic inference knows every room's geometry.
+- The previously pinned engine remains `b2a28281b1042eb25ce0b83941be0ef756fcade9`.
+  The companion's `lib/FirstPerson.lua` mode/input ownership was checked for the
+  existing indoor/free-camera path. Ruby keeps its original native scene,
+  warp and interaction handlers instead of adopting that engine's gameplay.
+- The locally extracted Dramatic Shape Quest APK **2.4.2**, `lib/StudioRoom.lua`,
+  preserves the regular view when its temporary editing room closes and seats UI
+  only after the new camera mapping is active. This is an editor-room lifecycle,
+  not Ruby indoor reconstruction or evidence of Gen 3 support. No equivalent
+  reusable Ruby furniture profile was found in that focused APK pass.
+- Ruby layout, collision, warp and indexed-art inputs come from the user's local
+  `pret/pokeruby` at `63a8cbf0016b351a4e68f7036fa0b77e23d2f2c1`. The generated
+  profile report names unsupported/default fixture IDs for subsequent review.
+
+All new C++ control/scope code and the Python room profiles were authored here.
+No restricted Lua implementation or packaged game art was copied into this PR.
+The exact artifact/license audit and broader camera research remain above and
+in [the Emerald audit](emerald-camera-actor-audit.md); they were not repeated.

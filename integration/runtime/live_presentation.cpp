@@ -28,7 +28,7 @@ Input inspect(const world::live::Memory& m,uint64_t epoch) {
     }
     if(out.callback==world::live::kOverworldCallback) {
         out.mode=header[0x17]>=1 && header[0x17]<=3 ? Mode::Field : Mode::Interior;
-        out.indoor_3d=out.mode==Mode::Interior && world::live::indoor_house_available(m);
+        out.indoor_3d=out.mode==Mode::Interior && world::live::indoor_scene_available(m);
         return out;
     }
     // Imported rev1 symbols, cross-checked against the pinned source call paths.

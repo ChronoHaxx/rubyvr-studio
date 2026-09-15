@@ -1,7 +1,7 @@
 // viewer.cpp — see viewer.h for what this is for.
 
 #include "viewer.h"
-#include "indoor_house_assets.h"
+#include "indoor_scene.h"
 #include "diorama.h"
 #include "actor_render.h"
 #include "gl_loader.h"
@@ -60,6 +60,7 @@ std::vector<world::live::RegionEntry> g_visible_maps;
 uint64_t g_requested=0,g_visible_space=0;
 presentation::Lifetime g_lifetime;
 presentation::Decision g_presentation;
+presentation::Input g_control_scene;
 world::Snapshot g_retained;
 bool g_world_controls=true,g_world_drawn=false;
 
@@ -186,6 +187,9 @@ void set_overlay(void (*draw)(SDL_Window*),bool (*owns_input)(),void (*shutdown)
     g_overlay=draw;g_overlay_input=owns_input;g_overlay_shutdown=shutdown;
 }
 bool uses_world_controls() {return g_world_controls;}
+bool controls_for_scene(const presentation::Input& in) {
+    return g_world_controls && g_world_drawn && g_retained.valid && presentation::same_control_scene(g_control_scene,in);
+}
 presentation::Decision presentation_state() {return g_presentation;}
 void set_camera_relative(bool enabled) { g_camera_relative=enabled; }
 void reset_camera() { release_mouse();g_yaw=0;g_pitch=g_mode==CameraMode::FirstPerson?0.12f:0.9f;g_dist=12;g_ty=1;g_follow=true;g_turn.reset(); }
@@ -198,7 +202,7 @@ void shutdown() {
     if(g_pending.valid()) g_pending.wait();
     g_pending={};g_neighbourhood={};g_visible_maps.clear();
     g_requested=g_visible_space=0;g_source_loader=nullptr;g_active=false;
-    g_lifetime.reset();g_retained={};g_presentation={};g_world_controls=true;g_world_drawn=false;
+    g_lifetime.reset();g_retained={};g_presentation={};g_control_scene={};g_world_controls=true;g_world_drawn=false;
     screen_overlay::shutdown();
 }
 size_t connected_maps() {return g_visible_maps.size();}
@@ -366,7 +370,7 @@ void frame(const world::Snapshot& s, bool present) {
         math::look_at(ex, ey, ez, tx, ty, tz));
 
     actor_render::set_camera(g_yaw,g_pitch,g_mode==CameraMode::FirstPerson);
-    const auto room=indoor_house::room(s.map_group,s.map_number);
+    const auto room=indoor_scene::describe(s,diorama::current_overrides());
     if(room.width) diorama::set_room_cutaway(g_mode!=CameraMode::FirstPerson,
         float(origin_x+7),float(origin_z+room.wall_front)-.25f,
         float(origin_x+s.width-8),float(origin_z+s.height-7),std::sin(g_yaw),std::cos(g_yaw));
@@ -388,9 +392,10 @@ void game_frame(const world::Snapshot& snapshot,const presentation::Input& input
                 std::span<const uint8_t> field_ui,bool present) {
     if(!g_active || !g_win)return;
     auto supported=input;
-    if(input.indoor_3d && !indoor_house::authored(snapshot,diorama::current_overrides()))
+    if(input.indoor_3d && !indoor_scene::describe(snapshot,diorama::current_overrides()).width)
         supported.indoor_3d=false;
     auto decision=g_lifetime.next(supported,snapshot.valid);
+    g_control_scene=supported;
     if(decision.update)g_retained=snapshot;
     if(!decision.world)g_retained={};
     // frame() owns the existing camera, shared mesher, live materials and actor

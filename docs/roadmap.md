@@ -4,7 +4,7 @@
 game integration.** It replaces the local research workspace's
 `_docs/full-vr-roadmap-v1.md`; its detailed M0–M11 scope is retained here.
 Work-package documents explain individual contributions; they are not another
-roadmap. Last reconciled **2026-09-14**: archived PRs #19–#31 and the new
+roadmap. Last reconciled **2026-09-15**: archived PRs #19–#31 and the new
 repository's GPL PR #19, camera-driven loading PR #20, ground-base PR #21 and
 native Linux/WSL PR #22, mouse repair PR #24 and bridge PR #25 are merged.
 The shared region-query component merged in PR #26; all three human CLI checks
@@ -42,7 +42,13 @@ special profiles and the continuous camera modes remain open.
 NPCs and the straight-ledge presentation follow-up are in main. The maintainer
 reported merging; the five individual human results remain unreported. Broken
 ledge corners remain open. The next combined delivery is
-[batch 2: free walking, camera modes and a two-floor house](free-camera-movement.md), in review.
+[batch 2: free walking, camera modes and a two-floor house](free-camera-movement.md).
+**PR #35 merged on 2026-09-15 at `594ea1d`.** All seven human steps are checked
+for implementation `c7ed26d`; the exact check-completion time was not recorded.
+This accepts the bounded free-camera/two-floor-house sequence. The maintainer
+explicitly noted that broader indoor coverage and substantial art work remain.
+**Current batch — [common interiors](common-interiors.md), in review:** reusable
+room support, four common tileset profiles and direct playable-room checkpoints.
 
 **Prefer the short version? [Watch the acceptance GIF and verdict](acceptance.md).**
 The contributor/agent performs routine desktop functional and visual checks;
@@ -65,7 +71,7 @@ temporary fallback frames remain defects.
 
 ## Route to a shareable playable demo
 
-**Current stage: an early native playable prototype; a two-floor 3D house is in review.** The editor,
+**Current stage: an early native playable prototype; free cameras and a two-floor 3D house are merged. Common interiors are in review.** The editor,
 reusable scenery, original player and nearby NPCs, cardinal camera controls,
 developer checkpoints and connected Route 101/Oldale walking are implemented.
 The current recording can be shared as work in progress. The prepared local
@@ -131,7 +137,7 @@ Batch 2 now has native encounter-escape/camera continuity and actual GL
 pitch-readable sprite checks; the human retest remains pending. Corner repair
 stays in terrain/contact work.
 
-**Batch 2 implementation, 13 September — in review:**
+**Batch 2 implementation history, 13 September — merged in PR #35 on 15 September:**
 [free walking, third-person and first-person](free-camera-movement.md) combines
 fractional/diagonal movement, continuous orbit, right-click mouse capture and
 speed, first-person player hiding, pitch-aware actor cards and camera continuity.
@@ -148,17 +154,19 @@ with a free camera selected. Native reproduction found indoor input interception
 and missed shallow door approaches. Both are repaired in this same PR; four
 house entry/walk/exit cases pass with the camera and heading retained. The guide
 adds a house clip, checkpoint and human check. At that revision interiors retained original graphics.
-Movement acceptance remains failed/pending retest, not restored by automated checks. A native partial-reversal camera defect found during integration
-is repaired. Seven combined human checks remain pending. This does not finish
+At that point movement acceptance remained failed/pending. A native partial-
+reversal camera defect found during integration was repaired. The seven combined
+human checks were subsequently checked on `c7ed26d` before PR #35 merged. This does not finish
 lip-exact ledge triggers, corner art, camera obstacle avoidance or public setup.
 
-**14 September, M4/M5/M9 house pilot — in review in the same PR:** at the
+**14 September, M4/M5/M9 house pilot — merged in PR #35 on 15 September:** at the
 maintainer's request, May's Littleroot house now has both floors in 3D with
 free diagonal/first-person movement, original dialogue, stairs, furniture
 collision and camera-preserving exit. Third-person cutaways and a first-person
 ceiling share ordinary source-textured Studio parts. Twelve native journey
-assertions and component/sanitizer checks pass; human acceptance is pending.
-Other interiors retain the original view. This advances one interior family,
+assertions and component/sanitizer checks pass. The seven-step human retest was
+subsequently checked on `c7ed26d` before PR #35 merged. Other interiors retained
+the original view at that revision. This advances one interior family,
 not all 234 interiors or final furniture polish. The batch guide has a native
 clip, two direct indoor checkpoints and the updated seven-step playtest.
 
@@ -177,7 +185,9 @@ setup are the highest uncertainties in this estimate.
 For this demo, defer all-Hoenn model/terrain perfection, replacement foliage,
 new primitive/editor features, full weather/day-night systems, 3D battles,
 remaining interior reconstruction, and headset/diegetic-UI completion. The
-maintainer brought the two-floor house pilot into batch 2; broader rooms stay deferred. Record new reports
+maintainer brought the two-floor house pilot into batch 2 and requested broader
+playability on 15 September. The common-room batch adds reusable coverage without
+claiming final art or postponing the public runner work. Record new reports
 under their existing milestone and bring them into this week only when they
 block startup, controls, progression, saves or the demonstrated route.
 
@@ -195,8 +205,9 @@ Demo readiness is tracked by these outcomes, not an invented whole-game percent:
   in PR #32, and ordinary NPC view/viewport behavior in PR #33.
 - [ ] The selected route's remaining blocking actor/contact defects and demo
   controls are accepted as batch 1.
-- [ ] Third-person and first-person movement/camera behavior is accepted as
-  batch 2; implementation and native checks are in review, human acceptance pending.
+- [x] The bounded third-person/first-person sequence in batch 2 is accepted:
+  PR #35 merged with seven checked human steps on `c7ed26d`. New common rooms,
+  camera obstacle avoidance and broader comfort still need their own acceptance.
 - [ ] Another player can set up and launch the supported demo without this
   maintainer's private worktree paths or bundled game data.
 - [ ] A continuous desktop play session, save/reopen, frame-time/memory record
@@ -205,6 +216,11 @@ Demo readiness is tracked by these outcomes, not an invented whole-game percent:
 The full M0-M11 checklist below remains the longer-term completion tracker.
 
 ## Current focus
+
+**15 September: [common indoor playability](common-interiors.md), M4/M5/M9, in review.**
+The next release-critical work remains a reproducible public runner (M11) and a
+continuous demo play/performance check (M10), not all-Hoenn art perfection.
+
 
 **Next: native desktop gameplay proof (M5, with bounded M2/M6/M7/M9 support).**
 Maintainer decision, 2026-09-12: retain RubySapphireRecomp/gbarecomp and prove
@@ -768,9 +784,11 @@ trial and error, and a person can save/reopen/reuse their work unaided.
   underwater scenery and secret-base geometry/decorations.
 - [ ] Complete every interior family: walls, ceilings/cutaways, doors/windows,
   stairs, beds, furniture, counters, shelves, machines, terminals, displays,
-  carpets and other cataloged drawings. **In review — PR #35:** May's house
-  1F/2F pilot, cutaways, first-person ceiling, furniture collision and native
-  dialogue/stairs/exit; [recording and pending human check](free-camera-movement.md).
+  carpets and other cataloged drawings. **Merged — PR #35:** May's house
+  1F/2F pilot and bounded native/human sequence on `c7ed26d`.
+  **In review — [common interiors](common-interiors.md):** 127 generated rooms
+  from four shared profiles, complete-room control guards and four native
+  house/Mart/Center/lab journeys. Broader art and individual-room acceptance stay open.
 - [ ] Account for puzzles, removable/movable objects, alternate map states,
   destruction/cut/strength states and replacement metatiles through M5 live
   invalidation, without leaving stale art.
@@ -995,13 +1013,14 @@ encounter/warp checks remain pending; the original report's cause remains
 unconfirmed. Deliberate R reset, mode change and session-only preferences are
 explicit in the batch guide.
 
-- [ ] **In review — batch 2:** continuous on-foot/diagonal movement, small-body
+- [x] **Merged — PR #35, bounded desktop sequence:** continuous on-foot/diagonal movement, small-body
   native collision queries, once-per-cell events and original special-action
   handoff; third-person/first-person, right-click toggle, sensitivity,
   Escape/focus release and anchored pitch-aware actors. Component/sanitizer,
   Windows GL and native game checks pass. Angled ledge contact now hands back in
   the blocked direction even while sliding; twelve native approach cases pass.
-  Six human checks pending, including the expanded ledge retest.
+  Seven human checks were checked for `c7ed26d` before merge; headset and broader
+  scene/comfort acceptance remain open. New common-room tests have their own pending checklist.
 - [ ] Finish lip-exact ledge handoff, camera obstruction handling, persistent
   camera preferences and free-vector input recording/replay. Current special
   actions can centre the player; old button-only replay requires Grid.

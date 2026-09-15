@@ -33,6 +33,11 @@ jobs:
         run: |
           python3 tools/test-live-presentation.py
           python3 tools/test-live-presentation.py --sanitize
+      - name: Test indoor coverage, placement and persistence without a display
+        run: |
+          python3 tools/test-indoor-scenes.py
+          python3 tools/test-indoor-scenes.py --sanitize
+          python3 tools/test-interior-recipes.py
       - name: Test live actor frames without graphics or assets
         run: bash tools/test-actor-frame.sh
       - name: Test distant actor visibility without graphics or assets

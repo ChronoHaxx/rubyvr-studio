@@ -53,6 +53,78 @@ Verified live identity/invalidation is the first bounded change, now
 desktop viewer is a prototype, not evidence that the current Studio terrain
 and complete gameplay already work together. See the [single roadmap](../docs/roadmap.md).
 
+## Continuous on-foot adapter
+
+[Batch 2](../docs/free-camera-movement.md) adds `runtime/free_walk_runtime.*`
+on the emulation thread. Unlike the read-only snapshot renderer, this optional
+adapter writes verified guest player/sprite state and invokes bounded original
+collision/event/camera helpers. It verifies Ruby USA rev1, yields to scripted
+and special actions, and resets ownership on `g_runtime_state_epoch` changes.
+
+The native host must merge `free-walk-hooks.toml` into its recompiler config and
+regenerate guarded Thumb entries for `0x080587FC` (`player_step`), `0x08059224`
+(tile transition) and `0x0805810C` (`CameraUpdate`). The last handles partial Y
+reversals that ordinary full-tile stepping does not exercise. It requires the
+existing `gba_mod_register_function_entry_plugin`/enable API, bounded interpreter
+bridge and call-stack save/restore API in the prepared host. These declarations
+are our hook configuration; no generated ROM code is distributed.
+
+The 13 September diagonal repair completes both collision-checked axes before
+one resulting-cell notification. A validated copy of the active player's exact
+foot travels in `actor::Source::motion`; the renderer and follow camera use that
+value instead of rounding back through the GBA Sprite. Capture refuses another
+actor/cell or load epoch, and the renderer accepts it only for the player. Native
+special/grid motion falls back to the unchanged source placement.
+
+The angled-ledge follow-up preserves each blocked body axis and checks the
+adjacent special tile in that axis's direction even while the other axis slides.
+A cell crossing completes before ledge/push/border handoff. On a valid contact,
+discard the uncommitted slide, centre the existing sprite, and invoke one bounded
+original `player_step` with the contact direction and original action buttons.
+The hook handles the return: a declined hook restores CPU registers, so changing
+R0 and returning zero would incorrectly retain the dominant input direction.
+Ruby still validates/executes the special action; ordinary wall sliding and the
+collision dimensions are unchanged.
+
+The existing input filter supplies the view-relative fractional vector only
+while the viewer owns verified outdoor or authored pilot-house controls. Original-window input restores
+native control. The viewer's event hook releases relative mouse capture on
+Escape, focus loss, scene changes and panel use. Button-only host recording and
+replay cannot encode the free vector/camera pose, so the panel refuses free modes
+when either is active. Original Grid playback is unchanged. See the batch guide
+for centring, special-action, camera-collision and platform limitations.
+
+The house pilot shares `scene_controls_available` between input and movement:
+verified unlocked outdoors, or May's two exact house identities/layouts. The
+viewer additionally requires two complete structurally matching room patterns
+before it enables 3D input. Unsupported/unmeshed interiors retain original
+walking even while a free camera is selected. Scene ownership survives an idle
+focus/panel pause without recentering; scripts still acquire native ownership.
+
+`indoor_house_assets.h` derives small-body collision from the loaded unrotated
+box parts in free modes. Native tile/NPC rules remain authoritative; the stair
+well yields to the original warp. A bounded native collision query temporarily
+clears `trackedByCamera` (ObjectEvent byte 1, bit 7) in these rooms and restores
+it immediately, including on exceptions. Otherwise the already-advanced camera
+can reject a valid last-row player destination. This does not bypass actual map
+boundaries, collision/elevation or NPC tests. Grid retains native tile collision.
+Supported rooms share field UI extraction, avoiding an opaque original-room
+frame over the 3D result. Rendering cuts near walls/ceiling only for third-person
+and Grid; first person keeps them. Other interiors remain original-view fallback.
+
+Ruby's `ProcessPlayerFieldInput` handles north-facing doors before `player_step`.
+On blocked contact with `MetatileBehavior_IsWarpDoor`, the adapter retains the
+current foot, sets native facing and queues that direction for the next input
+pass. This can preempt an uncommitted tangential cell crossing past the entrance;
+no crossing/event is committed twice. `contact_facing` applies it only while
+input still pushes into that contact; release, reversal, parallel input, control
+loss and reset cancel it. Ruby's original handler validates and performs the
+warp/script. Other special actions and collision dimensions are unchanged.
+
+Public adapter source and configuration are not a complete upstream host patch;
+the separately licensed local runner integration and public installation work
+remain open. Human playtesting is pending; no executable is distributed here.
+
 ## Development base
 
 | Component | Upstream base | Local development reference |

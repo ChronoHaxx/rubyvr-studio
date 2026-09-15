@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Original synthetic memory; contains no ROM or saved-game bytes.
 #include "live_scene.h"
+#include "indoor_house_assets.h"
 #include <cstring>
 #include <cstdlib>
 #include <iostream>
@@ -221,5 +222,61 @@ int main() {
     expect(!m.read(0x02000001,std::numeric_limits<size_t>::max()),"span overflow rejected");
     expect(!m.read_rom(0x08000001,4),"unaligned header pointer rejected");
     expect(!m.read_rom(0x02000000,4),"ROM structural pointer cannot refer to RAM");
+    {
+        Fixture house;
+        house.word(kMapGroups+4,Fixture::table);
+        house.word(kMain,kOverworldInputCallback);
+        house.at(kGPlayerAvatar)[0]=1;
+        for(int floor=1;floor<=2;++floor) {
+            const int number=floor+1,w=floor==1?11:9,h=floor==1?9:8;
+            house.word(Fixture::layouts+number*24,w);house.word(Fixture::layouts+number*24+4,h);
+            house.at(Fixture::headers+number*28+0x17)[0]=8;
+            house.select(number);house.at(kGSaveBlock1+4)[0]=1;
+            expect(indoor_house_available(house.memory()),"both authored house layouts recognized");
+            expect(scene_controls_available(house.memory()),"supported interior permits free controls");
+            house.at(kFieldControlsLock)[0]=1;
+            expect(indoor_house_available(house.memory()) && !scene_controls_available(house.memory()),
+                "dialogue retains indoor presentation but owns movement");
+            house.at(kFieldControlsLock)[0]=0;
+            house.at(kGMapHeader+18)[0]=1;
+            expect(!indoor_house_available(house.memory()),"partial warp layout ID refuses indoor support");
+            house.at(kGMapHeader+18)[0]=0;
+            house.word(Fixture::layouts+number*24,w+1);
+            expect(!indoor_house_available(house.memory()),"unexpected house dimensions refuse");
+            house.word(Fixture::layouts+number*24,w);
+            auto unverified=house.memory();unverified.verified_ruby_rev1=false;
+            expect(!scene_controls_available(unverified),"unverified indoor ROM refuses input ownership");
+        }
+        house.select(0);house.at(kGSaveBlock1+4)[0]=1;house.at(kGMapHeader+0x17)[0]=8;
+        expect(!scene_controls_available(house.memory()),"other interiors keep native input");
+        Snapshot room;room.valid=true;room.map_group=1;room.map_number=2;room.width=26;room.height=23;
+        room.grid.assign(26*23,513);room.attributes.resize(1024);room.metatiles.resize(8192);
+        vr::overrides::OverrideSet set;
+        for(int x0:{0,4}) {
+            vr::overrides::Pattern p;p.id="indoor-may-1f-"+std::to_string(x0);
+            p.w=x0?7:4;p.extent=9;p.ids.assign(p.cells(),513);p.mask.assign(p.cells(),1);
+            p.tiles[513]={};p.voxel.emplace();p.parts.emplace_back();set.patterns.push_back(p);
+        }
+        expect(vr::indoor_house::authored(room,set),"complete two-strip source guards enable room");
+        auto missing=set;missing.patterns.pop_back();
+        expect(!vr::indoor_house::authored(room,missing),"missing room half falls back before taking input");
+        auto changed=room;changed.grid[10*26+12]=514;
+        expect(!vr::indoor_house::authored(changed,set),"changed room furniture refuses stale geometry");
+        changed=room;changed.metatiles[513*8]=1;
+        expect(!vr::indoor_house::authored(changed,set),"different tileset art refuses same numeric IDs");
+        missing=set;missing.patterns[0].parts.clear();
+        expect(!vr::indoor_house::authored(room,missing),"empty geometry cannot enable indoor controls");
+        changed=room;changed.map_number=0;
+        expect(!vr::indoor_house::authored(changed,set),"a room with shared tiles is not silently promoted");
+        auto& furniture=set.patterns[1].parts[0];
+        furniture.transform.position={1.25f,0,-2};furniture.transform.size={.5f,.75f,.5f};
+        expect(vr::indoor_house::body_blocked(set,1,2,12.5,13.5),"loaded chair bounds stop the player body");
+        expect(!vr::indoor_house::body_blocked(set,1,2,11.5,13.5),"clear floor beside chair remains walkable");
+        furniture.transform.position.x+=1;
+        expect(!vr::indoor_house::body_blocked(set,1,2,12.5,13.5) &&
+               vr::indoor_house::body_blocked(set,1,2,13.5,13.5),"moving chair moves collider with its mesh");
+        furniture.transform.position.y=2.5f;
+        expect(!vr::indoor_house::body_blocked(set,1,2,13.5,13.5),"ceiling does not block floor movement");
+    }
     std::cout << "PASS: live scene contract (" << checks << " checks; synthetic memory, no graphics or game assets)\n";
 }

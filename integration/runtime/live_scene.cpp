@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 #include "live_scene.h"
+#include "indoor_house.h"
 
 #include <algorithm>
 #include <array>
@@ -131,6 +132,30 @@ bool field_controls_available(const Memory& m) {
     return main && lock && avatar && !*lock &&
         u32(main)==kOverworldInputCallback && u32(main+4)==kOverworldCallback &&
         !(main[0x43d]&2) && (avatar[0]&1) && !(avatar[0]&0x1e);
+}
+
+bool outdoor_controls_available(const Memory& m) {
+    if(!field_controls_available(m))return false;
+    const auto* header=m.read(kGMapHeader,28);
+    return header && header[0x17]>=1 && header[0x17]<=3;
+}
+
+bool indoor_house_available(const Memory& m) {
+    if(!m.verified_ruby_rev1)return false;
+    const auto* location=m.read(kGSaveBlock1+4,2);
+    const auto* current=m.read(kGMapHeader,28);
+    if(!location || !current || current[0x17]!=8)return false;
+    const auto r=indoor_house::room(location[0],location[1]);
+    if(!r.width)return false;
+    const auto* source=header(m,location[0],location[1]);
+    Layout own;
+    if(!source || std::memcmp(source,current,16) || source[18]!=current[18] ||
+       source[19]!=current[19] || !layout(m,u32(current),own))return false;
+    return indoor_house::supports(location[0],location[1],own.width+15,own.height+14);
+}
+
+bool scene_controls_available(const Memory& m) {
+    return field_controls_available(m) && (outdoor_controls_available(m) || indoor_house_available(m));
 }
 
 Scene inspect(const Memory& m) {

@@ -8,7 +8,7 @@ namespace rubyvr::dev::panel {
 // Value-owned UI state; only the runtime adapter owns transport and save actions.
 struct Model {
     bool available=false, paused=false, noclip=false, can_noclip=false, busy=false;
-    int speed=0, selected=0;
+    int speed=0, selected=0, camera_mode=0, mouse_speed=1;
     std::vector<std::string> checkpoints;
     std::string location, status;
 };

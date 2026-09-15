@@ -1,6 +1,7 @@
 // viewer.cpp — see viewer.h for what this is for.
 
 #include "viewer.h"
+#include "indoor_house_assets.h"
 #include "diorama.h"
 #include "actor_render.h"
 #include "gl_loader.h"
@@ -26,8 +27,8 @@ bool (*g_overlay_input)()=nullptr;
 void (*g_overlay_shutdown)()=nullptr;
 bool        g_active = false;
 
-// Follow camera in map-cell units. Grid gameplay uses cardinal yaw only;
-// continuous yaw belongs with the later continuous-movement integration.
+// Follow camera in map-cell units. Free modes are paired with the native
+// continuous movement adapter; the original grid mode keeps cardinal yaw.
 float g_yaw    = 0.0f;      // north-up gameplay view
 float g_pitch  = 0.9f;      // radians above the horizon
 float g_dist   = 12.0f;     // cells; read the player at native sprite proportions
@@ -41,6 +42,9 @@ bool  g_b_held = false, g_h_held = false, g_n_held = false, g_m_held = false, g_
 bool g_camera_relative = true;
 uint64_t g_control_time = 0;
 camera_input::TurnLatch g_turn;
+CameraMode g_mode=CameraMode::Grid;
+bool g_mouse_look=false,g_skip_motion=false;
+int g_mouse_speed=1;
 
 world::live::SourceLoader g_source_loader=nullptr;
 world::live::Neighbourhood g_neighbourhood;
@@ -130,8 +134,52 @@ void capture_review(int width,int height) {
 bool active() { return g_active; }
 bool focused() { return g_active && SDL_GetKeyboardFocus()==g_win; }
 float yaw_radians() { return g_yaw; }
+float pitch_radians() { return g_pitch; }
+CameraMode camera_mode() {return g_mode;}
+bool continuous_movement(){return g_mode!=CameraMode::Grid;}
+bool mouse_look(){return g_mouse_look;}
+int mouse_speed(){return g_mouse_speed;}
+void set_mouse_speed(int preset){g_mouse_speed=std::clamp(preset,0,2);}
+void release_mouse(){
+    if(g_mouse_look)SDL_SetRelativeMouseMode(SDL_FALSE);
+    g_mouse_look=false;g_skip_motion=true;
+}
+void set_camera_mode(CameraMode mode){
+    if(mode!=CameraMode::Grid && mode!=CameraMode::ThirdPerson && mode!=CameraMode::FirstPerson)return;
+    if(mode==g_mode)return;
+    release_mouse();g_mode=mode;g_turn.reset();
+    if(mode==CameraMode::Grid)set_yaw_radians(g_yaw);
+    set_pitch_radians(mode==CameraMode::FirstPerson?0.12f:0.9f);
+}
+void set_pitch_radians(float pitch){
+    if(std::isfinite(pitch))g_pitch=std::clamp(pitch,g_mode==CameraMode::FirstPerson?-1.35f:0.15f,1.5f);
+}
 void set_yaw_radians(float yaw) {
-    if(std::isfinite(yaw)) g_yaw=camera_input::quadrant(yaw)*1.570796327f;
+    if(std::isfinite(yaw))g_yaw=g_mode==CameraMode::Grid?camera_input::quadrant(yaw)*1.570796327f:std::remainder(yaw,6.283185307f);
+}
+bool event(const SDL_Event& e){
+    if(!g_active || !g_win)return false;
+    const auto id=SDL_GetWindowID(g_win);
+    if(e.type==SDL_WINDOWEVENT && e.window.windowID==id &&
+       (e.window.event==SDL_WINDOWEVENT_FOCUS_LOST || e.window.event==SDL_WINDOWEVENT_HIDDEN || e.window.event==SDL_WINDOWEVENT_CLOSE))release_mouse();
+    if(e.type==SDL_KEYDOWN && e.key.windowID==id && e.key.keysym.scancode==SDL_SCANCODE_ESCAPE)release_mouse();
+    if(!focused() || !g_world_controls || !continuous_movement() || (g_overlay_input && g_overlay_input())){release_mouse();return false;}
+    if(e.type==SDL_MOUSEBUTTONDOWN && e.button.windowID==id && e.button.button==SDL_BUTTON_RIGHT){
+        if(g_mouse_look)release_mouse();
+        else {
+            SDL_SetHint(SDL_HINT_MOUSE_RELATIVE_MODE_WARP,"0");
+            if(SDL_SetRelativeMouseMode(SDL_TRUE)==0){g_mouse_look=true;g_skip_motion=true;}
+        }
+        return true;
+    }
+    if(e.type==SDL_MOUSEMOTION && e.motion.windowID==id && g_mouse_look){
+        if(g_skip_motion){g_skip_motion=false;return true;}
+        const float scale=0.0015f*(g_mouse_speed+1);
+        set_yaw_radians(g_yaw-float(std::clamp(e.motion.xrel,-100,100))*scale);
+        set_pitch_radians(g_pitch+float(std::clamp(e.motion.yrel,-100,100))*scale);
+        return true;
+    }
+    return false;
 }
 bool camera_relative() { return g_camera_relative; }
 void set_overlay(void (*draw)(SDL_Window*),bool (*owns_input)(),void (*shutdown)()) {
@@ -140,9 +188,10 @@ void set_overlay(void (*draw)(SDL_Window*),bool (*owns_input)(),void (*shutdown)
 bool uses_world_controls() {return g_world_controls;}
 presentation::Decision presentation_state() {return g_presentation;}
 void set_camera_relative(bool enabled) { g_camera_relative=enabled; }
-void reset_camera() { g_yaw=0;g_pitch=0.9f;g_dist=12;g_ty=1;g_follow=true;g_turn.reset(); }
+void reset_camera() { release_mouse();g_yaw=0;g_pitch=g_mode==CameraMode::FirstPerson?0.12f:0.9f;g_dist=12;g_ty=1;g_follow=true;g_turn.reset(); }
 
 void shutdown() {
+    release_mouse();g_mode=CameraMode::Grid;
     if(g_overlay_shutdown)g_overlay_shutdown();
     g_overlay=nullptr;g_overlay_input=nullptr;g_overlay_shutdown=nullptr;
     g_cancel=true;
@@ -197,13 +246,15 @@ void frame(const world::Snapshot& s, bool present) {
     const auto now=SDL_GetTicks64();
     const float dt=std::min(float(now-g_control_time)/1000.f,0.05f);
     g_control_time=now;
-    if (const Uint8* k = SDL_GetKeyboardState(nullptr);focused() && k && !(g_overlay_input && g_overlay_input())) {
+    if (const Uint8* k = SDL_GetKeyboardState(nullptr);g_world_controls && focused() && k && !(g_overlay_input && g_overlay_input())) {
         if (pressed(k,SDL_SCANCODE_R,&g_r_held)) reset_camera();
         const bool walking=k[SDL_SCANCODE_UP] || k[SDL_SCANCODE_DOWN] ||
             k[SDL_SCANCODE_LEFT] || k[SDL_SCANCODE_RIGHT] ||
             k[SDL_SCANCODE_W] || k[SDL_SCANCODE_A] || k[SDL_SCANCODE_S] || k[SDL_SCANCODE_D];
-        const int turn=g_turn.update(k[SDL_SCANCODE_J],k[SDL_SCANCODE_L],walking);
-        if(turn) set_yaw_radians(g_yaw+turn*1.570796327f);
+        if(g_mode==CameraMode::Grid){
+            const int turn=g_turn.update(k[SDL_SCANCODE_J],k[SDL_SCANCODE_L],walking);
+            if(turn)set_yaw_radians(g_yaw+turn*1.570796327f);
+        }else set_yaw_radians(g_yaw+(int(k[SDL_SCANCODE_L]!=0)-int(k[SDL_SCANCODE_J]!=0))*dt*1.4f);
         if (k[SDL_SCANCODE_I]) g_pitch += 0.9f*dt;
         if (k[SDL_SCANCODE_K]) g_pitch -= 0.9f*dt;
         const float zoom=std::pow(1.02f,60*dt);
@@ -215,8 +266,7 @@ void frame(const world::Snapshot& s, bool present) {
 
         // Clamp pitch just short of the poles: at exactly straight-down the
         // look-at basis degenerates and the view snaps to an arbitrary roll.
-        if (g_pitch >  1.50f) g_pitch =  1.50f;
-        if (g_pitch <  0.15f) g_pitch =  0.15f;
+        set_pitch_radians(g_pitch);
         if (g_dist  <  1.0f)  g_dist  =  1.0f;
         if (g_dist  > 200.0f) g_dist  = 200.0f;
 
@@ -241,6 +291,7 @@ void frame(const world::Snapshot& s, bool present) {
             std::fprintf(stderr, "[viewer] min unit %d\n", g_min_unit);
         }
     } else {
+        release_mouse();
         g_b_held=g_h_held=g_n_held=g_m_held=g_r_held=false;
         g_turn.reset();
     }
@@ -259,8 +310,10 @@ void frame(const world::Snapshot& s, bool present) {
     char title[256];
     const auto& actors=actor_render::stats();
     const char* compass[]={"N","W","S","E"};
-    std::snprintf(title,sizeof(title),"RubyRecomp - live map %d.%d | %zu maps | %d actors | Up=%s (field) | Arrows: walk | J/L: turn 90 | R: north-up | %s",
-        s.map_group,s.map_number,connected?connected_maps():size_t(1),actors.visible,compass[g_camera_relative?camera_input::quadrant(g_yaw):0],
+    std::snprintf(title,sizeof(title),"RubyRecomp - live map %d.%d | %zu maps | %d actors | %s | Up~%s | WASD: walk | R: reset | %s",
+        s.map_group,s.map_number,connected?connected_maps():size_t(1),actors.visible,
+        g_mode==CameraMode::Grid?"Grid / J-L: turn 90":g_mode==CameraMode::ThirdPerson?"Third person / right-click: mouse look":"First person / right-click: mouse look",
+        compass[g_camera_relative?camera_input::quadrant(g_yaw):0],
         focused()?"3D controls":"Focus here to play");
     SDL_SetWindowTitle(g_win,title);
 
@@ -276,14 +329,18 @@ void frame(const world::Snapshot& s, bool present) {
         pz=actors.player?actors.player_z:s.camera_cell_y();
     }
 
-    const float tx = origin_x+(g_follow ? px : mw * 0.5f);
-    const float tz = origin_z+(g_follow ? pz : mh * 0.5f);
-    const float ty = (g_follow ? py : 0.0f) + g_ty;
+    float tx = origin_x+(g_follow ? px : mw * 0.5f);
+    float tz = origin_z+(g_follow ? pz : mh * 0.5f);
+    float ty = (g_follow ? py : 0.0f) + g_ty;
 
     const float cp = std::cos(g_pitch);
-    const float ex = tx + std::sin(g_yaw) * cp * g_dist;
-    const float ey = ty + std::sin(g_pitch) * g_dist;
-    const float ez = tz + std::cos(g_yaw) * cp * g_dist;
+    float ex = tx + std::sin(g_yaw) * cp * g_dist;
+    float ey = ty + std::sin(g_pitch) * g_dist;
+    float ez = tz + std::cos(g_yaw) * cp * g_dist;
+    if(g_mode==CameraMode::FirstPerson){
+        ex=origin_x+px;ey=py+1.35f;ez=origin_z+pz;
+        tx=ex-std::sin(g_yaw)*cp;ty=ey-std::sin(g_pitch);tz=ez-std::cos(g_yaw)*cp;
+    }
 
     int w = 1280, h = 800;
     SDL_GL_GetDrawableSize(g_win, &w, &h);
@@ -308,10 +365,17 @@ void frame(const world::Snapshot& s, bool present) {
         math::projection(fov, 0.05f, 500.0f),
         math::look_at(ex, ey, ez, tx, ty, tz));
 
+    actor_render::set_camera(g_yaw,g_pitch,g_mode==CameraMode::FirstPerson);
+    const auto room=indoor_house::room(s.map_group,s.map_number);
+    if(room.width) diorama::set_room_cutaway(g_mode!=CameraMode::FirstPerson,
+        float(origin_x+7),float(origin_z+room.wall_front)-.25f,
+        float(origin_x+s.width-8),float(origin_z+s.height-7),std::sin(g_yaw),std::cos(g_yaw));
     if(connected) {
         diorama::draw_region_raw(vp,g_debug);
         actor_render::draw(vp,math::translation(float(origin_x),0,float(origin_z)));
     } else diorama::draw_raw(vp, math::identity(), g_debug);
+    actor_render::clear_camera();
+    diorama::set_room_cutaway(false);
     g_world_drawn=true;
 
     if(present)capture_review(w,h);
@@ -323,14 +387,18 @@ void game_frame(const world::Snapshot& snapshot,const presentation::Input& input
                 std::span<const uint8_t> rgb,int sw,int sh,
                 std::span<const uint8_t> field_ui,bool present) {
     if(!g_active || !g_win)return;
-    auto decision=g_lifetime.next(input,snapshot.valid);
+    auto supported=input;
+    if(input.indoor_3d && !indoor_house::authored(snapshot,diorama::current_overrides()))
+        supported.indoor_3d=false;
+    auto decision=g_lifetime.next(supported,snapshot.valid);
     if(decision.update)g_retained=snapshot;
     if(!decision.world)g_retained={};
     // frame() owns the existing camera, shared mesher, live materials and actor
     // renderer. Retained frames read only the host copy, never menu VRAM/OBJ.
+    g_world_controls=decision.world && presentation::world_mode(input);
     frame(decision.world?g_retained:world::Snapshot{},false);
     if(!g_world_drawn) {decision.world=decision.retained=false;decision.overlay=presentation::Overlay::Original;}
-    g_world_controls=decision.world && input.mode==presentation::Mode::Field;
+    g_world_controls=decision.world && presentation::world_mode(input);
     int w=0,h=0;SDL_GL_GetDrawableSize(g_win,&w,&h);
     if(w<=0||h<=0)return;
     gl::glBindFramebuffer(GL_FRAMEBUFFER,0);glViewport(0,0,w,h);
@@ -346,7 +414,7 @@ void game_frame(const world::Snapshot& snapshot,const presentation::Input& input
         screen_overlay::draw(rgba,sw,sh,w,h,decision.world);
     }
     g_presentation=decision;
-    if(input.mode!=presentation::Mode::Field || !decision.world) {
+    if(!presentation::world_mode(input) || !decision.world) {
         char title[256];std::snprintf(title,sizeof(title),
             "RubyRecomp - %s | %s | X: confirm / Z: back / Enter: Start | Arrows: original controls | J/L: view",
             presentation::name(input.mode),decision.retained?"world retained":"original game view");

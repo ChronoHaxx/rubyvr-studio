@@ -43,6 +43,10 @@ jobs:
         run: |
           python3 tools/test-camera-input.py
           python3 tools/test-camera-input.py --sanitize
+      - name: Test free movement and camera-facing sprites without graphics or assets
+        run: |
+          bash tools/test-free-walk.sh
+          bash tools/test-billboard.sh
       - name: Test original synthetic suites
         run: |
           python3 tools/test-coverage-ledger.py

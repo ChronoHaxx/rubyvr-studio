@@ -22,6 +22,8 @@ function(rubyvr_attach_runtime target)
         "${root}/integration/runtime/viewer.cpp"
         "${root}/integration/runtime/dev_runtime.cpp"
         "${root}/integration/runtime/game_input.cpp"
+        "${root}/integration/runtime/free_walk_runtime.cpp"
+        "${root}/src/vr/free_walk.cpp"
         "${root}/src/vr/camera_input.cpp"
         "${root}/src/dev/session.cpp"
         "${root}/src/dev/demo_panel.cpp"
@@ -30,7 +32,7 @@ function(rubyvr_attach_runtime target)
         "${root}/src/vr/diorama.cpp" "${root}/src/vr/world_io.cpp"
         "${root}/src/vr/json_scan.cpp" "${root}/src/vr/overrides.cpp"
         "${root}/src/vr/cutout.cpp" "${root}/src/vr/part_geometry.cpp"
-        "${root}/src/vr/terrain.cpp" "${root}/src/vr/actor_frame.cpp" "${root}/src/vr/actor_render.cpp" "${root}/src/vr/actor_range.cpp")
+        "${root}/src/vr/terrain.cpp" "${root}/src/vr/actor_frame.cpp" "${root}/src/vr/actor_render.cpp" "${root}/src/vr/actor_range.cpp" "${root}/src/vr/billboard.cpp")
     target_include_directories(${target} BEFORE PRIVATE
         "${root}/integration/runtime" "${root}/src/vr" "${root}/src")
     target_compile_features(${target} PRIVATE cxx_std_20)

@@ -57,6 +57,15 @@ int main(){
     expect(p.x==16.f && p.z==21.5f && p.lift==.375f,"subtile motion and separate jump");
     auto wrap=position(f,9,16,256,256,0,0,16,21);
     expect(wrap.x==p.x && wrap.z==p.z,"ring incarnation chosen by object tile");
+    Motion precise{true,16.544194f,21.455806f};
+    auto continuous=position(f,9,16,0,0,0,0,16,21,&precise);
+    expect(continuous.x==precise.x&&continuous.z==precise.z&&continuous.lift==p.lift,"precise foot survives pixel rounding and preserves source lift");
+    precise.valid=false;auto inactive_pose=position(f,9,16,0,0,0,0,16,21,&precise);
+    expect(inactive_pose.x==p.x&&inactive_pose.z==p.z,"ordinary grid motion retains exact native placement");
+    precise.valid=true;precise.x=80;auto stale=position(f,9,16,0,0,0,0,16,21,&precise);
+    expect(stale.x==p.x&&stale.z==p.z,"another cell cannot supply a stale precise foot");
+    precise.x=std::numeric_limits<float>::quiet_NaN();auto invalid_motion=position(f,9,16,0,0,0,0,16,21,&precise);
+    expect(invalid_motion.x==p.x&&invalid_motion.z==p.z,"non-finite precise motion falls back to native placement");
     f.x=40;f.y=-80;f.y2=0;
     auto offset=position(f,9,16,0,216,80,152,16,23);
     expect(offset.x==16.5f && offset.z==23.5f,"global sprite offset and vertical ring phase");

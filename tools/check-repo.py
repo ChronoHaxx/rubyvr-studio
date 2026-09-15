@@ -82,7 +82,9 @@ def main():
             if not path.startswith('docs/media/'):
                 errors.append(f'{path}: image outside reviewed documentation media')
             continue
-        if p.suffix.lower() not in TEXT and path not in ROOT_FILES:
+        # Reviewed hook declarations are plain-text configuration, not generated
+        # ROM code. Keep this exception scoped to the audited integration file.
+        if p.suffix.lower() not in TEXT and path not in ROOT_FILES and path != 'integration/free-walk-hooks.toml':
             errors.append(f'{path}: unreviewed file type')
             continue
         try:

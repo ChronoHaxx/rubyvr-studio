@@ -1,0 +1,18 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Merge these declarations into the Ruby USA rev1 recompiler configuration,
+# then regenerate. They are function-entry hooks, not replacement ROM bytes.
+# Requires the guarded native runtime API described in integration/README.md.
+[[mod_function_hook]]
+addr = 0x080587FC
+mode = "thumb"
+note = "RubyVR continuous on-foot player_step, gated by verified field state"
+
+[[mod_function_hook]]
+addr = 0x08059224
+mode = "thumb"
+note = "RubyVR cell-entry transition, preserving original field event handling"
+
+[[mod_function_hook]]
+addr = 0x0805810C
+mode = "thumb"
+note = "RubyVR partial-step Y reversal camera correction"

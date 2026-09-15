@@ -4,7 +4,7 @@
 game integration.** It replaces the local research workspace's
 `_docs/full-vr-roadmap-v1.md`; its detailed M0–M11 scope is retained here.
 Work-package documents explain individual contributions; they are not another
-roadmap. Last reconciled **2026-09-12**: archived PRs #19–#31 and the new
+roadmap. Last reconciled **2026-09-14**: archived PRs #19–#31 and the new
 repository's GPL PR #19, camera-driven loading PR #20, ground-base PR #21 and
 native Linux/WSL PR #22, mouse repair PR #24 and bridge PR #25 are merged.
 The shared region-query component merged in PR #26; all three human CLI checks
@@ -38,6 +38,12 @@ for `09d28c0`: ordinary NPC views, nearby viewport visibility, menu/focus and
 checkpoint reload. This accepts that bounded NPC repair. Distant actors,
 special profiles and the continuous camera modes remain open.
 
+**PR #34 merged on 2026-09-13 at `4a6f2246`.** Demo controls, WASD, remembered
+NPCs and the straight-ledge presentation follow-up are in main. The maintainer
+reported merging; the five individual human results remain unreported. Broken
+ledge corners remain open. The next combined delivery is
+[batch 2: free walking, camera modes and a two-floor house](free-camera-movement.md), in review.
+
 **Prefer the short version? [Watch the acceptance GIF and verdict](acceptance.md).**
 The contributor/agent performs routine desktop functional and visual checks;
 the maintainer performs a short, revision-specific human functional check before
@@ -59,7 +65,7 @@ temporary fallback frames remain defects.
 
 ## Route to a shareable playable demo
 
-**Current stage: an early native outdoor playable prototype.** The editor,
+**Current stage: an early native playable prototype; a two-floor 3D house is in review.** The editor,
 reusable scenery, original player and nearby NPCs, cardinal camera controls,
 developer checkpoints and connected Route 101/Oldale walking are implemented.
 The current recording can be shared as work in progress. The prepared local
@@ -100,7 +106,7 @@ does not satisfy the other-player installation requirement. Do not change
 licences, contact upstream developers or publish a release without the required
 specific authorization. Continue independent demo work while this is resolved.
 
-**Batch 1 implementation, 2026-09-13 — awaiting combined review/human acceptance:**
+**Batch 1 merged in PR #34, 2026-09-13 — individual human results unreported:**
 [demo controls and route](desktop-demo-batch.md) brings the existing test controls
 into the voxel viewer, retains previously observed ordinary NPCs beyond Ruby's
 live slots, and corrects Route 101's ledge surface/contact. The native route and
@@ -114,15 +120,47 @@ The affected human retest stays in the batch guide. Moving the physical trigger
 closer to the lip, with the ability to stop there, belongs to M9/batch 2 continuous
 movement; neither all-map collision nor that movement work is complete here.
 
-**Further maintainer reports, 13 September — unresolved and deferred:** ledge
+**Further maintainer reports, 13 September — original reports retained:** ledge
 corners look broken (M2/M5; exact corner/location not yet captured); facing north
 before an encounter becomes west after successfully running away (M5/M7/M9);
 sprites look thin from high camera angles (the existing M6/M9 pitch-orientation
 issue below). These reports followed the `ee4f71d` prepared handoff; the user did
 not restate the tested revision. They have not been independently reproduced,
-and prior straight-ledge/scene-return checks do not accept these cases. Keep the
-camera continuity and readable sprite tilt cases in batch 2, and retain the
-corner repair in terrain/contact work. No completion boxes change from this report.
+and prior straight-ledge/scene-return checks do not accept these cases.
+Batch 2 now has native encounter-escape/camera continuity and actual GL
+pitch-readable sprite checks; the human retest remains pending. Corner repair
+stays in terrain/contact work.
+
+**Batch 2 implementation, 13 September — in review:**
+[free walking, third-person and first-person](free-camera-movement.md) combines
+fractional/diagonal movement, continuous orbit, right-click mouse capture and
+speed, first-person player hiding, pitch-aware actor cards and camera continuity.
+Component/sanitizer, actual GL and native encounter/Bag/connection/checkpoint
+checks pass. **13 September human failure:** diagonal movement shook after the
+`6c9bcd1` handoff. The current PR repairs axis loss at cell crossings and rounded
+camera placement; sustained diagonal, precise-foot and native regressions pass.
+**Further M5/M9 human failure after `ce1b542`:** oblique and diagonal ledge
+approaches failed. The contact-direction handoff is repaired in this same PR;
+twelve native approach cases, downhill landings and blocked reverse checks pass.
+The expanded ledge playtest and a focused native comparison are in the batch guide.
+**Further M5/M9 human failure after `4d1fb46`:** house/interior entry could hang
+with a free camera selected. Native reproduction found indoor input interception
+and missed shallow door approaches. Both are repaired in this same PR; four
+house entry/walk/exit cases pass with the camera and heading retained. The guide
+adds a house clip, checkpoint and human check. At that revision interiors retained original graphics.
+Movement acceptance remains failed/pending retest, not restored by automated checks. A native partial-reversal camera defect found during integration
+is repaired. Seven combined human checks remain pending. This does not finish
+lip-exact ledge triggers, corner art, camera obstacle avoidance or public setup.
+
+**14 September, M4/M5/M9 house pilot — in review in the same PR:** at the
+maintainer's request, May's Littleroot house now has both floors in 3D with
+free diagonal/first-person movement, original dialogue, stairs, furniture
+collision and camera-preserving exit. Third-person cutaways and a first-person
+ceiling share ordinary source-textured Studio parts. Twelve native journey
+assertions and component/sanitizer checks pass; human acceptance is pending.
+Other interiors retain the original view. This advances one interior family,
+not all 234 interiors or final furniture polish. The batch guide has a native
+clip, two direct indoor checkpoints and the updated seven-step playtest.
 
 The [public host audit](runtime-host-audit.md) confirms menu extension callbacks
 and native function hooks exist upstream, but our frame/input/checkpoint/event
@@ -137,8 +175,9 @@ recording as a publicly playable release. Camera integration and public runner
 setup are the highest uncertainties in this estimate.
 
 For this demo, defer all-Hoenn model/terrain perfection, replacement foliage,
-new primitive/editor features, full weather/day-night systems, 3D battle and
-interior reconstruction, and headset/diegetic-UI completion. Record new reports
+new primitive/editor features, full weather/day-night systems, 3D battles,
+remaining interior reconstruction, and headset/diegetic-UI completion. The
+maintainer brought the two-floor house pilot into batch 2; broader rooms stay deferred. Record new reports
 under their existing milestone and bring them into this week only when they
 block startup, controls, progression, saves or the demonstrated route.
 
@@ -157,7 +196,7 @@ Demo readiness is tracked by these outcomes, not an invented whole-game percent:
 - [ ] The selected route's remaining blocking actor/contact defects and demo
   controls are accepted as batch 1.
 - [ ] Third-person and first-person movement/camera behavior is accepted as
-  batch 2; no free-movement completion is claimed from the current grid mode.
+  batch 2; implementation and native checks are in review, human acceptance pending.
 - [ ] Another player can set up and launch the supported demo without this
   maintainer's private worktree paths or bundled game data.
 - [ ] A continuous desktop play session, save/reopen, frame-time/memory record
@@ -453,7 +492,7 @@ Catalog and placement audits do not certify a complete game or headset experienc
 | [M6 Actors and field effects](#m6-actors-and-field-effects) | Player and ordinary NPC views/viewport visibility merged; distant NPCs, special poses and broad coverage pending | M2, M5 |
 | [M7 UI, battles and game loop](#m7-ui-battles-and-game-loop) | Bounded desktop menus/battle/interior/save sequence accepted in PR #32; full-game/VR routing pending | M5 |
 | [M8 Sky, lighting, time and weather](#m8-sky-lighting-time-and-weather) | Editor preview merged; runtime cycle/weather/water pending | M2, M5 for runtime |
-| [M9 Controls and comfort](#m9-controls-and-comfort) | Editor cameras and native cardinal follow/camera-relative grid walking merged; continuous movement, first-person and VR acceptance pending | M5–M8 |
+| [M9 Controls and comfort](#m9-controls-and-comfort) | Grid controls merged; continuous walking, free orbit, first-person and mouse look in review; human and VR acceptance pending | M5–M8 |
 | [M10 Performance and reliability](#m10-performance-and-reliability) | Native WSL editor/batch and Linux CI merged; full-world/headset budgets pending | Representative M2–M9 scenes |
 | [M11 Completion and release](#m11-completion-and-release) | Public contributor foundation exists; game release pending | M1–M10 |
 
@@ -729,7 +768,9 @@ trial and error, and a person can save/reopen/reuse their work unaided.
   underwater scenery and secret-base geometry/decorations.
 - [ ] Complete every interior family: walls, ceilings/cutaways, doors/windows,
   stairs, beds, furniture, counters, shelves, machines, terminals, displays,
-  carpets and other cataloged drawings.
+  carpets and other cataloged drawings. **In review — PR #35:** May's house
+  1F/2F pilot, cutaways, first-person ceiling, furniture collision and native
+  dialogue/stairs/exit; [recording and pending human check](free-camera-movement.md).
 - [ ] Account for puzzles, removable/movable objects, alternate map states,
   destruction/cut/strength states and replacement metatiles through M5 live
   invalidation, without leaving stale art.
@@ -847,6 +888,8 @@ guest-memory reads from the VR thread.
   **Reconfirmed 13 September during PR #34 review:** steep views still make
   sprites look too thin. Include pitch-aware orientation with anchored feet and
   stable animation in batch 2's camera checks; yaw-facing fixes do not close it.
+  **Batch 2 in review:** foot-anchored pitch-facing geometry and actual GL
+  steep-view/first-person checks pass. Human art/occlusion review remains open.
 
 **Exit:** every discovered actor/effect state has an intended renderer and live
 evidence, with no doubled source sprites, missing frames or drifting feet.
@@ -937,18 +980,31 @@ checks and correct actor views; implement first-person player-card hiding and
 camera/eye height deliberately. The NPC batch in M6 supplies more of the actor
 view contract but does not implement those modes or change movement authority.
 
-**13 September controls clarification:** WASD aliases are in review with PR #34,
+**13 September controls clarification:** WASD aliases merged in PR #34,
 alongside arrows, with the existing camera/menu/focus gates. The maintainer chose
 **right-click toggle mouse look for unrestricted third-person orbit together with
 continuous movement in batch 2**. Include clear cursor capture/release, sensitivity,
 Escape/focus-loss recovery and access to the demo panel in that combined check;
-this control is not implemented by the current WASD follow-up.
+this control is implemented in [batch 2](free-camera-movement.md), with human checks pending.
 
 **13 September battle-return report (M5/M7/M9):** north-facing field view changes
 to west after a successful encounter escape. The cause is unverified. Batch 2
-must preserve the selected yaw, pitch, zoom and view mode when returning to the
-same field after battle. Test encounter/escape from all four headings; keep
-deliberate camera reset, checkpoint load and map-warp policies explicit.
+preserves the selected camera through same-field return: the native successful
+Run/north-view case and arbitrary-yaw/pitch/mode GL checks pass. Human and broader
+encounter/warp checks remain pending; the original report's cause remains
+unconfirmed. Deliberate R reset, mode change and session-only preferences are
+explicit in the batch guide.
+
+- [ ] **In review — batch 2:** continuous on-foot/diagonal movement, small-body
+  native collision queries, once-per-cell events and original special-action
+  handoff; third-person/first-person, right-click toggle, sensitivity,
+  Escape/focus release and anchored pitch-aware actors. Component/sanitizer,
+  Windows GL and native game checks pass. Angled ledge contact now hands back in
+  the blocked direction even while sliding; twelve native approach cases pass.
+  Six human checks pending, including the expanded ledge retest.
+- [ ] Finish lip-exact ledge handoff, camera obstruction handling, persistent
+  camera preferences and free-vector input recording/replay. Current special
+  actions can centre the player; old button-only replay requires Grid.
 
 - [x] Provide tested editor orbit/fly/orthographic/focus controls, independent
   of saved authoring data ([camera verification](verification.md)).

@@ -62,6 +62,22 @@ int main(int,char**) {
     glReadPixels(0,0,1280,800,GL_RGBA,GL_UNSIGNED_BYTE,actor_pixels.data());
     int red=0;for(size_t i=0;i<actor_pixels.size();i+=4)red+=actor_pixels[i]>240 && actor_pixels[i+1]<10;
     expect(red>100,"actual player pixels in GL frame");
+    // The same source rectangle must remain readable when looking nearly
+    // straight down. With the old upright card it collapsed to a thin strip.
+    vr::viewer::set_pitch_radians(1.45f);vr::viewer::frame(field,false);
+    glReadPixels(0,0,1280,800,GL_RGBA,GL_UNSIGNED_BYTE,actor_pixels.data());
+    int left=1280,right=-1,bottom=800,pixel_top=-1;
+    for(int y=0;y<800;++y)for(int x=0;x<1280;++x){const size_t p=(size_t(y)*1280+x)*4;
+        if(actor_pixels[p]>240 && actor_pixels[p+1]<10){left=std::min(left,x);right=std::max(right,x);bottom=std::min(bottom,y);pixel_top=std::max(pixel_top,y);}}
+    expect(right>left && float(pixel_top-bottom)/(right-left)>1.8f,"steep view preserves source sprite aspect in actual pixels");
+    vr::viewer::set_camera_mode(vr::viewer::CameraMode::FirstPerson);vr::viewer::frame(field,false);
+    glReadPixels(0,0,1280,800,GL_RGBA,GL_UNSIGNED_BYTE,actor_pixels.data());
+    red=0;for(size_t p=0;p<actor_pixels.size();p+=4)red+=actor_pixels[p]>240&&actor_pixels[p+1]<10;
+    expect(red==0 && vr::actor_render::stats().player,"first-person hides own card but retains camera foot");
+    vr::viewer::set_camera_mode(vr::viewer::CameraMode::ThirdPerson);
+    vr::viewer::set_yaw_radians(.713f);
+    expect(std::abs(vr::viewer::yaw_radians()-.713f)<.001f,"free yaw is not quantized");
+    vr::viewer::set_camera_mode(vr::viewer::CameraMode::Grid);vr::viewer::reset_camera();
     vr::viewer::set_yaw_radians(1.570796327f);vr::viewer::frame(field,false);
     expect(vr::diorama::diorama_stats().geometry_hash==first,"orbit keeps the same scenery");
     expect(vr::actor_render::stats().visible==1,"quarter-turn keeps the original actor visible");
@@ -137,6 +153,15 @@ int main(int,char**) {
     vr::viewer::reset_camera();
     put(0x20,196);vr::viewer::frame(field,false);vr::diorama::player_cell(&px,&py,&pz);
     expect(px==12.25f && vr::diorama::diorama_stats().geometry_hash==first,"subtile actor move does not rebuild scenery");
+    // Simulate rounded source pixels during diagonal walking. The production
+    // actor/camera foot must instead follow the precise immutable motion sample.
+    for(int tick=0;tick<10;++tick) {
+        const float x=12.25f+tick*.044194174f,z=12.75f-tick*.044194174f;
+        sprite.motion={true,x,z};put(0x20,int(std::lround(x*16)));put(0x22,int(std::lround(z*16))-8);
+        vr::viewer::frame(field,false);vr::diorama::player_cell(&px,&py,&pz);
+        expect(std::abs(px-x)<.00001f&&std::abs(pz-z)<.00001f,"actual GL consumer retains subpixel diagonal camera foot");
+    }
+    sprite.motion={};put(0x20,196);put(0x22,192);vr::viewer::frame(field,false);
     // Explicit terrain layer chooses the surface; visual jump leaves it alone.
     vr::overrides::OverrideSet authored;authored.version=vr::overrides::kTerrainVersion;vr::overrides::TerrainMap tm;
     tm.group=0;tm.number=16;tm.width=25;tm.height=24;
@@ -312,11 +337,13 @@ int main(int,char**) {
     glReadPixels(0,0,1280,800,GL_RGBA,GL_UNSIGNED_BYTE,actor_pixels.data());
     const size_t dialog=(size_t(180)*1280+640)*4;
     expect(actor_pixels[dialog]==234 && actor_pixels[dialog+1]==56 && actor_pixels[dialog+2]==123,"dialog pixels overlay shared world at readable screen position");
+    vr::viewer::set_camera_mode(vr::viewer::CameraMode::ThirdPerson);vr::viewer::set_yaw_radians(.713f);vr::viewer::set_pitch_radians(1.12f);
     signal.mode=Mode::Battle;vr::viewer::game_frame({},signal,original,240,160,{},false);
     expect(!vr::viewer::presentation_state().world && vr::actor_render::stats().visible==0,"battle uses original game and clears stale actors");
     glReadPixels(0,0,1280,800,GL_RGBA,GL_UNSIGNED_BYTE,actor_pixels.data());
     expect(color(640,780,250,10) && color(640,20,10,250),"battle original frame fills available aspect without cropping");
     signal.mode=Mode::Field;vr::viewer::game_frame(field,signal,original,240,160,transparent_ui,false);
+    expect(std::abs(vr::viewer::yaw_radians()-.713f)<.001f && std::abs(vr::viewer::pitch_radians()-1.12f)<.001f && vr::viewer::camera_mode()==vr::viewer::CameraMode::ThirdPerson,"battle return preserves camera heading, pitch and mode");
     ++signal.epoch;signal.mode=Mode::Bag;vr::viewer::game_frame({},signal,original,240,160,{},false);
     expect(!vr::viewer::presentation_state().world && !vr::viewer::uses_world_controls(),"loading directly into Bag never reuses preceding world");
     signal.mode=Mode::Interior;vr::viewer::game_frame(field,signal,original,240,160,{},false);

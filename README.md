@@ -21,7 +21,7 @@ The [work-package index](docs/issues/README.md) explains scope and dependencies.
 **Delivery priority:** [one-week desktop demo target](docs/roadmap.md#one-week-desktop-demo-target),
 with substantial batches and one combined review/playtest per batch. The target
 is a small playable area another player can install, with public runner setup
-and continuous camera modes still to resolve.
+still to resolve. Free walking and camera modes are now in review below.
 
 **Next milestone:** [native gameplay on a monitor](docs/issues/007-native-integration.md#native-desktop-proof)
 using our authored world: walking, connected maps, an interior and the original
@@ -77,11 +77,20 @@ remain open. All five human checks passed for `09d28c0`.
 
 ## What works
 
-**Current batch for review:** [demo controls, distant NPCs and Route 101 ledges](docs/desktop-demo-batch.md).
-Test controls open in the voxel viewer; previously seen ordinary NPCs survive
-source distance removal; the ledge jump keeps the player on its visible terrain.
-The same prepared launcher is used. Human acceptance, save-latency repairs and
-a public runner installation remain pending. [Host integration audit](docs/runtime-host-audit.md).
+**Current batch for review: [free walking, third-person and first-person](docs/free-camera-movement.md).**
+**14 September addition:** both floors of May's house now support free Third/First
+person movement, solid furniture, dialogue and stairs. The guide has the actual
+house recording and two direct indoor checkpoints. Other interiors retain the
+original view. Diagonal, angled-ledge and house controls still need human retest.
+Smooth camera-relative walking, diagonal movement, right-click mouse look and
+pitch-aware sprites work in the prepared native game. Watch the actual recording
+and use the same launcher in the guide. Human playtesting, ledge-corner repairs,
+camera collision and public runner installation remain pending.
+
+**PR #34 merged at `4a6f2246` on 13 September:**
+[demo controls, distant NPCs and Route 101 ledges](docs/desktop-demo-batch.md).
+Its individual human checks remain unreported. The current build includes those
+controls and scenery changes. [Host integration audit](docs/runtime-host-audit.md).
 
 - [Terrain authoring](docs/terrain-authoring.md): explicit heights, steps,
   materials/underlays and layered decks, with undo/save/reopen. A local

@@ -2,6 +2,7 @@
 #include "actor_render.h"
 #include "gl_loader.h"
 #include "actor_range.h"
+#include "billboard.h"
 #include <cmath>
 #include <cstdio>
 
@@ -11,11 +12,13 @@ struct Item {
     GLuint texture=0; actor::Frame frame,uploaded;
     std::array<actor::Frame,4> directions;
     uint8_t world_facing=0;
-    float x=0,y=0,z=0; bool visible=false;
+    float x=0,y=0,z=0; bool visible=false,player=false;
 };
 Item items[world::kObjectEventCount+64];
 actor::RangeCache range;
 Stats result;
+bool camera_set=false,hide_player=false;
+billboard::Basis camera_basis;
 GLuint program=0,vao=0,vbo=0;
 GLint matrix=-1,sampler=-1;
 bool init() {
@@ -48,18 +51,21 @@ void main(){color=texture(image,texcoord);if(color.a<0.5)discard;})";
 }
 }
 const Stats& stats(){return result;}
+void set_camera(float yaw,float pitch,bool hide){camera_set=true;camera_basis=billboard::basis(yaw,pitch);hide_player=hide;}
+void clear_camera(){camera_set=false;hide_player=false;}
 void clear(){result={};range.reset();for(auto& item:items)item.visible=false;}
 void update(const world::Snapshot& s,const terrain::Resolved& terrain) {
     result={};for(auto& item:items)item.visible=false;
     range.update(s);if(!s.valid)return;
     for(int i=0;i<world::kObjectEventCount;++i) {
-        auto& item=items[i];const auto& object=s.objects[i];
+        auto& item=items[i];const auto& object=s.objects[i];item.player=object.is_player && i==s.player_index;
         if(!object.active || object.invisible)continue;
         auto frame=actor::decode(s.actor_sources[i],s.obj_tiles,s.obj_palette,s.obj_mapping_1d);
         if(frame.status==actor::Status::Unsupported || frame.status==actor::Status::Truncated)++result.unsupported;
         if(frame.status!=actor::Status::Visible)continue;
         const auto p=actor::position(frame,s.view_x,s.view_y,s.view_base_x,s.view_base_y,
-            s.actor_offset_x,s.actor_offset_y,object.x,object.y);
+            s.actor_offset_x,s.actor_offset_y,object.x,object.y,
+            item.player?&s.actor_sources[i].motion:nullptr);
         const int x=int(std::floor(p.x)),z=int(std::floor(p.z));
         const auto height=terrain.query(x,z,object.elevation,p.x-x,p.z-z);
         if(!height.resolved()){++result.unresolved;continue;}
@@ -117,7 +123,7 @@ void update(const world::Snapshot& s,const terrain::Resolved& terrain) {
     }
     size_t index=world::kObjectEventCount;
     for(const auto& remembered:range.distant()) {
-        auto& item=items[index++];const auto& p=remembered.position;
+        auto& item=items[index++];item.player=false;const auto& p=remembered.position;
         const int x=int(std::floor(p.x)),z=int(std::floor(p.z));
         const auto height=terrain.query(x,z,remembered.object.elevation,p.x-x,p.z-z);
         if(!height.resolved()){++result.unresolved;continue;}
@@ -139,11 +145,12 @@ void draw(const math::Mat4& view,const math::Mat4& model) {
     const auto mvp=math::multiply(view,model);
     float rx=mvp.m[0],rz=mvp.m[8],length=std::hypot(rx,rz);
     if(length<1e-6f){rx=1;rz=0;}else{rx/=length;rz/=length;}
+    if(camera_set){rx=camera_basis.right.x;rz=camera_basis.right.z;}
     const bool cull=glIsEnabled(GL_CULL_FACE),blend=glIsEnabled(GL_BLEND);
     glDisable(GL_CULL_FACE);glDisable(GL_BLEND);
     gl::glUseProgram(program);gl::glUniformMatrix4fv(matrix,1,GL_FALSE,mvp.m);
     gl::glUniform1i(sampler,0);gl::glActiveTexture(GL_TEXTURE0);gl::glBindVertexArray(vao);
-    for(auto& item:items)if(item.visible) {
+    for(auto& item:items)if(item.visible && !(hide_player && item.player)) {
         const auto facing=actor::apparent_facing(item.world_facing,rx,rz);
         const auto& f=facing>=1 && facing<=4?item.directions[facing-1]:item.frame;
         glBindTexture(GL_TEXTURE_2D,item.texture);
@@ -151,14 +158,11 @@ void draw(const math::Mat4& view,const math::Mat4& model) {
             glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA8,f.width,f.height,0,GL_RGBA,GL_UNSIGNED_BYTE,f.rgba.data());
             item.uploaded=f;
         }
-        const float left=f.corner_x/16.f,right=left+f.width/16.f;
-        const float top=f.height/16.f,bottom=0;
-        float vertices[30];const float corners[6][4]={{left,top,0,0},{right,top,1,0},{right,bottom,1,1},
-            {left,top,0,0},{right,bottom,1,1},{left,bottom,0,1}};
-        for(int k=0;k<6;++k){vertices[k*5]=item.x+rx*corners[k][0];vertices[k*5+1]=item.y+corners[k][1];
-            vertices[k*5+2]=item.z+rz*corners[k][0];vertices[k*5+3]=corners[k][2];vertices[k*5+4]=corners[k][3];}
+        std::array<float,30> vertices;
+        const billboard::Basis basis=camera_set?camera_basis:billboard::Basis{{rx,0,rz},{0,1,0}};
+        if(!billboard::vertices(basis,{item.x,item.y,item.z},f.corner_x/16.f,f.width/16.f,f.height/16.f,vertices))continue;
         glBindTexture(GL_TEXTURE_2D,item.texture);gl::glBindBuffer(GL_ARRAY_BUFFER,vbo);
-        gl::glBufferData(GL_ARRAY_BUFFER,sizeof(vertices),vertices,GL_STREAM_DRAW);glDrawArrays(GL_TRIANGLES,0,6);
+        gl::glBufferData(GL_ARRAY_BUFFER,sizeof(vertices),vertices.data(),GL_STREAM_DRAW);glDrawArrays(GL_TRIANGLES,0,6);
     }
     gl::glBindVertexArray(0);glBindTexture(GL_TEXTURE_2D,0);
     if(cull)glEnable(GL_CULL_FACE);if(blend)glEnable(GL_BLEND);

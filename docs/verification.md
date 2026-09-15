@@ -1,13 +1,63 @@
 # Verification and its limits
 
-## WASD controls follow-up — in review with PR #34
+## Free walking and camera modes — batch 2 in review, 2026-09-14
+
+**14 September 3D house pilot:** twelve native assertions pass through May's
+house entry, diagonal movement, actual chair collision, dialogue/return,
+upstairs first person, bed collision, stairs down and camera-preserving exit.
+Public free-walk 67, live-scene 122, neighbourhood 17 and presentation 60 checks
+pass, including WSL ASan/UBSan. The prepared build adds direct 1F/2F checkpoints;
+other interiors retain original views. The current native clip and pending
+human checklist are in the guide. Recipe generation uses local pinned source
+art; all unrelated starter patterns/terrain are retained. Native input/focus,
+angled-ledge and unsupported-lab regressions accompany this bounded journey.
+Automated and capture review do not establish human input or headset acceptance.
+
+The earlier repair records below describe their historical revisions.
+
+**13 September interior follow-up:** the `4d1fb46` native build consumes indoor
+walking input while a free camera remains selected. After fixing that ownership
+gate, a shallow approach also reproduced a missed native door-opening event.
+Both are repaired: all four normal-collision house entry/walk/exit approaches
+pass (20 assertions) with Third/First person camera and heading retained. The
+lab gate/return sequence passed six checks. Camera 1,372 and presentation 53 pass
+on Windows and WSL ASan/UBSan; movement 66 passes optimized and ASan/UBSan.
+The ledge (48) and encounter/Bag/connection (six) native checks pass again.
+The new house clip and checkpoint support the affected human retest; current
+acceptance remains failed/pending. Interiors retain original 2D graphics.
+
+**13 September angled-ledge follow-up:** the native reproducer fails ten
+angled/diagonal approaches on `ce1b542`. The repair preserves each blocked axis
+and executes Ruby's original step toward the valid special tile even while
+sliding sideways. All twelve native approaches now pass in Third/First person
+(48 assertions including landing, heading and reverse collision). The public
+49-case movement suite passes optimized and ASan/UBSan. The focused comparison
+and expanded ledge playtest are in the guide below; human retest stays pending.
+
+**Earlier 13 September diagonal follow-up:** the maintainer reported shake after
+`6c9bcd1`. The movement case remains failed/pending human retest. The then-23-case
+movement and 3,504-case player suites pass with sanitizers, plus exact-foot GL
+checks. Two negative controls reject the old axis-drop/rounded-foot behavior.
+A native straight-diagonal segment and the existing 16 movement/input and six
+encounter/Bag/connection checks pass on the repaired build.
+
+[Actual native recording, check counts, worker accounting and seven pending human
+steps](free-camera-movement.md). Free movement and billboard checks pass with
+ASan/UBSan; existing actor/camera/presentation suites pass. Windows GL verifies
+steep sprite readability, first-person hiding and camera retention. Sixteen
+native movement/input checks and six real encounter/Bag/connection checks pass.
+The outward connection check uses obstacle bypass; these are bounded automated
+checks, not physical-input, full-world or headset acceptance. Original battle
+reset cause is unconfirmed; ledge corners remain deferred.
+
+## WASD controls follow-up — merged PR #34 at `4a6f2246`, 2026-09-13
 
 `python tools/test-camera-input.py` passes **1,107** assertions on Windows and
 with WSL `--sanitize`. The additional cases cover WASD at all four camera views,
 combining arrow/controller/action input, original menu directions, panel/focus
 release and queued-turn behavior. See the [current control and human checks](desktop-demo-batch.md).
 The earlier batch GIF remains baseline evidence; it does not prove physical WASD
-input. Right-click toggle free orbit stays with continuous movement in batch 2.
+input. Right-click toggle and continuous movement are now in review in batch 2 above.
 
 ## NPC views and viewport visibility — merged PR #33, 2026-09-12
 

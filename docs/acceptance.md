@@ -1,6 +1,41 @@
 # Watch the acceptance check
 
-**Current batch — [demo controls, distant NPCs and Route 101 ledge contact](desktop-demo-batch.md).**
+**Current batch — [free walking, third-person and first-person](free-camera-movement.md).**
+**14 September — playable 3D house:** May's house now has both floors, free
+diagonal/first-person movement, furniture collision, dialogue and working stairs.
+The native journey passes 12 assertions. Load **House 1F ready** or **House 2F
+ready** using the same prepared launcher. Other interiors still use the original
+view; human playtesting and final furniture polish remain pending.
+
+![Actual native house gameplay, sampled and retimed](media/indoor-house.gif)
+
+**Interior follow-up after `4d1fb46`:** house entry could miss a shallow approach,
+and free movement consumed indoor walking input. The repaired handoff passes
+four house entry/walk/exit approaches in Third/First person (20 native assertions).
+The focused house clip and new **House approach** checkpoint are in the guide.
+Repeat the updated house step; this remains failed/pending human retest. That
+earlier revision kept original interior views; the pilot above replaces two rooms.
+
+**Angled ledge follow-up:** the maintainer's `ce1b542`-era report is reproduced;
+the old build fails ten angled/diagonal approaches. The corrected native handoff
+passes all twelve approaches across Third/First person, including blocked uphill
+movement. Watch the focused comparison in the guide and repeat its ledge step.
+This remains failed/pending human retest; ledge artwork and trigger depth are
+separate known limits.
+
+**13 September:** the maintainer failed the initial diagonal-motion check.
+Axis loss at cell boundaries and pixel-rounded camera follow are repaired;
+the current recording/checklist is updated and human retest remains pending.
+Continuous/diagonal walking, smooth orbit, right-click mouse look and pitch-aware
+sprites are ready for the combined human playtest. Native movement, checkpoint,
+ledge, encounter escape, Bag and map-connection checks pass; physical input
+acceptance is pending. Use the guide's same launcher and seven checks.
+
+![Actual native free walking and camera modes](media/free-camera-movement.gif)
+
+**Earlier batch — PR #34 merged at `4a6f2246` on 13 September:**
+[demo controls, distant NPCs and Route 101 ledge contact](desktop-demo-batch.md).
+Individual human results remain unreported; the report history below is retained.
 Previous agent/native checks pass for their bounded cases; the combined human
 checklist is pending, with further unresolved reports below. Controls now
 open over the voxel viewer, remembered ordinary NPCs survive source distance
@@ -17,7 +52,9 @@ The affected human retest is pending. Original batch evidence is retained below.
 encounter escape changes a north-facing camera to west (M5/M7/M9); steep camera
 angles make upright sprite cards look thin (the existing M6/M9 issue). These
 followed the `ee4f71d` prepared handoff without a restated tested revision. They
-are deferred, not fixed or independently reproduced. See the explicit
+were deferred at that handoff. Batch 2 now adds camera-continuity and pitch-facing
+implementation/checks; original-revision reset reproduction and human retesting
+remain pending. Ledge-corner repair remains deferred. See the explicit
 [known limits beside the playtest](desktop-demo-batch.md#known-limits-beside-the-playtest).
 Earlier straight-ledge and scene/UI evidence does not establish corner fidelity,
 battle-return heading preservation or pitch-aware sprites.

@@ -1,30 +1,10 @@
-// viewer.h — live desktop gameplay with cardinal camera views.
-//
-// WHY THIS EXISTS:
-//
-//   Geometry bugs are visual, and until now judging one cost a headset session
-//   plus a description of a screenshot. The contact-sheet inspector fixed the
-//   worst of that, but a fixed set of six angles still cannot answer "what does
-//   the BACK of that house look like" or "is that tree's silhouette right"
-//   without another build.
-//
-//   This is the same mesh, in a window, that you can fly around — and because
-//   it renders from the emulation thread's own frame sink, it is LIVE: walk in
-//   the game and the world updates under the camera.
-//
-//   It is a development instrument, not a feature. It never runs alongside a VR
-//   session, because the two would fight over the GL context.
-//
-// CONTROLS (all keys the GBA does not have, so nothing collides with play):
-//   J / L      turn 90 degrees per press   U / O   zoom out / in
-//              (deferred until held arrow keys are released)
-//   I / K      tilt up / down              T / G   raise / lower the target
-//   N / M      min unit height  - / +      (re-meshes live)
-//   B          cycle: textured -> classification colours
-//   H          follow the player  <->  hold still over the map centre
-//   R          reset north-up camera
-//   Arrows     play while focused: camera-relative in the normal field,
-//              original screen directions in menus (not free/diagonal walking).
+// SPDX-License-Identifier: GPL-3.0-or-later
+// Live desktop presentation over the shared scenery and original game.
+// Grid: WASD/arrows, J/L quarter turns. Free modes: continuous on-foot
+// movement, right-click mouse-look toggle, J/L smooth turn and I/K pitch.
+// Escape/menu/focus loss release capture. First person hides only the player
+// card. The native movement adapter is separate; the editor/XR keep their own
+// camera policy. All calls run on the thread that owns the GL context.
 
 #pragma once
 
@@ -48,8 +28,19 @@ bool map_origin(int group,int number,int* x,int* z);
 bool active();
 bool focused();
 float yaw_radians();
-// Grid gameplay accepts only the nearest cardinal view.
+float pitch_radians();
+// Grid mode quantizes yaw; free modes retain the continuous angle.
 void set_yaw_radians(float yaw);
+void set_pitch_radians(float pitch);
+enum class CameraMode { Grid, ThirdPerson, FirstPerson };
+CameraMode camera_mode();
+void set_camera_mode(CameraMode);
+bool continuous_movement();
+bool mouse_look();
+int mouse_speed();
+void set_mouse_speed(int preset);
+void release_mouse();
+bool event(const SDL_Event&);
 void reset_camera();
 bool camera_relative();
 void set_camera_relative(bool enabled);

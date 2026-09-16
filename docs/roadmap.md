@@ -4,7 +4,7 @@
 game integration.** It replaces the local research workspace's
 `_docs/full-vr-roadmap-v1.md`; its detailed M0–M11 scope is retained here.
 Work-package documents explain individual contributions; they are not another
-roadmap. Last reconciled **2026-09-16**: archived PRs #19–#31 and the new
+roadmap. Last reconciled **2026-09-17**: archived PRs #19–#31 and the new
 repository's GPL PR #19, camera-driven loading PR #20, ground-base PR #21 and
 native Linux/WSL PR #22, mouse repair PR #24 and bridge PR #25 are merged.
 The shared region-query component merged in PR #26; all three human CLI checks
@@ -51,8 +51,12 @@ explicitly noted that broader indoor coverage and substantial art work remain.
 adds reusable room support, four common tileset profiles and direct room checkpoints.
 Both CI checks passed; its five human steps remain unreported. The maintainer
 explicitly described the result as rough, so furniture/room artwork is provisional.
-**Current batch — [local demo startup and persistence](demo-runner.md), in review:**
-a play screen, remembered camera/checkpoint choices and isolated local session setup.
+**PR #37 merged on 2026-09-16 at `ca2d3b7`.** [Local demo startup and persistence](demo-runner.md)
+adds a play screen, remembered camera/checkpoint choices and isolated local setup.
+Both CI checks passed; its five individual human results remain unreported.
+**17 September follow-up:** the maintainer reports a major map-crossing bug,
+poor performance and little apparent speed increase above 2x. [Issue #38](https://github.com/ChronoHaxx/rubyvr-studio/issues/38)
+records the unknown reproduction/cause and pending M5/M10 acceptance.
 
 **Prefer the short version? [Watch the acceptance GIF and verdict](acceptance.md).**
 The contributor/agent performs routine desktop functional and visual checks;
@@ -75,7 +79,7 @@ temporary fallback frames remain defects.
 
 ## Route to a shareable playable demo
 
-**Current stage: an early native playable prototype; free cameras and common 3D interiors are merged. Local demo startup is in review.** The editor,
+**Current stage: an early native playable prototype; free cameras, common 3D interiors and local demo startup are merged. Transition/performance defects remain open.** The editor,
 reusable scenery, original player and nearby NPCs, cardinal camera controls,
 developer checkpoints and connected Route 101/Oldale walking are implemented.
 The current recording can be shared as work in progress. The prepared local
@@ -221,12 +225,15 @@ The full M0-M11 checklist below remains the longer-term completion tracker.
 
 ## Current focus
 
-**16 September: [local demo startup and persistence](demo-runner.md), M9/M10/M11, in review.**
-PR #36 is merged; its human steps remain unreported and the room art is provisional.
-This batch improves the local playable entry point and save/settings lifecycle.
-It does not close the public native-runner/API/distribution blocker.
-The next release-critical work remains a reproducible public runner (M11) and a
-continuous demo play/performance check (M10), not all-Hoenn art perfection.
+**17 September, maintainer priority: [Emerald geometry reuse evaluation](emerald-geometry-reuse.md), M4.**
+The pinned source and five-tileset compatibility comparison are complete locally.
+Start the rendered transfer with matching common-house kitchen roles; the adapter,
+visual comparison and gameplay checks remain pending. Keep Ruby's native gameplay.
+PR #37 is merged; PR #36/#37 individual human steps remain unreported and room
+art is provisional. [Issue #38](https://github.com/ChronoHaxx/rubyvr-studio/issues/38)
+tracks the new crossing/performance/fast-forward report, deferred during this
+evaluation. The release blockers remain public runner reproduction (M11) and
+stable connected play/performance (M5/M10).
 
 
 **Next: native desktop gameplay proof (M5, with bounded M2/M6/M7/M9 support).**
@@ -515,7 +522,7 @@ Catalog and placement audits do not certify a complete game or headset experienc
 | [M6 Actors and field effects](#m6-actors-and-field-effects) | Player and ordinary NPC views/viewport visibility merged; distant NPCs, special poses and broad coverage pending | M2, M5 |
 | [M7 UI, battles and game loop](#m7-ui-battles-and-game-loop) | Bounded desktop menus/battle/interior/save sequence accepted in PR #32; full-game/VR routing pending | M5 |
 | [M8 Sky, lighting, time and weather](#m8-sky-lighting-time-and-weather) | Editor preview merged; runtime cycle/weather/water pending | M2, M5 for runtime |
-| [M9 Controls and comfort](#m9-controls-and-comfort) | Grid/free walking, orbit and first-person merged; saved desktop preferences in review; broader comfort and VR acceptance pending | M5–M8 |
+| [M9 Controls and comfort](#m9-controls-and-comfort) | Grid/free walking, orbit, first-person and saved desktop preferences merged; broader comfort and VR acceptance pending | M5–M8 |
 | [M10 Performance and reliability](#m10-performance-and-reliability) | Native WSL editor/batch and Linux CI merged; full-world/headset budgets pending | Representative M2–M9 scenes |
 | [M11 Completion and release](#m11-completion-and-release) | Public contributor foundation exists; game release pending | M1–M10 |
 
@@ -764,7 +771,11 @@ trial and error, and a person can save/reopen/reuse their work unaided.
   a representative adapter before broader adoption. The inspected code is
   substantial; visually accepted coverage of most of Hoenn is unverified.
   Keep native Ruby gameplay while evaluating geometry reuse.
-  [Source findings](references.md#emerald-geometry-reuse-follow-up-16-september-2026).
+  **17 September: [source/input evaluation complete locally](emerald-geometry-reuse.md).**
+  Checked current companion `726782f`, five tileset families and exact indexed
+  layers. Kitchen and Center stair pins are promising; tree artwork differs even
+  where definitions agree. Rendered adapter proof and visual acceptance remain
+  pending, so the overall comparison stays unchecked.
 
 - [ ] **Deferred art pass:** finish [shared art direction](art-direction.md) and a
   reference scene before expanding foliage. Maintainer feedback on trees,
@@ -822,6 +833,11 @@ in its relevant placements, including source variants and conditional states;
 flat materials are intentional.
 
 ## M5: live scene data
+
+- [ ] **17 September, [issue #38](https://github.com/ChronoHaxx/rubyvr-studio/issues/38):**
+  reproduce and fix the reported major map-crossing defect. Exact map pair,
+  symptom, build and cause are unconfirmed; preserve earlier bounded acceptance.
+  Coordinate with M10 profiling and use application-local/hidden replay.
 
 - [ ] **Next playable target:** complete the [native desktop proof](issues/007-native-integration.md#native-desktop-proof)
   using the current shared scenery and terrain query. Retain original game
@@ -1038,7 +1054,7 @@ explicit in the batch guide.
   the blocked direction even while sliding; twelve native approach cases pass.
   Seven human checks were checked for `c7ed26d` before merge; headset and broader
   scene/comfort acceptance remain open. New common-room tests have their own pending checklist.
-- [ ] **In review — [desktop demo preferences](demo-runner.md):** remember Grid/Third/First
+- [x] **Merged — PR #37, [desktop demo preferences](demo-runner.md):** remember Grid/Third/First
   person, heading, pitch, zoom and mouse speed across process restarts. Speed,
   pause, noclip and mouse capture are transient. Named checkpoints stay separate
   from camera settings and the normal in-game save. Human restart testing pending.
@@ -1087,6 +1103,12 @@ mandatory developer console. Camera changes remain independent of authored data.
 
 ## M10: performance and reliability
 
+- [ ] **17 September, [issue #38](https://github.com/ChronoHaxx/rubyvr-studio/issues/38):**
+  investigate poor performance and apparent fast-forward scaling plateau above
+  2x. Measure guest frames separately from presentation FPS at 1x/2x/4x/8x/MAX,
+  with original-view and voxel comparisons and transition timings. No hard cap
+  or cause is established. Deferred behind the requested M4 reuse evaluation.
+
 - [ ] **M5/M10 research follow-up, 2026-09-12:** reuse the accepted native actor
   input replay for a small original/capture-only/3D comparison, with BMP capture
   disabled. Establish repeatable baseline state/frames at matching guest events
@@ -1124,10 +1146,12 @@ from headset frame times and end-to-end latency, on named hardware/runtimes.
 
 ## M11: completion and release
 
-- [ ] **In review — [local prepared session](demo-runner.md):** validate own ROM/BIOS,
+- [x] **Merged — PR #37, [local prepared session](demo-runner.md):** validate own ROM/BIOS,
   stage the existing private runner with its DLLs, copy isolated checkpoints/save,
   and launch through one script after relocating the folder. Public compilation,
   distribution and another-player installation are separate unresolved work.
+  The five PR #37 human checks remain unreported; this marks implementation
+  delivery, not complete public setup or performance acceptance.
 
 - [x] Publish the standalone editor/contributor foundation: build and authoring
   docs, contribution/AI guidance, work packages, provenance/notices and

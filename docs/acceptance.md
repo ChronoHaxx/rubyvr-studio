@@ -1,13 +1,15 @@
 # Watch the acceptance check
 
-**Current batch — [local demo startup and remembered settings](demo-runner.md), in review.**
+**Latest merged batch — PR #37, [local demo startup and remembered settings](demo-runner.md).**
 The Play screen puts camera choices and named situations together. Reopening
 remembers the camera and last saved/opened checkpoint; debug toggles and mouse
 capture start fresh. Local setup validates inputs and stages runtime DLLs beside
 the private executable. The public runner/distribution blocker remains open.
-The [five-step human playtest](demo-runner.md#human-playtest--pending-before-merge)
-is pending. Native lifecycle checks and hidden UI tests pass; full results are
-in the guide.
+The [five-step human playtest](demo-runner.md#human-playtest--results-unreported)
+remains unreported. Native lifecycle checks and hidden UI tests pass; full
+results are in the guide. The new [map-crossing/performance report](https://github.com/ChronoHaxx/rubyvr-studio/issues/38)
+is unresolved. Current work is the [Emerald reuse evaluation](emerald-geometry-reuse.md),
+which has no new visual acceptance clip yet.
 
 ![Actual native play screen and shop loading](media/demo-runner.gif)
 

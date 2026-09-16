@@ -22,8 +22,11 @@ The [work-package index](docs/issues/README.md) explains scope and dependencies.
 with substantial batches and one combined review/playtest per batch. The target
 is a small playable area another player can install, with public runner setup
 still to resolve. Free walking/camera modes merged in PR #35 and
-[common indoor playability](docs/common-interiors.md) in PR #36. The current
-batch adds [a play screen and remembered settings](docs/demo-runner.md).
+[common indoor playability](docs/common-interiors.md) in PR #36. PR #37 adds
+[a play screen and remembered settings](docs/demo-runner.md). Current work
+[evaluates Emerald geometry reuse](docs/emerald-geometry-reuse.md); the reported
+[map-crossing and performance defects](https://github.com/ChronoHaxx/rubyvr-studio/issues/38)
+remain open.
 
 The native game integration keeps [RubySapphireRecomp](integration/README.md).
 The prepared desktop demo supports the original player and nearby NPCs,
@@ -38,7 +41,7 @@ human results are recorded there; they do not imply full-game acceptance.
 
 ## What works
 
-**Current batch for review: [local demo startup](docs/demo-runner.md).**
+**Merged in PR #37: [local demo startup](docs/demo-runner.md).**
 Choose a camera and named situation in the Play screen. Camera preferences and
 the last saved/opened checkpoint survive reopening; debug toggles reset. Local
 preparation stages runtime DLLs and checks inputs. The public runner remains open.

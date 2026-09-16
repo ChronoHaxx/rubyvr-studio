@@ -52,6 +52,11 @@ checks. The human contributor owns the PR and its claims.
   Continue the active milestone unless the report blocks it or the user
   explicitly reprioritizes. A report or question alone is not a request to
   abandon the roadmap. This is the maintainer's requested working preference.
+- Routine automated UI checks must leave the maintainer's desktop input alone.
+  Prefer hidden/offscreen windows and application-local event injection. Do not
+  move the shared pointer, force foreground focus or send desktop-wide keys while
+  the maintainer is using the PC. Use the hidden demo-panel test for widget
+  checks; physical input feel remains a separate, explicitly coordinated playtest.
 - Use docs/roadmap.md as the single completion tracker. Do not maintain a second
   roadmap in the research workspace. Update the relevant checklist, work-package
   status and evidence with each change; keep implementation in an open PR

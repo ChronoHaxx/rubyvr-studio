@@ -187,6 +187,18 @@ int Value::as_int(int def) const {
     return type == Type::Number ? static_cast<int>(number) : def;
 }
 
+bool parse_text(const std::string& text, Value* out) {
+    if(text.empty() || !out)return false;
+    const size_t start=text.size()>=3 && static_cast<uint8_t>(text[0])==0xEF &&
+        static_cast<uint8_t>(text[1])==0xBB && static_cast<uint8_t>(text[2])==0xBF?3:0;
+    Parser ps;ps.begin=text.c_str();ps.p=ps.begin+start;ps.end=ps.begin+text.size();
+    Value value;
+    if(!ps.parse_value(&value) || !ps.ok)return false;
+    ps.skip_ws();
+    if(ps.p!=ps.end)return false;
+    *out=std::move(value);return true;
+}
+
 bool parse_file(const char* path, Value* out) {
     std::FILE* f = std::fopen(path, "rb");
     if (!f) {

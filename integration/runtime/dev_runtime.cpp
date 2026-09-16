@@ -11,6 +11,7 @@
 #include "game_input.h"
 #include "camera_input.h"
 #include "dev/demo_panel.h"
+#include "dev/preferences.h"
 #include <array>
 #include <chrono>
 #include <cstdio>
@@ -33,6 +34,64 @@ uint64_t frame_number = 0, bypasses = 0;
 Clock::time_point deadline{}, last_present{};
 constexpr char hook_id[] = "rubyvr.dev.noclip";
 constexpr uint32_t collision_entry = 0x08058DD4;
+std::filesystem::path preferences_path;
+rubyvr::dev::Preferences preferences, observed_preferences;
+bool preferences_applied=false, preferences_writable=true, close_after_load=false;
+std::string preferences_status, initial_checkpoint;
+Clock::time_point preferences_changed{};
+
+rubyvr::dev::Preferences camera_preferences() {
+    auto out=preferences;
+    out.camera_mode=int(viewer::camera_mode());out.mouse_speed=viewer::mouse_speed();
+    out.camera_relative=viewer::camera_relative();out.yaw=viewer::yaw_radians();
+    out.pitch=viewer::pitch_radians();out.distance=viewer::camera_distance();
+    return out;
+}
+void persist_preferences(bool flush=false) {
+    if(!preferences_applied || !preferences_writable)return;
+    const auto current=camera_preferences();
+    const auto now=Clock::now();
+    if(current!=observed_preferences){observed_preferences=current;preferences_changed=now;}
+    if(current==preferences || (!flush && now-preferences_changed<std::chrono::milliseconds(600)))return;
+    if(rubyvr::dev::save_preferences(preferences_path,current,&preferences_status)) {
+        preferences=current;preferences_status.clear();
+    } else {
+        // A failed or unsupported file stays untouched. Avoid retrying at 60Hz.
+        preferences_writable=false;
+    }
+}
+void panel_draw(SDL_Window* window) {
+    if(!preferences_applied) {
+        // Viewer initialization resets its camera. Apply only once it is live,
+        // never on a scene/Bag/battle change or checkpoint load.
+        const bool replay=std::getenv("GBARECOMP_INPUT_REPLAY") || std::getenv("GBARECOMP_INPUT_RECORD");
+        viewer::set_camera_mode(viewer::CameraMode(replay?0:preferences.camera_mode));
+        viewer::set_mouse_speed(preferences.mouse_speed);viewer::set_camera_relative(preferences.camera_relative);
+        viewer::set_yaw_radians(preferences.yaw);viewer::set_pitch_radians(preferences.pitch);
+        viewer::set_camera_distance(preferences.distance);viewer::release_mouse();
+        preferences_applied=true;observed_preferences=camera_preferences();
+        const char* home=std::getenv("RUBYVR_DEMO_HOME");
+        rubyvr::dev::panel::set_open(home && std::strcmp(home,"1")==0);
+        std::fprintf(stderr,"[rubyvr:preferences] applied camera=%d mouse=%d yaw=%.4f pitch=%.4f distance=%.4f writable=%d\n",
+            int(viewer::camera_mode()),viewer::mouse_speed(),viewer::yaw_radians(),viewer::pitch_radians(),viewer::camera_distance(),preferences_writable);
+    }
+    rubyvr::dev::panel::draw(window);
+    // The command-line checkpoint load happens after viewer initialization.
+    // Remember it only after the runner has presented the loaded game.
+    if(!initial_checkpoint.empty() && preferences_applied && frame_number>0) {
+        auto next=camera_preferences();next.checkpoint=initial_checkpoint;
+        if(preferences_writable && rubyvr::dev::save_preferences(preferences_path,next,&preferences_status)) {
+            preferences=next;observed_preferences=next;preferences_status.clear();
+        } else if(preferences_writable)preferences_writable=false;
+        initial_checkpoint.clear();
+    }
+    persist_preferences();
+}
+void panel_shutdown() {
+    persist_preferences(true);
+    rubyvr::dev::panel::shutdown();
+    preferences_applied=false;
+}
 
 world::live::Memory memory() {
     auto* bus = gbarecomp::active_bus();
@@ -136,7 +195,7 @@ int action(const char* key) {
         else if (!std::strcmp(key, "dev.previous")) session->select(session->selected() - 1);
         else if (!std::strcmp(key, "dev.next")) session->select(session->selected() + 1);
         else if (!std::strcmp(key, "dev.save")) session->save_new(name);
-        else if (!std::strcmp(key, "dev.load")) session->load_selected();
+        else if (!std::strcmp(key, "dev.load")) close_after_load=session->load_selected();
         else if (!std::strcmp(key, "dev.step")) { transport.step(); deadline = {}; }
         else return 0;
     } catch (const std::exception& e) { error = e.what(); }
@@ -173,7 +232,7 @@ rubyvr::dev::panel::Model panel_model() {
     out.paused=transport.paused();out.noclip=noclip;out.can_noclip=verified && registered;
     out.busy=session->busy();out.selected=session->selected();out.checkpoints=session->names();
     get("dev.speed",&out.speed);out.camera_mode=int(viewer::camera_mode());out.mouse_speed=viewer::mouse_speed();out.location=scene;
-    out.status=error.empty()?session->message():error;return out;
+    out.status=error.empty()?session->message():error;out.preferences_status=preferences_status;return out;
 }
 void panel_change(const char* key,int value,const char* text) {
     if(!session)return;
@@ -187,10 +246,17 @@ void configure(gbarecomp::RunOptions& options) {
     if (!directory || !*directory) return;
     try { session = std::make_unique<rubyvr::dev::Session>(directory); }
     catch (const std::exception& e) { throw std::runtime_error(std::string("Developer session: ") + e.what()); }
+    preferences_path=std::filesystem::path(directory).parent_path()/"preferences.json";
+    const auto loaded=rubyvr::dev::load_preferences(preferences_path);
+    preferences=loaded.value;preferences_writable=loaded.writable;preferences_status=loaded.message;
+    if(std::getenv("GBARECOMP_INPUT_REPLAY") || std::getenv("GBARECOMP_INPUT_RECORD")) {
+        preferences_writable=false;
+        preferences_status="Button-only replay uses Grid; your saved camera settings are kept.";
+    }
     if (const char* initial = std::getenv("RUBYVR_DEV_START_CHECKPOINT")) {
         const auto& names = session->names();
         const auto found = std::find(names.begin(), names.end(), initial);
-        if (found != names.end()) session->select(static_cast<int>(found - names.begin()));
+        if (found != names.end()) {session->select(static_cast<int>(found - names.begin()));initial_checkpoint=initial;}
     }
     options.ui_extra_items = items;
     options.ui_extra_item_count = std::size(items);
@@ -198,7 +264,7 @@ void configure(gbarecomp::RunOptions& options) {
     options.ui_get_text = get_text; options.ui_set_text = set_text;
     options.ui_enabled = selectable;
     rubyvr::dev::panel::configure({panel_model,panel_change});
-    viewer::set_overlay(rubyvr::dev::panel::draw,rubyvr::dev::panel::open,rubyvr::dev::panel::shutdown);
+    viewer::set_overlay(panel_draw,rubyvr::dev::panel::open,panel_shutdown);
     std::fprintf(stderr, "[rubyvr:dev] enabled; Esc > Developer; checkpoints=%s\n", directory);
 }
 bool enabled() { return bool(session); }
@@ -224,6 +290,17 @@ void complete(bool success, const std::string& reason) {
     if (!session) return;
     try { session->complete(success, reason); }
     catch (const std::exception& e) { error = e.what(); }
+    const bool saved=session->message().starts_with("Saved ");
+    const bool loaded=session->message().starts_with("Loaded ");
+    if(success && (saved || loaded) && !session->names().empty()) {
+        const auto checkpoint=session->names()[session->selected()];
+        auto next=camera_preferences();next.checkpoint=checkpoint;
+        if(preferences_writable && rubyvr::dev::save_preferences(preferences_path,next,&preferences_status)) {
+            preferences=next;observed_preferences=next;preferences_status.clear();
+        } else if(preferences_writable) preferences_writable=false;
+        if(loaded && close_after_load)rubyvr::dev::panel::set_open(false);
+    }
+    close_after_load=false;
     std::fprintf(stderr, "[rubyvr:dev] frame=%llu %s\n", static_cast<unsigned long long>(frame_number), session->message().c_str());
     deadline = {}; last_present = {};
 }

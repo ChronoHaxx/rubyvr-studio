@@ -67,6 +67,9 @@ struct Value {
 // if these ever fail to parse, the file changed shape rather than being subtly
 // wrong.
 bool parse_file(const char* path, Value* out);
+// Parse already-read bytes, requiring a complete value with no trailing data.
+// The caller bounds size/nesting when using this for hand-edited settings.
+bool parse_text(const std::string& text, Value* out);
 
 }  // namespace json
 }  // namespace vr

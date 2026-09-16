@@ -1,5 +1,14 @@
 # Verification and its limits
 
+**16 September local demo batch - [startup, persistence and verification](demo-runner.md):**
+11 asset-free launcher tests pass on Windows/WSL; preferences pass 224 Windows
+and 228 WSL sanitizer checks. Twenty-two native startup/save/load/reopen checks
+pass, preserving the 17 existing checkpoint files and source save. Sixteen
+hidden UI checks cover actual widgets without desktop focus or mouse capture.
+The local runner stages its own DLLs/config. Public runtime reproduction,
+human input and release performance remain unverified. PR #36 is merged;
+its five common-room human checks remain unreported.
+
 **15 September common-interior batch — [recording and playtest](common-interiors.md):**
 127 generated common-room recipes pass the production loader/matcher/Studio
 serializer. Four representative native rooms pass 30 movement, collision,

@@ -1,19 +1,19 @@
 # Public runner integration check
 
-**2026-09-13, M5 / RV-007:** the current public framework provides useful menu
+**Refreshed 2026-09-16, M5 / RV-007:** the current public framework provides useful menu
 and native-function extension points. It does not contain the private adapter
 hooks used by this demo. This is a source inspection, not a successful clean
 build, a distribution permission, or a reason to replace the engine.
 
 Inspected `mstan/gbarecomp` at
-`3d61d5572e440fd0907b1529b85686d59a9cd314`, retrieved from GitHub's contents API:
+`17421a32c8194159769e0438222389f837a13371`, retrieved from GitHub's contents API:
 
 | Interface | Finding |
 |---|---|
-| [RunOptions](https://github.com/mstan/gbarecomp/blob/3d61d5572e440fd0907b1529b85686d59a9cd314/src/runtime/runtime.h) | Existing setting/action/text callbacks can carry developer controls. Retain this upstream boundary. |
-| [Native function hooks](https://github.com/mstan/gbarecomp/blob/3d61d5572e440fd0907b1529b85686d59a9cd314/src/runtime/mod_function_hooks.h) | Function-entry registration exists; it supports the bounded collision override. This does not supply a whole rendering adapter. |
-| [HostWindow](https://github.com/mstan/gbarecomp/blob/3d61d5572e440fd0907b1529b85686d59a9cd314/src/runtime/host_window.h) and [event implementation](https://github.com/mstan/gbarecomp/blob/3d61d5572e440fd0907b1529b85686d59a9cd314/src/runtime/host_window.cpp) | No `set_frame_sink` equivalent to our current private hook; no RubyVR viewer-event dispatch. Both are required by the present integration. |
-| [Runtime loop](https://github.com/mstan/gbarecomp/blob/3d61d5572e440fd0907b1529b85686d59a9cd314/src/runtime/runtime.cpp) | Present-in-place and load-epoch machinery exist, but our camera input filter, named checkpoint service and developer pacing/stepping calls are absent. They need a supported integration boundary. |
+| [RunOptions](https://github.com/mstan/gbarecomp/blob/17421a32c8194159769e0438222389f837a13371/src/runtime/runtime.h) | Existing setting/action/text callbacks can carry developer controls. Retain this upstream boundary. |
+| [Native function hooks](https://github.com/mstan/gbarecomp/blob/3d61d5572e440fd0907b1529b85686d59a9cd314/src/runtime/mod_function_hooks.h) | Earlier 13 September inspection: function-entry registration exists; it supports the bounded collision override. This does not supply a whole rendering adapter. |
+| [HostWindow](https://github.com/mstan/gbarecomp/blob/17421a32c8194159769e0438222389f837a13371/src/runtime/host_window.h) and [event implementation](https://github.com/mstan/gbarecomp/blob/17421a32c8194159769e0438222389f837a13371/src/runtime/host_window.cpp) | No `set_frame_sink` equivalent to our current private hook; no RubyVR viewer-event dispatch. Both are required by the present integration. |
+| [Runtime loop](https://github.com/mstan/gbarecomp/blob/17421a32c8194159769e0438222389f837a13371/src/runtime/runtime.cpp) | Present-in-place and load-epoch machinery exist, but our camera input filter, named checkpoint service and developer pacing/stepping calls are absent. They need a supported integration boundary. |
 
 The local private framework passes all six marker checks; this pinned public
 snapshot passes the settings callback check and lacks the other five current
@@ -35,3 +35,7 @@ directory launch with the player's own inputs and save/load lifecycle. The
 [existing combined-runtime distribution question](../integration/README.md#licence-compatibility-before-distribution)
 also remains unresolved. No release, upstream post, new licence or copying of
 restricted runtime implementation was done by this check.
+
+The 16 September four-file refresh again found only the settings callback group.
+[Local session preparation](demo-runner.md) can stage an already-built private runner
+and its dependencies; it does not fill these upstream hooks or grant distribution rights.

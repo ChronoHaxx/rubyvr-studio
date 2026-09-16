@@ -1,5 +1,30 @@
 # References, inspiration and tools evaluated
 
+## Emerald geometry reuse follow-up (16 September 2026)
+
+The maintainer asked whether we are rebuilding existing voxel work. The cached
+companion mod at `4a114b3e344db629ac7c7ac5108bd3d910fc4554` contains substantial
+Emerald-specific generation in `lib/Gen3.lua`: synthetic metatile addressing,
+layer/ground separation, foliage classification, building footprints and roof
+height corrections, including Fortree and Sootopolis cases. It feeds shared
+`Structures`/`Buildings` mesh generation. This is evidence of reusable algorithms;
+it is not a verified catalogue of finished, transferable meshes or visual proof
+that most Ruby objects are complete.
+
+The companion's [LICENSE](https://github.com/UNDERdecoded/Gen2Recomped-DramaticShapes/blob/4a114b3e344db629ac7c7ac5108bd3d910fc4554/LICENSE)
+is MIT, with DramaticShape and UNDERdecodedHD notices. Its public
+[README](https://github.com/UNDERdecoded/Gen2Recomped-DramaticShapes#licenses)
+still identifies MIT when checked on 16 September. Do not conflate that mod
+with the separately licensed Dramatic Shape VR application/APK or its game art.
+Lua-to-C++ translation is an adaptation, not a way around source licensing.
+
+Before further M4 art generation, compare representative trees, roofs and a
+common room, map Emerald's inputs to Ruby, then try a small attributed adapter.
+Prefer transferring applicable data/shape rules over independently rediscovering
+them. Rendering uses LÖVE mesh/texture interfaces there and our shared C++ mesher
+here; Ruby's native gameplay can stay in place. This follow-up copied no code or
+art and does not promise a complete plug-in conversion or engine migration.
+
 The [live border audit](live-borders.md#source-first-implementation) traces
 Ruby's border lookup, the cached Emerald `Gen3.lua` pattern/blocked-cell split,
 and APK 2.4.2's seam-height warning. It underpins the bounded border restoration
@@ -9,6 +34,20 @@ Initial tool/workflow review: 2026-09-08. Native-engine comparison and camera/
 editor/debug source audit refreshed 2026-09-12. This record separates
 dependencies, adapted techniques, observed workflows and untested candidates.
 It is not a benchmark leaderboard; dated tool trials keep their original scope.
+
+## Local demo launch/settings reference pass (16 September 2026)
+
+The cached Dramatic Shape **APK 2.4.2** files `src/import/LauncherSettings.lua`
+and `mods/DRAMATIC_SHAPE/lib/QuestLauncher.lua` share launcher/in-game options,
+show game/save choices together and check inputs before presenting a ready game.
+The cached Emerald companion `mod/lib/FirstPerson.lua` at
+`4a114b3e344db629ac7c7ac5108bd3d910fc4554` treats mouse capture as live camera
+ownership. We applied those workflow lessons: one Play screen using the existing
+runtime callbacks, one persistent camera schema, explicit named checkpoints,
+preflight of the exact user inputs, and fresh uncaptured input after restart.
+The new C++/Python/PowerShell code is original; no restricted Lua was copied.
+Ruby still needs its existing private native dispatch/frame hooks. The refreshed
+[public host inspection](runtime-host-audit.md) records that boundary.
 
 ## What RubyVR builds on
 

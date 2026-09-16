@@ -29,6 +29,8 @@ bool active();
 bool focused();
 float yaw_radians();
 float pitch_radians();
+float camera_distance();
+void set_camera_distance(float distance);
 // Grid mode quantizes yaw; free modes retain the continuous angle.
 void set_yaw_radians(float yaw);
 void set_pitch_radians(float pitch);

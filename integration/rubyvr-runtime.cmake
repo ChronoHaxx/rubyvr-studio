@@ -26,6 +26,8 @@ function(rubyvr_attach_runtime target)
         "${root}/src/vr/free_walk.cpp"
         "${root}/src/vr/camera_input.cpp"
         "${root}/src/dev/session.cpp"
+        "${root}/src/dev/preferences.cpp"
+        "${root}/src/studio/platform_io.cpp"
         "${root}/src/dev/demo_panel.cpp"
         "${RECOMP_UI_ROOT}/src/third_party/imgui/backends/imgui_impl_opengl3.cpp"
         "${root}/src/vr/tileset.cpp" "${root}/src/vr/gl_loader.cpp"

@@ -10,7 +10,7 @@ struct Model {
     bool available=false, paused=false, noclip=false, can_noclip=false, busy=false;
     int speed=0, selected=0, camera_mode=0, mouse_speed=1;
     std::vector<std::string> checkpoints;
-    std::string location, status;
+    std::string location, status, preferences_status;
 };
 struct Callbacks {
     Model (*read)()=nullptr;

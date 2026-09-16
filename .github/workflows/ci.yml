@@ -43,7 +43,11 @@ jobs:
       - name: Test distant actor visibility without graphics or assets
         run: bash tools/test-actor-range.sh
       - name: Test developer checkpoints and transport without graphics or assets
-        run: python3 tools/test-dev-session.py
+        run: |
+          python3 tools/test-dev-session.py
+          python3 tools/test-demo-runner.py
+          python3 tools/test-demo-preferences.py
+          python3 tools/test-demo-preferences.py --sanitize
       - name: Test camera input and menu gates without graphics or assets
         run: |
           python3 tools/test-camera-input.py

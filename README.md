@@ -21,7 +21,9 @@ The [work-package index](docs/issues/README.md) explains scope and dependencies.
 **Delivery priority:** [one-week desktop demo target](docs/roadmap.md#one-week-desktop-demo-target),
 with substantial batches and one combined review/playtest per batch. The target
 is a small playable area another player can install, with public runner setup
-still to resolve. Free walking/camera modes merged in PR #35; [common indoor playability](docs/common-interiors.md) is now in review.
+still to resolve. Free walking/camera modes merged in PR #35 and
+[common indoor playability](docs/common-interiors.md) in PR #36. The current
+batch adds [a play screen and remembered settings](docs/demo-runner.md).
 
 The native game integration keeps [RubySapphireRecomp](integration/README.md).
 The prepared desktop demo supports the original player and nearby NPCs,
@@ -36,7 +38,12 @@ human results are recorded there; they do not imply full-game acceptance.
 
 ## What works
 
-**Current batch for review: [common houses, shops, Centers and labs](docs/common-interiors.md).**
+**Current batch for review: [local demo startup](docs/demo-runner.md).**
+Choose a camera and named situation in the Play screen. Camera preferences and
+the last saved/opened checkpoint survive reopening; debug toggles reset. Local
+preparation stages runtime DLLs and checks inputs. The public runner remains open.
+
+**Merged in PR #36: [common houses, shops, Centers and labs](docs/common-interiors.md).**
 Reusable guarded room recipes extend free Third/First person beyond May's house.
 Four new checkpoints lead directly into representative rooms. The guide includes
 native gameplay footage and the short playtest; furniture art and broad acceptance

@@ -1,6 +1,21 @@
 # Watch the acceptance check
 
-**Current batch — [common interior gameplay](common-interiors.md), in review.**
+**Current batch — [local demo startup and remembered settings](demo-runner.md), in review.**
+The Play screen puts camera choices and named situations together. Reopening
+remembers the camera and last saved/opened checkpoint; debug toggles and mouse
+capture start fresh. Local setup validates inputs and stages runtime DLLs beside
+the private executable. The public runner/distribution blocker remains open.
+The [five-step human playtest](demo-runner.md#human-playtest--pending-before-merge)
+is pending. Native lifecycle checks and hidden UI tests pass; full results are
+in the guide.
+
+![Actual native play screen and shop loading](media/demo-runner.gif)
+
+The 19.84-second montage uses actual native captures, sampled/captioned/retimed.
+It shows camera choices, test tools and a shop checkpoint load; it does not
+show a process restart or certify physical-input feel.
+
+**Previous batch — [common interior gameplay](common-interiors.md), merged in PR #36.**
 Third-person and first-person now work in generated common houses, shops,
 Pokémon Centers and labs. Four new room checkpoints and the same launcher let
 reviewers try the changed behavior immediately. The prepared start is Oldale
@@ -12,7 +27,7 @@ The 19.2-second clip is sampled/captioned/retimed from the native four-room
 journey. Thirty native assertions pass, plus six fresh-process room-reopen and
 missing/partial-pack fallback checks. All 127 generated recipes pass structural
 coverage and persistence checks. The [five-step human playtest](common-interiors.md#human-playtest--pending-before-merge)
-is pending; native scripted input does not establish physical mouse feel.
+remains unreported; native scripted input does not establish physical mouse feel.
 
 **Previous batch — PR #35 merged at `594ea1d` on 15 September.** The seven human
 steps were checked for `c7ed26d`, including the earlier diagonal/ledge/house

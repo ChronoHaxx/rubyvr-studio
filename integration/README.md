@@ -1,5 +1,13 @@
 # Native game integration: prototype source
 
+**Current review: [local demo startup and remembered settings](../docs/demo-runner.md).**
+The viewer's Play screen shares the existing camera/checkpoint callbacks.
+Preferences apply after viewer initialization and flush before camera teardown;
+scene changes and checkpoint loads do not reapply them. Mouse capture and debug
+speed/pause/bypass are transient. The launcher stages an existing private runner
+and its dependencies; the [public host/API gap](../docs/runtime-host-audit.md)
+still blocks a reproducible public combined build.
+
 **Current M5 handoff:** PR #29, including PR #30 camera/facing, is merged into main.
 The combined prepared build also includes [source border restoration](../docs/live-borders.md).
 Use that guide's single camera-session launcher; the old main-checkout prepared

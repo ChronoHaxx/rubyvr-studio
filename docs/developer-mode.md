@@ -1,48 +1,26 @@
-# Native developer mode
+# Developer controls and local demo
 
-**Current: [common interior demo](common-interiors.md), awaiting human playtest.**
-The test controls are now available over the voxel viewer. This is the prepared
-private Windows game, separate from the Studio editor and a public installation.
+The current [local demo guide](demo-runner.md) covers the Play screen, saved
+camera preferences, checkpoint reopening, local setup and known limitations.
+Use the same prepared Windows command from any PowerShell directory:
 
 ```powershell
 & E:\Coding\vr-modding-research\_worktrees\live-camera\tools\run-dev-game.ps1
 ```
 
-The same launcher now starts **Oldale Center ready** from the prepared manifest.
-An explicit `-Checkpoint` still selects any earlier situation. Click **Demo controls** or
-press **Esc in the voxel viewer** for pause, one-frame stepping, speed, obstacle
-bypass and a direct list of named checkpoints. **Return to game** closes the
-panel. The original Ruby window retains its existing Esc menu.
+The Play tab has Grid/Third/First person, mouse speed, named checkpoints and
+Route 101/house/shop/Center/lab shortcuts. **Continue playing** closes it; Escape
+opens it and releases mouse look. **Test tools** contains pause/step, speed and
+obstacle bypass. **Open selected checkpoint** returns to play after a successful
+load. Save under a new name and wait for **Saved** before closing; the same command
+reopens the last named checkpoint with your camera settings. Existing checkpoints
+and the ordinary in-game save remain separate and protected.
 
-Select **Oldale house ready**, **Oldale Mart ready**, **Oldale Center ready**,
-**Birch lab ready**, **House approach**, **House 1F ready**, **House 2F ready**, **Demo ledge**,
-**Demo battle**, **Demo lab ready** or another situation
-and click **Load selected situation**. Loading resets speed to 1x and disables
-obstacle bypass. Save under a new name; existing names are refused. Checkpoints
-stay separate from the normal game save. All existing prepared states are kept.
-
-WASD/arrows walk. In **Grid**, J/L turn in 90-degree steps; **Third person** and
-**First person** use continuous walking and smooth J/L or right-click mouse look.
-R resets the view, I/K tilt and U/O zoom. Enter opens Start, X confirms/talks and Z goes back.
-Original Bag/Party/Options retain scenery. May's house has both floors in 3D,
-with free Third/First person movement, solid furniture and native dialogue/stairs.
-Common house/shop/Center/lab recipes now also support both free modes. Missing or
-changed rooms and battles use the original view/controls; the selected camera
-returns on exit. These recipes are provisional, not finished all-interior art. The WSL Studio editor remains separate; Linux live-game
-support is not established by this prepared Windows build.
-
-WASD also navigates ordinary game menus in the voxel viewer; the developer panel
-keeps typing separate from gameplay. A held movement key must be released after
-returning from a menu or another window. Right-click toggles free mouse look;
-Escape, focus loss and scene changes release it. Mouse speed is in Demo controls.
-After an update, close the old game and use the same command; the launcher selects
-the new, hash-verified executable without overwriting a still-running version.
-
-Use the [current five-step human check and visible limitations](common-interiors.md#human-playtest--pending-before-merge).
-In particular, the measured route checkpoint save took about 28 seconds to reach
-a safe boundary; wait for **Saved** before closing. Unseen/neighbour NPCs, other
-routes' contact defects, camera collision, foliage polish, public setup and
-release performance remain unfinished. No new human acceptance is claimed yet.
+WASD/arrows walk. J/L turns, I/K tilts, U/O zooms, R resets. In free modes,
+right-click toggles mouse look. X confirms/interacts, Z goes back, Enter opens Start.
+Settings do not remember mouse capture, pause, speed or obstacle bypass. The
+[revision-specific human checklist](demo-runner.md#human-playtest--pending-before-merge)
+remains pending. The standalone Linux/WSL editor is separate from this Windows runner.
 
 ## Earlier developer slice
 

@@ -155,6 +155,10 @@ void set_camera_mode(CameraMode mode){
 void set_pitch_radians(float pitch){
     if(std::isfinite(pitch))g_pitch=std::clamp(pitch,g_mode==CameraMode::FirstPerson?-1.35f:0.15f,1.5f);
 }
+float camera_distance(){return g_dist;}
+void set_camera_distance(float distance){
+    if(std::isfinite(distance))g_dist=std::clamp(distance,1.f,200.f);
+}
 void set_yaw_radians(float yaw) {
     if(std::isfinite(yaw))g_yaw=g_mode==CameraMode::Grid?camera_input::quadrant(yaw)*1.570796327f:std::remainder(yaw,6.283185307f);
 }
@@ -195,8 +199,9 @@ void set_camera_relative(bool enabled) { g_camera_relative=enabled; }
 void reset_camera() { release_mouse();g_yaw=0;g_pitch=g_mode==CameraMode::FirstPerson?0.12f:0.9f;g_dist=12;g_ty=1;g_follow=true;g_turn.reset(); }
 
 void shutdown() {
-    release_mouse();g_mode=CameraMode::Grid;
+    release_mouse();
     if(g_overlay_shutdown)g_overlay_shutdown();
+    g_mode=CameraMode::Grid;
     g_overlay=nullptr;g_overlay_input=nullptr;g_overlay_shutdown=nullptr;
     g_cancel=true;
     if(g_pending.valid()) g_pending.wait();

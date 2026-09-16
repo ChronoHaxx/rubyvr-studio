@@ -4,7 +4,7 @@
 game integration.** It replaces the local research workspace's
 `_docs/full-vr-roadmap-v1.md`; its detailed M0–M11 scope is retained here.
 Work-package documents explain individual contributions; they are not another
-roadmap. Last reconciled **2026-09-15**: archived PRs #19–#31 and the new
+roadmap. Last reconciled **2026-09-16**: archived PRs #19–#31 and the new
 repository's GPL PR #19, camera-driven loading PR #20, ground-base PR #21 and
 native Linux/WSL PR #22, mouse repair PR #24 and bridge PR #25 are merged.
 The shared region-query component merged in PR #26; all three human CLI checks
@@ -47,8 +47,12 @@ ledge corners remain open. The next combined delivery is
 for implementation `c7ed26d`; the exact check-completion time was not recorded.
 This accepts the bounded free-camera/two-floor-house sequence. The maintainer
 explicitly noted that broader indoor coverage and substantial art work remain.
-**Current batch — [common interiors](common-interiors.md), in review:** reusable
-room support, four common tileset profiles and direct playable-room checkpoints.
+**PR #36 merged on 2026-09-16 at `c050e52`.** [Common interiors](common-interiors.md)
+adds reusable room support, four common tileset profiles and direct room checkpoints.
+Both CI checks passed; its five human steps remain unreported. The maintainer
+explicitly described the result as rough, so furniture/room artwork is provisional.
+**Current batch — [local demo startup and persistence](demo-runner.md), in review:**
+a play screen, remembered camera/checkpoint choices and isolated local session setup.
 
 **Prefer the short version? [Watch the acceptance GIF and verdict](acceptance.md).**
 The contributor/agent performs routine desktop functional and visual checks;
@@ -71,7 +75,7 @@ temporary fallback frames remain defects.
 
 ## Route to a shareable playable demo
 
-**Current stage: an early native playable prototype; free cameras and a two-floor 3D house are merged. Common interiors are in review.** The editor,
+**Current stage: an early native playable prototype; free cameras and common 3D interiors are merged. Local demo startup is in review.** The editor,
 reusable scenery, original player and nearby NPCs, cardinal camera controls,
 developer checkpoints and connected Route 101/Oldale walking are implemented.
 The current recording can be shared as work in progress. The prepared local
@@ -217,7 +221,10 @@ The full M0-M11 checklist below remains the longer-term completion tracker.
 
 ## Current focus
 
-**15 September: [common indoor playability](common-interiors.md), M4/M5/M9, in review.**
+**16 September: [local demo startup and persistence](demo-runner.md), M9/M10/M11, in review.**
+PR #36 is merged; its human steps remain unreported and the room art is provisional.
+This batch improves the local playable entry point and save/settings lifecycle.
+It does not close the public native-runner/API/distribution blocker.
 The next release-critical work remains a reproducible public runner (M11) and a
 continuous demo play/performance check (M10), not all-Hoenn art perfection.
 
@@ -508,7 +515,7 @@ Catalog and placement audits do not certify a complete game or headset experienc
 | [M6 Actors and field effects](#m6-actors-and-field-effects) | Player and ordinary NPC views/viewport visibility merged; distant NPCs, special poses and broad coverage pending | M2, M5 |
 | [M7 UI, battles and game loop](#m7-ui-battles-and-game-loop) | Bounded desktop menus/battle/interior/save sequence accepted in PR #32; full-game/VR routing pending | M5 |
 | [M8 Sky, lighting, time and weather](#m8-sky-lighting-time-and-weather) | Editor preview merged; runtime cycle/weather/water pending | M2, M5 for runtime |
-| [M9 Controls and comfort](#m9-controls-and-comfort) | Grid controls merged; continuous walking, free orbit, first-person and mouse look in review; human and VR acceptance pending | M5–M8 |
+| [M9 Controls and comfort](#m9-controls-and-comfort) | Grid/free walking, orbit and first-person merged; saved desktop preferences in review; broader comfort and VR acceptance pending | M5–M8 |
 | [M10 Performance and reliability](#m10-performance-and-reliability) | Native WSL editor/batch and Linux CI merged; full-world/headset budgets pending | Representative M2–M9 scenes |
 | [M11 Completion and release](#m11-completion-and-release) | Public contributor foundation exists; game release pending | M1–M10 |
 
@@ -750,6 +757,15 @@ trial and error, and a person can save/reopen/reuse their work unaided.
 
 ## M4: all static scenery
 
+- [ ] **Reuse comparison before more art work (16 September):** compare the
+  MIT-licensed Gen2Recomped DramaticShapes Emerald generators against Ruby's
+  current output. Start with trees, roofs and one common room; identify portable
+  shape rules/model data, map Emerald inputs to Ruby, retain attribution and test
+  a representative adapter before broader adoption. The inspected code is
+  substantial; visually accepted coverage of most of Hoenn is unverified.
+  Keep native Ruby gameplay while evaluating geometry reuse.
+  [Source findings](references.md#emerald-geometry-reuse-follow-up-16-september-2026).
+
 - [ ] **Deferred art pass:** finish [shared art direction](art-direction.md) and a
   reference scene before expanding foliage. Maintainer feedback on trees,
   encounter grass and shrubs remains open. Grass recipes are opt-in experiments;
@@ -786,9 +802,10 @@ trial and error, and a person can save/reopen/reuse their work unaided.
   stairs, beds, furniture, counters, shelves, machines, terminals, displays,
   carpets and other cataloged drawings. **Merged — PR #35:** May's house
   1F/2F pilot and bounded native/human sequence on `c7ed26d`.
-  **In review — [common interiors](common-interiors.md):** 127 generated rooms
+  **Merged — PR #36, [common interiors](common-interiors.md):** 127 generated rooms
   from four shared profiles, complete-room control guards and four native
-  house/Mart/Center/lab journeys. Broader art and individual-room acceptance stay open.
+  house/Mart/Center/lab journeys. The five human steps remain unreported; broader
+  art and individual-room acceptance stay open.
 - [ ] Account for puzzles, removable/movable objects, alternate map states,
   destruction/cut/strength states and replacement metatiles through M5 live
   invalidation, without leaving stale art.
@@ -1021,8 +1038,12 @@ explicit in the batch guide.
   the blocked direction even while sliding; twelve native approach cases pass.
   Seven human checks were checked for `c7ed26d` before merge; headset and broader
   scene/comfort acceptance remain open. New common-room tests have their own pending checklist.
-- [ ] Finish lip-exact ledge handoff, camera obstruction handling, persistent
-  camera preferences and free-vector input recording/replay. Current special
+- [ ] **In review — [desktop demo preferences](demo-runner.md):** remember Grid/Third/First
+  person, heading, pitch, zoom and mouse speed across process restarts. Speed,
+  pause, noclip and mouse capture are transient. Named checkpoints stay separate
+  from camera settings and the normal in-game save. Human restart testing pending.
+- [ ] Finish lip-exact ledge handoff, camera obstruction handling and free-vector
+  input recording/replay. Current special
   actions can centre the player; old button-only replay requires Grid.
 
 - [x] Provide tested editor orbit/fly/orthographic/focus controls, independent
@@ -1102,6 +1123,11 @@ long sessions/transitions remain stable. Report desktop draw times separately
 from headset frame times and end-to-end latency, on named hardware/runtimes.
 
 ## M11: completion and release
+
+- [ ] **In review — [local prepared session](demo-runner.md):** validate own ROM/BIOS,
+  stage the existing private runner with its DLLs, copy isolated checkpoints/save,
+  and launch through one script after relocating the folder. Public compilation,
+  distribution and another-player installation are separate unresolved work.
 
 - [x] Publish the standalone editor/contributor foundation: build and authoring
   docs, contribution/AI guidance, work packages, provenance/notices and

@@ -1,6 +1,11 @@
 # Common interiors in the playable demo
 
-**M4/M5/M9 — in review.** The same native viewer can now walk into common houses,
+**Merged in PR #36 on 16 September 2026 at `c050e52`.** Both CI checks passed.
+The five human steps below remain unreported; a merge does not tick them. The
+maintainer described the result as rough. Room art remains provisional. Current
+launch/menu instructions are in the [local demo guide](demo-runner.md).
+
+**M4/M5/M9 — merged; individual human results unreported.** The same native viewer can now walk into common houses,
 shops, Pokémon Centers and labs in Third person or First person. Support comes
 from the loaded room recipes instead of a C++ list containing one house.
 

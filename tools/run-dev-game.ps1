@@ -1,77 +1,29 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 [CmdletBinding()]
 param(
     [string]$Checkpoint = '',
+    [string]$SessionDirectory = '',
     [switch]$Fresh,
     [switch]$Check
 )
 $ErrorActionPreference = 'Stop'
-$studioRoot = Split-Path -Parent $PSScriptRoot
-$devRoot = Join-Path $studioRoot 'build/dev-session'
-$manifestPath = Join-Path $devRoot 'handoff.json'
-if (-not (Test-Path -LiteralPath $manifestPath)) {
-    throw 'The private native developer build is not prepared. See docs/developer-mode.md.'
+if (-not $SessionDirectory) {
+    $SessionDirectory = if (Test-Path -LiteralPath (Join-Path $PSScriptRoot 'handoff.json')) {
+        $PSScriptRoot
+    } else { Join-Path (Split-Path -Parent $PSScriptRoot) 'build/dev-session' }
 }
-$manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json
-if (-not $Checkpoint) {
-    $Checkpoint = if ($manifest.PSObject.Properties['default_checkpoint']) { [string]$manifest.default_checkpoint } else { 'NPC views' }
+$runner = Join-Path $PSScriptRoot 'run-dev-game.py'
+if (-not (Test-Path -LiteralPath $runner)) { throw 'The launcher is incomplete: run-dev-game.py is missing. Prepare the local session again.' }
+$python = Get-Command python -ErrorAction SilentlyContinue
+$prefix = @()
+if (-not $python) {
+    $python = Get-Command py -ErrorAction SilentlyContinue
+    $prefix = @('-3')
 }
-$exeName = if ($manifest.PSObject.Properties['executable']) { [string]$manifest.executable } else { 'RubyRecomp.exe' }
-if ($exeName -notmatch '^RubyRecomp(?:-[0-9a-f]{12})?\.exe$' -or
-    @($manifest.files | Where-Object { $_.name -ceq $exeName }).Count -ne 1) {
-    throw 'The prepared executable must be a named, hash-verified local build.'
-}
-foreach ($entry in $manifest.files) {
-    $path = Join-Path $devRoot $entry.name
-    if (-not (Test-Path -LiteralPath $path) -or
-        (Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash.ToLowerInvariant() -ne $entry.sha256) {
-        throw "Prepared developer build changed or missing: $($entry.name). Rebuild the handoff."
-    }
-}
-if ($Checkpoint -notmatch '^[a-zA-Z0-9][a-zA-Z0-9 _-]{0,47}$') { throw 'Invalid checkpoint name.' }
-$checkpoints = Join-Path $devRoot 'checkpoints'
-$state = Join-Path $checkpoints ($Checkpoint + '.state')
-if (-not $Fresh -and -not (Test-Path -LiteralPath $state -PathType Leaf)) { throw "Checkpoint missing: $Checkpoint" }
-Write-Host "RubyVR Developer build: $($manifest.source_commit)"
-Write-Host 'Demo controls > Camera and movement: Grid, Third person or First person. Free modes use WASD and right-click toggle mouse look; Esc releases the mouse.'
-Write-Host 'Grid uses J/L quarter turns. Free modes turn smoothly with J/L or mouse; I/K tilts and R resets the view. Mouse speed is in Demo controls.'
-Write-Host 'Play in the viewer: Enter opens Start; X confirms, Z goes back. Common houses, shops, Centers and labs have provisional 3D rooms. Missing/changed recipes and battles use the original game.'
-Write-Host 'In the voxel viewer, click Demo controls or press Esc: pause/step, speed, obstacle bypass and named checkpoints.'
-Write-Host "Starting: $Checkpoint. Demo controls lists every saved situation. Try Oldale house ready, Oldale Mart ready, Oldale Center ready or Birch lab ready. Previous situations are kept; loading resets speed and obstacle bypass."
-if ($Check) { Write-Host 'PASS: prepared developer inputs verified'; return }
-try {
-    $sessionLock = [IO.File]::Open((Join-Path $devRoot 'session.lock'), 'OpenOrCreate', 'ReadWrite', 'None')
-} catch { throw 'This developer session is already running. Close its Ruby window before reopening.' }
-try {
-$psi = [Diagnostics.ProcessStartInfo]::new()
-$psi.FileName = Join-Path $devRoot $exeName
-$psi.WorkingDirectory = $manifest.game_directory
-$psi.UseShellExecute = $false
-$psi.CreateNoWindow = $true
-$psi.RedirectStandardOutput = $true
-$psi.RedirectStandardError = $true
-foreach ($key in @($psi.EnvironmentVariables.Keys)) {
-    if ($key -like 'RUBYVR_*' -or $key -in @('GBARECOMP_INPUT_RECORD','GBARECOMP_INPUT_REPLAY')) { $psi.EnvironmentVariables.Remove($key) }
-}
-$psi.EnvironmentVariables['PATH'] = 'C:\msys64\mingw64\bin;' + $env:PATH
-$psi.EnvironmentVariables['RUBYVR_DEV_DIR'] = $checkpoints
-$psi.EnvironmentVariables['RUBYVR_DEV_START_CHECKPOINT'] = $Checkpoint
-$psi.EnvironmentVariables['RUBYVR_VIEWER'] = '1'
-$psi.EnvironmentVariables['RUBYVR_WORLD_DEBUG'] = '1'
-$psi.EnvironmentVariables['RUBYVR_BUILD_MODE'] = 'diorama'
-$psi.EnvironmentVariables['RUBYVR_OVERRIDES'] = Join-Path $devRoot 'review-pack.json'
-$psi.EnvironmentVariables['GBARECOMP_PRESENT_IN_PLACE'] = '1'
-$psi.EnvironmentVariables['GBARECOMP_SELFHEAL_RECOMPILE'] = '0'
-$psi.EnvironmentVariables['GBARECOMP_COVERAGE_JSON'] = Join-Path $devRoot 'coverage.json'
-$psi.EnvironmentVariables['GBARECOMP_MISS_FRAG'] = Join-Path $devRoot 'misses.toml.frag'
-$config = Join-Path $manifest.game_directory 'variants/ruby/game.toml'
-$testSave = Join-Path $devRoot 'test-session.sav'
-$psi.Arguments = '--no-launcher --window --scale 4 --volume 0 --config "' + $config + '" --save "' + $testSave + '"'
-if (-not $Fresh) { $psi.Arguments += ' --load-state "' + $state + '"' }
-$process = [Diagnostics.Process]::Start($psi)
-$stdout = $process.StandardOutput.ReadToEndAsync()
-$stderr = $process.StandardError.ReadToEndAsync()
-$process.WaitForExit()
-Set-Content -LiteralPath (Join-Path $devRoot 'last-run.out.log') -Value $stdout.Result -Encoding UTF8
-Set-Content -LiteralPath (Join-Path $devRoot 'last-run.err.log') -Value $stderr.Result -Encoding UTF8
-if ($process.ExitCode -ne 0) { throw "Developer game exited with $($process.ExitCode). Logs are in build/dev-session." }
-} finally { $sessionLock.Dispose() }
+if (-not $python) { throw 'Python 3 is needed by this local demo launcher. Install Python 3, then reopen this command. See docs/demo-runner.md.' }
+$arguments = @($runner, '--session', $SessionDirectory)
+if ($Checkpoint) { $arguments += @('--checkpoint', $Checkpoint) }
+if ($Fresh) { $arguments += '--fresh' }
+if ($Check) { $arguments += '--check' }
+& $python.Source @prefix @arguments
+if ($LASTEXITCODE -ne 0) { throw 'RubyVR could not start or exited with an error. See the message above; your existing saves have been kept.' }

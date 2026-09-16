@@ -155,7 +155,19 @@ bool indoor_house_available(const Memory& m) {
 }
 
 bool scene_controls_available(const Memory& m) {
-    return field_controls_available(m) && (outdoor_controls_available(m) || indoor_house_available(m));
+    return field_controls_available(m) && (outdoor_controls_available(m) || indoor_scene_available(m));
+}
+
+bool indoor_scene_available(const Memory& m) {
+    if(!m.verified_ruby_rev1 || m.ewram.size()!=0x40000 || m.iwram.size()!=0x8000 ||
+       m.rom.size()!=0x1000000)return false;
+    const auto* location=m.read(kGSaveBlock1+4,2);
+    const auto* current=m.read(kGMapHeader,28);
+    if(!location || !current || current[0x17]!=8)return false;
+    const auto* source=header(m,location[0],location[1]);
+    Layout own;
+    return source && source[0x17]==8 && !std::memcmp(source,current,16) && source[18]==current[18] &&
+        source[19]==current[19] && layout(m,u32(current),own) && own.width<=128 && own.height<=128;
 }
 
 Scene inspect(const Memory& m) {

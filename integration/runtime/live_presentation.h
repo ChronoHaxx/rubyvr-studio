@@ -21,6 +21,10 @@ struct Input {
 inline bool world_mode(const Input& in) {
     return in.mode==Mode::Field || (in.mode==Mode::Interior && in.indoor_3d);
 }
+inline bool same_control_scene(const Input& published,const Input& current) {
+    return world_mode(published) && world_mode(current) && !current.fading &&
+        published.identity==current.identity && published.epoch==current.epoch;
+}
 // Hash-gated pinned Ruby signals only. An unknown callback is never a menu.
 Input inspect(const world::live::Memory& memory, uint64_t epoch=0);
 const char* name(Mode);

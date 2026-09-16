@@ -1,5 +1,20 @@
 # Verification and its limits
 
+**15 September common-interior batch — [recording and playtest](common-interiors.md):**
+127 generated common-room recipes pass the production loader/matcher/Studio
+serializer. Four representative native rooms pass 30 movement, collision,
+interaction, first-person and exit assertions. Six fresh-process checks cover
+four checkpoint reopens and working original movement with missing/partial packs.
+The former two-floor house is preserved. New room art is provisional and human
+acceptance is pending. Source-only CI now includes the synthetic room recipe and
+v8 scope/persistence contracts; it does not obtain game assets or native playtests.
+
+**PR #35 reconciliation:** merged `594ea1d` on 15 September; seven human boxes
+checked for `c7ed26d`. Pending/failure wording in the older dated entries below
+records the state at that time. It is not a new unresolved rejection of that
+bounded revision. New room, broader art, physical-input and headset acceptance
+remain separate.
+
 ## Free walking and camera modes — batch 2 in review, 2026-09-14
 
 **14 September 3D house pilot:** twelve native assertions pass through May's

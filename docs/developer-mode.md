@@ -1,6 +1,6 @@
 # Native developer mode
 
-**Current: [free walking and camera modes, batch 2](free-camera-movement.md), awaiting human retest.**
+**Current: [common interior demo](common-interiors.md), awaiting human playtest.**
 The test controls are now available over the voxel viewer. This is the prepared
 private Windows game, separate from the Studio editor and a public installation.
 
@@ -8,12 +8,14 @@ private Windows game, separate from the Studio editor and a public installation.
 & E:\Coding\vr-modding-research\_worktrees\live-camera\tools\run-dev-game.ps1
 ```
 
-The same launcher starts **NPC views** in Littleroot. Click **Demo controls** or
+The same launcher now starts **Oldale Center ready** from the prepared manifest.
+An explicit `-Checkpoint` still selects any earlier situation. Click **Demo controls** or
 press **Esc in the voxel viewer** for pause, one-frame stepping, speed, obstacle
 bypass and a direct list of named checkpoints. **Return to game** closes the
 panel. The original Ruby window retains its existing Esc menu.
 
-Select **House approach**, **House 1F ready**, **House 2F ready**, **Demo ledge**,
+Select **Oldale house ready**, **Oldale Mart ready**, **Oldale Center ready**,
+**Birch lab ready**, **House approach**, **House 1F ready**, **House 2F ready**, **Demo ledge**,
 **Demo battle**, **Demo lab ready** or another situation
 and click **Load selected situation**. Loading resets speed to 1x and disables
 obstacle bypass. Save under a new name; existing names are refused. Checkpoints
@@ -24,8 +26,9 @@ WASD/arrows walk. In **Grid**, J/L turn in 90-degree steps; **Third person** and
 R resets the view, I/K tilt and U/O zoom. Enter opens Start, X confirms/talks and Z goes back.
 Original Bag/Party/Options retain scenery. May's house has both floors in 3D,
 with free Third/First person movement, solid furniture and native dialogue/stairs.
-Other interiors and battles use the original view and controls; the selected
-camera returns on exit. The WSL Studio editor remains separate; Linux live-game
+Common house/shop/Center/lab recipes now also support both free modes. Missing or
+changed rooms and battles use the original view/controls; the selected camera
+returns on exit. These recipes are provisional, not finished all-interior art. The WSL Studio editor remains separate; Linux live-game
 support is not established by this prepared Windows build.
 
 WASD also navigates ordinary game menus in the voxel viewer; the developer panel
@@ -35,7 +38,7 @@ Escape, focus loss and scene changes release it. Mouse speed is in Demo controls
 After an update, close the old game and use the same command; the launcher selects
 the new, hash-verified executable without overwriting a still-running version.
 
-Use the [current seven-step human check and visible limitations](free-camera-movement.md#human-playtest--pending-before-merge).
+Use the [current five-step human check and visible limitations](common-interiors.md#human-playtest--pending-before-merge).
 In particular, the measured route checkpoint save took about 28 seconds to reach
 a safe boundary; wait for **Saved** before closing. Unseen/neighbour NPCs, other
 routes' contact defects, camera collision, foliage polish, public setup and

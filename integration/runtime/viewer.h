@@ -59,6 +59,7 @@ void game_frame(const world::Snapshot&, const presentation::Input&,
                 std::span<const uint8_t> rgb, int width, int height,
                 std::span<const uint8_t> field_ui={}, bool present=true);
 bool uses_world_controls();
+bool controls_for_scene(const presentation::Input&);
 presentation::Decision presentation_state();
 
 }  // namespace viewer

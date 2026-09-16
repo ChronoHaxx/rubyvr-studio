@@ -1,37 +1,25 @@
 # Watch the acceptance check
 
-**Current batch — [free walking, third-person and first-person](free-camera-movement.md).**
-**14 September — playable 3D house:** May's house now has both floors, free
-diagonal/first-person movement, furniture collision, dialogue and working stairs.
-The native journey passes 12 assertions. Load **House 1F ready** or **House 2F
-ready** using the same prepared launcher. Other interiors still use the original
-view; human playtesting and final furniture polish remain pending.
+**Current batch — [common interior gameplay](common-interiors.md), in review.**
+Third-person and first-person now work in generated common houses, shops,
+Pokémon Centers and labs. Four new room checkpoints and the same launcher let
+reviewers try the changed behavior immediately. The prepared start is Oldale
+Center ready. Furniture art remains provisional; this is not all-room acceptance.
 
-![Actual native house gameplay, sampled and retimed](media/indoor-house.gif)
+![Actual native house, Mart, Center and lab gameplay](media/common-interiors.gif)
 
-**Interior follow-up after `4d1fb46`:** house entry could miss a shallow approach,
-and free movement consumed indoor walking input. The repaired handoff passes
-four house entry/walk/exit approaches in Third/First person (20 native assertions).
-The focused house clip and new **House approach** checkpoint are in the guide.
-Repeat the updated house step; this remains failed/pending human retest. That
-earlier revision kept original interior views; the pilot above replaces two rooms.
+The 19.2-second clip is sampled/captioned/retimed from the native four-room
+journey. Thirty native assertions pass, plus six fresh-process room-reopen and
+missing/partial-pack fallback checks. All 127 generated recipes pass structural
+coverage and persistence checks. The [five-step human playtest](common-interiors.md#human-playtest--pending-before-merge)
+is pending; native scripted input does not establish physical mouse feel.
 
-**Angled ledge follow-up:** the maintainer's `ce1b542`-era report is reproduced;
-the old build fails ten angled/diagonal approaches. The corrected native handoff
-passes all twelve approaches across Third/First person, including blocked uphill
-movement. Watch the focused comparison in the guide and repeat its ledge step.
-This remains failed/pending human retest; ledge artwork and trigger depth are
-separate known limits.
-
-**13 September:** the maintainer failed the initial diagonal-motion check.
-Axis loss at cell boundaries and pixel-rounded camera follow are repaired;
-the current recording/checklist is updated and human retest remains pending.
-Continuous/diagonal walking, smooth orbit, right-click mouse look and pitch-aware
-sprites are ready for the combined human playtest. Native movement, checkpoint,
-ledge, encounter escape, Bag and map-connection checks pass; physical input
-acceptance is pending. Use the guide's same launcher and seven checks.
-
-![Actual native free walking and camera modes](media/free-camera-movement.gif)
+**Previous batch — PR #35 merged at `594ea1d` on 15 September.** The seven human
+steps were checked for `c7ed26d`, including the earlier diagonal/ledge/house
+retests. The [original failure chronology and recordings](free-camera-movement.md)
+are retained. This accepts that bounded desktop sequence, not every interior,
+ledge corner, camera obstruction case or VR use. The maintainer explicitly noted
+that broad indoor coverage and considerable art work remain.
 
 **Earlier batch — PR #34 merged at `4a6f2246` on 13 September:**
 [demo controls, distant NPCs and Route 101 ledge contact](desktop-demo-batch.md).

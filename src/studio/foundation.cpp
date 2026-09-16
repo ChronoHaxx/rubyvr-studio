@@ -76,7 +76,7 @@ bool level(const vr::world::Snapshot& s,const vr::overrides::OverrideSet& origin
         result->changed_cells+=flat!=surface;surface=flat;
     }
     if(!terrain::valid(candidate.terrain)) return fail("The foundation exceeds terrain limits. No changes applied.");
-    candidate.version=kTerrainVersion;
+    candidate.version=std::max(candidate.version,kTerrainVersion);
     result->message=result->changed_cells?"Foundation levelled at "+std::to_string(result->height)+" px. Ctrl+Z restores the slope; Ctrl+S saves.":"This foundation is already level.";
     *out=std::move(candidate);return true;
 }

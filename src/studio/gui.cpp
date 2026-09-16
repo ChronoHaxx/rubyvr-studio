@@ -560,7 +560,7 @@ void refresh_matches(App& a) {
     a.accepted_matches = a.rejected_matches = 0;
     if (!a.has_draft || !populated(a.draft)) return;
     OverrideSet one;
-    one.version = a.draft.voxel ? vr::overrides::kVoxelVersion : a.working.version;
+    one.version = std::max(a.working.version,a.draft.voxel ? vr::overrides::kVoxelVersion : vr::overrides::kVersion);
     one.patterns.push_back(a.draft);
     a.draft_matches = vr::overrides::find(a.snap, one);
     OverrideSet preview = a.working;

@@ -87,7 +87,7 @@ Ruby still validates/executes the special action; ordinary wall sliding and the
 collision dimensions are unchanged.
 
 The existing input filter supplies the view-relative fractional vector only
-while the viewer owns verified outdoor or authored pilot-house controls. Original-window input restores
+while the viewer owns verified outdoor or complete authored-room controls. Original-window input restores
 native control. The viewer's event hook releases relative mouse capture on
 Escape, focus loss, scene changes and panel use. Button-only host recording and
 replay cannot encode the free vector/camera pose, so the panel refuses free modes
@@ -95,13 +95,15 @@ when either is active. Original Grid playback is unchanged. See the batch guide
 for centring, special-action, camera-collision and platform limitations.
 
 The house pilot shares `scene_controls_available` between input and movement:
-verified unlocked outdoors, or May's two exact house identities/layouts. The
-viewer additionally requires two complete structurally matching room patterns
-before it enables 3D input. Unsupported/unmeshed interiors retain original
+verified unlocked outdoors or a verified native indoor identity/layout. The
+viewer separately requires a complete guarded v8 room, exact identity/load-epoch
+publication and an unfaded world before it owns movement. The legacy two-strip
+May house remains supported. Room coverage is now data-driven; see
+[the common-interior contract](../docs/common-interiors.md). Unsupported/unmeshed interiors retain original
 walking even while a free camera is selected. Scene ownership survives an idle
 focus/panel pause without recentering; scripts still acquire native ownership.
 
-`indoor_house_assets.h` derives small-body collision from the loaded unrotated
+`indoor_scene.h` (with legacy `indoor_house_assets.h`) derives small-body collision from the loaded unrotated
 box parts in free modes. Native tile/NPC rules remain authoritative; the stair
 well yields to the original warp. A bounded native collision query temporarily
 clears `trackedByCamera` (ObjectEvent byte 1, bit 7) in these rooms and restores
@@ -110,7 +112,8 @@ can reject a valid last-row player destination. This does not bypass actual map
 boundaries, collision/elevation or NPC tests. Grid retains native tile collision.
 Supported rooms share field UI extraction, avoiding an opaque original-room
 frame over the 3D result. Rendering cuts near walls/ceiling only for third-person
-and Grid; first person keeps them. Other interiors remain original-view fallback.
+and Grid; first person keeps them. Missing, changed and unsupported room recipes
+remain original-view fallback. Do not infer full indoor art coverage from the gate.
 
 Ruby's `ProcessPlayerFieldInput` handles north-facing doors before `player_step`.
 On blocked contact with `MetatileBehavior_IsWarpDoor`, the adapter retains the

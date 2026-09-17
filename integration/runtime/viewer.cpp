@@ -194,6 +194,14 @@ bool uses_world_controls() {return g_world_controls;}
 bool controls_for_scene(const presentation::Input& in) {
     return g_world_controls && g_world_drawn && g_retained.valid && presentation::same_control_scene(g_control_scene,in);
 }
+bool connection_transition(const presentation::Input& in) {
+    if(!g_world_drawn || !g_retained.valid || in.mode!=presentation::Mode::Field ||
+       g_control_scene.mode!=presentation::Mode::Field || in.fading ||
+       in.epoch!=g_control_scene.epoch || in.identity==g_control_scene.identity)return false;
+    for(const auto& c:g_retained.connections)
+        if(c.group==in.identity.group && c.number==in.identity.number)return true;
+    return false;
+}
 presentation::Decision presentation_state() {return g_presentation;}
 void set_camera_relative(bool enabled) { g_camera_relative=enabled; }
 void reset_camera() { release_mouse();g_yaw=0;g_pitch=g_mode==CameraMode::FirstPerson?0.12f:0.9f;g_dist=12;g_ty=1;g_follow=true;g_turn.reset(); }
@@ -399,16 +407,21 @@ void game_frame(const world::Snapshot& snapshot,const presentation::Input& input
     auto supported=input;
     if(input.indoor_3d && !indoor_scene::describe(snapshot,diorama::current_overrides()).width)
         supported.indoor_3d=false;
-    auto decision=g_lifetime.next(supported,snapshot.valid);
-    g_control_scene=supported;
+    const bool crossing=connection_transition(supported) &&
+        (!snapshot.valid || world::live::connection_handoff_pending(g_retained,snapshot));
+    // Do not publish new-map geometry with old-map actor coordinates, or give
+    // continuous movement ownership to that incomplete native transition.
+    auto decision=crossing?presentation::Decision{true,false,true,presentation::Overlay::FieldUi}:
+        g_lifetime.next(supported,snapshot.valid);
+    if(!crossing)g_control_scene=supported;
     if(decision.update)g_retained=snapshot;
     if(!decision.world)g_retained={};
     // frame() owns the existing camera, shared mesher, live materials and actor
     // renderer. Retained frames read only the host copy, never menu VRAM/OBJ.
-    g_world_controls=decision.world && presentation::world_mode(input);
+    g_world_controls=!crossing && decision.world && presentation::world_mode(input);
     frame(decision.world?g_retained:world::Snapshot{},false);
     if(!g_world_drawn) {decision.world=decision.retained=false;decision.overlay=presentation::Overlay::Original;}
-    g_world_controls=decision.world && presentation::world_mode(input);
+    g_world_controls=!crossing && decision.world && presentation::world_mode(input);
     int w=0,h=0;SDL_GL_GetDrawableSize(g_win,&w,&h);
     if(w<=0||h<=0)return;
     gl::glBindFramebuffer(GL_FRAMEBUFFER,0);glViewport(0,0,w,h);
@@ -424,6 +437,13 @@ void game_frame(const world::Snapshot& snapshot,const presentation::Input& input
         screen_overlay::draw(rgba,sw,sh,w,h,decision.world);
     }
     g_presentation=decision;
+    if(std::getenv("RUBYVR_VIEWER_TRACE") && decision.world) {
+        int x=0,z=0;map_origin(g_control_scene.identity.group,g_control_scene.identity.number,&x,&z);
+        const auto& a=actor_render::stats();
+        std::fprintf(stderr,"[live-pose] map=%d.%d foot=%.4f,%.4f pending=%d controls=%d\n",
+            g_control_scene.identity.group,g_control_scene.identity.number,x+a.player_x,z+a.player_z,
+            crossing,g_world_controls);
+    }
     if(!presentation::world_mode(input) || !decision.world) {
         char title[256];std::snprintf(title,sizeof(title),
             "RubyRecomp - %s | %s | X: confirm / Z: back / Enter: Start | Arrows: original controls | J/L: view",

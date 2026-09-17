@@ -62,6 +62,9 @@ void game_frame(const world::Snapshot&, const presentation::Input&,
                 std::span<const uint8_t> field_ui={}, bool present=true);
 bool uses_world_controls();
 bool controls_for_scene(const presentation::Input&);
+// A connected map is changing underneath the retained field. Wait without
+// treating that native handoff as a menu/focus change or requiring key release.
+bool connection_transition(const presentation::Input&);
 presentation::Decision presentation_state();
 
 }  // namespace viewer

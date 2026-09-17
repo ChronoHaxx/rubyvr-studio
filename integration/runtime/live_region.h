@@ -6,6 +6,12 @@ namespace vr::world::live {
 using SourceLoader = bool (*)(int group,int number,Snapshot&);
 struct RegionEntry { Snapshot source; int x=0,z=0,depth=0; };
 
+// CameraMove loads the destination header before rebasing ObjectEvents. A
+// VBlank can land between those operations. Keep the last coherent connected
+// field frame until the player's backup coordinates follow the new view.
+// Call only within the same runtime epoch and normal outdoor presentation.
+bool connection_handoff_pending(const Snapshot& previous,const Snapshot& next);
+
 // Bounded, display-independent neighbourhood. Backup coordinates and real
 // connection offsets are used throughout; a crossing never recentres the world.
 class Neighbourhood {

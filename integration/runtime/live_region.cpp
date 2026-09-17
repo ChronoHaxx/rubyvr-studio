@@ -4,6 +4,24 @@
 #include <tuple>
 
 namespace vr::world::live {
+bool connection_handoff_pending(const Snapshot& previous,const Snapshot& next) {
+    if(!previous.valid || !next.valid || !previous.has_map_identity() || !next.has_map_identity() ||
+       (previous.map_group==next.map_group && previous.map_number==next.map_number))return false;
+    bool connected=false;
+    for(const auto& c:previous.connections)
+        connected|=c.group==next.map_group && c.number==next.map_number &&
+            c.width==next.width && c.height==next.height;
+    if(!connected)return false;
+    auto aligned=[](const Snapshot& s) {
+        if(s.player_index<0 || s.player_index>=kObjectEventCount)return false;
+        const auto& p=s.objects[size_t(s.player_index)];
+        // Native player following places the player seven backup cells beyond
+        // gSaveBlock1.pos. A step updates either end first, hence one cell of
+        // tolerance. Camera pixel panning does not change these tile origins.
+        return p.active && p.is_player && std::abs(p.x-s.view_x-7)<=1 && std::abs(p.y-s.view_y-7)<=1;
+    };
+    return aligned(previous) && !aligned(next);
+}
 namespace {
 bool valid(const Snapshot& s) {
     return s.valid && s.has_map_identity() && s.valid_connections() &&

@@ -12,6 +12,7 @@
 #include "camera_input.h"
 #include "dev/demo_panel.h"
 #include "dev/preferences.h"
+#include "dev/frame_rate.h"
 #include <array>
 #include <chrono>
 #include <cstdio>
@@ -27,6 +28,7 @@ namespace {
 using Clock = std::chrono::steady_clock;
 std::unique_ptr<rubyvr::dev::Session> session;
 rubyvr::dev::Transport transport;
+rubyvr::dev::FrameRate frame_rate;
 std::string name = "checkpoint", error, scene = "Waiting for game";
 bool noclip = false, verified = false;
 const uint8_t* checked_rom = nullptr;
@@ -183,6 +185,7 @@ int set(const char* key, int value) {
         const bool found = gba_mod_set_function_hook_enabled(hook_id, noclip);
         if (!found) noclip = false;
     } else if (!std::strcmp(key, "dev.speed") && value >= 0 && value < 8) {
+        frame_rate.reset();
         transport.set_speed(speed_values[value]); deadline = {};
     } else return 0;
     return 1;
@@ -279,6 +282,7 @@ bool obstacles_bypassed(){return noclip && verified && registered;}
 bool pending() { return session && session->pending(); }
 std::optional<rubyvr::dev::Request> take_request() { return session ? session->take_request() : std::nullopt; }
 void reset_after_load() {
+    frame_rate.reset();
     game_input::reset();
     noclip = false;
     gba_mod_set_function_hook_enabled(hook_id, 0);
@@ -304,11 +308,12 @@ void complete(bool success, const std::string& reason) {
     std::fprintf(stderr, "[rubyvr:dev] frame=%llu %s\n", static_cast<unsigned long long>(frame_number), session->message().c_str());
     deadline = {}; last_present = {};
 }
-void pause(bool value) { transport.pause(value); deadline = {}; }
+void pause(bool value) { transport.pause(value); deadline = {}; frame_rate.reset(); }
 bool paused() { return enabled() && transport.paused(); }
 void next_frame(uint64_t frame) {
     if (frame == frame_number) return;
     frame_number = frame;
+    frame_rate.observe(frame,std::chrono::duration<double>(Clock::now().time_since_epoch()).count());
     transport.next_frame();
 }
 bool present_due(bool menu_open) {
@@ -337,7 +342,9 @@ void refresh_scene() {
             scene += " | cell " + std::to_string(static_cast<int16_t>(u16(object+0x10))-7) + "," +
                 std::to_string(static_cast<int16_t>(u16(object+0x12))-7) + " L" + std::to_string(object[0x0b]&15);
     }
-    scene += " | frame " + std::to_string(frame_number);
+    char rate[64];
+    std::snprintf(rate,sizeof(rate)," | %.1fx actual | frame ",paused()?0.:frame_rate.speed());
+    scene += rate + std::to_string(frame_number);
     if (noclip) scene += " / NOCLIP " + std::to_string(bypasses);
 }
 }

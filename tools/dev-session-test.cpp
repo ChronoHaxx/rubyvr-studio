@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 #include "dev/session.h"
+#include "dev/frame_rate.h"
+#include <cmath>
 #include <fstream>
 #include <iostream>
 #include <stdexcept>
@@ -16,6 +18,17 @@ std::string read(const fs::path& path) {
 }
 int main(int argc, char** argv) {
     if (argc != 2) return 2;
+    FrameRate rate;
+    rate.observe(100,10);rate.observe(130,10.5);
+    check(std::abs(rate.speed()-1)<.01,"actual speed counts guest frames, independent of redraws");
+    rate.observe(250,11);
+    check(std::abs(rate.speed()-4)<.02,"fast-forward measures four times as many guest frames");
+    rate.observe(250,11.5);
+    check(rate.speed()==0,"redrawing one paused guest frame cannot invent progress");
+    rate.observe(10,12);
+    check(rate.speed()==0,"backwards frame counter restarts measurement");
+    rate.reset();rate.observe(10,20);rate.observe(40,20.5);
+    check(std::abs(rate.speed()-1)<.01,"pause/load reset excludes waiting time");
     const fs::path root(argv[1]);
     Session s(root);
     check(!s.load_selected(), "empty load refused");

@@ -41,7 +41,15 @@ uint16_t filter_from_source(uint16_t keys, Source source) {
             }
             const world::live::Memory m{{bus->rom_ptr(),bus->rom_size()},
                 {bus->ewram_ptr(),0x40000},{bus->iwram_ptr(),0x8000},verified};
-            if (viewer::controls_for_scene(presentation::capture_input()) &&
+            const auto current=presentation::capture_input();
+            if(viewer::connection_transition(current)) {
+                // A native border scroll is not a menu/focus transfer. Hold
+                // movement briefly without touching the mapper's held-key
+                // latch, then resume the same input when the scene is ready.
+                free_walk::runtime::input({},false);
+                return keys|camera_input::directions;
+            }
+            if (viewer::controls_for_scene(current) &&
                 (viewer::camera_relative() || viewer::continuous_movement()) && world::live::scene_controls_available(m))
                 context=camera_input::Context::Camera;
         }

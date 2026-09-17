@@ -310,6 +310,30 @@ int main(int,char**) {
     }
     vr::viewer::game_frame(field,signal,original,240,160,transparent_ui,false);
     expect(vr::viewer::presentation_state().world && vr::viewer::uses_world_controls(),"game field owns camera-relative controls");
+    // Reproduce CameraMove's split VBlank: new map/view first, old player
+    // ObjectEvent until UpdateObjectEventsForCameraUpdate rebases it.
+    field.view_x=field.objects[0].x-7;field.view_y=field.objects[0].y-7;
+    vr::viewer::game_frame(field,signal,original,240,160,transparent_ui,false);
+    auto crossing=field;crossing.map_number=17;crossing.view_y+=10;
+    auto crossing_signal=signal;crossing_signal.identity.number=17;
+    expect(vr::viewer::connection_transition(crossing_signal),"native connected identity is a handoff, not a menu/focus transfer");
+    auto loaded_signal=crossing_signal;++loaded_signal.epoch;
+    expect(!vr::viewer::connection_transition(loaded_signal),"checkpoint load cannot masquerade as a connected input handoff");
+    vr::viewer::game_frame({},crossing_signal,original,240,160,transparent_ui,false);
+    expect(vr::viewer::presentation_state().retained && !vr::viewer::uses_world_controls(),"different-size map header before backup-grid rebuild retains coherent old field");
+    expect(vr::viewer::connection_transition(crossing_signal),"temporarily invalid native grid keeps the held-input handoff active");
+    vr::viewer::game_frame(crossing,crossing_signal,original,240,160,transparent_ui,false);
+    expect(vr::viewer::presentation_state().retained && !vr::viewer::uses_world_controls(),"incomplete native crossing retains old view and releases movement");
+    expect(std::strstr(SDL_GetWindowTitle(window),"live map 0.16"),"incomplete crossing never pairs new map with old coordinates");
+    crossing.objects[0].y+=10;
+    vr::viewer::game_frame(crossing,crossing_signal,original,240,160,transparent_ui,false);
+    expect(!vr::viewer::presentation_state().retained && vr::viewer::controls_for_scene(crossing_signal),"completed crossing publishes and resumes movement without extra delay");
+    expect(!vr::viewer::connection_transition(crossing_signal),"completed handoff immediately returns to ordinary input mapping");
+    // A checkpoint load must never borrow a frame from the previous epoch.
+    crossing.objects[0].y-=10;++crossing_signal.epoch;
+    vr::viewer::game_frame(crossing,crossing_signal,original,240,160,transparent_ui,false);
+    expect(!vr::viewer::presentation_state().retained,"runtime epoch change does not retain an old crossing frame");
+    vr::viewer::game_frame(field,signal,original,240,160,transparent_ui,false);
     uploads=vr::diorama::mesh_upload_count();
     signal.mode=Mode::Bag;
     vr::viewer::game_frame({},signal,original,240,160,{},false);

@@ -2,7 +2,8 @@
 
 **17 September 2026: reuse selected generators and rules while keeping Ruby's
 native gameplay and shared mesher.** The source/input evaluation and first
-guarded kitchen adaptation are implemented and agent-reviewed. **In review:**
+guarded kitchen adaptation are implemented and agent-reviewed. **Merged in
+PR #39 at `2a7d6a2` on 17 September:**
 human art and native playthrough acceptance remain pending. Only the useful
 matching roles/heights are adapted; this is not a wholesale Lua generator port.
 
@@ -15,8 +16,9 @@ pack, including walls, floor and neighbouring furniture.
 
 The separate map-crossing, performance and apparent fast-forward plateau report
 is recorded in [issue #38](https://github.com/ChronoHaxx/rubyvr-studio/issues/38)
-under M5/M10. Its cause is unconfirmed. The maintainer prioritised this M4
-evaluation before investigating it.
+under M5/M10. The [current playable-performance batch](playable-performance.md)
+now addresses reproduced crossing and speed causes. The kitchen playtest and
+separate launcher below record the earlier PR #39 handoff.
 
 ## What we actually inspected
 

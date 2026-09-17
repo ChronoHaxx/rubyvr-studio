@@ -1,6 +1,10 @@
 # Native game integration: prototype source
 
-**Current review: [local demo startup and remembered settings](../docs/demo-runner.md).**
+**Current review: [connected walking and usable fast-forward](../docs/playable-performance.md).**
+The native demo requires an explicit Release build. A connected map's header
+and actor coordinates publish together; transient border input holds preserve
+the held-key mapper state. Test tools measures actual guest-frame speed.
+The [demo startup and remembered settings](../docs/demo-runner.md) remain shared.
 The viewer's Play screen shares the existing camera/checkpoint callbacks.
 Preferences apply after viewer initialization and flush before camera teardown;
 scene changes and checkpoint loads do not reapply them. Mouse capture and debug

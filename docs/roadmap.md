@@ -226,14 +226,21 @@ The full M0-M11 checklist below remains the longer-term completion tracker.
 ## Current focus
 
 **17 September, maintainer priority: [Emerald geometry reuse evaluation](emerald-geometry-reuse.md), M4.**
-The pinned source and five-tileset compatibility comparison are complete locally.
-Start the rendered transfer with matching common-house kitchen roles; the adapter,
-visual comparison and gameplay checks remain pending. Keep Ruby's native gameplay.
+The pinned source and five-tileset comparison are complete. **In review:** the
+first guarded May-house kitchen adaptation fixes repeated worktop/front textures,
+fridge casing and the wall hiding the sink. Hidden production views and automated
+checks pass; human art/native playthrough acceptance remain pending. Retain only
+useful matching rules, defer regressions, and keep Ruby's native gameplay.
 PR #37 is merged; PR #36/#37 individual human steps remain unreported and room
 art is provisional. [Issue #38](https://github.com/ChronoHaxx/rubyvr-studio/issues/38)
 tracks the new crossing/performance/fast-forward report, deferred during this
-evaluation. The release blockers remain public runner reproduction (M11) and
-stable connected play/performance (M5/M10).
+evaluation. **17 September delivery correction:** the maintainer prioritises a
+coherent rough pass across whole families/maps over polished individual props.
+Stop kitchen polish at this handoff. Next address #38's playable crossing/speed
+blockers, then adapt shared furnishing/scenery rules across supported families
+with conservative fallbacks and one combined review. Keep save/crash/movement
+checks strict; minor art defects go to grouped follow-up work. The release
+blockers remain public runner reproduction (M11) and stable connected play (M5/M10).
 
 
 **Next: native desktop gameplay proof (M5, with bounded M2/M6/M7/M9 support).**
@@ -774,8 +781,11 @@ trial and error, and a person can save/reopen/reuse their work unaided.
   **17 September: [source/input evaluation complete locally](emerald-geometry-reuse.md).**
   Checked current companion `726782f`, five tileset families and exact indexed
   layers. Kitchen and Center stair pins are promising; tree artwork differs even
-  where definitions agree. Rendered adapter proof and visual acceptance remain
-  pending, so the overall comparison stays unchecked.
+  where definitions agree. **In review:** one guarded kitchen now has a
+  [six-view comparison and native test handoff](emerald-geometry-reuse.md#first-transfer-mays-kitchen--in-review).
+  Repeated textures and kitchen-wall occlusion are repaired; unsupported cupboard
+  rules and whole-sprite lid mapping are deferred. Human art/native playthrough,
+  tree/roof comparisons and wider reuse remain pending; this item stays unchecked.
 
 - [ ] **Deferred art pass:** finish [shared art direction](art-direction.md) and a
   reference scene before expanding foliage. Maintainer feedback on trees,

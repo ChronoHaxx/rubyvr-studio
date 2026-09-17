@@ -3,8 +3,13 @@
 **17 September source reuse evaluation:** the new [input comparison](emerald-geometry-reuse.md)
 passes its synthetic identity/remapping guards and compares five pinned
 Ruby/Emerald tileset families without graphics or desktop input. This is source
-compatibility evidence, not a rendered adapter or visual improvement. PR #37
-is merged with its individual human checks unreported. The maintainer's new
+compatibility evidence. The subsequent guarded May-house kitchen adaptation now
+passes native-scale geometry/source refusal tests, unchanged 1,188-pattern and
+terrain checks, 13,404 production load/save checks, and hidden six-view/full-room
+rendering. [Evidence, retained/deferred rules and four pending human checks](emerald-geometry-reuse.md#first-transfer-mays-kitchen--in-review).
+These captures use the shared Studio mesher; native gameplay and human art
+acceptance of the candidate remain pending. PR #37 is merged with its individual
+human checks unreported. The maintainer's new
 [crossing/performance/fast-forward report](https://github.com/ChronoHaxx/rubyvr-studio/issues/38)
 leaves broader M5/M10 acceptance open; earlier bounded results below remain intact.
 

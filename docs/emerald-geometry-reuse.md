@@ -1,9 +1,17 @@
 # Emerald geometry reuse evaluation
 
 **17 September 2026: reuse selected generators and rules while keeping Ruby's
-native gameplay and shared mesher. Start with common furniture.** The source
-and input comparison is complete; a rendered adapter comparison is still to do.
-No upstream geometry has been integrated or visually accepted by this evaluation.
+native gameplay and shared mesher.** The source/input evaluation and first
+guarded kitchen adaptation are implemented and agent-reviewed. **In review:**
+human art and native playthrough acceptance remain pending. Only the useful
+matching roles/heights are adapted; this is not a wholesale Lua generator port.
+
+![Before and after, six actual production-mesher views](media/kitchen-reuse.gif)
+
+The 12-second GIF uses identical source-scale cameras, filtering each pack to
+the kitchen parts for inspection. It is Studio output, not native gameplay.
+The [full-room view](media/kitchen-reuse-room.png) retains the complete candidate
+pack, including walls, floor and neighbouring furniture.
 
 The separate map-crossing, performance and apparent fast-forward plateau report
 is recorded in [issue #38](https://github.com/ChronoHaxx/rubyvr-studio/issues/38)
@@ -25,8 +33,10 @@ evaluation before investigating it.
 The companion's pinned [MIT licence](https://github.com/UNDERdecoded/Gen2Recomped-DramaticShapes/blob/726782f223cac76b4e78cdadb24fa6ac78edaef0/LICENSE)
 permits code adaptation with its DramaticShape/UNDERdecodedHD notices retained.
 This finding applies to that companion repository, not the separately licensed
-engine, Dramatic Shape APK or game artwork. This evaluation copied no upstream
-implementation into RubyVR; the input comparison tool is original code.
+engine, Dramatic Shape APK or game artwork. The initial evaluation copied no
+implementation. The subsequent kitchen recipe adapts the role/height constants
+with the [retained MIT notice](../LICENSES/Gen2Recomped-DramaticShapes-MIT.txt);
+its face mapping and source guards are Ruby-specific.
 
 The public tree contains procedural generators and authored tables, rather than
 ready `.vox`, `.obj`, `.gltf` or `.bbmodel` scenery assets. The Python building
@@ -124,10 +134,109 @@ voxel-grid payload. Adding such a payload would need a deliberate shared format,
 material mapping and editor/runtime implementation. Embedding the entire Lua
 engine would broaden the dependency and maintenance scope beyond this need.
 
-The first adapted room proof must retain upstream notices, guard actual Ruby
-inputs, preserve walkable gaps/interaction/save behavior, and compare current
-versus adapted output through the production mesher. Use hidden/offscreen
-captures from elevated, orbit and first-person views, plus representative room
-replays. Human art acceptance stays separate. **Those rendered and gameplay
-checks remain pending; this report establishes feasibility and selects the
-first transfer, not a visual win.**
+## First transfer: May's kitchen — in review
+
+| Candidate | Accepted into this patch | Deferred |
+|---|---|---|
+| Sink/worktop IDs 569/570 | Upstream's 16px height replaces our 24px counter. One native-scale sink/work surface; extend only the plain door band so handles and the kickboard appear once. A small box-built tap stands above it. | General furniture classification and other kitchen layouts. |
+| Appliance ID 568 | Retain the 32px upright two-door face; sample plain casing texels on the sides and top. | Whole-sprite horizontal lid mapping from `buildGen3Joinery`: it would place appliance fronts on top and use edge texels down the sides. This risk was identified in source, not by executing the Lua exporter. |
+| Glass cupboard | Keep our existing 28px cupboard. | Their 571/572 cabinet rules do not target this cupboard's 587/588 lower tiles. Raising it blindly would repeat its shorter front artwork. |
+| Room integration | Move the kitchen's wall/window behind the work surface and extend the existing ceiling. The previous wall crossed the front of the sink. | Other walls, room families, TV reconstruction and outdoor scenery. |
+
+The guard checks the exact May 1F layout, six placed tile/collision words and
+indexed palette-slot/pixel identity of the kitchen. Unknown artwork/layouts
+retain the old recipe and report `unchanged-source-mismatch`. RGB recolouring
+still uses the local source palette. Runtime pattern guards continue to check
+the loaded tileset definitions. No runtime, camera or movement code changes.
+
+Verification on 17 September:
+
+- `test-house-kitchen.py` passes without game assets: height, native surface
+  dimensions, one handle band, plain fridge sides, footprint and unknown-source
+  refusal. CI runs this check.
+- With pinned local Ruby inputs, six ID/collision/pixel/palette/missing-art/room
+  mutations fall back. All **1,188 other patterns**, all terrain, ordering and
+  ownership masks are unchanged; regeneration is idempotent. New wall solids
+  stay within native blocked cells. This footprint check is not a physical
+  character-radius playthrough.
+- The C++ production loader/serializer passes **13,404 checks**, including 127
+  existing scoped rooms and exact complete-pack save/reload. The changed stripe
+  has 32 parts and remains within the existing voxel memory/work bounds.
+- Hidden WSL Studio renders front/back/left/right/top/oblique, neutral shape and
+  complete-room views. Isolated models are closed and save/reload exactly.
+  Agent review finds the repeated sink/cupboard and fridge-side artifacts fixed.
+  The room view caught and corrected the existing wall occlusion. No shared
+  pointer, foreground focus or desktop-wide keys were used.
+- Candidate pack SHA-256:
+  `b486860f99b9acd7923a98c551fadade319403cdbaf0e223392b70002a702aad`.
+  The separate prepared demo passes file/input/dependency verification and
+  preserves all 17 checkpoint inputs. Native gameplay and human art acceptance
+  of this candidate are **pending**; the existing runner binary is unchanged.
+
+The first shell attempt exceeded the existing mesher work bound. Consolidating
+the ceiling and keeping the back wall within the furniture depth resolved it;
+the limit was not raised. Automatic approval review blocked an external Claude
+source handoff before execution; the implementation and review were completed
+locally, with no worker result or worker cost to report.
+
+### Try the prepared local demo
+
+Windows PowerShell, existing local ROM/BIOS and Python 3. Close the previous
+game. Use this same command to launch and reopen the separate review session:
+
+```powershell
+& E:\Coding\vr-modding-research\rubyvr-studio\build\kitchen-demo\run-dev-game.ps1
+```
+
+It starts at **House 1F ready**. This is the maintainer's local handoff, not a
+publicly downloadable game. The runner remains source `ba96cdd0541c4ac4fa4f43c8fe37e402af9191b6`,
+binary SHA-256 `b0bce6b36358fefb815477efb1852280c014e6614955253399c8f1ff0dbde721`.
+The PR identifies the recipe revision; the candidate pack above identifies the
+new scenery independently of the unchanged binary.
+
+Human checks — **pending**, approximately 3 minutes:
+
+- [ ] Launch, choose **First person**, then **Continue playing**. Expect May's
+  first floor, working WASD movement and the revised kitchen along the north wall.
+- [ ] Approach the kitchen and right-click to look. Expect one sink, one row of
+  cupboard doors and plain fridge sides. Escape must release look and open Play.
+- [ ] Choose **Third person**; pass the TV, use the stairs up/down, then leave
+  and re-enter the house. Expect clear approaches and normal transitions.
+- [ ] Save a new named checkpoint **Kitchen check**, wait for **Saved**, close
+  both game windows and reopen with the same command. Expect that checkpoint,
+  remembered camera mode and the same kitchen. Existing checkpoints stay intact.
+
+Known limitations beside this test: **M4** wider furniture/foliage fidelity and
+other kitchen layouts are unchanged. **M5/M10 issue #38** map crossings,
+performance and apparent speed saturation are not fixed by this patch.
+**M11** public runtime reproduction/distribution remains unresolved. No headset
+or physical input acceptance is inferred from the hidden captures.
+
+<details>
+<summary>Developer regeneration and hidden comparison</summary>
+
+Use the pinned local inputs and an existing complete baseline pack; keep it
+separate from the generated candidate. The baseline is not distributed here.
+
+```sh
+python tools/test-house-kitchen.py
+python tools/test-house-kitchen.py --decomp third_party/pokeruby --baseline build/interior-scenes/pack.json
+python tools/build-indoor-house-example.py --pack build/interior-scenes/pack.json --out build/emerald-reuse/kitchen/candidate/pack.json
+python tools/test-indoor-scenes.py --pack build/emerald-reuse/kitchen/candidate/pack.json
+```
+
+On the supported Linux/WSL Studio build with a working graphics display:
+
+```sh
+bash tools/build.sh --jobs 4
+python tools/review-house-kitchen.py --before build/interior-scenes/pack.json --after build/emerald-reuse/kitchen/candidate/pack.json
+```
+
+The renderer uses hidden windows and writes evidence under
+`build/emerald-reuse/kitchen/review/`. Full-room captures preserve the whole pack;
+isolated views deliberately omit unrelated parts. JSON records the exact binary
+and input hashes. `--gui`, `--decomp` and `--out` select explicit local paths.
+Do not substitute a generated replacement for a personally edited pack without
+reviewing the changes.
+
+</details>

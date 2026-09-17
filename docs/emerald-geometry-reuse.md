@@ -168,7 +168,7 @@ Verification on 17 September:
   The room view caught and corrected the existing wall occlusion. No shared
   pointer, foreground focus or desktop-wide keys were used.
 - Candidate pack SHA-256:
-  `b486860f99b9acd7923a98c551fadade319403cdbaf0e223392b70002a702aad`.
+  `c0b3466e72853d1fa2cfe3d79bf11f29c80228448cea21398d1e3422ae05bae4`.
   The separate prepared demo passes file/input/dependency verification and
   preserves all 17 checkpoint inputs. Native gameplay and human art acceptance
   of this candidate are **pending**; the existing runner binary is unchanged.

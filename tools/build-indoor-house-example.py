@@ -227,7 +227,8 @@ def stripe(data, floor, x0, width, output):
             box('Kitchen back wall', 106, 32, 70, 4, 40)
         else:
             box('North wall', 64, north-4, (w-4)*16, 4, 40)
-        box('East wall', w*16-3, north, 3, h*16-north, 40)
+        east_back = 32 if adapted_kitchen else north
+        box('East wall', w*16-3, east_back, 3, h*16-east_back, 40)
         box('South wall', 64, h*16-3, (w-4)*16, 3, 40)
     ceiling_back = 32 if adapted_kitchen else north-4
     box('Ceiling', x0*16, ceiling_back, width*16, h*16-ceiling_back, 1, y=40)

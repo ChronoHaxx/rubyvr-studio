@@ -94,7 +94,7 @@ def local_contract(decomp, baseline):
                     k: v for k, v in new[identity].items() if k != 'parts'}, 'Source ownership changed'
                 def other(parts):
                     return [p for p in parts if not p['name'].startswith('Kitchen ')
-                            and p['name'] not in ('Refrigerator', 'North wall', 'Ceiling')]
+                            and p['name'] not in ('Refrigerator', 'North wall', 'East wall', 'Ceiling')]
                 assert other(old[identity]['parts']) == other(new[identity]['parts']), 'Other furnishings changed'
                 # At body height, newly occupied geometry must stay inside
                 # native blocked source cells. This is a solid-footprint check;

@@ -12,10 +12,10 @@ speed/pause/bypass are transient. The launcher stages an existing private runner
 and its dependencies; the [public host/API gap](../docs/runtime-host-audit.md)
 still blocks a reproducible public combined build.
 
-**Current M5 handoff:** PR #29, including PR #30 camera/facing, is merged into main.
+**Earlier M5 foundation:** PR #29, including PR #30 camera/facing, is merged into main.
 The combined prepared build also includes [source border restoration](../docs/live-borders.md).
-Use that guide's single camera-session launcher; the old main-checkout prepared
-developer executable is historical. Ledge collision/depth and
+Use the current performance guide's prepared launcher; the older camera-session
+and main-checkout executables are historical. Ledge collision/depth and
 broader actor/terrain coverage remain open.
 The [connected native scenery](../docs/live-connected-world.md) slice, merged in PR #31,
 uses a verified-ROM source reader and the shared region renderer to keep up to

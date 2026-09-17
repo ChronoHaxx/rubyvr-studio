@@ -2,6 +2,9 @@
 # For the documented private Windows runner experiment. The caller supplies
 # its runtime_bus_bridge/gba_bus/sha1 headers and libraries, plus the frame sink.
 function(rubyvr_attach_runtime target)
+    if(NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
+        message(FATAL_ERROR "Choose a native build configuration: -DCMAKE_BUILD_TYPE=Release for playable demos (Debug only for debugging). An empty configuration runs the guest and mesher unoptimized.")
+    endif()
     if(NOT WIN32)
         message(FATAL_ERROR "The current native runtime adapter uses Win32 OpenXR bindings")
     endif()

@@ -871,7 +871,7 @@ bool start() {
     // running, instead of silently doing nothing.
     if (const char* vw = std::getenv("RUBYVR_VIEWER")) {
         if (vw[0] == '1' && have_gl) {
-            viewer::init(g_win,true,world::source_map);
+            viewer::init(g_win,!std::getenv("RUBYVR_AUTOMATED_TEST"),world::source_map);
             return false;   // no XR session; the frame sink drives the window
         }
     }

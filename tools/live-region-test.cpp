@@ -22,6 +22,32 @@ bool load(int g,int n,Snapshot& s) {
 }
 int main() {
     Snapshot a;load(0,1,a);Neighbourhood r;
+    {
+        auto before=a;before.player_index=0;
+        auto& p=before.objects[0];p.active=p.is_player=true;p.x=18;p.y=7;
+        before.view_x=11;before.view_y=0;
+        auto during=before;during.map_number=2;during.view_y=20;
+        expect(connection_handoff_pending(before,during),"north header changes before native object coordinates: hold old frame");
+        expect(connection_handoff_pending(before,during),"multiple incomplete samples cannot advance presentation");
+        during.objects[0].y=27;during.view_y=19;
+        expect(!connection_handoff_pending(before,during),"north coordinate rebase completes, including one-cell camera lag");
+        auto south=during;south.map_number=1;south.connections=before.connections;
+        auto returning=south;returning.map_number=0;returning.view_y=0;
+        expect(connection_handoff_pending(south,returning),"south header cannot publish north-map player coordinates");
+        returning.objects[0].y=7;
+        expect(!connection_handoff_pending(south,returning),"south rebase returns immediately to live presentation");
+        before.objects[0].x=7;before.objects[0].y=18;before.view_x=0;before.view_y=11;
+        during=before;during.map_number=2;during.view_x=20;
+        expect(connection_handoff_pending(before,during),"horizontal crossing uses the same coordinate guard");
+        during.objects[0].x=27;
+        expect(!connection_handoff_pending(before,during),"horizontal rebase completes");
+        during.objects[0].x=7;during.map_number=40;
+        expect(!connection_handoff_pending(before,during),"unconnected warp cannot retain the old field");
+        during.map_number=before.map_number;
+        expect(!connection_handoff_pending(before,during),"same-map scripted camera is unaffected");
+        during.map_number=2;before.player_index=-1;
+        expect(!connection_handoff_pending(before,during),"no unverified player-follow anchor");
+    }
     expect(r.refresh(a,load) && r.maps().size()==3,"full unseen neighbours in a bounded local area");
     expect(r.find(0,0)->z==20 && r.find(0,2)->z==-20,"connection-derived translations, including negative north");
     const int calls=loads;const auto revision=r.revision(),space=r.space();

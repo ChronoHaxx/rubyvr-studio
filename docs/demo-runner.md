@@ -7,7 +7,10 @@ renderer and checkpoint service still own gameplay.
 
 **17 September follow-up:** the maintainer reports a major map-crossing bug,
 poor performance and little apparent speed increase above 2x. [Issue #38](https://github.com/ChronoHaxx/rubyvr-studio/issues/38)
-tracks reproduction and M5/M10 repair; cause and exact tested build are unknown.
+tracks M5/M10 repair. The [connected walking/performance batch](playable-performance.md)
+reproduces a split-frame camera jump, a held-key stall and an unoptimized native
+build. Its prepared Release runner is the current launch target below; human
+confirmation of the originally reported journey remains pending.
 The five individual PR #37 human checks remain unreported. Earlier automated
 results below are preserved; broad transition/performance acceptance is pending.
 
@@ -30,7 +33,7 @@ maintainer's existing local ROM/BIOS. Close the previous game first. From any
 PowerShell directory:
 
 ```powershell
-& E:\Coding\vr-modding-research\_worktrees\live-camera\tools\run-dev-game.ps1
+& E:\Coding\vr-modding-research\rubyvr-studio\build\playable-demo\run-dev-game.ps1
 ```
 
 The viewer opens **Play & test**. Choose **Grid**, **Third person** or **First
@@ -44,6 +47,11 @@ and click **Open selected checkpoint**. Successful loading closes the panel;
 failure keeps its error visible. Loading resets speed and obstacle bypass. Save
 under a new name and wait for **Saved** before closing. Existing names are never
 replaced. Reopening starts with normal speed, pause/noclip off and no captured mouse.
+
+Test tools also reports **actual speed** from guest-frame progress. The selected
+multiplier is a target; MAX uses available hardware capacity. The current
+[four-step playtest](playable-performance.md#try-this-revision) replaces the
+historical PR #37 checklist below for this handoff.
 
 For setup diagnostics, add `-Check` to that same command. It validates the prepared
 files and exact input revision without opening a game. `-Fresh` starts at the title
@@ -87,6 +95,8 @@ physical-input checklist are separate; all boxes below are initially unchecked.
 ## Developer setup for another local directory
 
 This is an alternative setup path, not another required human launch command.
+Build the compatible native runner with `-DCMAKE_BUILD_TYPE=Release`; an empty
+single-configuration build type is refused because it caused the measured plateau.
 It requires an existing compatible private runner built from the stated Studio
 revision, its MinGW runtime dependencies, your exact Ruby USA revision 1 ROM,
 GBA BIOS, generated scenery pack and compatible local checkpoints. Python 3.10+

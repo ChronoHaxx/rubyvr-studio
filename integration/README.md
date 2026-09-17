@@ -1,6 +1,10 @@
 # Native game integration: prototype source
 
-**Current review: [local demo startup and remembered settings](../docs/demo-runner.md).**
+**Current review: [connected walking and usable fast-forward](../docs/playable-performance.md).**
+The native demo requires an explicit Release build. A connected map's header
+and actor coordinates publish together; transient border input holds preserve
+the held-key mapper state. Test tools measures actual guest-frame speed.
+The [demo startup and remembered settings](../docs/demo-runner.md) remain shared.
 The viewer's Play screen shares the existing camera/checkpoint callbacks.
 Preferences apply after viewer initialization and flush before camera teardown;
 scene changes and checkpoint loads do not reapply them. Mouse capture and debug
@@ -8,10 +12,10 @@ speed/pause/bypass are transient. The launcher stages an existing private runner
 and its dependencies; the [public host/API gap](../docs/runtime-host-audit.md)
 still blocks a reproducible public combined build.
 
-**Current M5 handoff:** PR #29, including PR #30 camera/facing, is merged into main.
+**Earlier M5 foundation:** PR #29, including PR #30 camera/facing, is merged into main.
 The combined prepared build also includes [source border restoration](../docs/live-borders.md).
-Use that guide's single camera-session launcher; the old main-checkout prepared
-developer executable is historical. Ledge collision/depth and
+Use the current performance guide's prepared launcher; the older camera-session
+and main-checkout executables are historical. Ledge collision/depth and
 broader actor/terrain coverage remain open.
 The [connected native scenery](../docs/live-connected-world.md) slice, merged in PR #31,
 uses a verified-ROM source reader and the shared region renderer to keep up to

@@ -1,6 +1,22 @@
 # Watch the acceptance check
 
-**Latest merged batch — PR #37, [local demo startup and remembered settings](demo-runner.md).**
+**Current batch — [connected walking and usable fast-forward](playable-performance.md), in review.**
+Hold movement across Route 101 ↔ Oldale without another key press; keep the view
+coherent while Ruby changes maps. The optimized native build raises this PC's
+measured voxel fast-forward ceiling from about 2.3× to 6.4×. Human retest remains
+pending, and wider streaming/performance defects stay open.
+
+![Actual native held walk, look-back and return](media/playable-crossing.gif)
+
+The 10.4-second sampled recording uses the debug obstacle-bypass lane. Timing
+was measured separately without capture. All three camera journeys pass locally.
+
+**PR #39 merged at `2a7d6a2` on 17 September.** The
+[guarded kitchen adaptation and reuse evaluation](emerald-geometry-reuse.md) is in
+main; individual human art/playthrough checks remain unreported. Broader shared
+furnishing/scenery rules follow the current playable-performance batch.
+
+**Earlier merged batch — PR #37, [local demo startup and remembered settings](demo-runner.md).**
 The Play screen puts camera choices and named situations together. Reopening
 remembers the camera and last saved/opened checkpoint; debug toggles and mouse
 capture start fresh. Local setup validates inputs and stages runtime DLLs beside
@@ -8,8 +24,7 @@ the private executable. The public runner/distribution blocker remains open.
 The [five-step human playtest](demo-runner.md#human-playtest--results-unreported)
 remains unreported. Native lifecycle checks and hidden UI tests pass; full
 results are in the guide. The new [map-crossing/performance report](https://github.com/ChronoHaxx/rubyvr-studio/issues/38)
-is unresolved. Current work is the [Emerald reuse evaluation](emerald-geometry-reuse.md),
-which has no new visual acceptance clip yet.
+remains open pending the current batch's human retest.
 
 ![Actual native play screen and shop loading](media/demo-runner.gif)
 

@@ -56,7 +56,10 @@ adds a play screen, remembered camera/checkpoint choices and isolated local setu
 Both CI checks passed; its five individual human results remain unreported.
 **17 September follow-up:** the maintainer reports a major map-crossing bug,
 poor performance and little apparent speed increase above 2x. [Issue #38](https://github.com/ChronoHaxx/rubyvr-studio/issues/38)
-records the unknown reproduction/cause and pending M5/M10 acceptance.
+tracks the [current connected walking/performance batch](playable-performance.md):
+map/actor handoff, held-key continuation and a Release native build. Local
+evidence is bounded; broader/human acceptance remains pending. **PR #39 merged
+at `2a7d6a2` on 17 September**; its four human checks remain unreported.
 
 **Prefer the short version? [Watch the acceptance GIF and verdict](acceptance.md).**
 The contributor/agent performs routine desktop functional and visual checks;
@@ -226,15 +229,15 @@ The full M0-M11 checklist below remains the longer-term completion tracker.
 ## Current focus
 
 **17 September, maintainer priority: [Emerald geometry reuse evaluation](emerald-geometry-reuse.md), M4.**
-The pinned source and five-tileset comparison are complete. **In review:** the
+The pinned source and five-tileset comparison are complete. **Merged in PR #39:** the
 first guarded May-house kitchen adaptation fixes repeated worktop/front textures,
 fridge casing and the wall hiding the sink. Hidden production views and automated
 checks pass; human art/native playthrough acceptance remain pending. Retain only
 useful matching rules, defer regressions, and keep Ruby's native gameplay.
 PR #37 is merged; PR #36/#37 individual human steps remain unreported and room
 art is provisional. [Issue #38](https://github.com/ChronoHaxx/rubyvr-studio/issues/38)
-tracks the new crossing/performance/fast-forward report, deferred during this
-evaluation. **17 September delivery correction:** the maintainer prioritises a
+tracks the crossing/performance/fast-forward report, now the active
+[M5/M10 batch](playable-performance.md). **17 September delivery correction:** the maintainer prioritises a
 coherent rough pass across whole families/maps over polished individual props.
 Stop kitchen polish at this handoff. Next address #38's playable crossing/speed
 blockers, then adapt shared furnishing/scenery rules across supported families
@@ -845,9 +848,10 @@ flat materials are intentional.
 ## M5: live scene data
 
 - [ ] **17 September, [issue #38](https://github.com/ChronoHaxx/rubyvr-studio/issues/38):**
-  reproduce and fix the reported major map-crossing defect. Exact map pair,
-  symptom, build and cause are unconfirmed; preserve earlier bounded acceptance.
-  Coordinate with M10 profiling and use application-local/hidden replay.
+  **In review:** coherent map/actor handoff and held movement without a new key
+  press. Hidden Route 101 ↔ Oldale journeys pass in Grid/third/first person.
+  The originally reported map pair remains unknown; wider/human acceptance
+  stays pending. [Evidence and playtest](playable-performance.md).
 
 - [ ] **Next playable target:** complete the [native desktop proof](issues/007-native-integration.md#native-desktop-proof)
   using the current shared scenery and terrain query. Retain original game
@@ -1114,10 +1118,10 @@ mandatory developer console. Camera changes remain independent of authored data.
 ## M10: performance and reliability
 
 - [ ] **17 September, [issue #38](https://github.com/ChronoHaxx/rubyvr-studio/issues/38):**
-  investigate poor performance and apparent fast-forward scaling plateau above
-  2x. Measure guest frames separately from presentation FPS at 1x/2x/4x/8x/MAX,
-  with original-view and voxel comparisons and transition timings. No hard cap
-  or cause is established. Deferred behind the requested M4 reuse evaluation.
+  **In review:** an unoptimized native build reproduced the plateau above 2x.
+  Release reaches about 4x at 4x and 6.4x at MAX in the same fixture, with guest
+  and presentation timing separated. Test tools now displays actual speed.
+  Streaming, wider hardware and human retest remain. [Measurements](playable-performance.md).
 
 - [ ] **M5/M10 research follow-up, 2026-09-12:** reuse the accepted native actor
   input replay for a small original/capture-only/3D comparison, with BMP capture

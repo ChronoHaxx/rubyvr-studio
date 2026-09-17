@@ -13,6 +13,7 @@ These terms do not grant rights to external runtimes, game data or trademarks.
 |---|---|---|
 | Dear ImGui 1.91.9b | Selected source files under `third_party/imgui`, including SDL2/OpenGL backends | [MIT, copyright Omar Cornut](third_party/imgui/LICENSE.txt) |
 | DRAMALESS_SHAPE techniques | C++ adaptations of structural/inference rules, sky-band drawing and phase palettes/tints, with inline references; no Lua asset/runtime distribution | [MIT, copyright Stahltier and contributors](LICENSES/DRAMALESS_SHAPE-MIT.txt) |
+| Gen2Recomped-DramaticShapes kitchen roles | `tools/build-indoor-house-example.py` adapts sink/worktop and appliance roles/heights from `data/gen3_shapes.lua`, `lib/TileShape.lua` and `lib/Structures.lua` at `726782f223cac76b4e78cdadb24fa6ac78edaef0`; Ruby face mapping and guards are our own | [MIT, copyright DramaticShape; modifications by UNDERdecodedHD](LICENSES/Gen2Recomped-DramaticShapes-MIT.txt) |
 
 ImGui was imported from recomp-ui revision
 `76392fb215652a94f5b3b113806b9492731e2807`. The inspected DRAMALESS source is

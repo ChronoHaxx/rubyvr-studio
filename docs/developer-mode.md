@@ -19,7 +19,7 @@ and the ordinary in-game save remain separate and protected.
 WASD/arrows walk. J/L turns, I/K tilts, U/O zooms, R resets. In free modes,
 right-click toggles mouse look. X confirms/interacts, Z goes back, Enter opens Start.
 Settings do not remember mouse capture, pause, speed or obstacle bypass. The
-[revision-specific human checklist](demo-runner.md#human-playtest--pending-before-merge)
+[revision-specific human checklist](demo-runner.md#human-playtest--results-unreported)
 remains pending. The standalone Linux/WSL editor is separate from this Windows runner.
 
 ## Earlier developer slice

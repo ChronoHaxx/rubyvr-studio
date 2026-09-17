@@ -9,6 +9,12 @@ checks. The human contributor owns the PR and its claims.
   one issue or one small fix does not require its own PR. Preserve unrelated
   changes and authored assets. Use the one-week desktop demo target in
   docs/roadmap.md to select the current batch.
+- Maintainer priority, 2026-09-17: aim for a coherent roughly 80% pass across
+  whole families/maps before perfecting a small subset. Avoid a bespoke art
+  item per PR. Prefer shared rules, conservative fallbacks and grouped exceptions.
+  Time-box reference/capture setup; do one combined visual review per batch.
+  Keep save integrity, crashes, movement and proven regression checks strict;
+  defer minor art defects with evidence instead of blocking broad progress.
 - Implement the batch before its combined review. During implementation use
   focused component checks to catch failures; run broad integration, a single
   useful visual recording and the human playtest at the batch boundary. Do not

@@ -1,5 +1,15 @@
 # References, inspiration and tools evaluated
 
+## Emerald geometry evaluation (17 September 2026)
+
+[Pinned source audit and executed Ruby/Emerald input comparison](emerald-geometry-reuse.md)
+refresh the earlier snapshot to companion `726782f223cac76b4e78cdadb24fa6ac78edaef0`.
+Five tileset families were compared using actual indexed layers and attributes.
+Common-house kitchen roles are the first transfer candidate; tree masks need
+Ruby-specific treatment. The GPU-free export entry point was inspected, but no
+Lua mesh export or rendered adapter comparison has run. Native gameplay stays.
+No restricted engine/APK code or game artwork was copied into the repository.
+
 ## Emerald geometry reuse follow-up (16 September 2026)
 
 The maintainer asked whether we are rebuilding existing voxel work. The cached

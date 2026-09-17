@@ -1,9 +1,15 @@
 # Local demo startup and remembered settings
 
-**M9/M10/M11 — in review.** Open the prepared game, choose a situation and camera,
+**M9/M10/M11 — merged in PR #37 at `ca2d3b7` (16 September).** Open the prepared game, choose a situation and camera,
 and play. The Play tab puts the route, house, shop, Center and lab together.
 Pause, speed and obstacle bypass live in **Test tools**. The same native game,
 renderer and checkpoint service still own gameplay.
+
+**17 September follow-up:** the maintainer reports a major map-crossing bug,
+poor performance and little apparent speed increase above 2x. [Issue #38](https://github.com/ChronoHaxx/rubyvr-studio/issues/38)
+tracks reproduction and M5/M10 repair; cause and exact tested build are unknown.
+The five individual PR #37 human checks remain unreported. Earlier automated
+results below are preserved; broad transition/performance acceptance is pending.
 
 Camera mode, heading, pitch, zoom and mouse speed survive a process restart.
 The launcher opens the last successfully saved/opened named checkpoint; an
@@ -57,7 +63,7 @@ screen with this session's isolated in-game save; it does not erase that save.
   boundary (an earlier route save took about 28 seconds). Wait for the Saved/Loaded
   message. This batch does not claim that delay or release performance is fixed.
 
-## Human playtest — pending before merge
+## Human playtest — results unreported
 
 The PR records the exact source/build hashes. Agent/native checks and this
 physical-input checklist are separate; all boxes below are initially unchecked.
